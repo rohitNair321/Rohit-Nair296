@@ -1,0 +1,48 @@
+:root{
+    /* global colors */
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+
+    --primary-background-color: #FFFFFF;
+    --secondary-background-color: #FFDAB9;
+
+    /* 
+    Light Beige: #F5F5DC, 
+    Peach: #FFDAB9, 
+    Warm Gray: #F5F5F5, 
+    Cream: #FFF8DC, 
+    Light Yellow: #FFFFE0    other warm colors
+    */
+
+    --spacing-small: 10px;
+    --spacing-medium: 20px;
+    --spacing-large: 30px;
+    
+    --font-family: 'Arial', sans-serif;
+}
+
+
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--secondary-background-color);
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  background-color: var(--secondary-color);
+  color: #fff;
+  cursor: pointer;
+}
+
+.task-item {
+  border: 1px solid #ddd;
+  padding: var(--spacing-medium);
+  background-color: #f9f9f9;
+}
