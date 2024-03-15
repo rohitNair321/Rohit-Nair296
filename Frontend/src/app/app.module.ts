@@ -9,7 +9,8 @@ import { TaskDetailsComponent } from './Components/task-details/task-details.com
 import { FooterComponent } from './Components/footer/footer.component';
 import { NavbarComponent } from './Components/navbar/navbar.component';
 import { TaskFormComponent } from './Components/task-form/task-form.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ProfilePopupComponent } from './Components/profile-popup/profile-popup.component';
 
 @NgModule({
   declarations: [
@@ -19,10 +20,12 @@ import { FormsModule } from '@angular/forms';
     TaskFormComponent,
     NavbarComponent,
     FooterComponent,
-    LoginComponent
+    LoginComponent,
+    ProfilePopupComponent
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     FormsModule,
     AppRoutingModule
   ],
