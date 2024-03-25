@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/Services/auth.service';
+import { ProfilePopupService } from 'src/app/Services/profile-popup.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,11 +11,15 @@ import { AuthService } from 'src/app/Services/auth.service';
 export class NavbarComponent {
 
 
-  constructor(private auth: AuthService, private router: Router){}
+  constructor(private auth: AuthService, private router: Router, private profilePopup: ProfilePopupService){}
 
   logout(){
     this.auth.logout();
     this.router.navigate(['']);
+  }
+
+  showProfilePopup(){
+    this.profilePopup.showPopup();
   }
   
 }

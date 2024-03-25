@@ -24,6 +24,7 @@ export class LoginComponent {
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
+    
     this.auth.isAuthenticated$().subscribe({
       next: result =>{
         if(result){

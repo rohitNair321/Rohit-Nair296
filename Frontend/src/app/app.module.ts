@@ -11,6 +11,8 @@ import { NavbarComponent } from './Components/navbar/navbar.component';
 import { TaskFormComponent } from './Components/task-form/task-form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfilePopupComponent } from './Components/profile-popup/profile-popup.component';
+import { HttpClientModule } from '@angular/common/http';
+import {DialogModule} from 'primeng/dialog';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { ProfilePopupComponent } from './Components/profile-popup/profile-popup.
     BrowserModule,
     ReactiveFormsModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule,
+    DialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

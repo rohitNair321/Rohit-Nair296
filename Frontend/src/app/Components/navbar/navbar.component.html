@@ -18,9 +18,12 @@
   
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link">
+            <a class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="showProfilePopup()">
               <i class="fas fa-user"></i> Profile
             </a>
+            <!-- <div class="profile-icon" (click)="showProfilePopup()">
+              <i class="bi bi-person-circle"></i>
+            </div> -->
           </li>
           <li class="nav-item">
             <button class="nav-link" (click)="logout()">Logout</button>
@@ -29,4 +32,6 @@
       </div>
     </div>
   </nav>
+
   
+<app-profile-popup></app-profile-popup>
