@@ -1,37 +1,54 @@
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand">
-        <!-- <img alt="Company Logo" width="30" height="30" class="d-inline-block align-top"> -->
-        Company Name
-      </a>
-  
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-  
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-sm-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/task-list">Home</a>
-          </li>
-          </ul>
-  
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="showProfilePopup()">
-              <i class="fas fa-user"></i> Profile
-            </a>
-            <!-- <div class="profile-icon" (click)="showProfilePopup()">
-              <i class="bi bi-person-circle"></i>
-            </div> -->
-          </li>
-          <li class="nav-item">
-            <button class="nav-link" (click)="logout()">Logout</button>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+  <div class="container-fluid">
+    <a class="navbar-brand">
+      <!-- <img alt="Company Logo" width="30" height="30" class="d-inline-block align-top"> -->
+      Company Name
+    </a>
 
-  
-<app-profile-popup></app-profile-popup>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/task-list">Home</a>
+        </li>
+        </ul>
+
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="viewProfile()">
+            <i class="fas fa-user"></i> Profile
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<p-dialog header="Title" [(visible)]="showProfilePopup" [modal]="false" [style]="{width: '20vw'}" position="top-right">
+  <!-- menu-list.component.html -->
+
+<div class="menu-list">
+  <div class="menu-item" (click)="navigateTo('profile')">
+    <i class="pi pi-user"></i> User Profile
+  </div>
+  <div class="menu-item" (click)="navigateTo('account-settings')">
+    <i class="pi pi-cog"></i> Account Settings
+  </div>
+  <div class="menu-item" (click)="navigateTo('preferences')">
+    <i class="pi pi-globe"></i> Preferences
+  </div>
+  <div class="menu-item" (click)="navigateTo('recent-activity')">
+    <i class="pi pi-clock"></i> Recent Activity
+  </div>
+  <div class="menu-item" (click)="navigateTo('help-support')">
+    <i class="pi pi-question-circle"></i> Help & Support
+  </div>
+  <div class="menu-item" (click)="logout()">
+    <i class="pi pi-power-off"></i> Logout
+  </div>
+</div>
+
+</p-dialog>

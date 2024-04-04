@@ -9,7 +9,7 @@ import { NavigationEnd, Router } from '@angular/router';
 })
 export class AppComponent {
   isTaskListPage: boolean = false;
-
+  showProfilePopup: boolean = false;
   constructor(private router: Router) {
     // Listen for route changes
     this.router.events.subscribe(event => {

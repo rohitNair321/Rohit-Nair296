@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-
+import { BrowserModule,  } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './Components/login/login.component';
@@ -23,15 +23,19 @@ import {DialogModule} from 'primeng/dialog';
     NavbarComponent,
     FooterComponent,
     LoginComponent,
-    ProfilePopupComponent
+    ProfilePopupComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
     DialogModule
+  ],
+  exports: [
+    ProfilePopupComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -18,8 +18,14 @@ export class NavbarComponent {
     this.router.navigate(['']);
   }
 
-  showProfilePopup(){
-    this.profilePopup.showPopup();
+  showProfilePopup: boolean = false;
+  viewProfile(){
+    // this.profilePopup.showPopup();
+    this.showProfilePopup = !this.showProfilePopup 
+  }
+
+  navigateTo(menuName: string){
+
   }
   
 }
