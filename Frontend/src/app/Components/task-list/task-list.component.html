@@ -4,24 +4,40 @@
     <div class="row">
       <div class="col-md-8">
         <!-- Task list content goes here -->
-        <ul class="list-group">
-          <li class="list-group-item">Task 1</li>
-          <li class="list-group-item">Task 2</li>
-          <li class="list-group-item">Task 3</li>
-          <!-- Add more tasks as needed -->
-        </ul>
+        <!-- <ul class="list-group" *ngFor="let tasks of taskList; index as i" (click)="selectTask(tasks.id, i)">
+          <li class="list-group-item">{{tasks.title}}</li>
+        </ul> -->
+        <p-orderList [value]="taskList" [dragdrop]="true" controlsPosition="right" [(selection)]="selectedTask" [stripedRows]="true" 
+        (onSelectionChange)="selectTask($event.value[0])">
+          <ng-template let-tasks pTemplate="item">
+              <div class="task-action-title">
+                  <div>{{tasks.title}}</div>
+              </div>
+              
+          </ng-template>
+      </p-orderList>
       </div>
-      <div class="col-md-4">
-        <!-- Task details or sidebar content goes here -->
-        <div class="card">
+      <div class="col-md-4" *ngIf="taskName">
+        <p-card header="Advanced Card" subheader="Card Subheader" [style]="{width: '360px'}" styleClass="p-card-shadow">
+          <ng-template pTemplate="header">
+          </ng-template>
+          <p>
+            {{taskDetails}}
+          </p>
+          <ng-template pTemplate="footer">
+              <p-button label="Save" icon="pi pi-check"></p-button>
+              <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-secondary" [style]="{'margin-left': '.5em'}"></p-button>
+          </ng-template>
+        </p-card>
+        <!-- <div class="card">
           <div class="card-header">
-            Task Details
+            {{taskName}}
           </div>
           <div class="card-body">
-            <p class="card-text">Task details go here.</p>
+            <p class="card-text">{{taskDetails}}</p>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
-  </div>
+</div>
   

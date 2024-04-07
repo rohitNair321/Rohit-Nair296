@@ -1,0 +1,11 @@
+.task-action-btn{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.task-action-title{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}

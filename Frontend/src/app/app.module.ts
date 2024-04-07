@@ -13,6 +13,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ProfilePopupComponent } from './Components/profile-popup/profile-popup.component';
 import { HttpClientModule } from '@angular/common/http';
 import {DialogModule} from 'primeng/dialog';
+import {CardModule} from 'primeng/card';
+import {ButtonModule} from 'primeng/button';
+import {OrderListModule} from 'primeng/orderlist';
 
 @NgModule({
   declarations: [
@@ -32,7 +35,10 @@ import {DialogModule} from 'primeng/dialog';
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
-    DialogModule
+    DialogModule,
+    CardModule,
+    ButtonModule,
+    OrderListModule
   ],
   exports: [
     ProfilePopupComponent

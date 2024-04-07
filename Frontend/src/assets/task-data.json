@@ -1,0 +1,30 @@
+[
+    {
+      "id": 1,
+      "title": "Task 1",
+      "description": "Complete task 1",
+      "completed": false,
+      "onhold": false,
+      "inpregress": false,
+      "delete": false
+    },
+    {
+      "id": 2,
+      "title": "Task 2",
+      "description": "Complete task 2",
+      "completed": false,
+      "onhold": false,
+      "inpregress": false,
+      "delete": false
+    },
+    {
+      "id": 3,
+      "title": "Task 3",
+      "description": "Complete task 3",
+      "completed": false,
+      "onhold": false,
+      "inpregress": false,
+      "delete": false
+    }
+  ]
+  

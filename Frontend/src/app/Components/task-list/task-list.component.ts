@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TaskService } from 'src/app/Services/task.service';
 
 @Component({
   selector: 'app-task-list',
@@ -6,5 +7,28 @@ import { Component } from '@angular/core';
   styleUrls: ['./task-list.component.css']
 })
 export class TaskListComponent {
+
+  constructor(private taskservices: TaskService){
+
+  }
+
+  taskList: any[]=[];
+  ngOnInit(){
+    this.taskservices.getTaskList().subscribe(tasks =>{
+      this.taskList = tasks;
+    });
+  }
+
+  taskDetails: any;
+  taskName: any;
+  selectedTask: any[] = [];
+  selectTask(taskID: any){
+    this.taskList.map(task=>{
+      if(task.id===taskID.id){
+        this.taskName = task.title;
+        this.taskDetails = task.description;
+      }
+    });
+  }
 
 }
