@@ -31,4 +31,20 @@ export class TaskListComponent {
     });
   }
 
+  completeTask(tasks: any){
+
+  }
+  editTask(tasks: any){
+
+  }
+  startTask(tasks: any){
+
+  }
+  holdTask(tasks: any){
+
+  }
+  deleteTask(tasks: any){
+
+  }
+
 }
