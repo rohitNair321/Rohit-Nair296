@@ -31,6 +31,10 @@ export class TaskListComponent {
     });
   }
 
+  addNewTask(){
+    
+  }
+
   completeTask(tasks: any){
 
   }

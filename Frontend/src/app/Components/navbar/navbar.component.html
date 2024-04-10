@@ -1,7 +1,6 @@
-<nav class="navbar navbar-expand-sm navbar-light bg-light">
+<!-- <nav class="navbar navbar-expand-sm navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand">
-      <!-- <img alt="Company Logo" width="30" height="30" class="d-inline-block align-top"> -->
       Company Name
     </a>
 
@@ -25,30 +24,41 @@
       </ul>
     </div>
   </div>
-</nav>
+</nav> -->
+<p-menubar [model]="items">
+  <ng-template pTemplate="start">
+    Company Name
+  </ng-template>
+  <ng-template pTemplate="end">
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="viewProfile()">
+          <i class="fas fa-user"></i> Profile
+        </a>
+      </li>
+    </ul>
+  </ng-template>
+</p-menubar>
 
 <p-dialog header="Title" [(visible)]="showProfilePopup" [modal]="false" [style]="{width: '20vw'}" position="top-right">
-  <!-- menu-list.component.html -->
-
-<div class="menu-list">
-  <div class="menu-item" (click)="navigateTo('profile')">
-    <i class="pi pi-user"></i> User Profile
+  <div class="menu-list">
+    <div class="menu-item" (click)="navigateTo('profile')">
+      <i class="pi pi-user"></i> User Profile
+    </div>
+    <div class="menu-item" (click)="navigateTo('account-settings')">
+      <i class="pi pi-cog"></i> Account Settings
+    </div>
+    <div class="menu-item" (click)="navigateTo('preferences')">
+      <i class="pi pi-globe"></i> Preferences
+    </div>
+    <div class="menu-item" (click)="navigateTo('recent-activity')">
+      <i class="pi pi-clock"></i> Recent Activity
+    </div>
+    <div class="menu-item" (click)="navigateTo('help-support')">
+      <i class="pi pi-question-circle"></i> Help & Support
+    </div>
+    <div class="menu-item" (click)="logout()">
+      <i class="pi pi-power-off"></i> Logout
+    </div>
   </div>
-  <div class="menu-item" (click)="navigateTo('account-settings')">
-    <i class="pi pi-cog"></i> Account Settings
-  </div>
-  <div class="menu-item" (click)="navigateTo('preferences')">
-    <i class="pi pi-globe"></i> Preferences
-  </div>
-  <div class="menu-item" (click)="navigateTo('recent-activity')">
-    <i class="pi pi-clock"></i> Recent Activity
-  </div>
-  <div class="menu-item" (click)="navigateTo('help-support')">
-    <i class="pi pi-question-circle"></i> Help & Support
-  </div>
-  <div class="menu-item" (click)="logout()">
-    <i class="pi pi-power-off"></i> Logout
-  </div>
-</div>
-
 </p-dialog>
