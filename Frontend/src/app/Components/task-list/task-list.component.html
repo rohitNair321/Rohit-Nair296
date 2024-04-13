@@ -1,69 +1,70 @@
 <!-- task-list.component.html -->
-<div class="container mt-4">
-    <h2>Task List</h2>
-    <div class="row">
-      <div class="col-md-6">
-        <p-orderList [value]="taskList" [dragdrop]="true" controlsPosition="right" [(selection)]="selectedTask" [stripedRows]="true" 
-          (onSelectionChange)="selectTask($event.value[0])">
-          <ng-template let-tasks pTemplate="item">
-              <div class="flex flex-row justify-content-between flex-wrap">
-                  <div class="flex align-items-center justify-content-center">
-                   
-                    
-                  <div class="flex flex-column">
-                    <div class="flex">
-                       {{tasks.title}}
-                    </div>
-                    <div class="flex">
-                     {{tasks.completed == true? 'Complete':'Inprogress'}}
-                   </div>
-                    
-                  </div>
-                  </div>
-                  <div class="flex align-items-center">
-                    <!-- <button class="btn btn-success mr-2" (click)="completeTask(tasks)">Complete</button> -->
-                    <button class="btn btn-success mr-2" (click)="completeTask(tasks)" pTooltip="View">
-                      <i class="pi pi-eye"></i>
-                    </button>
-                    <button class="btn btn-warning mr-2" (click)="editTask(tasks)" pTooltip="Edit">
-                      <i class="pi pi-pencil"></i>
-                    </button>
-                    <!-- <button class="btn btn-primary mr-2" (click)="startTask(tasks)">Start</button>
-                    <button class="btn btn-info mr-2" (click)="holdTask(tasks)">On Hold</button> -->
-                    <button class="btn btn-danger" (click)="deleteTask(tasks)" pTooltip="Delete">
-                      <i class="pi pi-trash"></i>
-                    </button>
-                  </div>
-              </div>
-          </ng-template>
-        </p-orderList>
-        <div class="flex flex-row justify-content-end" [ngStyle]="{'max-width': '49em'}">
-          <button class="btn btn-primary" (click)="addNewTask()">Add New Task</button>
-        </div>
+<!-- <div class="container text-center">
+  <h2>Task List</h2>
+  <div class="row">
+    <div cdkDropList (cdkDropListDropped)="onDrop($event)">
+      <div *ngFor="let tasks of taskList" cdkDrag>
         
       </div>
-      
-      <div class="col-md-6" *ngIf="taskName">
-        <p-card header="Advanced Card" subheader="Card Subheader"  styleClass="p-card-shadow">
-          <ng-template pTemplate="header">
-          </ng-template>
-          <p>
-            {{taskDetails}}
-          </p>
-          <ng-template pTemplate="footer">
-              <p-button label="Save" icon="pi pi-check"></p-button>
-              <p-button label="Cancel" icon="pi pi-times" styleClass="p-button-secondary" [style]="{'margin-left': '.5em'}"></p-button>
-          </ng-template>
-        </p-card>
-        <!-- <div class="card">
-          <div class="card-header">
-            {{taskName}}
-          </div>
-          <div class="card-body">
-            <p class="card-text">{{taskDetails}}</p>
-          </div>
-        </div> -->
-      </div>
     </div>
-</div>
+    
+    
+  </div>
+</div> -->
   
+
+
+<div class="container mt-4">
+  <h2>Task List</h2>
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="task-list-container" cdkDropList (cdkDropListDropped)="onDrop($event)">
+        <div class="p-2" *ngFor="let tasks of taskList" cdkDrag>
+          <div class="flex flex-row justify-content-between flex-wrap">
+            <div class="flex align-items-center justify-content-center">
+              <div class="flex flex-column">
+                <div class="flex">
+                  {{ tasks.title }}
+                </div>
+                <div class="flex">
+                  {{ tasks.completed ? 'Complete' : 'In Progress' }}
+                </div>
+              </div>
+            </div>
+            <div class="flex align-items-center">
+              <!-- Status dropdown -->
+              <div class="dropdown mr-2">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="statusDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {{ tasks.status }}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="statusDropdown">
+                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, 'To Do')">To Do</button>
+                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, 'In Progress')">In Progress</button>
+                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, 'Completed')">Completed</button>
+                </div>
+              </div>
+              <!-- View button -->
+              <button class="btn btn-success mr-2" (click)="completeTask(tasks)" pTooltip="View">
+                <i class="pi pi-eye"></i>
+              </button>
+              <!-- Edit button -->
+              <button class="btn btn-primary mr-2" (click)="editTask(tasks.id)" pTooltip="Edit">
+                <i class="pi pi-pencil"></i>
+              </button>
+              <!-- Delete button -->
+              <button class="btn btn-danger" (click)="deleteTask(tasks)" pTooltip="Delete">
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-row justify-content-end">
+        <button class="btn btn-primary" (click)="addNewTask()"  pTooltip="Add New Task">
+          <i class="pi pi-plus"></i>
+          Add New Task
+        </button>
+      </div>  
+    </div>
+  </div>
+</div>

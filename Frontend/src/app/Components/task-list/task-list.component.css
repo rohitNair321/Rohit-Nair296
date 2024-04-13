@@ -1,11 +1,7 @@
-.task-action-btn{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
 
-.task-action-title{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
+.task-list-container {
+    background-color: #ffffff; /* White background */
+    width: 80%; /* Reduce width */
+    margin: 0 auto; /* Center the list */
+  }
+  

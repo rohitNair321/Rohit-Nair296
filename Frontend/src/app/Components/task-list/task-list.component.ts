@@ -1,4 +1,6 @@
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { TaskService } from 'src/app/Services/task.service';
 
 @Component({
@@ -7,8 +9,12 @@ import { TaskService } from 'src/app/Services/task.service';
   styleUrls: ['./task-list.component.css']
 })
 export class TaskListComponent {
+onDrop(event: CdkDragDrop<any,any,any>) {
+  moveItemInArray(this.taskList, event.previousIndex, event.currentIndex);
+}
 
-  constructor(private taskservices: TaskService){
+
+  constructor(private taskservices: TaskService, private router: Router){
 
   }
 
@@ -23,23 +29,29 @@ export class TaskListComponent {
   taskName: any;
   selectedTask: any[] = [];
   selectTask(taskID: any){
-    this.taskList.map(task=>{
-      if(task.id===taskID.id){
-        this.taskName = task.title;
-        this.taskDetails = task.description;
-      }
-    });
+
   }
 
   addNewTask(){
     
   }
 
+  statusOptions!: any[];
+  changeTaskStatus(arg0: any,arg1: any) {
+    throw new Error('Method not implemented.');
+  }
+
   completeTask(tasks: any){
 
   }
-  editTask(tasks: any){
-
+  editTask(taskID: any){
+    this.taskList.map(task=>{
+      if(task.id===taskID){
+        this.taskName = task.title;
+        this.taskDetails = task.description;
+        this.router.navigate(['/task-details'])
+      }
+    });
   }
   startTask(tasks: any){
 

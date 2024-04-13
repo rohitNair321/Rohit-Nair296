@@ -1,1 +1,60 @@
-<p>task-details works!</p>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-header">
+            <div class="row align-items-center">
+              <div class="col-10">
+                <h5 class="mb-0">{{ taskName }}</h5>
+              </div>
+              <div class="col-2 text-right">
+                <button class="btn btn-outline-secondary btn-sm" (click)="editTaskName()">
+                  <i class="fas fa-pencil-alt"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <strong>Description:</strong>
+              <p>{{ taskDetails }}</p>
+              <button class="btn btn-outline-secondary btn-sm" (click)="editTaskDetails()">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+            </div>
+            <div class="mb-3">
+              <strong>Status:</strong>
+              <select class="form-control" [(ngModel)]="selectedStatus">
+                <option value="todo">To Do</option>
+                <option value="inprogress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <strong>Comments:</strong>
+              <!-- Add editor component for comments -->
+              <button class="btn btn-outline-secondary btn-sm" (click)="editComments()">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+            </div>
+            <div class="mb-3">
+              <strong>Attachments:</strong>
+              <!-- Add attachment component -->
+              <button class="btn btn-outline-secondary btn-sm" (click)="editAttachments()">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+            </div>
+            <div class="mb-3">
+              <strong>Task Date:</strong>
+              <input type="date" class="form-control" [(ngModel)]="taskDate">
+            </div>
+          </div>
+          <div class="card-footer text-right">
+            <button class="btn btn-success" (click)="saveTask()">Save</button>
+            <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

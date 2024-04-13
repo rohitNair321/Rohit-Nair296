@@ -18,6 +18,7 @@ import {ButtonModule} from 'primeng/button';
 import {OrderListModule} from 'primeng/orderlist';
 import {TooltipModule} from 'primeng/tooltip';
 import {MenubarModule} from 'primeng/menubar';
+import {DropdownModule} from 'primeng/dropdown';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import {MenubarModule} from 'primeng/menubar';
     ButtonModule,
     OrderListModule,
     TooltipModule,
-    MenubarModule
+    MenubarModule,
+    DropdownModule
   ],
   exports: [
     ProfilePopupComponent
