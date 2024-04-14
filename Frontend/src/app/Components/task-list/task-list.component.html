@@ -1,33 +1,26 @@
-<!-- task-list.component.html -->
-<!-- <div class="container text-center">
-  <h2>Task List</h2>
-  <div class="row">
-    <div cdkDropList (cdkDropListDropped)="onDrop($event)">
-      <div *ngFor="let tasks of taskList" cdkDrag>
-        
-      </div>
-    </div>
-    
-    
-  </div>
-</div> -->
-  
-
-
 <div class="container mt-4">
   <h2>Task List</h2>
   <div class="row justify-content-center">
     <div class="col-lg-8">
-      <div class="task-list-container" cdkDropList (cdkDropListDropped)="onDrop($event)">
-        <div class="p-2" *ngFor="let tasks of taskList" cdkDrag>
+      <div class="task-list-container rounded-2" cdkDropList (cdkDropListDropped)="onDrop($event)">
+        <div class="p-3" *ngFor="let tasks of taskList" cdkDrag>
           <div class="flex flex-row justify-content-between flex-wrap">
             <div class="flex align-items-center justify-content-center">
               <div class="flex flex-column">
-                <div class="flex">
-                  {{ tasks.title }}
+                <div class="flex flex-row gap-3">
+                  <label for="" *ngIf="!tasks.titleEdit">{{ tasks.title }}</label>
+                  <input *ngIf="tasks.titleEdit" type="text" placeholder="Normal" pInputText [(ngModel)]="tasks.title"/>
+                  <button class="btn btn-outline-secondary btn-sm border-none" (click)="editTaskName(tasks.id, tasks.titleEdit, tasks.title)">
+                    <i class="pi" [ngClass]="{'pi-pencil': !tasks.titleEdit, 'pi-save': tasks.titleEdit}"></i>
+                  </button>
                 </div>
                 <div class="flex">
-                  {{ tasks.completed ? 'Complete' : 'In Progress' }}
+                  {{ 
+                  tasks.completed ? 'Complete' : 
+                    tasks.onhold ? 'On hold':
+                      tasks.inpregress ? 'In progress' : 
+                        tasks.delete ? 'Delete': 'New'
+                  }}
                 </div>
               </div>
             </div>
@@ -35,12 +28,19 @@
               <!-- Status dropdown -->
               <div class="dropdown mr-2">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="statusDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  {{ tasks.status }}
+                  {{ 
+                    tasks.completed ? 'Complete' :
+                      tasks.onhold ? 'On hold':
+                        tasks.inpregress ? 'In progress' :
+                          tasks.delete ? 'Delete': 'New'
+                  }}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="statusDropdown">
-                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, 'To Do')">To Do</button>
-                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, 'In Progress')">In Progress</button>
-                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, 'Completed')">Completed</button>
+                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, true, 'new')">New</button>
+                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, true, 'completed')">Completed</button>
+                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, true, 'onhold')">On Hold</button>
+                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, true, 'inpregress')">In Progress</button>
+                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, true, 'delete')">Delete</button>
                 </div>
               </div>
               <!-- View button -->
@@ -48,9 +48,9 @@
                 <i class="pi pi-eye"></i>
               </button>
               <!-- Edit button -->
-              <button class="btn btn-primary mr-2" (click)="editTask(tasks.id)" pTooltip="Edit">
+              <!-- <button class="btn btn-primary mr-2" (click)="editTask(tasks.id)" pTooltip="Edit">
                 <i class="pi pi-pencil"></i>
-              </button>
+              </button> -->
               <!-- Delete button -->
               <button class="btn btn-danger" (click)="deleteTask(tasks)" pTooltip="Delete">
                 <i class="pi pi-trash"></i>

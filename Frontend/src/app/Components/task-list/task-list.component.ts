@@ -9,6 +9,7 @@ import { TaskService } from 'src/app/Services/task.service';
   styleUrls: ['./task-list.component.css']
 })
 export class TaskListComponent {
+
 onDrop(event: CdkDragDrop<any,any,any>) {
   moveItemInArray(this.taskList, event.previousIndex, event.currentIndex);
 }
@@ -36,14 +37,30 @@ onDrop(event: CdkDragDrop<any,any,any>) {
     
   }
 
+  editTaskName(taskId: number, isEdit: boolean, taskTitle?: string) {
+    this.taskList.map(task=>{
+      if(task.id === taskId && !isEdit){
+        task.titleEdit = true;
+      }else if(task.id === taskId && isEdit){
+        task.title = taskTitle;
+        task.titleEdit = false;
+      }
+    });
+  }
+
   statusOptions!: any[];
-  changeTaskStatus(arg0: any,arg1: any) {
-    throw new Error('Method not implemented.');
+  changeTaskStatus(taskID: number, status: boolean, key?: string) {
+    this.taskList.map(task=>{
+      if(task.id === taskID && status){
+        // task[key] = true;
+      }
+    });
   }
 
   completeTask(tasks: any){
 
   }
+  
   editTask(taskID: any){
     this.taskList.map(task=>{
       if(task.id===taskID){
