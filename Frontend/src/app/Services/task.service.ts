@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
 
@@ -8,16 +8,11 @@ import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
 export class TaskService {
 
   private taskSubject = new BehaviorSubject<Task[]>([]);
-  // private taskSubject: any;
-  // task$ = this.taskSubject.asObservable();
+  private task = new BehaviorSubject<any>(null);
   
   constructor(private httpReq: HttpClient) { }
 
   getTaskList(): Observable<Task[]>{
-    // this.httpReq.get('./assets/task-data.json').toPromise().then((data) =>{
-    //   console.log(data);
-    //   this.taskList.next(data);
-    // });
     return this.httpReq.get<Task[]>('./assets/task-data.json').pipe(
       tap(tasks => {
         this.taskSubject.next(tasks);
@@ -27,6 +22,7 @@ export class TaskService {
       })
     );
   }
+
 
 }
 

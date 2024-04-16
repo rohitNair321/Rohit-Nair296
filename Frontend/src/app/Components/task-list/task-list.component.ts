@@ -21,8 +21,13 @@ onDrop(event: CdkDragDrop<any,any,any>) {
 
   taskList: any[]=[];
   ngOnInit(){
-    this.taskservices.getTaskList().subscribe(tasks =>{
-      this.taskList = tasks;
+    this.taskservices.getTaskList().subscribe({
+      next: tasks => {
+        this.taskList = tasks;
+      },
+      error: (e) =>{
+
+      }
     });
   }
 
@@ -62,14 +67,13 @@ onDrop(event: CdkDragDrop<any,any,any>) {
   }
   
   editTask(taskID: any){
-    this.taskList.map(task=>{
-      if(task.id===taskID){
-        this.taskName = task.title;
-        this.taskDetails = task.description;
-        this.router.navigate(['/task-details'])
+    this.router.navigate(['/task-details'], {
+      queryParams:{
+        taskId: taskID
       }
     });
   }
+
   startTask(tasks: any){
 
   }

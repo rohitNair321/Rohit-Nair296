@@ -1,8 +1,8 @@
 <div class="container mt-4">
   <h2>Task List</h2>
   <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="task-list-container rounded-2" cdkDropList (cdkDropListDropped)="onDrop($event)">
+    <div class="d-flex flex-column col-lg-8 gap-3">
+      <div class="text-bg-light w-100 rounded-2" cdkDropList (cdkDropListDropped)="onDrop($event)">
         <div class="p-3" *ngFor="let tasks of taskList" cdkDrag>
           <div class="flex flex-row justify-content-between flex-wrap">
             <div class="flex align-items-center justify-content-center">
@@ -44,7 +44,7 @@
                 </div>
               </div>
               <!-- View button -->
-              <button class="btn btn-success mr-2" (click)="completeTask(tasks)" pTooltip="View">
+              <button class="btn btn-success mr-2" (click)="editTask(tasks.id)" pTooltip="View">
                 <i class="pi pi-eye"></i>
               </button>
               <!-- Edit button -->
@@ -59,7 +59,7 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-row justify-content-end">
+      <div class="d-flex flex-row w-100 justify-content-end">
         <button class="btn btn-primary" (click)="addNewTask()"  pTooltip="Add New Task">
           <i class="pi pi-plus"></i>
           Add New Task
