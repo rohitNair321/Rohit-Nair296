@@ -38,8 +38,9 @@ onDrop(event: CdkDragDrop<any,any,any>) {
 
   }
 
+  newTaskForm: boolean = false;
   addNewTask(){
-    
+    this.newTaskForm = true;
   }
 
   editTaskName(taskId: number, isEdit: boolean, taskTitle?: string) {
@@ -85,3 +86,4 @@ onDrop(event: CdkDragDrop<any,any,any>) {
   }
 
 }
+

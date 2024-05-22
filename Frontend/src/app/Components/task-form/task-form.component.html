@@ -1,1 +1,59 @@
-<p>task-form works!</p>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="row align-items-center">
+              <div class="col-10">
+                <h5 class="mb-0">{{ 'title' }}</h5>
+              </div>
+              <div class="col-2 text-right">
+                <button class="btn btn-outline-secondary btn-sm">
+                  <i class="fas fa-pencil-alt"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <strong>Description:</strong>
+              <button class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+              <p>{{ 'description' }}</p>
+            </div>
+            <div class="mb-3 row">
+              <div class="col-6">
+                <strong>Status:</strong>
+                <select class="form-control">
+                  <option value="todo">To Do</option>
+                  <option value="inprogress">In Progress</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+              <div class="col">
+                <strong>Task Date:</strong>
+                <input type="date" class="form-control">
+              </div>
+            </div>
+            <div class="mb-3">
+              <strong>Comments:</strong>
+              <button class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+            </div>
+            <div class="mb-3">
+              <strong>Attachments:</strong>
+              <button class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-pencil-alt"></i>
+              </button>
+            </div>
+            <div class="mb-3">
+
+            </div>
+          </div>
+          <div class="card-footer flex justify-content-end gap-3">
+            <!-- <button class="btn btn-success">Save</button>
+            <button class="btn btn-secondary">Cancel</button> -->
+            <button type="submit" pButton label="Submit"></button>
+            <button type="button" pButton label="Cancel" (click)="onCancel()"></button>
+          </div>
+        </div>

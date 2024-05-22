@@ -17,18 +17,24 @@
           <div class="card-body">
             <div class="mb-3">
               <strong>Description:</strong>
-              <p>{{ taskData.description }}</p>
               <button class="btn btn-outline-secondary btn-sm" (click)="editTaskDetails()">
                 <i class="fas fa-pencil-alt"></i>
               </button>
+              <p>{{ taskData.description }}</p>
             </div>
-            <div class="mb-3">
-              <strong>Status:</strong>
-              <select class="form-control" [(ngModel)]="selectedStatus">
-                <option value="todo">To Do</option>
-                <option value="inprogress">In Progress</option>
-                <option value="completed">Completed</option>
-              </select>
+            <div class="mb-3 row">
+              <div class="col-6">
+                <strong>Status:</strong>
+                <select class="form-control" [(ngModel)]="selectedStatus">
+                  <option value="todo">To Do</option>
+                  <option value="inprogress">In Progress</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+              <div class="col">
+                <strong>Task Date:</strong>
+                <input type="date" class="form-control" [(ngModel)]="taskDate">
+              </div>
             </div>
             <div class="mb-3">
               <strong>Comments:</strong>
@@ -45,13 +51,12 @@
               </button>
             </div>
             <div class="mb-3">
-              <strong>Task Date:</strong>
-              <input type="date" class="form-control" [(ngModel)]="taskDate">
+
             </div>
           </div>
-          <div class="card-footer text-right">
-            <button class="btn btn-success" (click)="saveTask()">Save</button>
-            <button class="btn btn-secondary" (click)="cancel()">Cancel</button>
+          <div class="card-footer flex justify-content-end gap-3">
+            <button type="submit" pButton label="Save" (click)="saveTask()"></button>
+            <button type="button" pButton label="Cancel" (click)="cancel()"></button>
           </div>
         </div>
       </div>

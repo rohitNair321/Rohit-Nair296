@@ -67,4 +67,14 @@
       </div>  
     </div>
   </div>
+
+  <p-dialog [(visible)]="newTaskForm" [modal]="true" [responsive]="true" [style]="{width: '50%'}">
+    <ng-template pTemplate="header">
+      <h2>Add New Task</h2>
+    </ng-template>
+    <ng-template pTemplate="content">
+      <app-task-form></app-task-form>
+    </ng-template>
+    <!-- (onSubmit)="onTaskSubmit($event)" (onCancel)="hideDialog()" -->
+  </p-dialog>
 </div>
