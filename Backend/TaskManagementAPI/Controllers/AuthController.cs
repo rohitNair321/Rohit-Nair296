@@ -5,87 +5,102 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-[ApiController]
-[Route("api/[controller]")]
-public class AuthController : ControllerBase
+namespace TaskManagementAPI.Controllers
 {
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
-    private readonly IConfiguration _configuration;
-
-    public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration)
+    [ApiController]
+    public class AuthController : ControllerBase
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _configuration = configuration;
-    }
+        private readonly UserManager<IdentityUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<AuthController> _logger;
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterModel model)
-    {
-        if (ModelState.IsValid)
+        public AuthController(UserManager<IdentityUser> userManager,  SignInManager<IdentityUser> signInManager, IConfiguration configuration, ILogger<AuthController> logger)
         {
-            var user = new IdentityUser { UserName = model.Username, Email = model.Email };
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _configuration = configuration;
+            _logger = logger;
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        {
+             _logger.LogInformation("Attempting to register a new user");
+            var userExists = await _userManager.FindByNameAsync(model.Username);
+            if (userExists != null)
+            {
+                _logger.LogWarning("User already exists: {Username}", model.Username);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User already exists!" });
+            }
+
+            IdentityUser user = new IdentityUser()
+            {
+                Email = model.Email,
+                SecurityStamp = System.Guid.NewGuid().ToString(),
+                UserName = model.Username
+            };
             var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (result.Succeeded)
+            if (!result.Succeeded)
             {
-                return Ok(new { Result = "User created successfully" });
+                 _logger.LogError("User creation failed: {Errors}", string.Join(", ", result.Errors.Select(e => e.Description)));
+                 return StatusCode(StatusCodes.Status500InternalServerError, new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
             }
-            return BadRequest(result.Errors);
+            _logger.LogInformation("User created successfully: {Username}", model.Username);
+            return Ok(new { Status = "Success", Message = "User created successfully!" });
         }
-        return BadRequest(ModelState);
-    }
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginModel model)
-    {
-        if (ModelState.IsValid)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
-
-            if (result.Succeeded)
+            _logger.LogInformation("Attempting user login ");
+            if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByNameAsync(model.Username);
-                var tokenString = GenerateJwtToken(user);
-                return Ok(new { Token = tokenString });
+                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+
+                if (result.Succeeded)
+                {
+                    var user = await _userManager.FindByNameAsync(model.Username);
+                    var tokenString = GenerateJwtToken(user);
+                    return Ok(new { Token = tokenString });
+                }
+                return Unauthorized();
             }
-            return Unauthorized();
+            return BadRequest(ModelState);
         }
-        return BadRequest(ModelState);
-    }
 
-    private string GenerateJwtToken(IdentityUser user)
-    {
-        var claims = new[]
+        private string GenerateJwtToken(IdentityUser user)
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var token = new JwtSecurityToken(
-            issuer: _configuration["Jwt:Issuer"],
-            audience: _configuration["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:DurationInMinutes"])),
-            signingCredentials: creds);
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Jwt:DurationInMinutes"])),
+                signingCredentials: creds);
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
-}
 
-public class RegisterModel
-{
-    public string Username { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
-}
+    public class LoginModel
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
 
-public class LoginModel
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
+    public class RegisterModel
+    {
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
 }
