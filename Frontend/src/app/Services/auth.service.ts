@@ -1,7 +1,8 @@
 import { ɵparseCookieValue } from '@angular/common';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,15 +11,27 @@ export class AuthService {
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   
-  constructor(private router:Router) { }
+  constructor(private router:Router, private http: HttpClient) { }
 
   isAuthenticated$(): Observable<boolean> {
     return this.isAuthenticatedSubject.asObservable();
   }
 
-  public login(loginDetails: any): void {
-    const isAuthenticated = this.authenticate(loginDetails.username, loginDetails.password);
-    this.isAuthenticatedSubject.next(isAuthenticated);
+  public login(loginDetails: any): Observable<boolean> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.http.post<any>('http://localhost:5047/login', loginDetails, {headers}).pipe(
+      map(response => {
+        if(response && response.token){
+          localStorage.setItem('accessToken', response.token);
+          this.isAuthenticatedSubject.next(true);
+          return true;
+        }else{
+          return false;
+        }
+      })
+    );
+    // const isAuthenticated = this.authenticate(loginDetails.username, loginDetails.password);
+    // this.isAuthenticatedSubject.next(isAuthenticated);
   }
 
   private authenticate(username: string, password: string): boolean {
@@ -33,13 +46,11 @@ export class AuthService {
 
   public logout(){
     localStorage.removeItem('accessToken');
+    this.isAuthenticatedSubject.next(false);
+    this.router.navigate(['/login']);
   }
 
   public isLoggedIn(): boolean {
-     if(!!localStorage.getItem('token')){
-      return false;
-     }else{
-      return true;
-     }
+    return !!localStorage.getItem('accessToken');
   }
 }

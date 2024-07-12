@@ -20,6 +20,7 @@ import {TooltipModule} from 'primeng/tooltip';
 import {MenubarModule} from 'primeng/menubar';
 import {DropdownModule} from 'primeng/dropdown';
 import {InputTextModule} from 'primeng/inputtext';
+import {ToastModule} from 'primeng/toast';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import {InputTextModule} from 'primeng/inputtext';
     TooltipModule,
     MenubarModule,
     DropdownModule,
-    InputTextModule
+    InputTextModule,
+    ToastModule
   ],
   exports: [
     ProfilePopupComponent
