@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { AuthService } from './Services/auth.service';
 import { NavigationEnd, Router } from '@angular/router';
+import { AuthService } from './Services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -10,12 +10,13 @@ import { NavigationEnd, Router } from '@angular/router';
 export class AppComponent {
   isTaskListPage: boolean = false;
   showProfilePopup: boolean = false;
-  constructor(private router: Router) {
+  constructor(private router: Router, private auth: AuthService) {
     // Listen for route changes
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         // Check if the current route is the task-list page
-        this.isTaskListPage = event.url === '/task-list';
+        // this.isTaskListPage = event.url.includes('landing');
+        this.isTaskListPage = this.auth.isLoggedIn();
       }
     });
   }

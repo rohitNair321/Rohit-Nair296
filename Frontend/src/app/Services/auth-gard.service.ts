@@ -12,6 +12,7 @@ export class AuthGardService {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
     this.auth.isLoggedIn() == false?this.router.navigateByUrl('/'):this.auth.isLoggedIn();
+    // this.auth.isLoggedIn() == false?this.router.navigate(['/auth/login']):this.router.navigate(['/landing/task-list']);
     return this.auth.isLoggedIn();
   }
 

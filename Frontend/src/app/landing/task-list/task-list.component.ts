@@ -68,7 +68,7 @@ onDrop(event: CdkDragDrop<any,any,any>) {
   }
   
   editTask(taskID: any){
-    this.router.navigate(['/task-details'], {
+    this.router.navigate(['landing/task-details'], {
       queryParams:{
         taskId: taskID
       }

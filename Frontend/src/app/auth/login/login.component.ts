@@ -39,7 +39,7 @@ export class LoginComponent {
       next: (result =>{
         this.loading = false;
         if(result){
-          this.router.navigateByUrl('task-list');
+          this.router.navigateByUrl('landing/task-list');
         }
       }),
       error: (e) =>{

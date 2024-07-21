@@ -58,7 +58,7 @@ export class TaskDetailsComponent {
     }
 
     cancel() {
-      this.router.navigateByUrl('/task-list')
+      this.router.navigateByUrl('landing/task-list')
     }
 
 }

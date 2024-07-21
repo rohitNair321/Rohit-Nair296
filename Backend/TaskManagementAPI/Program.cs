@@ -37,6 +37,21 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// builder.Services.AddScoped<IUserService, UserService>();
+// builder.Services.AddScoped<IJwtUtils, JwtUtils>();
+
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
 builder.Services.AddControllers();
 // Configure Swagger
 builder.Services.AddSwaggerGen(c =>
@@ -68,7 +83,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -76,25 +90,30 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    // Enable middleware to serve generated Swagger as a JSON endpoint.
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Task Management API v1");
+    });
 }
+
+app.UseHttpsRedirection();
+
 app.UseRouting();
+
+// Apply CORS before Authentication and Authorization
+app.UseCors("AllowAll");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Enable middleware to serve generated Swagger as a JSON endpoint.
-app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Task Management API v1");
-});
+// Use JwtMiddleware
+// app.UseMiddleware<JwtMiddleware>();
 
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
-
-app.UseHttpsRedirection();
-
-//
 
 app.Run();

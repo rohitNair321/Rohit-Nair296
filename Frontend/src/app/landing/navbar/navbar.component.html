@@ -13,7 +13,7 @@
   </ng-template>
 </p-menubar>
 
-<p-dialog header="Title" [(visible)]="showProfilePopup" [modal]="false"  position="top-right">
+<p-dialog header="Title" [(visible)]="showProfilePopup" [modal]="false" position="top-right" [draggable]="false">
     <div class="menu-list">
       <div class="menu-item" (click)="navigateTo('profile')">
         <i class="pi pi-user"></i> User Profile
