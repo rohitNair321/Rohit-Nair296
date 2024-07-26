@@ -11,7 +11,7 @@
         <label for="password">Password</label>
         <input type="password" class="form-control" id="password" formControlName="password" required>
       </div>
-      <button type="submit" class="btn btn-primary mb-3 w-100">
+      <button type="submit" class="btn mb-3 w-100" [ngClass]="{'btn-primary': !loading}" [disabled]="loading" >
         <span class="spinner-border spinner-border-sm" aria-hidden="true" *ngIf="loading"></span>
         Login
       </button>

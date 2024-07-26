@@ -34,6 +34,8 @@ import { TooltipModule } from 'primeng/tooltip';
     InputTextModule,
     ToastModule,
     DialogModule
+  ],
+  providers: [
   ]
 })
 export class AuthModule { }

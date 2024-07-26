@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthModule } from './auth/auth.module';
 import { LandingModule } from './landing/landing.module';
 import { AppComponent } from './app.component';
+import { SvgInjectorService } from './Services/svg-injector.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,7 @@ import { AppComponent } from './app.component';
   exports: [
     ProfilePopupComponent
   ],
-  providers: [],
+  providers: [ ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

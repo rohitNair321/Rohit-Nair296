@@ -1,1 +1,65 @@
-<p>register works!</p>
+<p-toast position="top-center" key="tc"></p-toast>
+<div class="container d-flex justify-content-center align-items-center vh-100">
+  <div class="card w-50">
+    <div class="card-header text-center">
+        Registration
+    </div>
+    <div class="card-body">
+        <div class="d-flex flex-column">
+          <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="row g-3">
+            <div class="col-md-6">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" class="form-control" [ngClass]="{'is-invalid': registrationForm.get('firstName')?.touched && registrationForm.get('firstName')?.invalid}" formControlName="firstName">
+                <div *ngIf="registrationForm.get('firstName')?.touched && registrationForm.get('firstName')?.invalid" class="invalid-feedback">
+                  Field is required.
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" class="form-control" [ngClass]="{'is-invalid': registrationForm.get('lastName')?.touched && registrationForm.get('lastName')?.invalid}" formControlName="lastName">
+                <div *ngIf="registrationForm.get('lastName')?.touched && registrationForm.get('lastName')?.invalid" class="invalid-feedback">
+                  Field is required.
+                </div>
+            </div>
+            <div class="col-md-6">
+              <label for="username">Username</label>
+              <input type="text" id="username" class="form-control" [ngClass]="{'is-invalid': registrationForm.get('username')?.touched && registrationForm.get('username')?.invalid}" formControlName="username" >
+              <div *ngIf="registrationForm.get('username')?.touched && registrationForm.get('username')?.invalid" class="invalid-feedback">
+                Field is required.
+              </div>
+            </div>
+            <div class="col-md-6">
+                <label for="emailId">Email ID</label>
+                <input type="email" id="emailId" class="form-control" [ngClass]="{'is-invalid': registrationForm.get('emailId')?.touched && registrationForm.get('emailId')?.invalid}" formControlName="emailId" >
+                <div *ngIf="registrationForm.get('emailId')?.invalid && registrationForm.get('emailId')?.touched" class="invalid-feedback">
+                  <small *ngIf="registrationForm.get('emailId')?.errors?.['required']">Email is required.</small>
+                  <small *ngIf="registrationForm.get('emailId')?.value !== '' && registrationForm.get('emailId')?.status === 'INVALID'">Enter a valid email.</small>
+                </div>
+            </div>
+            <div class="col-md-6">
+              <label for="password">Password</label>
+              <input type="password" id="password" class="form-control" [ngClass]="{'is-invalid': registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid}" formControlName="password" >
+              <div *ngIf="registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid" class="text-break invalid-feedback">
+                <small *ngIf="registrationForm.get('password')?.errors?.['required']">Password is required.</small>
+                <small *ngIf="registrationForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters long.</small>
+                <small *ngIf="registrationForm.get('password')?.errors?.['maxlength']">Password cannot be more the 10 characters long.</small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label for="confirmPassword">Confirm Password</label>
+              <input type="password" id="confirmPassword" class="form-control" [ngClass]="{'is-invalid': registrationForm.get('confirmPassword')?.touched && registrationForm.get('confirmPassword')?.invalid}" formControlName="confirmPassword" >
+              <div *ngIf="registrationForm.get('confirmPassword')?.touched && registrationForm.get('confirmPassword')?.invalid" class="invalid-feedback">
+                <!-- Field is required. -->
+                <small *ngIf="registrationForm.get('confirmPassword')?.errors?.['required']">Confirm Password is required.</small>
+                <small *ngIf="registrationForm.errors?.['passwordMismatch'] == null">Password must match.</small>
+              </div>
+            </div>
+            <button type="submit" class="btn mb-3 w-100" >
+              <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+              Login
+            </button>
+          </form>
+        </div>
+    </div>
+  </div>
+</div>
