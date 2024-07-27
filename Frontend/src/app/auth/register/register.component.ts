@@ -1,15 +1,7 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-
-
-
-export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-  const password = control.value.password;
-  const confirmPassword = control.value.confirmPassword;
-  // console.log(password === confirmPassword ? { passwordMismatch: true } : { passwordMismatch: false });
-  return password === confirmPassword? null : { passwordMismatch: false } 
-};
 
 @Component({
   selector: 'app-register',
@@ -20,8 +12,9 @@ export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): V
 export class RegisterComponent {
 
   registrationForm!: FormGroup;
+  loading: boolean = false;
 
-  constructor(private fb: FormBuilder){
+  constructor(private fb: FormBuilder, private router: Router){
     this.registrationForm = this.fb.group({
       firstName: new FormControl<string>('', [Validators.required]),
       lastName: new FormControl<string>('', [Validators.required]),
@@ -29,15 +22,28 @@ export class RegisterComponent {
       emailId: new FormControl<string>('', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]),
       password: new FormControl<string>('', [Validators.required, Validators.minLength(6), Validators.maxLength(10)]),
       confirmPassword: new FormControl<string>('',[ Validators.required]),
-    } , { validators: passwordMatchValidator });
+    });
   }
 
   ngOnInit(){
   }
 
+  // Additional method is added for handling the match of password and confirmPassword.
+  passwordMismatch: boolean = false;
+  checkPasswordMismatch(){
+    const password = this.registrationForm.get('password')?.value;
+    const confirmPassword = this.registrationForm.get('confirmPassword')?.value;
+    this.passwordMismatch = password !== confirmPassword;
+  }
 
   onSubmit(){
-    console.log(this.registrationForm.errors)
-  
+    this.loading = true;
+    setTimeout(() => {
+      this.loading = false;
+    }, 3000);
+  }
+
+  cancelRegistration(){
+    this.router.navigateByUrl('/auth/login');
   }
 }

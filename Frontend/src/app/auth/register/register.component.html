@@ -47,17 +47,23 @@
             </div>
             <div class="col-md-6">
               <label for="confirmPassword">Confirm Password</label>
-              <input type="password" id="confirmPassword" class="form-control" [ngClass]="{'is-invalid': registrationForm.get('confirmPassword')?.touched && registrationForm.get('confirmPassword')?.invalid}" formControlName="confirmPassword" >
-              <div *ngIf="registrationForm.get('confirmPassword')?.touched && registrationForm.get('confirmPassword')?.invalid" class="invalid-feedback">
+              <input type="password" id="confirmPassword" class="form-control" [ngClass]="{'is-invalid': passwordMismatch}" formControlName="confirmPassword" 
+              (input)="checkPasswordMismatch()">
+              <div *ngIf="passwordMismatch" class="invalid-feedback">
                 <!-- Field is required. -->
-                <small *ngIf="registrationForm.get('confirmPassword')?.errors?.['required']">Confirm Password is required.</small>
-                <small *ngIf="registrationForm.errors?.['passwordMismatch'] == null">Password must match.</small>
+                <small *ngIf="registrationForm.get('confirmPassword')?.value == ''">Confirm Password is required.</small>
+                <small *ngIf="registrationForm.get('confirmPassword')?.value != '' && passwordMismatch">Password must match.</small>
               </div>
             </div>
-            <button type="submit" class="btn mb-3 w-100" >
-              <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
-              Login
-            </button>
+            <div class="d-flex justify-content-end gap-2">
+              <button type="submit" class="btn btn-primary" [disabled]="registrationForm.invalid || passwordMismatch">
+                <span class="spinner-border spinner-border-sm" aria-hidden="false" *ngIf="loading"></span>
+                Register
+              </button>
+              <button type="submit" class="btn btn-danger" (click)="cancelRegistration()">
+                Cancel
+              </button>
+            </div>
           </form>
         </div>
     </div>
