@@ -8,7 +8,7 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 })
 export class AuthService {
   
-  private apiUrl = 'http://localhost:5046';
+  private apiUrl = 'http://127.0.0.1:8000/api';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   
   constructor(private router:Router, private http: HttpClient) { }
@@ -22,6 +22,7 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/login`, loginDetails, {headers}).pipe(
       map(response => {
         if(response && response.token){
+          sessionStorage.setItem('loginUserName', response.user.firstName);
           sessionStorage.setItem('accessToken', response.token);
           this.isAuthenticatedSubject.next(true);
           return true;
@@ -34,23 +35,46 @@ export class AuthService {
     // this.isAuthenticatedSubject.next(isAuthenticated);
   }
 
-  private authenticate(username: string, password: string): boolean {
-    if(username === "admin" && password === "admin@123"){
-      const dummyToken = "dummyToken";
-      sessionStorage.setItem('accessToken', dummyToken);
-      return true;
-    }else{
-      return false;
-    }
+  public register(newUserDetails: RegisterDTO): Observable<any> {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.post<any>(`${this.apiUrl}/register`, newUserDetails, {headers}).pipe(
+      map(response =>{
+        return response;
+      })
+    );
   }
 
-  public logout(){
-    sessionStorage.removeItem('accessToken');
-    this.isAuthenticatedSubject.next(false);
-    this.router.navigate(['/login']);
+  logout(token: any) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `${this.apiUrl}/logout`, true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+
+    xhr.onreadystatechange = () => {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          sessionStorage.clear();
+          this.isAuthenticatedSubject.next(false);
+          this.router.navigate(['']);
+        } else {
+          console.error('Logout error:', xhr.statusText);
+        }
+      }
+    };
+
+    xhr.send();
   }
 
   public isLoggedIn(): boolean {
     return !!sessionStorage.getItem('accessToken');
   }
+}
+
+
+export class RegisterDTO {
+  public first_name: string | undefined;
+  public last_name: string | undefined;
+  public username: string | undefined;
+  public email: string | undefined;
+  public password: string | undefined;
 }

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/Services/auth.service';
-import { ProfilePopupService } from 'src/app/Services/profile-popup.service';
 import {MenuItem} from 'primeng/api';
 
 @Component({
@@ -12,9 +11,11 @@ import {MenuItem} from 'primeng/api';
 export class NavbarComponent {
 
   items!: MenuItem[];
-  constructor(private auth: AuthService, private router: Router, private profilePopup: ProfilePopupService){}
+  loginUserName: any|undefined;
+  constructor(private auth: AuthService, private router: Router){}
 
   ngOnInit(){
+    this.loginUserName = sessionStorage.getItem('loginUserName');
     this.items = [
       {
           label:'Home',
@@ -24,8 +25,7 @@ export class NavbarComponent {
   }
 
   logout(){
-    this.auth.logout();
-    this.router.navigate(['']);
+    this.auth.logout(sessionStorage.getItem('accessToken'));
   }
 
   showProfilePopup: boolean = false;

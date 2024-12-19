@@ -2,13 +2,11 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/Services/auth.service';
-import {MessageService} from 'primeng/api';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  providers: [MessageService]
 })
 export class LoginComponent {
 
@@ -17,7 +15,7 @@ export class LoginComponent {
   errorMessage: string = '';
   loginForm!: FormGroup;
 
-  constructor(private router:Router, private auth: AuthService, private fb: FormBuilder,private messageService: MessageService){
+  constructor(private router:Router, private auth: AuthService, private fb: FormBuilder){
     
   }
 
@@ -44,7 +42,6 @@ export class LoginComponent {
       }),
       error: (e) =>{
         this.loading = false;
-        this.messageService.add({key: 'tc', severity:'error', summary: 'Invalid authentication', detail: 'Invalid loginId or Password', life: 4000})
       }
     });
   }

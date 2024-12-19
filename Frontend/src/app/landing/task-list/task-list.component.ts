@@ -20,7 +20,9 @@ onDrop(event: CdkDragDrop<any,any,any>) {
   }
 
   taskList: any[]=[];
+  loginUserName: any|undefined;
   ngOnInit(){
+    this.loginUserName = sessionStorage.getItem('loginUserName');
     this.taskservices.getTaskList().subscribe({
       next: tasks => {
         this.taskList = tasks;

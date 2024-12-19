@@ -4,11 +4,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { FooterComponent } from './Components/footer/footer.component';
 import { ProfilePopupComponent } from './Components/profile-popup/profile-popup.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthModule } from './auth/auth.module';
 import { LandingModule } from './landing/landing.module';
 import { AppComponent } from './app.component';
-import { SvgInjectorService } from './Services/svg-injector.service';
+import { ErrorInterceptor } from './Services/error.service';
+import { AuthService } from './Services/auth.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,10 @@ import { SvgInjectorService } from './Services/svg-injector.service';
   exports: [
     ProfilePopupComponent
   ],
-  providers: [ ],
+  providers: [
+    AuthService,
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -23,7 +23,7 @@ export class AppRoutingModule {
 
   handleRoutingSession(event: string){
     if(event == '/auth/login' && sessionStorage.getItem('accessToken')){
-      sessionStorage.removeItem('accessToken');
+      sessionStorage.clear();
     }
   }
 }

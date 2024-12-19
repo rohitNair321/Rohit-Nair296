@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { ProfilePopupService } from 'src/app/Services/profile-popup.service';
 
 @Component({
   selector: 'profile-popup',
@@ -11,7 +10,7 @@ export class ProfilePopupComponent {
   
   @Input() isVisible: boolean = false;
 
-  constructor(private profilePopup: ProfilePopupService) { }
+  constructor() { }
 
   ngOnInit(): void {
     // this.profilePopup.isVisible$().subscribe(result => {
@@ -20,6 +19,6 @@ export class ProfilePopupComponent {
   }
 
   closePopup(): void {
-    this.profilePopup.hidePopup();
+    // this.profilePopup.hidePopup();
   }
 }
