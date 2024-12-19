@@ -1,0 +1,156 @@
+/* Light Mode (Default Theme) */
+:root {
+  --primary-bg-color: #118B50;
+  --secondary-bg-color: #5DB996;
+  --accent-color: #E3F0AF;
+  --text-bg-color: #FBF6E9;
+
+  --text-color: #000000; /* Black text for light mode */
+  --card-bg-color: #ffffff; /* White cards for light mode */
+  --border-color: #dddddd;
+}
+
+/* Dark Mode Theme */
+:root.dark-mode {
+  --primary-bg-color: #0F0F0F;
+  --secondary-bg-color: #232D3F;
+  --accent-color: #005B41;
+  --text-bg-color: #008170;
+
+  --text-color: #ffffff; /* White text for dark mode */
+  --card-bg-color: #232D3F; /* Dark cards for dark mode */
+  --border-color: #444444;
+}
+
+/* General Body Styling */
+body {
+  background: var(--primary-bg-color);
+  color: var(--text-color);
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Navbar Styling */
+.navbar {
+  background-color: var(--secondary-bg-color);
+  color: var(--text-color);
+}
+
+.navbar .nav-link {
+  color: var(--text-color);
+  transition: color 0.3s;
+}
+
+.navbar .nav-link:hover {
+  color: var(--accent-color);
+}
+
+/* Card Styling */
+.card {
+  background-color: var(--card-bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+/* Footer Styling */
+footer {
+  background-color: var(--secondary-bg-color);
+  color: var(--text-bg-color);
+  text-align: center;
+  padding: 1rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Buttons */
+button, .btn {
+  background-color: var(--accent-color);
+  color: var(--primary-bg-color);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+button:hover, .btn:hover {
+  background-color: var(--primary-bg-color);
+  color: var(--text-bg-color);
+}
+
+/* Links */
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: var(--text-bg-color);
+}
+
+/* Header Section */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-color);
+  transition: color 0.3s;
+}
+
+/* Input Fields */
+input, textarea {
+  background-color: var(--card-bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 0.5rem;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent-color);
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid var(--border-color);
+  padding: 0.5rem;
+  text-align: left;
+}
+
+th {
+  background-color: var(--secondary-bg-color);
+  color: var(--text-color);
+}
+
+td {
+  background-color: var(--card-bg-color);
+}
+
+/* Transitions */
+* {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+html, body {
+  height: 100%;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.footer {
+  margin-top: auto;
+}

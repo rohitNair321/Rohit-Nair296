@@ -1,0 +1,21 @@
+<section class="py-5">
+    <div class="text-center mb-4">
+      <h2>My Projects</h2>
+      <p>Here are some of the projects I have worked on.</p>
+    </div>
+    <div class="row">
+      <div class="col-lg-4 col-md-6 mb-4" *ngFor="let project of projects">
+        <div class="card h-100">
+          <img src="{{ project.image }}" class="card-img-top" alt="{{ project.title }}">
+          <div class="card-body">
+            <h5 class="card-title">{{ project.title }}</h5>
+            <p class="card-text">{{ project.description }}</p>
+          </div>
+          <div class="card-footer text-center">
+            <a [href]="project.link" class="btn btn-primary" target="_blank">View Project</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
