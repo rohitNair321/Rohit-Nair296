@@ -12,7 +12,7 @@ export class ThemeService {
 
   toggleTheme() {
     const isDarkMode = document.documentElement.classList.toggle('dark-mode');
-    localStorage.setItem(this.darkModeKey, isDarkMode.toString());
+    localStorage.setItem(this.darkModeKey, String(isDarkMode));
     return isDarkMode;
   }
 

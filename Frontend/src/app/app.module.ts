@@ -10,6 +10,7 @@ import { LandingModule } from './landing/landing.module';
 import { AppComponent } from './app.component';
 import { ErrorInterceptor } from './Services/error.service';
 import { AuthService } from './Services/auth.service';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { AuthService } from './Services/auth.service';
   ],
   providers: [
     AuthService,
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    {provide: HTTP_INTERCEPTORS,useClass: AuthInterceptor,multi: true}
    ],
   bootstrap: [AppComponent]
 })

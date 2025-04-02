@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!-- Template 1 -->
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rohit Nair's Portfolio</title>
-    <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -109,10 +109,928 @@
     <footer class="bg-dark text-white text-center py-3">
         <p>&copy; 2024 Rohit Nair</p>
     </footer>
-    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="script.js"></script>
 </body>
-</html>
+</html> -->
+
+<!-- Template 2 -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rohit Nair - Frontend Developer</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: #040D12;
+            background-color: #F5F7F8;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .section-title {
+            color: #50B498;
+            border-bottom: 2px solid #50B498;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        .dark-mode {
+            background-color: #040D12;
+            color: #F5F7F8;
+        }
+        .dark-mode .card {
+            background-color: #333;
+            color: #F5F7F8;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            background-color: #fff;
+            color: #040D12;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            transition: transform 0.3s;
+        }
+        .navbar {
+            background-color: #50B498;
+            color: #F5F7F8;
+        }
+        .navbar a {
+            color: #F5F7F8;
+        }
+        .fixed-top {
+            position: sticky;
+            top: 0;
+            z-index: 1030;
+        }
+        .scroll-up-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #50B498;
+            color: #F5F7F8;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50%;
+            display: none;
+            cursor: pointer;
+        }
+        .scroll-up-btn.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <a class="navbar-brand" href="#">Rohit Nair</a>
+        <div class="ml-auto">
+            <button class="btn btn-toggle" onclick="toggleDarkMode()">
+                <i id="toggle-icon" class="fas fa-sun"></i>
+            </button>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="text-center mt-5">
+            <h1>Rohit Nair</h1>
+            <p>Contact: +91- 8668671077 / 9921313026 | E-Mail: rohit296nair@yahoo.com</p>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">Summary</h2>
+            <p>Frontend Developer with 3+ years of experience building user interfaces for web applications in the Finance and Wealth Management sector. Proficient in Angular, TypeScript, HTML, CSS, and various UI component libraries. Proven ability to collaborate effectively in a team environment and deliver high-quality solutions. I want to succeed in an environment of growth and excellence to meet personal and organizational goals.</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Technical Skills</h2>
+            <ul>
+                <li>Scripting Languages: TypeScript, JavaScript</li>
+                <li>Web Technologies: HTML, CSS</li>
+                <li>Web Frameworks: Angular (8, 10, 12, 14)</li>
+                <li>Other Skills: Highcharts, Component library, Git (GitHub)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Work Experience</h2>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Ikione Systems Pvt Ltd | Pune, India | January 2021 – July 2024</h5>
+                    <p class="card-text">
+                        Frontend Developer
+                        <ul>
+                            <li>Developed user interfaces for various Wealth Management web applications using Angular, Bootstrap, HTML, and CSS.</li>
+                            <li>Utilized Highcharts to create interactive charts for market overview, portfolio performance, and customer insights.</li>
+                            <li>Integrated third-party APIs for functionalities such as customer verification, market data retrieval, and stock updates.</li>
+                            <li>Implemented Identity Provider (IdP) configuration for secure access in FINODs environments.</li>
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Projects</h2>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">HBNO-Welathermapper (Handelsbanken)</h5>
+                    <p class="card-text">Developed a secure investment web application for managing investments in Funds and Stocks. (Live, Angular 14)</p>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Portfolio Management web application (SBM - Sparebanken Møre)</h5>
+                    <p class="card-text">Built a web app for advisors to view and manage customer portfolios. (Completed, Angular 10)</p>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Suitability test web application (Handelsbanken)</h5>
+                    <p class="card-text">Created a web-based suitability test to assess customer knowledge before investment. (Live, Angular 10)</p>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">I1Wealth (product)</h5>
+                    <p class="card-text">Contributed to the development of a modular Wealth Management platform using Angular 8 and various integrations. (Completed)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Education</h2>
+            <ul>
+                <li>Master of Computer Applications (MCA) | IMCC, Pune (SPPU) | 2021</li>
+                <li>Bachelor of Computer Applications (BCA) | MMCC, Pune (SPPU) | 2017</li>
+                <li>Higher Secondary Certificate (HSC) | Sinhgad Public School, Lonavala (CBSE) | 2014</li>
+                <li>Secondary School Certificate (SSC) | Kendriya Vidyalaya, Lonavala (CBSE) | 2012</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">Languages</h2>
+            <ul>
+                <li>English (Fluent)</li>
+                <li>Hindi (Conversational)</li>
+                <li>Malayalam (Native)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <button id="scroll-up-btn" class="scroll-up-btn" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        function toggleDarkMode() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+            const icon = document.getElementById('toggle-icon');
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            } else {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            const scrollBtn = document.getElementById('scroll-up-btn');
+            if (window.scrollY > 200) {
+                scrollBtn.classList.add('show');
+            } else {
+                scrollBtn.classList.remove('show');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html> -->
+
+
+<!-- Template 3 -->
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rohit Nair | Frontend Developer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .navbar {
+            background-color: #50B498;
+        }
+
+        .navbar .nav-link {
+            color: #F5F7F8;
+        }
+
+        .navbar .nav-link:hover {
+            color: #DEF9C4;
+        }
+
+        .hero-section {
+            background-color: #DEF9C4;
+            color: #040D12;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #468585;
+        }
+
+        .dark-mode .hero-section {
+            background-color: #040D12;
+            color: #F5F7F8;
+        }
+
+        .dark-mode .navbar {
+            background-color: #468585;
+        }
+
+        .dark-mode .navbar .nav-link {
+            color: #DEF9C4;
+        }
+
+        .dark-mode .navbar .nav-link:hover {
+            color: #9CDBA6;
+        }
+
+        .dark-mode .section-title {
+            color: #9CDBA6;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .dark-mode .card {
+            background-color: #F5F7F8;
+            color: #040D12;
+        }
+
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1030;
+        }
+
+        .scroll-up-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            background-color: #50B498;
+            color: #F5F7F8;
+            border: none;
+            border-radius: 50%;
+            padding: 10px 15px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .scroll-up-btn:hover {
+            background-color: #468585;
+        }
+
+        .dark-mode .scroll-up-btn {
+            background-color: #468585;
+        }
+
+        .dark-mode .scroll-up-btn:hover {
+            background-color: #50B498;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-header">
+        <div class="container">
+            <a class="navbar-brand" href="#">Rohit Nair</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About Me</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#skills">Skills</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#experience">Experience</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#projects">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#education">Education</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#languages">Languages</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-light" id="theme-toggle">Light Mode</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="container">
+            <h1>Rohit Nair</h1>
+            <p>Contact: +91-8668671077 / 9921313026 | E-Mail: rohit296nair@yahoo.com</p>
+        </div>
+    </section>
+
+    <section id="about" class="py-5">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <p>Frontend Developer with 3+ years of experience building user interfaces for web applications in the
+                Finance and Wealth Management sector. Proficient in Angular, TypeScript, HTML, CSS, and various UI
+                component libraries. Proven ability to collaborate effectively in a team environment and deliver
+                high-quality solutions. I want to succeed in an environment of growth and excellence to meet personal and
+                organizational goals.</p>
+        </div>
+    </section>
+
+    <section id="skills" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Technical Skills</h2>
+            <ul class="list-unstyled">
+                <li><i class="fab fa-js-square"></i> TypeScript, JavaScript</li>
+                <li><i class="fas fa-code"></i> HTML, CSS</li>
+                <li><i class="fab fa-angular"></i> Angular (8, 10, 12, 14)</li>
+                <li><i class="fas fa-chart-line"></i> Highcharts</li>
+                <li><i class="fab fa-git-alt"></i> Git (GitHub)</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="experience" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Work Experience</h2>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Ikione Systems Pvt Ltd | Pune, India</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">January 2021 – July 2024</h6>
+                    <p class="card-text">Frontend Developer</p>
+                    <ul>
+                        <li>Developed user interfaces for various Wealth Management web applications using Angular,
+                            Bootstrap, HTML, and CSS.</li>
+                        <li>Utilized Highcharts to create interactive charts for market overview, portfolio performance,
+                            and customer insights.</li>
+                        <li>Integrated third-party APIs for functionalities such as customer verification, market data
+                            retrieval, and stock updates.</li>
+                        <li>Implemented Identity Provider (IdP) configuration for secure access in FINODs environments.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">HBNO-Welathermapper (Handelsbanken)</h5>
+                    <p class="card-text">Developed a secure investment web application for managing investments in Funds
+                        and Stocks. (Live, Angular 14)</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Portfolio Management web application (SBM - Sparebanken Møre)</h5>
+                    <p class="card-text">Built a web app for advisors to view and manage customer portfolios.
+                        (Completed, Angular 10)</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Test data generator for different market scenarios</h5>
+                    <p class="card-text">Created a tool to generate test data for various market conditions to assist in
+                        quality assurance. (Completed, Angular 8)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="education" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Education</h2>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Bachelor of Engineering (Computer Engineering)</h5>
+                    <p class="card-text">Dhole Patil College of Engineering, Pune, India</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="languages" class="py-5">
+        <div class="container">
+            <h2 class="section-title">Languages</h2>
+            <ul class="list-unstyled">
+                <li>English: Fluent</li>
+                <li>Hindi: Native</li>
+                <li>Malayalam: Conversational</li>
+            </ul>
+        </div>
+    </section>
+
+    <button class="scroll-up-btn" id="scroll-up-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const scrollUpBtn = document.getElementById('scroll-up-btn');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            themeToggle.textContent = body.classList.contains('dark-mode') ? 'Dark Mode' : 'Light Mode';
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                scrollUpBtn.style.display = 'block';
+            } else {
+                scrollUpBtn.style.display = 'none';
+            }
+        });
+
+        scrollUpBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rohit Nair | Frontend Developer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .navbar {
+            background-color: #50B498;
+        }
+
+        .navbar .nav-link {
+            color: #F5F7F8;
+        }
+
+        .navbar .nav-link:hover {
+            color: #DEF9C4;
+        }
+
+        .hero-section {
+            background-color: #DEF9C4;
+            color: #040D12;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 2.5rem;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #468585;
+        }
+
+        .dark-mode .hero-section {
+            background-color: #040D12;
+            color: #F5F7F8;
+        }
+
+        .dark-mode .navbar {
+            background-color: #468585;
+        }
+
+        .dark-mode .navbar .nav-link {
+            color: #DEF9C4;
+        }
+
+        .dark-mode .navbar .nav-link:hover {
+            color: #9CDBA6;
+        }
+
+        .dark-mode .section-title {
+            color: #9CDBA6;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .dark-mode .card {
+            background-color: #F5F7F8;
+            color: #040D12;
+        }
+
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1030;
+        }
+
+        .scroll-up-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            background-color: #50B498;
+            color: #F5F7F8;
+            border: none;
+            border-radius: 50%;
+            padding: 10px 15px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .scroll-up-btn:hover {
+            background-color: #468585;
+        }
+
+        .dark-mode .scroll-up-btn {
+            background-color: #468585;
+        }
+
+        .dark-mode .scroll-up-btn:hover {
+            background-color: #50B498;
+        }
+
+        .template-buttons {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .template-buttons button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        .template-container {
+            display: none;
+        }
+
+        .template-container.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-header">
+        <div class="container">
+            <a class="navbar-brand" href="#">Rohit Nair</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About Me</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#skills">Skills</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#experience">Experience</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#projects">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#education">Education</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#languages">Languages</a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-light" id="theme-toggle">Light Mode</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="template-buttons">
+        <button id="template1-btn">Template 1</button>
+        <button id="template2-btn">Template 2</button>
+    </div>
+
+    <div id="template1" class="template-container active">
+        <section class="hero-section">
+            <div class="container">
+                <h1>Rohit Nair</h1>
+                <p>Contact: +91-8668671077 / 9921313026 | E-Mail: rohit296nair@yahoo.com</p>
+            </div>
+        </section>
+
+        <section id="about" class="py-5">
+            <div class="container">
+                <h2 class="section-title">About Me</h2>
+                <p>Frontend Developer with 3+ years of experience building user interfaces for web applications in the
+                    Finance and Wealth Management sector. Proficient in Angular, TypeScript, HTML, CSS, and various UI
+                    component libraries. Proven ability to collaborate effectively in a team environment and deliver
+                    high-quality solutions. I want to succeed in an environment of growth and excellence to meet personal and
+                    organizational goals.</p>
+            </div>
+        </section>
+
+        <section id="skills" class="py-5">
+            <div class="container">
+                <h2 class="section-title">Technical Skills</h2>
+                <ul class="list-unstyled">
+                    <li><i class="fab fa-js-square"></i> TypeScript, JavaScript</li>
+                    <li><i class="fas fa-code"></i> HTML, CSS</li>
+                    <li><i class="fab fa-angular"></i> Angular (8, 10, 12, 14)</li>
+                    <li><i class="fas fa-chart-line"></i> Highcharts</li>
+                    <li><i class="fab fa-git-alt"></i> Git (GitHub)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="experience" class="py-5">
+            <div class="container">
+                <h2 class="section-title">Work Experience</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Ikione Systems Pvt Ltd | Pune, India</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">January 2021 – July 2024</h6>
+                        <p class="card-text">Frontend Developer</p>
+                        <ul>
+                            <li>Developed user interfaces for various Wealth Management web applications using Angular,
+                                Bootstrap, HTML, and CSS.</li>
+                            <li>Utilized Highcharts to create interactive charts for market overview, portfolio performance,
+                                and customer insights.</li>
+                            <li>Integrated third-party APIs for functionalities such as customer verification, market data
+                                retrieval, and stock updates.</li>
+                            <li>Implemented Identity Provider (IdP) configuration for secure access in FINODs environments.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="py-5">
+            <div class="container">
+                <h2 class="section-title">Projects</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">HBNO-Welathermapper (Handelsbanken)</h5>
+                        <p class="card-text">Developed a secure investment web application for managing investments in Funds
+                            and Stocks. (Live, Angular 14)</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Portfolio Management web application (SBM - Sparebanken Møre)</h5>
+                        <p class="card-text">Built a web app for advisors to view and manage customer portfolios.
+                            (Completed, Angular 14)</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Test data generator for different market scenarios</h5>
+                        <p class="card-text">Created a tool to generate test data for various market conditions to assist in
+                            quality assurance. (Completed, Angular 8)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="py-5">
+            <div class="container">
+                <h2 class="section-title">Education</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Bachelor of Engineering (Computer Engineering)</h5>
+                        <p class="card-text">Dhole Patil College of Engineering, Pune, India</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="languages" class="py-5">
+            <div class="container">
+                <h2 class="section-title">Languages</h2>
+                <ul class="list-unstyled">
+                    <li>English: Fluent</li>
+                    <li>Hindi: Native</li>
+                    <li>Malayalam: Conversational</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <div id="template2" class="template-container">
+        <section class="hero-section">
+            <div class="container">
+                <h1>Rohit Nair</h1>
+                <p>Contact: +91-8668671077 / 9921313026 | E-Mail: rohit296nair@yahoo.com</p>
+            </div>
+        </section>
+
+        <section id="about" class="py-5">
+            <div class="container">
+                <h2 class="section-title">About Me</h2>
+                <p>Frontend Developer with 3+ years of experience building user interfaces for web applications in the
+                    Finance and Wealth Management sector. Proficient in Angular, TypeScript, HTML, CSS, and various UI
+                    component libraries. Proven ability to collaborate effectively in a team environment and deliver
+                    high-quality solutions. I want to succeed in an environment of growth and excellence to meet personal and
+                    organizational goals.</p>
+            </div>
+        </section>
+
+        <section id="skills" class="py-5">
+            <div class="container">
+                <h2 class="section-title">Technical Skills</h2>
+                <ul class="list-unstyled">
+                    <li><i class="fab fa-js-square"></i> TypeScript, JavaScript</li>
+                    <li><i class="fas fa-code"></i> HTML, CSS</li>
+                    <li><i class="fab fa-angular"></i> Angular (8, 10, 12, 14)</li>
+                    <li><i class="fas fa-chart-line"></i> Highcharts</li>
+                    <li><i class="fab fa-git-alt"></i> Git (GitHub)</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="experience" class="py-5">
+            <div class="container">
+                <h2 class="section-title">Work Experience</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Ikione Systems Pvt Ltd | Pune, India</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">January 2021 – July 2024</h6>
+                        <p class="card-text">Frontend Developer</p>
+                        <ul>
+                            <li>Developed user interfaces for various Wealth Management web applications using Angular,
+                                Bootstrap, HTML, and CSS.</li>
+                            <li>Utilized Highcharts to create interactive charts for market overview, portfolio performance,
+                                and customer insights.</li>
+                            <li>Integrated third-party APIs for functionalities such as customer verification, market data
+                                retrieval, and stock updates.</li>
+                            <li>Implemented Identity Provider (IdP) configuration for secure access in FINODs environments.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="py-5">
+            <div class="container">
+                <h2 class="section-title">Projects</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">HBNO-Welathermapper (Handelsbanken)</h5>
+                        <p class="card-text">Developed a secure investment web application for managing investments in Funds
+                            and Stocks. (Live, Angular 14)</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Portfolio Management web application (SBM - Sparebanken Møre)</h5>
+                        <p class="card-text">Built a web app for advisors to view and manage customer portfolios.
+                            (Completed, Angular 14)</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Test data generator for different market scenarios</h5>
+                        <p class="card-text">Created a tool to generate test data for various market conditions to assist in
+                            quality assurance. (Completed, Angular 8)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="py-5">
+            <div class="container">
+                <h2 class="section-title">Education</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Bachelor of Engineering (Computer Engineering)</h5>
+                        <p class="card-text">Dhole Patil College of Engineering, Pune, India</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="languages" class="py-5">
+            <div class="container">
+                <h2 class="section-title">Languages</h2>
+                <ul class="list-unstyled">
+                    <li>English: Fluent</li>
+                    <li>Hindi: Native</li>
+                    <li>Malayalam: Conversational</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <button class="scroll-up-btn" id="scroll-up-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const scrollUpBtn = document.getElementById('scroll-up-btn');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            themeToggle.textContent = body.classList.contains('dark-mode') ? 'Dark Mode' : 'Light Mode';
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                scrollUpBtn.style.display = 'block';
+            } else {
+                scrollUpBtn.style.display = 'none';
+            }
+        });
+
+        scrollUpBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        const template1Btn = document.getElementById('template1-btn');
+        const template2Btn = document.getElementById('template2-btn');
+        const template1 = document.getElementById('template1');
+        const template2 = document.getElementById('template2');
+
+        template1Btn.addEventListener('click', () => {
+            template1.classList.add('active');
+            template2.classList.remove('active');
+        });
+
+        template2Btn.addEventListener('click', () => {
+            template1.classList.remove('active');
+            template2.classList.add('active');
+        });
+    </script>
+</body>
+
+</html> -->
+

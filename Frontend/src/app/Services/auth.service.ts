@@ -8,7 +8,7 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 })
 export class AuthService {
   
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = 'http://localhost:5000/api/auth';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   
   constructor(private router:Router, private http: HttpClient) { }
@@ -18,11 +18,13 @@ export class AuthService {
   }
 
   public login(loginDetails: any): Observable<boolean> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const headers = new HttpHeaders()
+    .set('Content-Type', 'application/json')
+    .set('Accept', 'application/json');
     return this.http.post<any>(`${this.apiUrl}/login`, loginDetails, {headers}).pipe(
       map(response => {
         if(response && response.token){
-          sessionStorage.setItem('loginUserName', response.user.firstName);
+          sessionStorage.setItem('loginUserName', response.user.username);
           sessionStorage.setItem('accessToken', response.token);
           this.isAuthenticatedSubject.next(true);
           return true;
