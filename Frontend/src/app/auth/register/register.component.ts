@@ -44,8 +44,8 @@ export class RegisterComponent {
   }
 
   userRegisterAPI(userDetails: any){
-    this.userRegister.first_name = this.registrationForm.value.firstName;
-    this.userRegister.last_name = this.registrationForm.value.lastName;
+    this.userRegister.firstName = this.registrationForm.value.firstName;
+    this.userRegister.lastName = this.registrationForm.value.lastName;
     this.userRegister.username = this.registrationForm.value.username;
     this.userRegister.email = this.registrationForm.value.emailId;
     this.userRegister.password = this.registrationForm.value.password;

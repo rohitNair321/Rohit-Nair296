@@ -25,7 +25,16 @@ export class NavbarComponent {
   }
 
   logout(){
-    this.auth.logout(sessionStorage.getItem('accessToken'));
+    // this.auth.logout(sessionStorage.getItem('accessToken'));
+    this.auth.logout(sessionStorage.getItem('accessToken')).subscribe({
+      next: () => {
+        this.router.navigate(['']);
+        console.log('Logged out successfully');
+      },
+      error: (error) => {
+        console.error('Logout failed:', error);
+      }
+    });
   }
 
   showProfilePopup: boolean = false;

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/login`, loginDetails, {headers}).pipe(
       map(response => {
         if(response && response.token){
-          sessionStorage.setItem('loginUserName', response.user.username);
+          sessionStorage.setItem('loginUserName', response.user.firstName + ' ' + response.user.lastName);
           sessionStorage.setItem('accessToken', response.token);
           this.isAuthenticatedSubject.next(true);
           return true;
@@ -33,8 +33,6 @@ export class AuthService {
         }
       })
     );
-    // const isAuthenticated = this.authenticate(loginDetails.username, loginDetails.password);
-    // this.isAuthenticatedSubject.next(isAuthenticated);
   }
 
   public register(newUserDetails: RegisterDTO): Observable<any> {
@@ -46,25 +44,19 @@ export class AuthService {
     );
   }
 
-  logout(token: any) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', `${this.apiUrl}/logout`, true);
-    xhr.setRequestHeader('Content-Type', 'application/json');
-    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+  logout(token: any): Observable<any> {
+    // const token = localStorage.getItem('token');
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${token}`)
+      .set('Content-Type', 'application/json');
 
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          sessionStorage.clear();
-          this.isAuthenticatedSubject.next(false);
-          this.router.navigate(['']);
-        } else {
-          console.error('Logout error:', xhr.statusText);
-        }
-      }
-    };
-
-    xhr.send();
+    return this.http.post(`${this.apiUrl}/logout`, {}, { headers }).pipe(
+      tap(() => {
+        sessionStorage.removeItem('token');
+        sessionStorage.clear();
+        this.isAuthenticatedSubject.next(false);
+      })
+    );
   }
 
   public isLoggedIn(): boolean {
@@ -74,8 +66,8 @@ export class AuthService {
 
 
 export class RegisterDTO {
-  public first_name: string | undefined;
-  public last_name: string | undefined;
+  public firstName: string | undefined;
+  public lastName: string | undefined;
   public username: string | undefined;
   public email: string | undefined;
   public password: string | undefined;
