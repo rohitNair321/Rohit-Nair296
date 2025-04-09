@@ -18,8 +18,20 @@ export class NavbarComponent {
     this.loginUserName = sessionStorage.getItem('loginUserName');
     this.items = [
       {
-          label:'Home',
-          icon:'pi pi-home',
+        label:'Home',
+        icon:'pi pi-home',
+      },
+      {
+        label:'Todo',
+        icon:'pi pi-list',
+      },
+      {
+        label:'Projects',
+        icon:'pi pi-server',
+      },
+      {
+        label:'Notification',
+        icon:'pi pi-bell',
       }
     ]
   }
