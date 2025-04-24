@@ -16,6 +16,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NavbarComponent } from './navbar/navbar.component';
 import { MenubarModule } from 'primeng/menubar';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { MenubarModule } from 'primeng/menubar';
     TaskDetailsComponent,
     TaskFormComponent,
     TaskListComponent,
-    NavbarComponent
+    NavbarComponent,
+    DashboardComponent
   ],
   imports: [
     CommonModule,

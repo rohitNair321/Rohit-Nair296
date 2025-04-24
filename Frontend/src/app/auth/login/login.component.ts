@@ -37,7 +37,7 @@ export class LoginComponent {
       next: (result =>{
         this.loading = false;
         if(result){
-          this.router.navigateByUrl('landing/task-list');
+          this.router.navigateByUrl('landing/dashboard');
         }
       }),
       error: (e) =>{

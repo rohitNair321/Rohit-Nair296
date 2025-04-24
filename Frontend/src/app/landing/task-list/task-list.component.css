@@ -1,7 +1,25 @@
-
 .task-list-container {
-  background-color: #ffffff; /* White background */
-  width: 80%; /* Reduce width */
-  margin: 0 auto; /* Center the list */
+  background-color: var(--global-background-color); /* Matches the theme background */
+  color: var(--global-text-color); /* Dynamically adjusts text color */
+  padding: var(--global-spacing-medium);
+  border-radius: 10px;
+  width: 80%;
+  margin: 0 auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
-  
+
+.task-item {
+  background-color: var(--global-secondary-color);
+  color: var(--global-text-color);
+  border: 1px solid var(--global-primary-color);
+  padding: var(--global-spacing-small);
+  margin-bottom: var(--global-spacing-small);
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.task-item:hover {
+  background-color: var(--global-primary-color);
+  color: var(--global-text-color);
+}

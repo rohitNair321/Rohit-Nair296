@@ -1,0 +1,84 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Full viewport height */
+  background-color: var(--global-background-color); /* Dynamic background color */
+  color: var(--global-text-color); /* Dynamic text color */
+  padding: var(--global-spacing-medium);
+  box-sizing: border-box;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: var(--global-spacing-large);
+}
+
+.dashboard-header h1 {
+  color: var(--global-primary-color);
+  font-size: 2.5rem;
+  margin-bottom: var(--global-spacing-small);
+}
+
+.dashboard-header p {
+  color: var(--global-secondary-color);
+  font-size: 1.2rem;
+}
+
+.dashboard-content {
+  display: flex;
+  gap: var(--global-spacing-medium);
+  justify-content: center;
+  flex-wrap: wrap; /* Ensures responsiveness */
+}
+
+.card {
+  background-color: var(--global-secondary-color);
+  color: var(--global-text-color);
+  border: 1px solid var(--global-primary-color);
+  border-radius: 10px;
+  padding: var(--global-spacing-medium);
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  background-color: var(--global-primary-color);
+  color: var(--global-text-color);
+}
+
+.card h2 {
+  font-size: 1.5rem;
+  margin-bottom: var(--global-spacing-small);
+}
+
+.card p {
+  font-size: 1rem;
+  margin-bottom: var(--global-spacing-medium);
+}
+
+.btn {
+  padding: var(--global-spacing-small) var(--global-spacing-medium);
+  font-size: 1rem;
+  color: var(--global-text-color);
+  background-color: var(--global-primary-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background-color: var(--global-secondary-color);
+}
+
+.dashboard-footer {
+  margin-top: var(--global-spacing-large);
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--global-secondary-color);
+}

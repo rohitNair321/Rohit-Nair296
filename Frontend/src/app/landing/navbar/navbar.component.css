@@ -9,5 +9,26 @@
 .menu-item:hover {
     background-color: #f0f0f0; /* Add your desired hover color here */
 }
-  
-  
+
+p-menubar {
+  background-color: var(--global-primary-color);
+  color: var(--global-text-color);
+}
+
+p-menubar .pi {
+  color: var(--global-text-color);
+}
+
+.navbar-nav .nav-link {
+  color: var(--global-text-color);
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--global-secondary-color);
+}
+
+img {
+  border: 2px solid var(--global-secondary-color);
+  border-radius: 5px;
+}
+

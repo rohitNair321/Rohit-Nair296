@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
+import { AuthService } from '../../Services/auth.service';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/Services/auth.service';
 import {MenuItem} from 'primeng/api';
 
 @Component({
@@ -8,36 +8,70 @@ import {MenuItem} from 'primeng/api';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
-
+export class NavbarComponent implements OnInit {
   items!: MenuItem[];
-  loginUserName: any|undefined;
-  constructor(private auth: AuthService, private router: Router){}
+  loginUserName: any | undefined;
+  isDarkTheme: boolean = false; // Default to light theme
+  showProfilePopup: boolean = false;
 
-  ngOnInit(){
+  constructor(private auth: AuthService, private router: Router, private renderer: Renderer2) {}
+
+  ngOnInit() {
     this.loginUserName = sessionStorage.getItem('loginUserName');
     this.items = [
       {
-        label:'Home',
-        icon:'pi pi-home',
+        label: 'Home',
+        icon: 'pi pi-home',
+        routerLink: '/landing/dashboard'
       },
       {
-        label:'Todo',
-        icon:'pi pi-list',
+        label: 'Todo',
+        icon: 'pi pi-list',
+        routerLink: '/landing/task-list'
       },
       {
-        label:'Projects',
-        icon:'pi pi-server',
+        label: 'Projects',
+        icon: 'pi pi-server',
+        routerLink: '/landing/projects'
       },
       {
-        label:'Notification',
-        icon:'pi pi-bell',
+        label: 'Notification',
+        icon: 'pi pi-bell',
+        routerLink: '/landing/notifications'
       }
-    ]
+    ];
+
+    // Apply the saved theme on initialization
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      this.isDarkTheme = true;
+      this.applyTheme();
+    }
   }
 
-  logout(){
-    // this.auth.logout(sessionStorage.getItem('accessToken'));
+  toggleTheme() {
+    this.isDarkTheme = !this.isDarkTheme;
+    if (this.isDarkTheme) {
+      document.body.classList.add('dark-theme');
+      document.body.classList.remove('light-theme');
+    } else {
+      document.body.classList.add('light-theme');
+      document.body.classList.remove('dark-theme');
+    }
+    localStorage.setItem('theme', this.isDarkTheme ? 'dark' : 'light');
+  }
+
+  applyTheme() {
+    if (this.isDarkTheme) {
+      this.renderer.addClass(document.body, 'dark-theme');
+      this.renderer.removeClass(document.body, 'light-theme');
+    } else {
+      this.renderer.addClass(document.body, 'light-theme');
+      this.renderer.removeClass(document.body, 'dark-theme');
+    }
+  }
+
+  logout() {
     this.auth.logout(sessionStorage.getItem('accessToken')).subscribe({
       next: () => {
         this.router.navigate(['']);
@@ -49,14 +83,11 @@ export class NavbarComponent {
     });
   }
 
-  showProfilePopup: boolean = false;
-  viewProfile(){
-    // this.profilePopup.showPopup();
-    this.showProfilePopup = !this.showProfilePopup 
+  viewProfile() {
+    this.showProfilePopup = !this.showProfilePopup;
   }
 
-  navigateTo(menuName: string){
-
+  navigateTo(menuName: string) {
+    // Navigation logic
   }
-  
 }
