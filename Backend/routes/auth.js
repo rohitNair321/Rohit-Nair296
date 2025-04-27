@@ -1,8 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const BlacklistedToken = require('../models/BlacklistedToken');
+const { OAuth2Client } = require('google-auth-library');
+
+// Google OAuth2 client
+const client = new OAuth2Client('YOUR_GOOGLE_CLIENT_ID');
 
 //#region Register route
 router.post('/register', async (req, res) => {
@@ -17,12 +22,12 @@ router.post('/register', async (req, res) => {
         }
 
         // Check if user already exists
-        const existingUser = await User.findOne({ 
-            $or: [{ email }, { username }] 
+        const existingUser = await User.findOne({
+            $or: [{ email }, { username }]
         });
-        
+
         if (existingUser) {
-            return res.status(400).json({ 
+            return res.status(400).json({
                 message: existingUser.email === email ? 'Email already exists' : 'Username already exists'
             });
         }
@@ -40,7 +45,7 @@ router.post('/register', async (req, res) => {
 
         // Generate token
         const token = jwt.sign(
-            { userId: user._id }, 
+            { userId: user._id },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
         );
@@ -61,25 +66,23 @@ router.post('/register', async (req, res) => {
 
     } catch (error) {
         console.error('Registration error:', error);
-        res.status(500).json({ 
+        res.status(500).json({
             success: false,
             message: 'Error creating user',
-            error: error.message 
+            error: error.message
         });
     }
 });
 //#endregion
 
-//#region Login route
+//#region Normal Login route
 router.post('/login', async (req, res) => {
     try {
-        console.log('Login request body:', req.body); // Add this for debugging
-
         const { username, password } = req.body;
 
         if (!username || !password) {
             return res.status(400).json({
-                message: 'username and password are required'
+                message: 'Username and password are required'
             });
         }
 
@@ -120,14 +123,71 @@ router.post('/login', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Login error:', error); // Add this for debugging
+        console.error('Login error:', error);
         res.status(500).json({
             message: 'Error logging in',
             error: error.message
         });
     }
 });
-//#endregion 
+//#endregion
+
+//#region Google Login route
+router.post('/google-login', async (req, res) => {
+    const { idToken } = req.body;
+
+    try {
+        // Verify the Google ID token
+        const ticket = await client.verifyIdToken({
+            idToken,
+            audience: '299729034520-djqvrmcvek68rpr7g0s0enjg69ukihb9.apps.googleusercontent.com' // Replace with your Google Client ID
+        });
+
+        const payload = ticket.getPayload();
+        const { email, given_name: firstName, family_name: lastName } = payload;
+
+        // Check if the user already exists
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            // Create a new user if not found
+            user = new User({
+                firstName,
+                lastName,
+                username: email.split('@')[0], // Use email prefix as username
+                email,
+                password: '' // No password for Google login users
+            });
+
+            await user.save();
+        }
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        // Send response with token and user details
+        res.status(200).json({
+            success: true,
+            message: 'Login successful',
+            token,
+            user: {
+                id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                username: user.username,
+                email: user.email
+            }
+        });
+    } catch (error) {
+        console.error('Google login error:', error);
+        res.status(401).json({ success: false, message: 'Invalid Google token' });
+    }
+});
+//#endregion
 
 //#region Logout route
 router.post('/logout', async (req, res) => {
@@ -146,62 +206,6 @@ router.post('/logout', async (req, res) => {
             success: false, 
             message: 'Error during logout',
             error: error.message 
-        });
-    }
-});
-//#endregion
-
-//#region Update user profile route
-router.put('/update-profile', async (req, res) => {
-    try {
-        const token = req.header('Authorization').replace('Bearer ', '');
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        
-        const { firstName, lastName } = req.body;
-
-        // Validate fields
-        if (!firstName || !lastName) {
-            return res.status(400).json({
-                success: false,
-                message: 'First name and last name are required'
-            });
-        }
-
-        // Update user
-        const updatedUser = await User.findByIdAndUpdate(
-            decoded.userId,
-            { 
-                firstName, 
-                lastName 
-            },
-            { new: true, runValidators: true }
-        );
-
-        if (!updatedUser) {
-            return res.status(404).json({
-                success: false,
-                message: 'User not found'
-            });
-        }
-
-        res.status(200).json({
-            success: true,
-            message: 'Profile updated successfully',
-            user: {
-                id: updatedUser._id,
-                firstName: updatedUser.firstName,
-                lastName: updatedUser.lastName,
-                username: updatedUser.username,
-                email: updatedUser.email
-            }
-        });
-
-    } catch (error) {
-        console.error('Update profile error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error updating profile',
-            error: error.message
         });
     }
 });
