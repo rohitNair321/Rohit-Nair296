@@ -1,43 +1,37 @@
-<p-menubar [model]="items">
-  <ng-template pTemplate="start">
-    <img src="assets/images/Designer.png" alt="logo" height="54px">
-    FNCS
-  </ng-template>
-  <ng-template pTemplate="end">
-    <ul class="navbar-nav ms-auto">
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="viewProfile()">
-          <i class="fas fa-user"></i> {{ loginUserName }}
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" (click)="toggleTheme()">
-          <i class="pi" [ngClass]="isDarkTheme ? 'pi-sun' : 'pi-moon'"></i>
+<nav class="custom-navbar">
+  <div class="navbar-left">
+    <button class="burger-menu-btn" (click)="toggleBurgerMenu()">
+      <i class="pi pi-bars"></i>
+    </button>
+    <img src="assets/images/Designer.png" alt="logo" class="navbar-logo">
+    <span class="navbar-title">FNCS</span>
+  </div>
+
+  <div class="navbar-center" [ngClass]="{ 'show-menu': isBurgerMenuOpen }">
+    <ul class="nav-menu">
+      <li class="nav-item" *ngFor="let item of items">
+        <a [routerLink]="item.routerLink" routerLinkActive="active">
+          <i [class]="item.icon"></i> {{ item.label }}
         </a>
       </li>
     </ul>
-  </ng-template>
-</p-menubar>
+  </div>
 
-<p-dialog header="Title" [(visible)]="showProfilePopup" [modal]="false" position="top-right" [draggable]="false">
-  <div class="menu-list">
-    <div class="menu-item" (click)="navigateTo('profile')">
-      <i class="pi pi-user"></i> User Profile
-    </div>
-    <div class="menu-item" (click)="navigateTo('account-settings')">
-      <i class="pi pi-cog"></i> Account Settings
-    </div>
-    <div class="menu-item" (click)="navigateTo('preferences')">
-      <i class="pi pi-globe"></i> Preferences
-    </div>
-    <div class="menu-item" (click)="navigateTo('recent-activity')">
-      <i class="pi pi-clock"></i> Recent Activity
-    </div>
-    <div class="menu-item" (click)="navigateTo('help-support')">
-      <i class="pi pi-question-circle"></i> Help & Support
-    </div>
-    <div class="menu-item" (click)="logout()">
-      <i class="pi pi-power-off"></i> Logout
+  <div class="navbar-right">
+    <button class="theme-toggle-btn" (click)="toggleTheme()">
+      <i class="pi" [ngClass]="isDarkTheme ? 'pi-sun' : 'pi-moon'"></i>
+    </button>
+    <div class="profile-menu">
+      <button class="profile-btn" (click)="toggleProfileMenu()">
+        <i class="fas fa-user"></i> {{ loginUserName }}
+      </button>
+      <div class="profile-dropdown" *ngIf="showProfilePopup">
+        <ul class="profile-menu-list">
+          <li class="profile-menu-item" *ngFor="let menuItem of profileMenuItems" (click)="menuItem.action()">
+            <i [class]="menuItem.icon"></i> {{ menuItem.label }}
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
-</p-dialog>
+</nav>

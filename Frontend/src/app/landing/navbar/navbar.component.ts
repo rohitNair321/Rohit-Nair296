@@ -1,7 +1,6 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
-import { AuthService } from '../../Services/auth.service';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {MenuItem} from 'primeng/api';
+import { AuthService } from 'src/app/Services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,66 +8,51 @@ import {MenuItem} from 'primeng/api';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-  items!: MenuItem[];
-  loginUserName: any | undefined;
-  isDarkTheme: boolean = false; // Default to light theme
+  isBurgerMenuOpen: boolean = false;
+  isDarkTheme: boolean = false;
   showProfilePopup: boolean = false;
+  loginUserName: string = 'John Doe'; // Example user name
 
-  constructor(private auth: AuthService, private router: Router, private renderer: Renderer2) {}
+  items = [
+    { label: 'Home', icon: 'pi pi-home', routerLink: '/landing/dashboard' },
+    { label: 'To-Do', icon: 'pi pi-list', routerLink: '/landing/task-list' },
+    { label: 'Projects', icon: 'pi pi-server', routerLink: '/landing/projects' },
+    { label: 'Notifications', icon: 'pi pi-bell', routerLink: '/landing/notifications' }
+  ];
 
-  ngOnInit() {
-    this.loginUserName = sessionStorage.getItem('loginUserName');
-    this.items = [
-      {
-        label: 'Home',
-        icon: 'pi pi-home',
-        routerLink: '/landing/dashboard'
-      },
-      {
-        label: 'Todo',
-        icon: 'pi pi-list',
-        routerLink: '/landing/task-list'
-      },
-      {
-        label: 'Projects',
-        icon: 'pi pi-server',
-        routerLink: '/landing/projects'
-      },
-      {
-        label: 'Notification',
-        icon: 'pi pi-bell',
-        routerLink: '/landing/notifications'
-      }
-    ];
+  profileMenuItems = [
+    { label: 'User Profile', icon: 'pi pi-user', action: () => this.navigateTo('profile') },
+    { label: 'Account Settings', icon: 'pi pi-cog', action: () => this.navigateTo('account-settings') },
+    { label: 'Preferences', icon: 'pi pi-globe', action: () => this.navigateTo('preferences') },
+    { label: 'Recent Activity', icon: 'pi pi-clock', action: () => this.navigateTo('recent-activity') },
+    { label: 'Help & Support', icon: 'pi pi-question-circle', action: () => this.navigateTo('help-support') },
+    { label: 'Logout', icon: 'pi pi-power-off', action: () => this.logout() }
+  ];
+  
+  constructor(private router: Router, private auth: AuthService,) {} // Inject Router
 
-    // Apply the saved theme on initialization
+  ngOnInit(): void {
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      this.isDarkTheme = true;
-      this.applyTheme();
-    }
+    this.isDarkTheme = savedTheme === 'dark';
+  }
+
+  toggleBurgerMenu() {
+    this.isBurgerMenuOpen = !this.isBurgerMenuOpen;
   }
 
   toggleTheme() {
     this.isDarkTheme = !this.isDarkTheme;
-    if (this.isDarkTheme) {
-      document.body.classList.add('dark-theme');
-      document.body.classList.remove('light-theme');
-    } else {
-      document.body.classList.add('light-theme');
-      document.body.classList.remove('dark-theme');
-    }
+    document.body.classList.toggle('dark-theme', this.isDarkTheme);
+    document.body.classList.toggle('light-theme', !this.isDarkTheme);
     localStorage.setItem('theme', this.isDarkTheme ? 'dark' : 'light');
   }
 
-  applyTheme() {
-    if (this.isDarkTheme) {
-      this.renderer.addClass(document.body, 'dark-theme');
-      this.renderer.removeClass(document.body, 'light-theme');
-    } else {
-      this.renderer.addClass(document.body, 'light-theme');
-      this.renderer.removeClass(document.body, 'dark-theme');
-    }
+  toggleProfileMenu() {
+    this.showProfilePopup = !this.showProfilePopup;
+  }
+
+  navigateTo(route: string) {
+    this.router.navigate(['/profile-menu/'+route]); // Navigate to the specified route
   }
 
   logout() {
@@ -81,13 +65,5 @@ export class NavbarComponent implements OnInit {
         console.error('Logout failed:', error);
       }
     });
-  }
-
-  viewProfile() {
-    this.showProfilePopup = !this.showProfilePopup;
-  }
-
-  navigateTo(menuName: string) {
-    // Navigation logic
   }
 }

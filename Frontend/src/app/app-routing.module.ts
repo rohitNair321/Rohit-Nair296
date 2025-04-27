@@ -4,6 +4,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
   { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
   { path: 'landing', loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule) },
+  { path: 'profile-menu', loadChildren: () => import('./profile-menu/menu.module').then(m => m.MenuModule) },
   { path: '**', redirectTo: 'auth/login' }  // Wildcard route for a 404 page
 ];
 
