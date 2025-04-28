@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule,  } from '@angular/platform-browser';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { FooterComponent } from './Components/footer/footer.component';
@@ -11,12 +11,13 @@ import { AppComponent } from './app.component';
 import { ErrorInterceptor } from './Services/error.service';
 import { AuthService } from './Services/auth.service';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { GoogleLoginProvider, SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { environment } from 'src/environments/environments';
 
 @NgModule({
   declarations: [
     AppComponent,
     FooterComponent,
-    // LoginComponent,
     ProfilePopupComponent,
   ],
   imports: [
@@ -26,15 +27,28 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     LandingModule,
     AppRoutingModule,
     HttpClientModule,
+    SocialLoginModule
   ],
   exports: [
     ProfilePopupComponent
   ],
   providers: [
     AuthService,
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(environment.googleClientId) // Use hardcoded Client ID
+          }
+        ]
+      } as SocialAuthServiceConfig
+    },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    {provide: HTTP_INTERCEPTORS,useClass: AuthInterceptor,multi: true}
-   ],
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

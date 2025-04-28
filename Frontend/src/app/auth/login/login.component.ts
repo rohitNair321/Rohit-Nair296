@@ -1,53 +1,94 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/Services/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environments';
+
+declare const google: any;
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
-
-  username: string = '';
-  password: string = '';
-  errorMessage: string = '';
+export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
+  loading: boolean = false;
 
-  constructor(private router:Router, private auth: AuthService, private fb: FormBuilder){
-    
-  }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private http: HttpClient
+  ) {}
 
-  ngOnInit(){
+  ngOnInit(): void {
+    // Initialize the login form
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
     });
+
+    this.initializeGoogleSignIn();
   }
 
-  loading?: boolean;
-  onSubmit(){
-    this.loading = true;
-    this.login();
+  initializeGoogleSignIn(): void {
+    google.accounts.id.initialize({
+      client_id: environment.googleClientId, // Replace with your Client ID
+      callback: (response: any) => this.handleGoogleSignIn(response)
+    });
+ 
+    google.accounts.id.renderButton(
+      document.getElementById('google-signin-button'),
+      { theme: 'outline', size: 'large', type: 'icon', shape: 'circle', width: '40' } // Customize the button
+    );
+ 
+    google.accounts.id.prompt(); // Display the One Tap dialog
   }
 
-  login(): void{
-    this.auth.login(this.loginForm.value).subscribe({
-      next: (result =>{
-        this.loading = false;
-        if(result){
-          this.router.navigateByUrl('landing/dashboard');
+  // Handle standard login
+  onSubmit(): void {
+    if (this.loginForm.valid) {
+      this.loading = true;
+      this.authService.login(this.loginForm.value).subscribe({
+        next: (result) => {
+          this.loading = false;
+          if (result) {
+            console.log('Login successful');
+            this.router.navigateByUrl('landing/dashboard');
+          }
+        },
+        error: (error) => {
+          this.loading = false;
+          console.error('Login failed:', error);
+        },
+      });
+    }
+  }
+
+  // Handle Google Sign-In callback
+  handleGoogleSignIn(response: any): void {
+    console.log('Google Sign-In Response:', response);
+
+    // Send the ID token to the backend for validation
+    this.authService.googleLogin(response.credential).subscribe({
+      next: (isAuthenticated) => {
+        if (isAuthenticated) {
+          console.log('Google login successful');
+          this.router.navigate(['/landing/dashboard']);
+        } else {
+          console.error('Google login failed');
         }
-      }),
-      error: (e) =>{
-        this.loading = false;
-      }
+      },
+      error: (error) => {
+        console.error('Google login error:', error);
+      },
     });
   }
 
-  register(){
+  // Navigate to the registration page
+  register(): void {
     this.router.navigateByUrl('/auth/register');
   }
-
 }
