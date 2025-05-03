@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   googleClientId: '299729034520-75lboo1n2s1kbuelmtujp094o2i0el9j.apps.googleusercontent.com', // Replace with your Google Client ID
   apiUrl: 'http://localhost:5000/api/auth'
 };

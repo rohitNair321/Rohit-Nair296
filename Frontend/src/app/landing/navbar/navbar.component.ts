@@ -11,7 +11,7 @@ export class NavbarComponent implements OnInit {
   isBurgerMenuOpen: boolean = false;
   isDarkTheme: boolean = false;
   showProfilePopup: boolean = false;
-  loginUserName: string = 'John Doe'; // Example user name
+  loginUserName!: string; // Example user name
 
   items = [
     { label: 'Home', icon: 'pi pi-home', routerLink: '/landing/dashboard' },
@@ -33,6 +33,7 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     const savedTheme = localStorage.getItem('theme');
+    this.loginUserName = sessionStorage.getItem('loginUserName') || 'User'; // Get the user name from session storage
     this.isDarkTheme = savedTheme === 'dark';
   }
 
@@ -52,7 +53,8 @@ export class NavbarComponent implements OnInit {
   }
 
   navigateTo(route: string) {
-    this.router.navigate(['/profile-menu/'+route]); // Navigate to the specified route
+    this.router.navigate(['/profile-menu/'+route]);
+    this.showProfilePopup = false; // Navigate to the specified route
   }
 
   logout() {

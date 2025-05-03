@@ -7,7 +7,7 @@ const BlacklistedToken = require('../models/BlacklistedToken');
 const { OAuth2Client } = require('google-auth-library');
 
 // Google OAuth2 client
-const client = new OAuth2Client('YOUR_GOOGLE_CLIENT_ID');
+const client = new OAuth2Client('299729034520-75lboo1n2s1kbuelmtujp094o2i0el9j.apps.googleusercontent.com');
 
 //#region Register route
 router.post('/register', async (req, res) => {
@@ -134,13 +134,13 @@ router.post('/login', async (req, res) => {
 
 //#region Google Login route
 router.post('/google-login', async (req, res) => {
-    const { idToken } = req.body;
+    const idToken  = req?.body?.idToken?.credential;
 
     try {
         // Verify the Google ID token
         const ticket = await client.verifyIdToken({
             idToken,
-            audience: '299729034520-djqvrmcvek68rpr7g0s0enjg69ukihb9.apps.googleusercontent.com' // Replace with your Google Client ID
+            audience: '299729034520-75lboo1n2s1kbuelmtujp094o2i0el9j.apps.googleusercontent.com' // Replace with your Google Client ID
         });
 
         const payload = ticket.getPayload();
@@ -156,7 +156,8 @@ router.post('/google-login', async (req, res) => {
                 lastName,
                 username: email.split('@')[0], // Use email prefix as username
                 email,
-                password: '' // No password for Google login users
+                password: '', // No password for Google login users
+                isGoogleUser: true // Mark as a Google login user
             });
 
             await user.save();

@@ -34,8 +34,24 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
-        minlength: 6
+        required: function () {
+            // Password is required only if the user is not a Google login user
+            return !this.isGoogleUser;
+        },
+        validate: {
+            validator: function (value) {
+                // Only validate minlength if the user is not a Google login user
+                if (!this.isGoogleUser && (!value || value.length < 6)) {
+                    return false;
+                }
+                return true;
+            },
+            message: 'Password must be at least 6 characters long'
+        }
+    },
+    isGoogleUser: {
+        type: Boolean,
+        default: false // Default to false for normal users
     },
     createdAt: {
         type: Date,
@@ -43,10 +59,10 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-// Hash password before saving
-userSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) return next();
-    
+// Hash password before saving (only for non-Google users)
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password') || this.isGoogleUser) return next();
+
     try {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
@@ -55,10 +71,5 @@ userSchema.pre('save', async function(next) {
         next(error);
     }
 });
-
-// Method to compare password
-userSchema.methods.comparePassword = async function(candidatePassword) {
-    return bcrypt.compare(candidatePassword, this.password);
-};
 
 module.exports = mongoose.model('User', userSchema);

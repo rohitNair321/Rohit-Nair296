@@ -43,6 +43,7 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/google-login`, { idToken }, { headers }).pipe(
       map(response => {
         if (response && response.token) {
+          console.log('Google login response:', response);
           sessionStorage.setItem('loginUserName', response.user.firstName + ' ' + response.user.lastName);
           sessionStorage.setItem('accessToken', response.token);
           this.isAuthenticatedSubject.next(true);
