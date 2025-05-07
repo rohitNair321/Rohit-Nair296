@@ -13,6 +13,7 @@ import { AuthService } from './Services/auth.service';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { GoogleLoginProvider, SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { environment } from 'src/environments/environments';
+import { TodoInterceptor } from './interceptors/todo.interceptor';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { environment } from 'src/environments/environments';
     },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: TodoInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

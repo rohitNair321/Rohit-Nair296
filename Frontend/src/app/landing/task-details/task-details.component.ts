@@ -10,28 +10,28 @@ import { TaskService } from 'src/app/Services/task.service';
 export class TaskDetailsComponent {
 
   taskID!: number;
-    constructor(private router: Router, private taskservices: TaskService, private route: ActivatedRoute){
-      this.route.queryParams.subscribe({
-        next: result =>{
-          this.taskID = +result['taskId']; // Access route parameter 'id'
-        },
-        error: (e) =>{
+  constructor(private router: Router, private taskservices: TaskService, private route: ActivatedRoute){
+    this.route.queryParams.subscribe({
+      next: result =>{
+        this.taskID = +result['taskId']; // Access route parameter 'id'
+      },
+      error: (e) =>{
 
-        }
-      });
-    }
+      }
+    });
+  }
 
-    taskData: any;
-    ngOnInit(){
-      this.taskservices.getTaskList().subscribe({
-        next: tasks => {
-          this.taskData = tasks.find(x=>x.id === this.taskID);
-        },
-        error: (e) =>{
+  taskData: any;
+  ngOnInit(){
+    this.taskservices.getTaskList(5).subscribe({
+      next: tasks => {
+        this.taskData = tasks;
+      },
+      error: (e) =>{
 
-        }
-      });
-    }
+      }
+    });
+  }
 
     taskName: any;
     editTaskName() {

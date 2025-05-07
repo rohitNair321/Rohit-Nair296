@@ -14,15 +14,25 @@ export class TaskService {
   
   constructor(private httpReq: HttpClient) { }
 
-  getTaskList(){
+  getTaskList(recordCount: number): Observable<Task[]> {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json');
-    return this.httpReq.get<any[]>(`${this.apiUrl}/todos`,{headers}).pipe(
-      map(response => {
-        if (response && response) {
-          
-        }
+
+    // Add query parameters
+    const params = new HttpParams().set('limit', recordCount.toString());
+
+    return this.httpReq.get<Todos>(`${this.apiUrl}`, { headers, params }).pipe(
+      map((res: Todos) => {
+        // Extract the list of tasks from the response
+        const tasks = res.todos;
+        // Update the BehaviorSubject with the new list of tasks
+        this.taskSubject.next(tasks);
+        return tasks; // Return the list of tasks
+      }),
+      catchError((error) => {
+        console.error('Error fetching task list:', error);
+        throw error; // Rethrow the error to handle it in the component
       })
     );
   }
@@ -30,12 +40,16 @@ export class TaskService {
 
 }
 
-export interface Task {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-  onhold: boolean;
-  inpregress: boolean;
-  delete: boolean;
+export interface Todos {
+  limit:number
+  skip:number
+  total:number
+  todos:Task[]
 }
+export interface Task {
+  completed:boolean,
+  id:number,
+  userId:number,
+  todos:string
+}
+

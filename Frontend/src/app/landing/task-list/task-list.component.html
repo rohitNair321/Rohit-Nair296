@@ -1,80 +1,81 @@
 <div class="container mt-4">
-  <h2>Welcome, {{loginUserName}}</h2>
+  <h2>Welcome, {{ loginUserName }}</h2>
   <div class="row justify-content-center">
     <div class="d-flex flex-column col-lg-8 gap-3">
+      <!-- Task List -->
       <div class="text-bg-light w-100 rounded-2" cdkDropList (cdkDropListDropped)="onDrop($event)">
-        <div class="p-3" *ngFor="let tasks of taskList" cdkDrag>
-          <div class="flex flex-row justify-content-between flex-wrap">
-            <div class="flex align-items-center justify-content-center">
-              <div class="flex flex-column">
-                <div class="flex flex-row gap-3">
-                  <label for="" *ngIf="!tasks.titleEdit">{{ tasks.title }}</label>
-                  <input *ngIf="tasks.titleEdit" type="text" placeholder="Normal" pInputText [(ngModel)]="tasks.title"/>
-                  <button class="btn btn-outline-secondary btn-sm border-none" (click)="editTaskName(tasks.id, tasks.titleEdit, tasks.title)">
-                    <i class="pi" [ngClass]="{'pi-pencil': !tasks.titleEdit, 'pi-save': tasks.titleEdit}"></i>
+        <div class="p-3 border-bottom" *ngFor="let task of taskList" cdkDrag>
+          <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <!-- Task Title and Edit -->
+            <div class="d-flex align-items-center">
+              <div class="d-flex flex-column">
+                <div class="d-flex align-items-center gap-3">
+                  <label>{{ task.todos }}</label>
+                  <input
+                    type="text"
+                    placeholder="Edit Task Title"
+                    pInputText
+                    [(ngModel)]="task.todos"
+                  />
+                  <button
+                    class="btn btn-outline-secondary btn-sm"
+                    (click)="editTaskName(task.id, task.todos)"
+                  >
+                    <!-- <i class="pi" [ngClass]="{ 'pi-pencil': !task.titleEdit, 'pi-save': task.titleEdit }"></i> -->
                   </button>
                 </div>
-                <div class="flex">
-                  {{ 
-                  tasks.completed ? 'Complete' : 
-                    tasks.onhold ? 'On hold':
-                      tasks.inpregress ? 'In progress' : 
-                        tasks.delete ? 'Delete': 'New'
-                  }}
+                <div class="mt-1">
+                  <span class="badge"
+                    [ngClass]="{
+                      'bg-success': task.completed,
+                      'bg-secondary': !task.completed
+                    }">
+                    {{ task.completed ? 'Complete' : 'Incomplete' }}
+                  </span>
                 </div>
               </div>
             </div>
-            <div class="flex align-items-center">
-              <!-- Status dropdown -->
-              <div class="dropdown mr-2">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="statusDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  {{ 
-                    tasks.completed ? 'Complete' :
-                      tasks.onhold ? 'On hold':
-                        tasks.inpregress ? 'In progress' :
-                          tasks.delete ? 'Delete': 'New'
-                  }}
-                </button>
-                <div class="dropdown-menu" aria-labelledby="statusDropdown">
-                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, true, 'new')">New</button>
-                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, true, 'completed')">Completed</button>
-                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, true, 'onhold')">On Hold</button>
-                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, true, 'inpregress')">In Progress</button>
-                  <button class="dropdown-item" (click)="changeTaskStatus(tasks.id, true, 'delete')">Delete</button>
-                </div>
-              </div>
-              <!-- View button -->
-              <button class="btn btn-success mr-2" (click)="editTask(tasks.id)" pTooltip="View">
+
+            <!-- Task Actions -->
+            <div class="d-flex align-items-center gap-2">
+              <!-- Status Toggle -->
+              <button
+                class="btn btn-secondary"
+                (click)="changeTaskStatus(task.id, !task.completed)"
+              >
+                {{ task.completed ? 'Mark Incomplete' : 'Mark Complete' }}
+              </button>
+
+              <!-- View Button -->
+              <button class="btn btn-success" (click)="editTask(task.id)" pTooltip="View">
                 <i class="pi pi-eye"></i>
               </button>
-              <!-- Edit button -->
-              <!-- <button class="btn btn-primary mr-2" (click)="editTask(tasks.id)" pTooltip="Edit">
-                <i class="pi pi-pencil"></i>
-              </button> -->
-              <!-- Delete button -->
-              <button class="btn btn-danger" (click)="deleteTask(tasks)" pTooltip="Delete">
+
+              <!-- Delete Button -->
+              <button class="btn btn-danger" (click)="deleteTask(task)" pTooltip="Delete">
                 <i class="pi pi-trash"></i>
               </button>
             </div>
           </div>
         </div>
       </div>
-      <div class="d-flex flex-row w-100 justify-content-end">
-        <button class="btn btn-primary" (click)="addNewTask()"  pTooltip="Add New Task">
-          <i class="pi pi-plus"></i>
-          Add New Task
+
+      <!-- Add New Task Button -->
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="addNewTask()" pTooltip="Add New Task">
+          <i class="pi pi-plus"></i> Add New Task
         </button>
-      </div>  
+      </div>
     </div>
   </div>
 
-  <p-dialog [(visible)]="newTaskForm" [modal]="true" [responsive]="true" [style]="{width: '50%'}">
+  <!-- Add New Task Dialog -->
+  <p-dialog [(visible)]="newTaskForm" [modal]="true" [responsive]="true" [style]="{ width: '50%' }">
     <ng-template pTemplate="header">
       <h2>Add New Task</h2>
     </ng-template>
     <ng-template pTemplate="content">
       <app-task-form></app-task-form>
     </ng-template>
-    <!-- (onSubmit)="onTaskSubmit($event)" (onCancel)="hideDialog()" -->
   </p-dialog>
 </div>
