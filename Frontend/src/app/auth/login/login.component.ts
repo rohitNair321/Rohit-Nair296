@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   loading: boolean = false;
   googleClientId: string = environment.googleClientId;
-  googleLoginUri: string = environment.apiUrl + '/google-login';
+  googleLoginUri: string = environment.authApiUrl + '/google-login';
 
   constructor(
     private fb: FormBuilder,
@@ -36,18 +36,6 @@ export class LoginComponent implements OnInit {
   }
 
   initializeGoogleSignIn(): void {
-    // google.accounts.id.initialize({
-    //   client_id: environment.googleClientId, // Replace with your Client ID
-    //   callback: (response: any) => this.handleGoogleSignIn(response)
-    // });
- 
-    // google.accounts.id.renderButton(
-    //   document.getElementById('google-signin-button'),
-    //   { theme: 'outline', size: 'large', type: 'icon', shape: 'circle', width: '40' } // Customize the button
-    // );
- 
-    // google.accounts.id.prompt(); // Display the One Tap dialog
-    // @ts-ignore
     google.accounts.id.initialize({
       client_id: environment.googleClientId,
       callback: this.handleGoogleSignIn.bind(this),

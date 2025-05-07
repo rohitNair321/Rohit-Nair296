@@ -58,14 +58,8 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    this.auth.logout(sessionStorage.getItem('accessToken')).subscribe({
-      next: () => {
-        this.router.navigate(['']);
-        console.log('Logged out successfully');
-      },
-      error: (error) => {
-        console.error('Logout failed:', error);
-      }
-    });
+    sessionStorage.removeItem('token');
+    sessionStorage.clear();
+    this.router.navigate(['']);
   }
 }

@@ -164,7 +164,7 @@ router.post('/google-login', async (req, res) => {
         }
 
         // Generate JWT token
-        const token = jwt.sign(
+        const accessToken = jwt.sign(
             { userId: user._id },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
@@ -174,14 +174,12 @@ router.post('/google-login', async (req, res) => {
         res.status(200).json({
             success: true,
             message: 'Login successful',
-            token,
-            user: {
-                id: user._id,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                username: user.username,
-                email: user.email
-            }
+            accessToken,
+            id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            username: user.username,
+            email: user.email
         });
     } catch (error) {
         console.error('Google login error:', error);

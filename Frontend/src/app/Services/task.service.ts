@@ -1,24 +1,28 @@
-import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, tap } from 'rxjs';
+import { environment } from 'src/environments/environments';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
 
+  private apiUrl = environment.taskApiUrl;
   private taskSubject = new BehaviorSubject<Task[]>([]);
   private task = new BehaviorSubject<any>(null);
   
   constructor(private httpReq: HttpClient) { }
 
-  getTaskList(): Observable<Task[]>{
-    return this.httpReq.get<Task[]>('./assets/task-data.json').pipe(
-      tap(tasks => {
-        this.taskSubject.next(tasks);
-      }),
-      catchError(error => {
-        throw error;
+  getTaskList(){
+    const headers = new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('Accept', 'application/json');
+    return this.httpReq.get<any[]>(`${this.apiUrl}/todos`,{headers}).pipe(
+      map(response => {
+        if (response && response) {
+          
+        }
       })
     );
   }

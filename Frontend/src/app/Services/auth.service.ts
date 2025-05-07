@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environments';
 })
 export class AuthService {
   
-  private apiUrl = environment.apiUrl;
+  private apiUrl = environment.authApiUrl;
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   
   constructor(private router: Router, private http: HttpClient) {}
@@ -24,9 +24,9 @@ export class AuthService {
       .set('Accept', 'application/json');
     return this.http.post<any>(`${this.apiUrl}/login`, loginDetails, { headers }).pipe(
       map(response => {
-        if (response && response.token) {
-          sessionStorage.setItem('loginUserName', response.user.firstName + ' ' + response.user.lastName);
-          sessionStorage.setItem('accessToken', response.token);
+        if (response && response.accessToken) {
+          sessionStorage.setItem('loginUserName', response.firstName + ' ' + response.lastName);
+          sessionStorage.setItem('accessToken', response.accessToken);
           this.isAuthenticatedSubject.next(true);
           return true;
         } else {
