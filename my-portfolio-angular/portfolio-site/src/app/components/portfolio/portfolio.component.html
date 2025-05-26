@@ -1,21 +1,23 @@
-<section class="py-5">
-    <div class="text-center mb-4">
-      <h2>My Projects</h2>
-      <p>Here are some of the projects I have worked on.</p>
+<section class="portfolio-showcase-section">
+  <h2>My Work</h2>
+  <div class="portfolio-grid">
+    <div class="portfolio-card">
+      <div class="card-image"></div>
+      <h3>Project Title 1</h3>
+      <p>A brief overview of what this project is about.</p>
+      <button>View Project</button>
     </div>
-    <div class="row">
-      <div class="col-lg-4 col-md-6 mb-4" *ngFor="let project of projects">
-        <div class="card h-100">
-          <img src="{{ project.image }}" class="card-img-top" alt="{{ project.title }}">
-          <div class="card-body">
-            <h5 class="card-title">{{ project.title }}</h5>
-            <p class="card-text">{{ project.description }}</p>
-          </div>
-          <div class="card-footer text-center">
-            <a [href]="project.link" class="btn btn-primary" target="_blank">View Project</a>
-          </div>
-        </div>
-      </div>
+    <div class="portfolio-card">
+      <div class="card-image"></div>
+      <h3>Project Title 2</h3>
+      <p>A brief overview of what this project is about.</p>
+      <button>View Project</button>
     </div>
-  </section>
-  
+    <div class="portfolio-card">
+      <div class="card-image"></div>
+      <h3>Project Title 3</h3>
+      <p>A brief overview of what this project is about.</p>
+      <button>View Project</button>
+    </div>
+  </div>
+</section>

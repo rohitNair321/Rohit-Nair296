@@ -1,0 +1,44 @@
+<nav class="navigation" [class.navbar]="config?.type === 'navbar'" [class.sidebar]="config?.type === 'sidebar'">
+  <div class="nav-container">
+    <!-- Logo Section -->
+    <div class="logo">
+      <img [src]="config?.logo" alt="Portfolio Logo" class="logo-image" />
+    </div>
+
+    <!-- Desktop Menu -->
+    <div class="desktop-menu" *ngIf="!isMobile">
+      <div class="menu-items">
+        <a *ngFor="let item of menuItems" 
+           [routerLink]="item.href" 
+           class="menu-link"
+           routerLinkActive="active">
+          {{ item.label }}
+        </a>
+      </div>
+      <button class="theme-toggle" (click)="toggleTheme()">
+        <span class="material-icons">{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</span>
+      </button>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" *ngIf="isMobile" (click)="toggleMenu()">
+      <span class="material-icons">{{ isMenuOpen ? 'close' : 'menu' }}</span>
+    </button>
+
+    <!-- Mobile Menu (Right-aligned) -->
+    <div class="mobile-menu right-align" [class.show]="isMenuOpen && isMobile">
+      <div class="menu-items">
+        <a *ngFor="let item of menuItems" 
+           [routerLink]="item.href" 
+           class="menu-link"
+           (click)="toggleMenu()"
+           routerLinkActive="active">
+          {{ item.label }}
+        </a>
+        <button class="theme-toggle" (click)="toggleTheme()">
+          <span class="material-icons">{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

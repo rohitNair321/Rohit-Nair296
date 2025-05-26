@@ -1,7 +1,9 @@
-<app-navbar></app-navbar>
+<div class="wrapper">
+  <app-navigation [config]="config"></app-navigation>
+  
+  <main class="container">
+    <router-outlet></router-outlet>
+  </main>
 
-<div class="container">
-  <router-outlet></router-outlet>
+  <app-footer></app-footer>
 </div>
-
-<app-footer></app-footer>
