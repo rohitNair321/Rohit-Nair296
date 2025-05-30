@@ -1,16 +1,15 @@
-
 .navigation {
   background-color: var(--background-color);
   color: var(--text-color);
   transition: all var(--transition-speed);
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &.navbar {
     padding: var(--spacing-md) 0;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .logo-image {
@@ -77,51 +76,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-md) 0;
-}
-
-.desktop-menu {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xl);
-}
-
-.mobile-menu {
-  position: fixed;
-  top: 60px;
-  left: 0;
-  right: 0;
-  background: var(--background-color);
-  transform: translateY(-100%);
-  transition: transform var(--transition-speed) ease-out;
-  z-index: 999;
-  
-  &.show {
-    transform: translateY(0);
-  }
-}
-
-.menu-toggle {
-  background: none;
-  border: none;
-  color: var(--text-color);
-  font-size: 1.5rem;
-}
-
-.active {
-  color: var(--primary-color) !important;
-  font-weight: 600;
-  
-  &::after {
-    width: 100% !important;
-  }
-}
-
-.nav-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--spacing-md) 0;
+  padding: var(--spacing-md) var(--spacing-xl); // Add horizontal padding
   position: relative;
 
   .desktop-menu {
@@ -165,4 +120,32 @@
   .menu-toggle {
     margin-left: auto; 
   }
+}
+
+.resume-download-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--secondary-color);
+  color: var(--background-color);
+  padding: 0.4rem 1rem;
+  border-radius: var(--border-radius-md);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  margin-left: var(--spacing-md);
+  transition: background 0.2s, color 0.2s;
+
+  .material-icons {
+    font-size: 1.2em;
+  }
+
+  &:hover {
+    background: var(--primary-color);
+    color: var(--background-color);
+  }
+}
+
+.navigation, .navigation .menu-link, .navigation .resume-download-btn {
+  color: var(--text-color);
 }

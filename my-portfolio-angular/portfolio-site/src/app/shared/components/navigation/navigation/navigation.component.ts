@@ -13,10 +13,10 @@ export class NavigationComponent implements OnInit {
   isDarkTheme = false;
 
   menuItems = [
-    { label: 'Home', href: '/home' },
-    { label: 'About', href: '/about' },
-    { label: 'Projects', href: '/projects' },
-    { label: 'Contact', href: '/contact' }
+    { label: 'Home', href: '#home' },
+    { label: 'About', href: '#about' },
+    { label: 'Projects', href: '#projects' },
+    { label: 'Contact', href: '#contact' }
   ];
 
   constructor(private breakpointObserver: BreakpointObserver) {}
@@ -47,5 +47,15 @@ export class NavigationComponent implements OnInit {
   toggleTheme() {
     this.isDarkTheme = !this.isDarkTheme;
     document.body.classList.toggle('dark-mode', this.isDarkTheme);
+  }
+
+  // Add this method for smooth scrolling
+  scrollToSection(event: Event, href: string) {
+    event.preventDefault();
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      if (this.isMobile) this.isMenuOpen = false;
+    }
   }
 }

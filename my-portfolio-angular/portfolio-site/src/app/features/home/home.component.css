@@ -1,0 +1,457 @@
+/* =========================
+   HERO SECTION STYLES
+   ========================= */
+.hero-section {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+  padding: 100px 20px;
+}
+
+.hero-content {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.profile-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.text-content {
+  flex: 1 1 320px;
+  min-width: 250px;
+  text-align: left;
+}
+
+.hero-buttons {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.profile-photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0 220px;
+  min-width: 180px;
+}
+
+.profile-photo img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  margin-bottom: 1.2rem;
+}
+
+.resume-download-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--secondary-color);
+  color: var(--background-color);
+  padding: 0.5rem 1.2rem;
+  border-radius: var(--border-radius-md);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.resume-download-btn:hover {
+  background: var(--primary-color);
+  color: var(--background-color);
+}
+
+.resume-download-btn .material-icons {
+  font-size: 1.2em;
+}
+
+/* Responsive: Stack on small screens */
+@media (max-width: 900px) {
+  .profile-container {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+  .profile-photo {
+    align-items: flex-start;
+  }
+  .text-content {
+    text-align: left;
+  }
+}
+
+/* =========================
+   END HERO SECTION STYLES
+   ========================= */
+
+.about-teaser-section {
+  background-color: var(--secondary-color);
+  color: var(--background-color);
+  text-align: center;
+  padding: 50px 20px;
+}
+.about-button {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+.about-button:hover {
+  background-color: var(--secondary-color);
+  color: var(--background-color);
+}
+
+.cta-section {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+  text-align: center;
+  padding: 50px 20px;
+}
+.contact-button {
+  background-color: var(--secondary-color);
+  color: var(--background-color);
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+.contact-button:hover {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+}
+
+.portfolio-showcase-section {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  padding: 50px 20px;
+  text-align: center;
+}
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-md);
+}
+.portfolio-card {
+  background-color: var(--background-color);
+  border: 1px solid #dddddd;
+  border-radius: var(--border-radius-lg);
+  padding: 20px;
+  text-align: left;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  transition: background-color var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed);
+}
+.card-image {
+  background-color: var(--secondary-color);
+  height: 150px;
+  border-radius: var(--border-radius-md);
+  margin-bottom: 15px;
+}
+.portfolio-card h3 {
+  margin: 10px 0;
+  font-family: var(--heading-font);
+}
+.portfolio-card button {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+  padding: 5px 15px;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+.portfolio-card button:hover {
+  background-color: var(--secondary-color);
+  color: var(--background-color);
+}
+
+/* Animation Classes */
+.animate-fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-fade-in-delay {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s 0.4s ease-out forwards;
+}
+
+.animate-slide-up {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: slideUp 0.7s ease-out forwards;
+}
+
+.animate-slide-up-delay {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: slideUp 0.7s 0.3s ease-out forwards;
+}
+
+.animate-slide-up-delay-2 {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: slideUp 0.7s 0.6s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cta-button {
+  margin-right: 1rem;
+}
+.cta-button.outline {
+  background: transparent;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+.cta-button.outline:hover {
+  background: var(--primary-color);
+  color: var(--background-color);
+}
+
+.contact-section {
+  background: linear-gradient(120deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  color: var(--background-color);
+  padding: 60px 20px;
+}
+
+.contact-section h2 {
+  text-align: justify;
+}
+.contact-grid {
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  margin-top: 2rem;
+}
+
+.contact-info-cards {
+  flex: 1 1 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.contact-card {
+  display: flex;
+  align-items: center;
+  background: var(--background-color);
+  color: var(--primary-color);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 1.2rem 1.5rem;
+  gap: 1.2rem;
+  transition: box-shadow 0.2s;
+}
+.contact-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+}
+
+.contact-icon {
+  font-size: 2.7rem;
+  color: var(--secondary-color);
+}
+
+.contact-form-card {
+  flex: 2 1 340px;
+  background: var(--background-color);
+  color: var(--text-primary);
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 2.5rem 2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-title {
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 0.2rem;
+}
+.form-row .form-group {
+  flex: 1 1 0;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  margin-bottom: 0.4rem;
+  font-weight: 500;
+  color: var(--primary-color);
+  text-align: justify;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.7rem 1rem;
+  border-radius: var(--border-radius-md);
+  border: 1.5px solid var(--secondary-color);
+  font-size: 1rem;
+  background: var(--surface-color);
+  color: var(--text-primary);
+  resize: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.contact-button {
+  background: var(--primary-color);
+  color: var(--background-color);
+  border: none;
+  padding: 0.7rem 2.2rem;
+  border-radius: var(--border-radius-md);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s;
+  margin-top: 0.5rem;
+}
+.contact-button:hover {
+  background: var(--secondary-color);
+}
+
+/* =========================
+   HERO SECTION BUTTONS
+   ========================= */
+.hero-buttons .cta-button {
+  background: var(--secondary-color);
+  color: var(--background-color);
+  border: none;
+  padding: 0.7rem 2rem;
+  border-radius: var(--border-radius-md);
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hero-buttons .cta-button:hover,
+.hero-buttons .cta-button:focus {
+  background: var(--primary-color);
+  color: var(--background-color);
+}
+
+.hero-buttons .cta-button.outline {
+  background: transparent;
+  color: var(--secondary-color);
+  border: 2px solid var(--secondary-color);
+  box-shadow: none;
+}
+
+.hero-buttons .cta-button.outline:hover,
+.hero-buttons .cta-button.outline:focus {
+  background: var(--secondary-color);
+  color: var(--background-color);
+  border-color: var(--secondary-color);
+}
+
+/* Responsive: Stack buttons on small screens */
+@media (max-width: 600px) {
+  .hero-buttons {
+    flex-direction: column;
+    gap: 0.8rem;
+    width: 100%;
+  }
+  .hero-buttons .cta-button,
+  .hero-buttons .cta-button.outline {
+    width: 100%;
+    justify-content: center;
+  }
+}
+/* =========================
+   END HERO SECTION BUTTONS
+   ========================= */
+
+/* =========================
+   CONTACT SECTION RESPONSIVENESS
+   ========================= */
+@media (max-width: 900px) {
+  .contact-grid {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  .contact-info-cards,
+  .contact-form-card {
+    width: 100%;
+    max-width: 100%;
+  }
+  .contact-form-card {
+    margin-top: 0;
+    padding: 2rem 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-section {
+    padding: 40px 5px;
+  }
+  .contact-form-card {
+    padding: 1.2rem 0.5rem;
+  }
+  .form-title {
+    font-size: 1.1rem;
+  }
+  .contact-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 1rem 0.7rem;
+  }
+  .contact-icon {
+    font-size: 2rem;
+  }
+}

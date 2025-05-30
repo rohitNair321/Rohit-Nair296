@@ -8,11 +8,15 @@
     <!-- Desktop Menu -->
     <div class="desktop-menu" *ngIf="!isMobile">
       <div class="menu-items">
-        <a *ngFor="let item of menuItems" 
-           [routerLink]="item.href" 
+        <a *ngFor="let item of menuItems"
+           [href]="item.href"
            class="menu-link"
-           routerLinkActive="active">
+           (click)="scrollToSection($event, item.href)">
           {{ item.label }}
+        </a>
+        <a class="resume-download-btn" href="assets/resume.pdf" download>
+          <span class="material-icons">download</span>
+          Resume
         </a>
       </div>
       <button class="theme-toggle" (click)="toggleTheme()">
@@ -28,12 +32,15 @@
     <!-- Mobile Menu (Right-aligned) -->
     <div class="mobile-menu right-align" [class.show]="isMenuOpen && isMobile">
       <div class="menu-items">
-        <a *ngFor="let item of menuItems" 
-           [routerLink]="item.href" 
+        <a *ngFor="let item of menuItems"
+           [href]="item.href"
            class="menu-link"
-           (click)="toggleMenu()"
-           routerLinkActive="active">
+           (click)="scrollToSection($event, item.href)">
           {{ item.label }}
+        </a>
+        <a class="resume-download-btn" href="assets/resume.pdf" download>
+          <span class="material-icons">download</span>
+          Resume
         </a>
         <button class="theme-toggle" (click)="toggleTheme()">
           <span class="material-icons">{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</span>

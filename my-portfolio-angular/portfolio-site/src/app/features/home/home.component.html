@@ -1,0 +1,118 @@
+<!-- home.component.html -->
+<div class="home-page">
+  <section id="home" class="hero-section">
+    <div class="hero-content">
+      <div class="profile-container">
+        <!-- Left: Text Content -->
+        <div class="text-content">
+          <h1 class="animate-slide-up">Hi, I'm Rohit Nair</h1>
+          <p class="animate-slide-up-delay">A Passionate Front-End Developer</p>
+          <div class="typing-text animate-slide-up-delay-2">
+            <span>Angular</span> • <span>TypeScript</span> • <span>HTML/CSS</span>
+          </div>
+          <div class="hero-buttons">
+            <button class="cta-button animate-fade-in-delay" (click)="scrollToSection($event, '#projects')">My Work</button>
+            <button class="cta-button outline animate-fade-in-delay" (click)="scrollToSection($event, '#contact')">Contact Me</button>
+          </div>
+        </div>
+        <!-- Right: Profile Photo & Resume Button -->
+        <div class="profile-photo">
+          <img src="assets/images/profile.jpg" alt="Rohit Nair" class="animate-fade-in">
+          <a class="resume-download-btn" href="assets/resume.pdf" download>
+            <span class="material-icons">download</span>
+            Download Resume
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="about-teaser-section">
+    <h2>About Me</h2>
+    <p>I specialize in creating visually appealing and user-friendly web experiences using Angular.</p>
+    <button class="about-button">Learn More</button>
+  </section>
+
+  <section id="projects" class="portfolio-showcase-section">
+    <h2>My Work</h2>
+    <div class="portfolio-grid">
+      <div class="portfolio-card">
+        <div class="card-image"></div>
+        <h3>Project Title 1</h3>
+        <p>A brief overview of what this project is about.</p>
+        <button>View Project</button>
+      </div>
+      <div class="portfolio-card">
+        <div class="card-image"></div>
+        <h3>Project Title 2</h3>
+        <p>A brief overview of what this project is about.</p>
+        <button>View Project</button>
+      </div>
+      <div class="portfolio-card">
+        <div class="card-image"></div>
+        <h3>Project Title 3</h3>
+        <p>A brief overview of what this project is about.</p>
+        <button>View Project</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="cta-section contact-section">
+    <h2>Let's Work Together</h2>
+    <p>I'm available for freelance or full-time opportunities.</p>
+    <div class="contact-grid">
+      <!-- Left: Contact Info Cards -->
+      <div class="contact-info-cards">
+        <div class="contact-card">
+          <span class="material-icons contact-icon">email</span>
+          <div>
+            <h4>Email</h4>
+            <p>rohit@example.com</p>
+          </div>
+        </div>
+        <div class="contact-card">
+          <span class="material-icons contact-icon">phone</span>
+          <div>
+            <h4>Phone</h4>
+            <p>+91 98765 43210</p>
+          </div>
+        </div>
+        <div class="contact-card">
+          <span class="material-icons contact-icon">location_on</span>
+          <div>
+            <h4>Location</h4>
+            <p>Mumbai, India</p>
+          </div>
+        </div>
+      </div>
+      <!-- Right: Contact Form -->
+      <div class="contact-form-card">
+        <form>
+          <h3 class="form-title">Send a Message</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Your Name</label>
+              <input id="name" name="name" type="text" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Your Email</label>
+              <input id="email" name="email" type="email" placeholder="Enter your email" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input id="subject" name="subject" type="text" placeholder="Subject">
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="4" placeholder="Type your message..." required></textarea>
+          </div>
+          <button type="submit" class="contact-button">
+            <span class="material-icons">send</span>
+            Send
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>

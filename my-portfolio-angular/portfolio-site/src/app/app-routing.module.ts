@@ -1,24 +1,42 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AboutComponent } from './components/about/about.component';
-import { ContactComponent } from './components/contact/contact.component';
-import { HomeComponent } from './components/home/home.component';
-import { PortfolioComponent } from './components/portfolio/portfolio.component';
+import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
+import { HomeComponent } from './features/home/home.component';
 
 const routes: Routes = [
-  // {
-  //   path: '', // Parent route
-  //   component: MainLayoutComponent,
-  //   children: [
-
-  //   ],
-  // },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
-  { path: 'about', component: AboutComponent },
-  { path: 'portfolio', component: PortfolioComponent },
-  { path: 'contact', component: ContactComponent },
-  { path: '**', redirectTo: 'home' }, // Fallback route
+  {
+    path: '',
+    component: MainLayoutComponent,
+    children: [
+      { path: '', component: HomeComponent },
+      { path: '**', redirectTo: '' }
+      // {
+      //   path: 'home',
+      //   loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule)
+      // },
+      // {
+      //   path: 'about',
+      //   loadChildren: () => import('./features/about/about.module').then(m => m.AboutModule)
+      // },
+      // {
+      //   path: 'portfolio',
+      //   loadChildren: () => import('./features/portfolio/portfolio.module').then(m => m.PortfolioModule)
+      // },
+      // {
+      //   path: 'contact',
+      //   loadChildren: () => import('./features/contact/contact.module').then(m => m.ContactModule)
+      // }
+    ]
+  },
+  {
+    path: '',
+    component: AuthLayoutComponent,
+    children: [
+      // Auth routes here
+    ]
+  },
+  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({
