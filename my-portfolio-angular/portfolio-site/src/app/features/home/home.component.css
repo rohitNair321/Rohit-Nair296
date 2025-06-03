@@ -209,6 +209,26 @@
   animation: slideUp 0.7s 0.6s ease-out forwards;
 }
 
+.animate-fade-in-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.8s, transform 0.8s;
+}
+.animate-fade-in-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.8s, transform 0.8s;
+}
+.animate-fade-in-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s, transform 0.8s;
+}
+.in-view {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 @keyframes fadeInUp {
   to {
     opacity: 1;
@@ -454,4 +474,152 @@
   .contact-icon {
     font-size: 2rem;
   }
+}
+
+/* =========================
+   ABOUT SECTION STYLES
+   ========================= */
+.about-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 0;
+  flex-wrap: wrap;
+}
+.about-photo {
+  flex: 0 0 220px;
+  min-width: 180px;
+  display: flex;
+  justify-content: center;
+}
+.about-photo img {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+}
+.about-text {
+  flex: 1 1 350px;
+  min-width: 250px;
+  text-align: left;
+}
+
+/* Responsive: Stack on small screens */
+@media (max-width: 900px) {
+  .about-container {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 20px 0;
+  }
+  .about-photo img {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+/* =========================
+   PORTFOLIO SECTION STYLES
+   ========================= */
+.portfolio-slider-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 2rem 0;
+}
+
+.portfolio-slider-outer {
+  overflow: hidden;
+  width: 100%;
+  max-width: 1000px;
+}
+
+.portfolio-slider-inner {
+  display: flex;
+  gap: 2rem;
+  /* transition handled inline for dynamic cubic-bezier */
+}
+
+.portfolio-card {
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  min-width: 320px;
+  max-width: 320px;
+  flex: 0 0 320px;
+  transition: transform 0.4s, box-shadow 0.4s;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--surface-color);
+  border: 2px solid var(--primary-color);
+}
+.portfolio-card:hover {
+  transform: scale(1.04) translateY(-8px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+
+.slider-btn {
+  background: var(--primary-color);
+  color: var(--background-color);
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  position: relative;
+  z-index: 3;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  transition: background 0.2s;
+}
+.slider-btn.right {
+  margin-left: 1rem;
+}
+.slider-btn.left {
+  margin-right: 1rem;
+}
+.slider-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .portfolio-slider-outer {
+    max-width: 98vw;
+  }
+  .portfolio-card {
+    min-width: 90vw;
+    max-width: 95vw;
+  }
+}
+
+/* Animation classes */
+.animate-fade-in-up {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s, transform 0.8s;
+}
+.in-view {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Contact links */
+.contact-link {
+  color: var(--primary-color);
+  text-decoration: underline;
+  word-break: break-all;
+  transition: color 0.2s;
+}
+.contact-link:hover {
+  color: var(--secondary-color);
 }

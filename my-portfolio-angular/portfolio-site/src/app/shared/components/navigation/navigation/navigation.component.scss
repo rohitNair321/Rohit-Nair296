@@ -13,8 +13,12 @@
   }
 
   .logo-image {
+    width: 40px;
     height: 40px;
-    transition: transform var(--transition-speed);
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 0.7rem;
+    vertical-align: middle;
     
     &:hover {
       transform: scale(1.05);
@@ -148,4 +152,84 @@
 
 .navigation, .navigation .menu-link, .navigation .resume-download-btn {
   color: var(--text-color);
+}
+.logo-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-left: 0.7rem;
+  letter-spacing: 1px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.logo-rohit {
+  color: var(--primary-color);
+}
+.logo-portfolio {
+  color: var(--secondary-color);
+  margin-left: 0.2rem;
+}
+
+.logo-initials {
+  /* ... all the usual flex stuff to center it ... */
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif; /* Good fonts */
+  font-weight: 900; /* Bold AF */
+  font-size: 2.2rem;
+  width: 52px; /* Kept it the same size */
+  height: 52px; /* Ditto */
+  border-radius: 50%; /* Round boi */
+  background: linear-gradient(135deg, var(--logo-bg-gradient-start) 0%, var(--logo-bg-gradient-end) 100%); /* That peachy gradient */
+  border: 2.5px solid var(--logo-border-color); /* Terracotta border */
+  box-shadow: 0 4px 15px 0 var(--logo-main-shadow-color), /* Softer shadow, looks good */
+              0 1.5px 0 var(--app-background-color) inset; /* That pop-out shadow thingy */
+  /* ... other stuff like margin, position, etc. ... */
+  letter-spacing: -3px; /* Squishes the letters a bit, looks cool */
+  user-select: none; /* So ppl can't accidentally select it */
+  transition: box-shadow 0.25s ease-out, border-color 0.25s ease-out; /* Smooth moves on hover */
+}
+
+.logo-initials:hover {
+  box-shadow: 0 7px 22px 0 var(--logo-main-shadow-color); /* More shadow when you hover, neat! */
+  border-color: var(--logo-hover-border-color); /* Border changes color too! */
+}
+
+.rn-r {
+  color: var(--logo-letter-r-color); /* That sienna brown for R */
+  font-size: 2.3rem; /* Same size */
+  /* ... font family, margin for overlap ... */
+  z-index: 2; /* R on top! */
+  text-shadow: /* Just a tiny shadow to make it pop a bit */
+    0.5px 0.5px 0px var(--logo-letter-text-shadow);
+  letter-spacing: 0; /* Normal spacing for the letter itself */
+  position: relative;
+}
+
+.rn-n {
+  color: var(--logo-letter-n-color); /* Saddle brown for N */
+  font-size: 2.1rem; /* Same size */
+  /* ... font family, margin for overlap ... */
+  z-index: 1; /* N underneath R */
+  text-shadow:
+    0.5px 0.5px 0px var(--logo-letter-text-shadow); /* Same tiny shadow */
+  letter-spacing: 0; /* Normal spacing here too */
+  position: relative;
+}
+
+// Navigation Animations
+@keyframes navFadeIn {
+  from { opacity: 0; transform: scale(0.85);}
+  to { opacity: 1; transform: scale(1);}
+}
+@keyframes navSlideIn {
+  from { opacity: 0; transform: translateX(-30px);}
+  to { opacity: 1; transform: translateX(0);}
+}
+
+.animate-nav-fade-in {
+  opacity: 0;
+  animation: navFadeIn 0.7s cubic-bezier(.77,0,.18,1) 0.1s forwards;
+}
+
+.animate-nav-slide-in {
+  opacity: 0;
+  animation: navSlideIn 0.7s cubic-bezier(.77,0,.18,1) 0.3s forwards;
 }

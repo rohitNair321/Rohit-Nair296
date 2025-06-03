@@ -22,6 +22,7 @@ export class NavigationComponent implements OnInit {
   constructor(private breakpointObserver: BreakpointObserver) {}
 
   ngOnInit() {
+    console.log(this.config);
     this.setupResponsiveBehavior();
     this.initializeTheme();
   }

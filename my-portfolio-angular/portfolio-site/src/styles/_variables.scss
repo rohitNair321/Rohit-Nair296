@@ -9,6 +9,18 @@
   --accent-color: #C44536;
   --border-color: #D3CEC9;
 
+// :root {
+  --logo-bg-gradient-start: #FFF0E1; /* Like, a super light, warm peachy color */
+  --logo-bg-gradient-end: #FFDAB9;   /* Kinda light peach/apricot, super soft */
+  --logo-letter-r-color: #A0522D;   /* This "Sienna" - a nice, warm brown for the 'R' */
+  --logo-letter-n-color: #8B4513;   /* "SaddleBrown" - a bit darker brown for 'N', looks cool */
+  --logo-border-color: #E8A87C;     /* A chill terracotta for the border, not too loud */
+  --logo-hover-border-color: #E29578; /* A bit richer terracotta when you hover, nice touch! */
+  --app-background-color: #FFFFFF;   /* Just your page background, prob white, for that pop-out shadow */
+  --logo-main-shadow-color: rgba(200, 120, 80, 0.18); /* Soft shadow, keeps it warm */
+  --logo-letter-text-shadow: rgba(255, 255, 255, 0.6); /* Tiny bit of light shadow inside the letters */
+// }
+
   /* Typography */
   --font-family: 'Inter', sans-serif;
   --heading-font: 'Poppins', sans-serif;

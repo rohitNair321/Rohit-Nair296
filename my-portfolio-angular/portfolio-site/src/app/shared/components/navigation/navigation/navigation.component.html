@@ -2,11 +2,17 @@
   <div class="nav-container">
     <!-- Logo Section -->
     <div class="logo">
-      <img [src]="config?.logo" alt="Portfolio Logo" class="logo-image" />
+        <span class="logo-initials animate-nav-fade-in">
+          <span class="rn-r">R</span><span class="rn-n">N</span>
+        </span>
+      <span class="logo-name animate-nav-slide-in">
+        <span class="logo-rohit">Rohit</span>
+        <span class="logo-portfolio">Portfolio</span>
+      </span>
     </div>
 
     <!-- Desktop Menu -->
-    <div class="desktop-menu" *ngIf="!isMobile">
+    <div class="desktop-menu animate-nav-fade-in" *ngIf="!isMobile">
       <div class="menu-items">
         <a *ngFor="let item of menuItems"
            [href]="item.href"
