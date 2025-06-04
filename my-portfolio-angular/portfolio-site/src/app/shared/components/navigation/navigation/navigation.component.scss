@@ -1,7 +1,7 @@
 .navigation {
-  background-color: var(--background-color);
-  color: var(--text-color);
-  transition: all var(--transition-speed);
+  background-color: var(--global-background-color);
+  color: var(--global-text-color);
+  transition: all var(--global-transition-speed);
   position: sticky;
   top: 0;
   width: 100%;
@@ -9,7 +9,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   &.navbar {
-    padding: var(--spacing-md) 0;
+    padding: var(--global-spacing-md) 0;
   }
 
   .logo-image {
@@ -28,13 +28,13 @@
   .menu-items {
     display: flex;
     align-items: center;
-    gap: var(--spacing-xl);
+    gap: var(--global-spacing-xl);
 
     .menu-link {
       color: inherit;
-      padding: var(--spacing-xs) 0;
+      padding: var(--global-spacing-xs) 0;
       position: relative;
-      transition: color var(--transition-speed);
+      transition: color var(--global-transition-speed);
 
       &::after {
         content: '';
@@ -43,8 +43,8 @@
         left: 0;
         width: 0;
         height: 2px;
-        background-color: var(--primary-color);
-        transition: width var(--transition-speed);
+        background-color: var(--global-primary-color);
+        transition: width var(--global-transition-speed);
       }
 
       &:hover::after {
@@ -56,15 +56,15 @@
 .menu-toggle, .theme-toggle {
   background: none;
   border: none;
-  color: var(--text-color);
+  color: var(--global-text-color);
   cursor: pointer;
   padding: 0.5rem;
   display: flex;
   align-items: center;
-  transition: color var(--transition-speed);
+  transition: color var(--global-transition-speed);
 
   &:hover {
-    color: var(--primary-color);
+    color: var(--global-primary-color);
   }
 
   .material-icons {
@@ -80,33 +80,33 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-md) var(--spacing-xl); // Add horizontal padding
+  padding: var(--global-spacing-md) var(--global-spacing-xl); // Add horizontal padding
   position: relative;
 
   .desktop-menu {
     display: flex;
     align-items: center;
-    gap: var(--spacing-xl);
+    gap: var(--global-spacing-xl);
     margin-left: auto; 
 
     .menu-items {
       display: flex;
-      gap: var(--spacing-lg);
+      gap: var(--global-spacing-lg);
       align-items: center;
     }
   }
 
   .mobile-menu {
     position: fixed;
-    top: 60px;
+    top: 70px;
     right: 0; // Align to right edge
     left: auto; // Reset left position
     width: 250px; // Set specific width
     transform: translateX(100%); // Slide from right
-    background: var(--background-color);
+    background: var(--global-background-color);
     box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.1);
-    padding: var(--spacing-md);
-    transition: transform var(--transition-speed) ease-out;
+    padding: var(--global-spacing-md);
+    transition: transform var(--global-transition-speed) ease-out;
     z-index: 999;
     
     &.show {
@@ -116,8 +116,8 @@
     .menu-items {
       display: flex;
       flex-direction: column;
-      align-items: flex-end; 
-      gap: var(--spacing-md);
+      align-items: flex-start; 
+      gap: var(--global-spacing-md);
     }
   }
 
@@ -130,14 +130,13 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  background: var(--secondary-color);
-  color: var(--background-color);
+  background: var(--global-secondary-color);
+  color: var(--global-background-color);
   padding: 0.4rem 1rem;
-  border-radius: var(--border-radius-md);
+  border-radius: var(--global-border-radius-md);
   text-decoration: none;
   font-weight: 500;
   font-size: 1rem;
-  margin-left: var(--spacing-md);
   transition: background 0.2s, color 0.2s;
 
   .material-icons {
@@ -145,13 +144,13 @@
   }
 
   &:hover {
-    background: var(--primary-color);
-    color: var(--background-color);
+    background: var(--global-primary-color);
+    color: var(--global-background-color);
   }
 }
 
 .navigation, .navigation .menu-link, .navigation .resume-download-btn {
-  color: var(--text-color);
+  color: var(--global-text-color);
 }
 .logo-name {
   font-size: 1.3rem;
@@ -162,10 +161,10 @@
   vertical-align: middle;
 }
 .logo-rohit {
-  color: var(--primary-color);
+  color: var(--global-primary-color);
 }
 .logo-portfolio {
-  color: var(--secondary-color);
+  color: var(--global-secondary-color);
   margin-left: 0.2rem;
 }
 
@@ -177,10 +176,10 @@
   width: 52px; /* Kept it the same size */
   height: 52px; /* Ditto */
   border-radius: 50%; /* Round boi */
-  background: linear-gradient(135deg, var(--logo-bg-gradient-start) 0%, var(--logo-bg-gradient-end) 100%); /* That peachy gradient */
-  border: 2.5px solid var(--logo-border-color); /* Terracotta border */
-  box-shadow: 0 4px 15px 0 var(--logo-main-shadow-color), /* Softer shadow, looks good */
-              0 1.5px 0 var(--app-background-color) inset; /* That pop-out shadow thingy */
+  background: linear-gradient(135deg, var(--global-logo-bg-gradient-start) 0%, var(--global-logo-bg-gradient-end) 100%); /* That peachy gradient */
+  border: 2.5px solid var(--global-logo-border-color); /* Terracotta border */
+  box-shadow: 0 4px 15px 0 var(--global-logo-main-shadow-color), /* Softer shadow, looks good */
+              0 1.5px 0 var(--global-app-background-color) inset; /* That pop-out shadow thingy */
   /* ... other stuff like margin, position, etc. ... */
   letter-spacing: -3px; /* Squishes the letters a bit, looks cool */
   user-select: none; /* So ppl can't accidentally select it */
@@ -188,28 +187,28 @@
 }
 
 .logo-initials:hover {
-  box-shadow: 0 7px 22px 0 var(--logo-main-shadow-color); /* More shadow when you hover, neat! */
-  border-color: var(--logo-hover-border-color); /* Border changes color too! */
+  box-shadow: 0 7px 22px 0 var(--global-logo-main-shadow-color); /* More shadow when you hover, neat! */
+  border-color: var(--global-logo-hover-border-color); /* Border changes color too! */
 }
 
 .rn-r {
-  color: var(--logo-letter-r-color); /* That sienna brown for R */
+  color: var(--global-logo-letter-r-color); /* That sienna brown for R */
   font-size: 2.3rem; /* Same size */
   /* ... font family, margin for overlap ... */
   z-index: 2; /* R on top! */
   text-shadow: /* Just a tiny shadow to make it pop a bit */
-    0.5px 0.5px 0px var(--logo-letter-text-shadow);
+    0.5px 0.5px 0px var(--global-logo-letter-text-shadow);
   letter-spacing: 0; /* Normal spacing for the letter itself */
   position: relative;
 }
 
 .rn-n {
-  color: var(--logo-letter-n-color); /* Saddle brown for N */
+  color: var(--global-logo-letter-n-color); /* Saddle brown for N */
   font-size: 2.1rem; /* Same size */
   /* ... font family, margin for overlap ... */
   z-index: 1; /* N underneath R */
   text-shadow:
-    0.5px 0.5px 0px var(--logo-letter-text-shadow); /* Same tiny shadow */
+    0.5px 0.5px 0px var(--global-logo-letter-text-shadow); /* Same tiny shadow */
   letter-spacing: 0; /* Normal spacing here too */
   position: relative;
 }

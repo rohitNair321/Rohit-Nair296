@@ -5,8 +5,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "build-prod": "ng build --configuration production --base-href=/Rohit-Nair296/",
+    "watch": "ng build --watch --configuration development --base-href=/Rohit-Nair296/",
+    "test": "ng test",
+    "deploy": "npx angular-cli-ghpages --dir=dist --branch=gh-pages --repo=https://github.com/rohitNair321/Rohit-Nair296.git"
   },
   "private": true,
   "dependencies": {
@@ -35,6 +37,7 @@
     "@angular/cli": "~15.2.11",
     "@angular/compiler-cli": "^15.2.0",
     "@types/jasmine": "~4.3.0",
+    "gh-pages": "^6.3.0",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",

@@ -2,8 +2,8 @@
    HERO SECTION STYLES
    ========================= */
 .hero-section {
-  background-color: var(--primary-color);
-  color: var(--background-color);
+  background-color: var(--global-primary-color);
+  color: var(--global-background-color);
   padding: 100px 20px;
 }
 
@@ -52,11 +52,12 @@
 .resume-download-btn {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
-  background: var(--secondary-color);
-  color: var(--background-color);
+  background: var(--global-primary-color);
+  color: var(--global-background-color);
   padding: 0.5rem 1.2rem;
-  border-radius: var(--border-radius-md);
+  border-radius: var(--global-border-radius-md);
   text-decoration: none;
   font-weight: 500;
   font-size: 1rem;
@@ -64,9 +65,13 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
+.about-res-width {
+  width: 25%;
+}
+
 .resume-download-btn:hover {
-  background: var(--primary-color);
-  color: var(--background-color);
+  background: var(--global-primary-color);
+  color: var(--global-background-color);
 }
 
 .resume-download-btn .material-icons {
@@ -93,89 +98,89 @@
    ========================= */
 
 .about-teaser-section {
-  background-color: var(--secondary-color);
-  color: var(--background-color);
+  background-color: var(--global-secondary-color);
+  color: var(--global-background-color);
   text-align: center;
   padding: 50px 20px;
 }
 .about-button {
-  background-color: var(--primary-color);
-  color: var(--background-color);
+  background-color: var(--global-primary-color);
+  color: var(--global-background-color);
   padding: 10px 20px;
   border: none;
-  border-radius: var(--border-radius-md);
+  border-radius: var(--global-border-radius-md);
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color var(--transition-speed), color var(--transition-speed);
+  transition: background-color var(--global-transition-speed), color var(--global-transition-speed);
 }
 .about-button:hover {
-  background-color: var(--secondary-color);
-  color: var(--background-color);
+  background-color: var(--global-secondary-color);
+  color: var(--global-background-color);
 }
 
 .cta-section {
-  background-color: var(--primary-color);
-  color: var(--background-color);
+  background-color: var(--global-primary-color);
+  color: var(--global-background-color);
   text-align: center;
   padding: 50px 20px;
 }
 .contact-button {
-  background-color: var(--secondary-color);
-  color: var(--background-color);
+  background-color: var(--global-secondary-color);
+  color: var(--global-background-color);
   padding: 10px 20px;
   border: none;
-  border-radius: var(--border-radius-md);
+  border-radius: var(--global-border-radius-md);
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color var(--transition-speed), color var(--transition-speed);
+  transition: background-color var(--global-transition-speed), color var(--global-transition-speed);
 }
 .contact-button:hover {
-  background-color: var(--primary-color);
-  color: var(--background-color);
+  background-color: var(--global-primary-color);
+  color: var(--global-background-color);
 }
 
 .portfolio-showcase-section {
-  background-color: var(--background-color);
-  color: var(--text-color);
+  background-color: var(--global-background-color);
+  color: var(--global-text-color);
   padding: 50px 20px;
   text-align: center;
 }
 .portfolio-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--spacing-md);
+  gap: var(--global-spacing-md);
 }
 .portfolio-card {
-  background-color: var(--background-color);
+  background-color: var(--global-background-color);
   border: 1px solid #dddddd;
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--global-border-radius-lg);
   padding: 20px;
   text-align: left;
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  transition: background-color var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed);
+  transition: background-color var(--global-transition-speed), color var(--global-transition-speed), border-color var(--global-transition-speed);
 }
 .card-image {
-  background-color: var(--secondary-color);
+  background-color: var(--global-secondary-color);
   height: 150px;
-  border-radius: var(--border-radius-md);
+  border-radius: var(--global-border-radius-md);
   margin-bottom: 15px;
 }
 .portfolio-card h3 {
   margin: 10px 0;
-  font-family: var(--heading-font);
+  font-family: var(--global-heading-font);
 }
 .portfolio-card button {
-  background-color: var(--primary-color);
-  color: var(--background-color);
+  background-color: var(--global-primary-color);
+  color: var(--global-background-color);
   padding: 5px 15px;
   border: none;
-  border-radius: var(--border-radius-sm);
+  border-radius: var(--global-border-radius-sm);
   cursor: pointer;
-  transition: background-color var(--transition-speed), color var(--transition-speed);
+  transition: background-color var(--global-transition-speed), color var(--global-transition-speed);
 }
 .portfolio-card button:hover {
-  background-color: var(--secondary-color);
-  color: var(--background-color);
+  background-color: var(--global-secondary-color);
+  color: var(--global-background-color);
 }
 
 /* Animation Classes */
@@ -248,17 +253,17 @@
 }
 .cta-button.outline {
   background: transparent;
-  color: var(--primary-color);
-  border: 2px solid var(--primary-color);
+  color: var(--global-primary-color);
+  border: 2px solid var(--global-primary-color);
 }
 .cta-button.outline:hover {
-  background: var(--primary-color);
-  color: var(--background-color);
+  background: var(--global-primary-color);
+  color: var(--global-background-color);
 }
 
 .contact-section {
-  background: linear-gradient(120deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-  color: var(--background-color);
+  background: linear-gradient(120deg, var(--global-primary-color) 0%, var(--global-secondary-color) 100%);
+  color: var(--global-background-color);
   padding: 60px 20px;
 }
 
@@ -283,9 +288,9 @@
 .contact-card {
   display: flex;
   align-items: center;
-  background: var(--background-color);
-  color: var(--primary-color);
-  border-radius: var(--border-radius-lg);
+  background: var(--global-background-color);
+  color: var(--global-primary-color);
+  border-radius: var(--global-border-radius-lg);
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   padding: 1.2rem 1.5rem;
   gap: 1.2rem;
@@ -297,14 +302,14 @@
 
 .contact-icon {
   font-size: 2.7rem;
-  color: var(--secondary-color);
+  color: var(--global-secondary-color);
 }
 
 .contact-form-card {
   flex: 2 1 340px;
-  background: var(--background-color);
-  color: var(--text-primary);
-  border-radius: var(--border-radius-lg);
+  background: var(--global-background-color);
+  color: var(--global-text-primary);
+  border-radius: var(--global-border-radius-lg);
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   padding: 2.5rem 2rem 2rem 2rem;
   display: flex;
@@ -314,7 +319,7 @@
 
 .form-title {
   margin-bottom: 1.5rem;
-  color: var(--primary-color);
+  color: var(--global-primary-color);
   font-size: 1.4rem;
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -338,18 +343,18 @@
 .form-group label {
   margin-bottom: 0.4rem;
   font-weight: 500;
-  color: var(--primary-color);
+  color: var(--global-primary-color);
   text-align: justify;
 }
 
 .form-group input,
 .form-group textarea {
   padding: 0.7rem 1rem;
-  border-radius: var(--border-radius-md);
-  border: 1.5px solid var(--secondary-color);
+  border-radius: var(--global-border-radius-md);
+  border: 1.5px solid var(--global-secondary-color);
   font-size: 1rem;
-  background: var(--surface-color);
-  color: var(--text-primary);
+  background: var(--global-surface-color);
+  color: var(--global-text-primary);
   resize: none;
   transition: border-color 0.2s;
 }
@@ -357,15 +362,15 @@
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--primary-color);
+  border-color: var(--global-primary-color);
 }
 
 .contact-button {
-  background: var(--primary-color);
-  color: var(--background-color);
+  background: var(--global-primary-color);
+  color: var(--global-background-color);
   border: none;
   padding: 0.7rem 2.2rem;
-  border-radius: var(--border-radius-md);
+  border-radius: var(--global-border-radius-md);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -376,18 +381,18 @@
   margin-top: 0.5rem;
 }
 .contact-button:hover {
-  background: var(--secondary-color);
+  background: var(--global-secondary-color);
 }
 
 /* =========================
    HERO SECTION BUTTONS
    ========================= */
 .hero-buttons .cta-button {
-  background: var(--secondary-color);
-  color: var(--background-color);
+  background: var(--global-secondary-color);
+  color: var(--global-background-color);
   border: none;
   padding: 0.7rem 2rem;
-  border-radius: var(--border-radius-md);
+  border-radius: var(--global-border-radius-md);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -401,22 +406,22 @@
 
 .hero-buttons .cta-button:hover,
 .hero-buttons .cta-button:focus {
-  background: var(--primary-color);
-  color: var(--background-color);
+  background: var(--global-primary-color);
+  color: var(--global-background-color);
 }
 
 .hero-buttons .cta-button.outline {
   background: transparent;
-  color: var(--secondary-color);
-  border: 2px solid var(--secondary-color);
+  color: var(--global-secondary-color);
+  border: 2px solid var(--global-secondary-color);
   box-shadow: none;
 }
 
 .hero-buttons .cta-button.outline:hover,
 .hero-buttons .cta-button.outline:focus {
-  background: var(--secondary-color);
-  color: var(--background-color);
-  border-color: var(--secondary-color);
+  background: var(--global-secondary-color);
+  color: var(--global-background-color);
+  border-color: var(--global-secondary-color);
 }
 
 /* Responsive: Stack buttons on small screens */
@@ -519,6 +524,9 @@
     width: 160px;
     height: 160px;
   }
+  .about-res-width {
+    width: auto;
+  }
 }
 
 /* =========================
@@ -547,7 +555,7 @@
 .portfolio-card {
   background-size: cover;
   background-position: center;
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--global-border-radius-lg);
   box-shadow: 0 4px 16px rgba(0,0,0,0.10);
   min-width: 320px;
   max-width: 320px;
@@ -555,8 +563,8 @@
   transition: transform 0.4s, box-shadow 0.4s;
   position: relative;
   overflow: hidden;
-  background-color: var(--surface-color);
-  border: 2px solid var(--primary-color);
+  background-color: var(--global-surface-color);
+  border: 2px solid var(--global-primary-color);
 }
 .portfolio-card:hover {
   transform: scale(1.04) translateY(-8px);
@@ -564,8 +572,8 @@
 }
 
 .slider-btn {
-  background: var(--primary-color);
-  color: var(--background-color);
+  background: var(--global-primary-color);
+  color: var(--global-background-color);
   border: none;
   border-radius: 50%;
   width: 48px;
@@ -615,11 +623,11 @@
 
 /* Contact links */
 .contact-link {
-  color: var(--primary-color);
+  color: var(--global-primary-color);
   text-decoration: underline;
   word-break: break-all;
   transition: color 0.2s;
 }
 .contact-link:hover {
-  color: var(--secondary-color);
+  color: var(--global-secondary-color);
 }

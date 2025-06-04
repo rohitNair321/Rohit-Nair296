@@ -1,59 +1,57 @@
 /* Color Variables */
 :root {
-  --background-color: #F8F5F2;
-  --surface-color: #EDE5DE;
-  --primary-color: #4A6B7D;
-  --secondary-color: #9B7E6B;
-  --text-primary: #2D3741;
-  --text-secondary: #5C6B7A;
-  --accent-color: #C44536;
-  --border-color: #D3CEC9;
+  --global-background-color: #F8F5F2;
+  --global-surface-color: #EDE5DE;
+  --global-primary-color: #4A6B7D;
+  --global-secondary-color: #9B7E6B;
+  --global-text-primary: #2D3741;
+  --global-text-secondary: #5C6B7A;
+  --global-accent-color: #C44536;
+  --global-border-color: #D3CEC9;
 
-// :root {
-  --logo-bg-gradient-start: #FFF0E1; /* Like, a super light, warm peachy color */
-  --logo-bg-gradient-end: #FFDAB9;   /* Kinda light peach/apricot, super soft */
-  --logo-letter-r-color: #A0522D;   /* This "Sienna" - a nice, warm brown for the 'R' */
-  --logo-letter-n-color: #8B4513;   /* "SaddleBrown" - a bit darker brown for 'N', looks cool */
-  --logo-border-color: #E8A87C;     /* A chill terracotta for the border, not too loud */
-  --logo-hover-border-color: #E29578; /* A bit richer terracotta when you hover, nice touch! */
-  --app-background-color: #FFFFFF;   /* Just your page background, prob white, for that pop-out shadow */
-  --logo-main-shadow-color: rgba(200, 120, 80, 0.18); /* Soft shadow, keeps it warm */
-  --logo-letter-text-shadow: rgba(255, 255, 255, 0.6); /* Tiny bit of light shadow inside the letters */
-// }
+  --global-logo-bg-gradient-start: #FFF0E1; /* Like, a super light, warm peachy color */
+  --global-logo-bg-gradient-end: #FFDAB9;   /* Kinda light peach/apricot, super soft */
+  --global-logo-letter-r-color: #A0522D;   /* This "Sienna" - a nice, warm brown for the 'R' */
+  --global-logo-letter-n-color: #8B4513;   /* "SaddleBrown" - a bit darker brown for 'N', looks cool */
+  --global-logo-border-color: #E8A87C;     /* A chill terracotta for the border, not too loud */
+  --global-logo-hover-border-color: #E29578; /* A bit richer terracotta when you hover, nice touch! */
+  --global-app-background-color: #FFFFFF;   /* Just your page background, prob white, for that pop-out shadow */
+  --global-logo-main-shadow-color: rgba(200, 120, 80, 0.18); /* Soft shadow, keeps it warm */
+  --global-logo-letter-text-shadow: rgba(255, 255, 255, 0.6); /* Tiny bit of light shadow inside the letters */
 
   /* Typography */
-  --font-family: 'Inter', sans-serif;
-  --heading-font: 'Poppins', sans-serif;
-  --body-font: 'Inter', sans-serif;
+  --global-font-family: 'Inter', sans-serif;
+  --global-heading-font: 'Poppins', sans-serif;
+  --global-body-font: 'Inter', sans-serif;
 
   /* Spacing */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
+  --global-spacing-xs: 0.25rem;
+  --global-spacing-sm: 0.5rem;
+  --global-spacing-md: 1rem;
+  --global-spacing-lg: 1.5rem;
+  --global-spacing-xl: 2rem;
 
   /* Border radius */
-  --border-radius-sm: 0.25rem;
-  --border-radius-md: 0.5rem;
-  --border-radius-lg: 1rem;
+  --global-border-radius-sm: 0.25rem;
+  --global-border-radius-md: 0.5rem;
+  --global-border-radius-lg: 1rem;
 
   /* Transitions */
-  --transition-speed: 0.3s;
+  --global-transition-speed: 0.3s;
 
-  --text-color: var(--text-primary);
+  --global-text-color: var(--global-text-primary);
 }
 
 /* Dark Theme */
 .dark-mode {
-  --background-color: #1A242D;
-  --surface-color: #24323D;
-  --primary-color: #6B9080;
-  --secondary-color: #D4A373;
-  --text-primary: #E3E9EC;
-  --text-secondary: #A8B5BE;
-  --accent-color: #E76F51;
-  --border-color: #364551;
+  --global-background-color: #1A242D;
+  --global-surface-color: #24323D;
+  --global-primary-color: #6B9080;
+  --global-secondary-color: #D4A373;
+  --global-text-primary: #E3E9EC;
+  --global-text-secondary: #A8B5BE;
+  --global-accent-color: #E76F51;
+  --global-border-color: #364551;
 
-  --text-color: var(--text-primary);
+  --global-text-color: var(--global-text-primary);
 }
