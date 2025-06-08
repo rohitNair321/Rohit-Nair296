@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Renderer2 } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -69,7 +70,22 @@ export class HomeComponent implements AfterViewInit {
   currentProjectIndex = 0;
   hoveredProject: any = null;
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  contactForm: FormGroup;
+  sending = false;
+  sent = false;
+
+  constructor(
+    private el: ElementRef,
+    private renderer: Renderer2,
+    private fb: FormBuilder
+  ) {
+    this.contactForm = this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(50)]],
+      email: ['', [Validators.required, Validators.email]],
+      subject: ['', [Validators.required, Validators.maxLength(60)]],
+      message: ['', [Validators.required, Validators.maxLength(500)]]
+    });
+  }
 
   ngAfterViewInit() {
     const animatedEls = this.el.nativeElement.querySelectorAll(
@@ -111,4 +127,26 @@ export class HomeComponent implements AfterViewInit {
       this.currentProjectIndex++;
     }
   }
+
+  onSubmitContact() {
+    if (this.contactForm.invalid) {
+      this.contactForm.markAllAsTouched();
+      return;
+    }
+    this.sending = true;
+    this.sent = false;
+
+    // Simulate sending email (replace with real API call)
+    setTimeout(() => {
+      this.sending = false;
+      this.sent = true;
+      this.contactForm.reset();
+      setTimeout(() => this.sent = false, 3000);
+    }, 2000);
+  }
+
+  get name() { return this.contactForm.get('name'); }
+  get email() { return this.contactForm.get('email'); }
+  get subject() { return this.contactForm.get('subject'); }
+  get message() { return this.contactForm.get('message'); }
 }

@@ -9,6 +9,7 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout.component
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { CommonModule, HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { HomeComponent } from './features/home/home.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { HomeComponent } from './features/home/home.component';
     CommonModule,
     AppRoutingModule,
     CoreModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule
   ],
   providers: [{
     provide: LocationStrategy,
