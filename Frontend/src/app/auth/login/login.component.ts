@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
           this.loading = false;
           if (result) {
             console.log('Login successful');
-            this.router.navigateByUrl('landing/dashboard');
+            this.router.navigateByUrl('features/dashboard');
           }
         },
         error: (error) => {
@@ -88,7 +88,7 @@ export class LoginComponent implements OnInit {
       next: (isAuthenticated) => {
         if (isAuthenticated) {
           console.log('Google login successful');
-          this.router.navigate(['/landing/dashboard']);
+          this.router.navigate(['/features/dashboard']);
         } else {
           console.error('Google login failed');
         }

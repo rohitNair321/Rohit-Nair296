@@ -1,0 +1,64 @@
+<nav class="custom-navbar" [class.sidebar-open]="isSidebarOpen">
+  <!-- Sidebar for mobile/small screens -->
+  <div class="sidebar" *ngIf="isSidebarOpen">
+    <div class="sidebar-header">
+      <img src="assets/images/Designer.png" alt="logo" class="navbar-logo">
+      <span class="navbar-title">FNCS</span>
+      <button class="close-sidebar-btn" (click)="toggleSidebar()">
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+    <ul class="sidebar-menu">
+      <li class="nav-item" *ngFor="let item of items">
+        <a [href]="item.routerLink" routerLinkActive="active" (click)="toggleSidebar()">
+          <i [class]="item.icon"></i> {{ item.label }}
+        </a>
+      </li>
+    </ul>
+    <div class="sidebar-footer">
+      <div class="profile-upload">
+        <label for="sidebar-profile-upload" class="profile-upload-label">
+          <img [src]="profileImageUrl || 'assets/images/default-profile.png'" class="profile-pic" alt="Profile" />
+          <input id="sidebar-profile-upload" type="file" (change)="onProfilePicChange($event)" hidden>
+        </label>
+        <span>{{ loginUserName }}</span>
+      </div>
+      <button class="theme-toggle-btn" (click)="toggleTheme()">
+        <i class="pi" [ngClass]="isDarkTheme ? 'pi-sun' : 'pi-moon'"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Top bar -->
+  <div class="navbar-left">
+    <button class="burger-menu-btn" (click)="toggleSidebar()">
+      <i class="pi pi-bars"></i>
+    </button>
+    <img src="assets/images/Designer.png" alt="logo" class="navbar-logo">
+    <span class="navbar-title">FNCS</span>
+  </div>
+
+  <div class="navbar-center">
+    <ul class="nav-menu">
+      <li class="nav-item" *ngFor="let item of items">
+        <a [href]="item.routerLink" routerLinkActive="active">
+          <i [class]="item.icon"></i> {{ item.label }}
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="navbar-right">
+    <!-- Profile picture upload and display -->
+    <div class="profile-menu">
+      <label for="profile-upload" class="profile-upload-label">
+        <img [src]="profileImageUrl || 'assets/images/default-profile.png'" class="profile-pic" alt="Profile" />
+        <input id="profile-upload" type="file" (change)="onProfilePicChange($event)" hidden>
+      </label>
+      <span class="profile-name">{{ loginUserName }}</span>
+    </div>
+    <button class="theme-toggle-btn" (click)="toggleTheme()">
+      <i class="pi" [ngClass]="isDarkTheme ? 'pi-sun' : 'pi-moon'"></i>
+    </button>
+  </div>
+</nav>

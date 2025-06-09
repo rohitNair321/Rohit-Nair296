@@ -6,7 +6,7 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { HelpSupportComponent } from './help-support/help-support.component';
 import { PreferencesComponent } from './preferences/preferences.component';
 import { RecentActivityComponent } from './recent-activity/recent-activity.component';
-import { AuthGardService } from '../Services/auth-gard.service';
+import { AuthGardService } from 'src/app/Services/auth-gard.service';
 
 const routes: Routes = [
   { path: 'profile', component: UserProfileComponent,  canActivate: [AuthGardService] },

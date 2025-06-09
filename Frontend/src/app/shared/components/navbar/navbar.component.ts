@@ -7,17 +7,19 @@ import { AuthService } from 'src/app/Services/auth.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavigationComponent implements OnInit {
   isBurgerMenuOpen: boolean = false;
   isDarkTheme: boolean = false;
   showProfilePopup: boolean = false;
   loginUserName!: string; // Example user name
+  isSidebarOpen = false;
+  profileImageUrl: string | null = null;
 
   items = [
-    { label: 'Home', icon: 'pi pi-home', routerLink: '/landing/dashboard' },
-    { label: 'To-Do', icon: 'pi pi-list', routerLink: '/landing/task-list' },
-    { label: 'Projects', icon: 'pi pi-server', routerLink: '/landing/projects' },
-    { label: 'Notifications', icon: 'pi pi-bell', routerLink: '/landing/notifications' }
+    { label: 'Home', icon: 'pi pi-home', routerLink: '/features/dashboard' },
+    { label: 'To-Do', icon: 'pi pi-list', routerLink: '/features/task-list' },
+    { label: 'Projects', icon: 'pi pi-server', routerLink: '/features/projects' },
+    { label: 'Notifications', icon: 'pi pi-bell', routerLink: '/features/notifications' }
   ];
 
   profileMenuItems = [
@@ -52,6 +54,10 @@ export class NavbarComponent implements OnInit {
     this.showProfilePopup = !this.showProfilePopup;
   }
 
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
+
   navigateTo(route: string) {
     this.router.navigate(['/profile-menu/'+route]);
     this.showProfilePopup = false; // Navigate to the specified route
@@ -61,5 +67,17 @@ export class NavbarComponent implements OnInit {
     sessionStorage.removeItem('token');
     sessionStorage.clear();
     this.router.navigate(['']);
+  }
+
+  onProfilePicChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.profileImageUrl = e.target.result;
+        // Optionally, save to localStorage/sessionStorage or upload to server
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
   }
 }

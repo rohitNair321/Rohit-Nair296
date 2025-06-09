@@ -14,7 +14,6 @@ import { OrderListModule } from 'primeng/orderlist';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { NavbarComponent } from './navbar/navbar.component';
 import { MenubarModule } from 'primeng/menubar';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
@@ -24,7 +23,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     TaskDetailsComponent,
     TaskFormComponent,
     TaskListComponent,
-    NavbarComponent,
     DashboardComponent
   ],
   imports: [
@@ -32,7 +30,6 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     LandingRoutingModule,
     ReactiveFormsModule,
     FormsModule,
-    // HttpClientModule,
     CardModule,
     ButtonModule,
     OrderListModule,
@@ -43,8 +40,5 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     DialogModule,
     MenubarModule,
   ],
-  exports: [
-    NavbarComponent
-  ]
 })
 export class LandingModule { }

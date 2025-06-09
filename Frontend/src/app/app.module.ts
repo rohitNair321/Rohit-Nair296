@@ -2,41 +2,45 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
-import { FooterComponent } from './Components/footer/footer.component';
-import { ProfilePopupComponent } from './Components/profile-popup/profile-popup.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthModule } from './auth/auth.module';
-import { LandingModule } from './landing/landing.module';
 import { AppComponent } from './app.component';
-import { ErrorInterceptor } from './Services/error.service';
 import { AuthService } from './Services/auth.service';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { GoogleLoginProvider, SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { environment } from 'src/environments/environments';
 import { TodoInterceptor } from './interceptors/todo.interceptor';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { SharedModule } from './shared/shared.module';
+import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
+import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+import { ErrorInterceptor } from './services/error.service';
+import { LandingModule } from './features/landing.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    FooterComponent,
-    ProfilePopupComponent,
+    MainLayoutComponent,
+    AuthLayoutComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AuthModule,  
+    SharedModule,
     LandingModule,
     AppRoutingModule,
     HttpClientModule,
     SocialLoginModule
   ],
-  exports: [
-    ProfilePopupComponent
-  ],
   providers: [
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy,
+    },
     AuthService,
     {
-      provide: 'SocialAuthServiceConfig',
+      provide: 'SocialAuthServiceConfig', 
       useValue: {
         autoLogin: false,
         providers: [

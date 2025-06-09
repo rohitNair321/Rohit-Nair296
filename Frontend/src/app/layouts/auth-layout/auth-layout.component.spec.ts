@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProfilePopupComponent } from './profile-popup.component';
+import { AuthLayoutComponent } from './auth-layout.component';
 
-describe('ProfilePopupComponent', () => {
-  let component: ProfilePopupComponent;
-  let fixture: ComponentFixture<ProfilePopupComponent>;
+describe('AuthLayoutComponent', () => {
+  let component: AuthLayoutComponent;
+  let fixture: ComponentFixture<AuthLayoutComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProfilePopupComponent ]
+      declarations: [ AuthLayoutComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ProfilePopupComponent);
+    fixture = TestBed.createComponent(AuthLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
