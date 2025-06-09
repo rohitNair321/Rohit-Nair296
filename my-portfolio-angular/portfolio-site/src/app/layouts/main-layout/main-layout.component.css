@@ -1,0 +1,30 @@
+/* Remove top margin for sidebar layout */
+.container {
+  margin-top: 0;
+}
+
+/* Sidebar pushes content right, not down */
+.navigation.sidebar + .container {
+  margin-left: 220px;
+  transition: margin-left 0.3s cubic-bezier(.77,0,.18,1);
+}
+.navigation.sidebar.collapsed + .container {
+  margin-left: 95px;
+}
+
+@media (max-width: 900px) {
+  .navigation.sidebar + .container,
+  .navigation.sidebar.collapsed + .container {
+    margin-left: 0;
+  }
+}
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.container {
+  flex: 1 1 auto;
+  width: 100%;
+  padding: 0;
+}

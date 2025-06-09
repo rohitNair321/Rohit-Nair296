@@ -631,3 +631,35 @@
 .contact-link:hover {
   color: var(--global-secondary-color);
 }
+
+.form-error small {
+  color: #e74c3c;
+  font-size: 0.85em;
+  display: block;
+  margin-top: 2px;
+}
+input.invalid, textarea.invalid {
+  border-color: #e74c3c !important;
+}
+.form-success {
+  color: #27ae60;
+  margin-top: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.spinner {
+  display: inline-block;
+  width: 1.2em;
+  height: 1.2em;
+  border: 2.5px solid #fff;
+  border-top: 2.5px solid var(--global-secondary-color);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 0.5em;
+  vertical-align: middle;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

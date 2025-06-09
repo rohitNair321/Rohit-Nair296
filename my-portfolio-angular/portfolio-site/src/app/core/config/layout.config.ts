@@ -1,8 +1,8 @@
 export interface LayoutConfig {
   navigation: {
-    type: 'top' | 'left' | 'right';
-    theme: 'light' | 'dark';
-    isFixed: boolean;
+    type?: 'navbar' | 'sidebar';
+    theme?: 'light' | 'dark';
+    isFixed?: boolean;
   };
   theme: {
     primary: string;
@@ -20,7 +20,7 @@ export interface LayoutConfig {
 
 export const defaultConfig: LayoutConfig = {
   navigation: {
-    type: 'top',
+    type: 'navbar', // or 'sidebar'
     theme: 'light',
     isFixed: true
   },

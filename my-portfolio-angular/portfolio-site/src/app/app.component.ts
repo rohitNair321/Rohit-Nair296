@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { defaultConfig, LayoutConfig } from './core/config/layout.config';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +7,6 @@ import { defaultConfig, LayoutConfig } from './core/config/layout.config';
 })
 export class AppComponent {
   title = 'portfolio-site';
-  config: LayoutConfig = defaultConfig;
 
   constructor(){}
 

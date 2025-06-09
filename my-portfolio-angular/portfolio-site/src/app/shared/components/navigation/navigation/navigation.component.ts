@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';// For Font Awesome 5.x
 
 @Component({
@@ -6,17 +6,18 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';// For Fon
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
-export class NavigationComponent implements OnInit {
+export class NavigationComponent implements OnInit, OnDestroy {
   @Input() config: any;
   isMobile = false;
   isMenuOpen = false;
   isDarkTheme = false;
+  isSidebarCollapsed = false;
 
   menuItems = [
-    { label: 'Home', href: '#home' },
-    { label: 'About', href: '#about' },
-    { label: 'Projects', href: '#projects' },
-    { label: 'Contact', href: '#contact' }
+    { label: 'Home', href: '#home', icon: 'home' },
+    { label: 'About', href: '#about', icon: 'person' },
+    { label: 'Projects', href: '#projects', icon: 'work' },
+    { label: 'Contact', href: '#contact', icon: 'mail' },
   ];
 
   constructor(private breakpointObserver: BreakpointObserver) {}
@@ -25,6 +26,12 @@ export class NavigationComponent implements OnInit {
     console.log(this.config);
     this.setupResponsiveBehavior();
     this.initializeTheme();
+    this.checkMobile();
+    window.addEventListener('resize', this.checkMobile.bind(this));
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('resize', this.checkMobile.bind(this));
   }
 
   private setupResponsiveBehavior() {
@@ -41,6 +48,13 @@ export class NavigationComponent implements OnInit {
     this.isDarkTheme = document.body.classList.contains('dark-mode');
   }
 
+  checkMobile() {
+    this.isMobile = window.innerWidth <= 900;
+    if (!this.isMobile) {
+      this.isMenuOpen = false;
+    }
+  }
+
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
@@ -48,6 +62,10 @@ export class NavigationComponent implements OnInit {
   toggleTheme() {
     this.isDarkTheme = !this.isDarkTheme;
     document.body.classList.toggle('dark-mode', this.isDarkTheme);
+  }
+
+  toggleSidebarCollapse() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 
   // Add this method for smooth scrolling
