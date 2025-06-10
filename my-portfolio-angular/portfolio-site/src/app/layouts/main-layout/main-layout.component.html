@@ -1,7 +1,13 @@
 <div class="wrapper">
-  <app-navigation [config]="config"></app-navigation>
-  <main class="container">
-    <router-outlet></router-outlet>
-  </main>
-  <app-footer></app-footer>
+  <app-sidebar
+    *ngIf="config.navigation.type === 'sidebar'" [config]="config">
+  </app-sidebar>
+  <div class="main-content" [class.sidebar-collapsed]="isSidebarCollapsed && config.navigation.type === 'sidebar'"
+       [class.sidebar-expanded]="!isSidebarCollapsed && config.navigation.type === 'sidebar'">
+    <app-navigation *ngIf="config.navigation.type === 'navbar'" [config]="config"></app-navigation>
+    <main class="container">
+      <router-outlet></router-outlet>
+    </main>
+    <app-footer></app-footer>
+  </div>
 </div>

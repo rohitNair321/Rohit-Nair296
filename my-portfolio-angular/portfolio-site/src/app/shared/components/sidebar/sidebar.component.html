@@ -1,0 +1,39 @@
+<button class="mobile-toggle" *ngIf="isMobile" (click)="toggleMobile()">
+  <span class="material-icons">{{ isMobileOpen ? 'close' : 'menu' }}</span>
+</button>
+
+<div class="sidebar-container" [class.collapsed]="isSidebarCollapsed" [class.open]="isMobileOpen">
+  <div class="sidebar-header">
+    <div class="logo">
+      <span class="logo-initials animate-nav-fade-in">
+        <span class="rn-r">R</span><span class="rn-n">N</span>
+      </span>
+      <span class="logo-name animate-nav-slide-in" *ngIf="!isSidebarCollapsed">
+        <span class="logo-rohit">Rohit</span>
+        <span class="logo-portfolio">Portfolio</span>
+      </span>
+    </div>
+    <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()">
+      <span class="material-icons">
+        {{ isSidebarCollapsed ? 'arrow_forward_ios' : 'arrow_back_ios' }}
+      </span>
+    </button>
+  </div>
+  <div class="sidebar-menu" [class.collapsed]="isSidebarCollapsed">
+    <a *ngFor="let item of menuItems"
+       [href]="item.href"
+       class="menu-link"
+       (click)="scrollToSection($event, item.href)">
+      <span class="material-icons menu-icon">{{ item.icon }}</span>
+      <span class="menu-label" *ngIf="!isSidebarCollapsed">{{ item.label }}</span>
+    </a>
+    <a class="resume-download-btn" href="assets/Rohit.Nair.pdf" download>
+      <span class="material-icons menu-icon">download</span>
+      <span class="menu-label" *ngIf="!isSidebarCollapsed">Resume</span>
+    </a>
+    <button class="theme-toggle" (click)="toggleTheme()">
+      <span class="material-icons menu-icon">{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</span>
+      <span class="menu-label" *ngIf="!isSidebarCollapsed">Theme</span>
+    </button>
+  </div>
+</div>

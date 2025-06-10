@@ -8,9 +8,12 @@ import { defaultConfig, LayoutConfig } from 'src/app/core/config/layout.config';
 })
 export class MainLayoutComponent {
   config: LayoutConfig = defaultConfig;
+  isSidebarCollapsed = false;
+  isDarkTheme = false;
+
   constructor() {
     // You can modify the config here if needed
-    this.config.navigation.type = 'sidebar'; // Example of changing primary color
+    this.config.navigation.type = 'navbar'; // Example of changing primary color
     this.config.navigation.theme = 'dark';
   }
 }
