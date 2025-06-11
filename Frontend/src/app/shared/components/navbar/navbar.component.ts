@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/Services/auth.service';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -31,9 +31,12 @@ export class NavigationComponent implements OnInit {
     { label: 'Logout', icon: 'pi pi-power-off', action: () => this.logout() }
   ];
   
-  constructor(private router: Router, private auth: AuthService,) {} // Inject Router
+  constructor(private router: Router, private auth: AuthService) {}
 
   ngOnInit(): void {
+    if (!this.auth.isLoggedIn()) {
+      this.router.navigate(['/auth/login']);
+    }
     const savedTheme = localStorage.getItem('theme');
     this.loginUserName = sessionStorage.getItem('loginUserName') || 'User'; // Get the user name from session storage
     this.isDarkTheme = savedTheme === 'dark';

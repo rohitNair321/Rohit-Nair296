@@ -1,25 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
 import { FooterComponent } from './components/footer/footer.component';
 import { NavigationComponent } from './components/navbar/navbar.component';
 
 @NgModule({
   declarations: [
     NavigationComponent,
-    FooterComponent,
-    // Add shared pipes/directives here
+    FooterComponent
   ],
   imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    CommonModule
+    CommonModule,
+    RouterModule
   ],
   exports: [
     NavigationComponent,
-    FooterComponent,
-    // Export shared pipes/directives here
+    FooterComponent
   ]
 })
 export class SharedModule { }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { AuthService } from './Services/auth.service';
-import { SvgInjectorService } from './Services/svg-injector.service';
+import { AuthService } from './core/services/auth.service';
+import { SvgInjectorService } from './core/services/svg-injector.service';
 
 @Component({
   selector: 'app-root',

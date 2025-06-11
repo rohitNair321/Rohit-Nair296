@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
-import { AuthService, RegisterDTO } from 'src/app/Services/auth.service';
+import { AuthService, RegisterDTO } from 'src/app/core/services/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({

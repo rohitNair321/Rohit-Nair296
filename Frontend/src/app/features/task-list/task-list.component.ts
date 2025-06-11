@@ -1,7 +1,7 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { TaskService, Task } from 'src/app/Services/task.service';
+import { TaskService, Task } from 'src/app/core/services/task.service';
 
 @Component({
   selector: 'app-task-list',

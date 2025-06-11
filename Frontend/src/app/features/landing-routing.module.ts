@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGardService } from '../Services/auth-gard.service';
+import { AuthGardService } from '../core/services/auth-gard.service';
 import { TaskDetailsComponent } from './task-details/task-details.component';
 import { TaskListComponent } from './task-list/task-list.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
