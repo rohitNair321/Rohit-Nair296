@@ -45,7 +45,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   private initializeTheme() {
-    this.isDarkTheme = document.body.classList.contains('dark-mode');
+    this.isDarkTheme = this.config.navigation.theme == 'dark'?true:false;
+    this.isDarkTheme = document.body.classList.toggle('dark-mode',this.isDarkTheme);
   }
 
   checkMobile() {

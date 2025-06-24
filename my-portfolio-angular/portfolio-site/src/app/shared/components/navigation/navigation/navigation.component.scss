@@ -84,10 +84,14 @@
 .nav-container {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   padding: var(--global-spacing-md) var(--global-spacing-xl);
 
   .logo {
+    display: flex;
+    gap: 8px;
+    align-items: center;
     flex-shrink: 0;
   }
 
@@ -134,7 +138,7 @@
 .logo-name {
   font-size: 1.3rem;
   font-weight: 700;
-  margin-left: 0.7rem;
+  // margin-left: 0.7rem;
   letter-spacing: 1px;
   display: inline-block;
   vertical-align: middle;
@@ -233,9 +237,9 @@
   }
   .menu-toggle {
     display: flex !important;
-    position: absolute;
-    right: 1.5rem;
-    top: 1.2rem;
+    // position: absolute;
+    // right: 1.5rem;
+    // top: 1.2rem;
     z-index: 1002;
   }
 }
