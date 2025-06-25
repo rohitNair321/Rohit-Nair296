@@ -14,6 +14,6 @@ export class MainLayoutComponent {
   constructor() {
     // You can modify the config here if needed
     this.config.navigation.type = 'navbar'; // Example of changing primary color
-    this.config.navigation.theme = 'dark';
+    this.config.navigation.theme = 'light';
   }
 }

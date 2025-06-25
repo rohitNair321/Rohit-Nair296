@@ -34,7 +34,7 @@ const routes: Routes = [
     component: AuthLayoutComponent,
     children: [
       // Auth routes here
-    ]
+    ],
   },
   { path: '**', redirectTo: 'home' }
 ];
