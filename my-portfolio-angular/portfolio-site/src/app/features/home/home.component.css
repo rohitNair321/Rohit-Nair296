@@ -512,6 +512,11 @@
   min-width: 250px;
   text-align: left;
 }
+.group-btn {
+  display: flex;
+  gap: 4px;
+}
+
 
 /* Responsive: Stack on small screens */
 @media (max-width: 900px) {

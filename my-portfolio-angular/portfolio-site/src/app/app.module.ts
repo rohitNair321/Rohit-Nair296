@@ -10,13 +10,15 @@ import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component
 import { CommonModule, HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { HomeComponent } from './features/home/home.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AboutMeComponent } from './features/about-me/about-me.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainLayoutComponent,
     AuthLayoutComponent,
-    HomeComponent
+    HomeComponent,
+    AboutMeComponent
   ],
   imports: [
     BrowserModule,

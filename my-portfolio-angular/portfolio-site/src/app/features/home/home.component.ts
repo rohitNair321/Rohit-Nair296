@@ -73,6 +73,9 @@ export class HomeComponent implements AfterViewInit {
   contactForm: FormGroup;
   sending = false;
   sent = false;
+  myEmail: string = 'rohit123nair@gmail.com';
+  myAddress: string = 'Hinjewadi, Pune, Maharashtra, India';
+  myContactNumber: string = '+91 8668671077';
 
   constructor(
     private el: ElementRef,

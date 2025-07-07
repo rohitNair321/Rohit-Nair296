@@ -6,19 +6,23 @@
         <!-- Left: Text Content -->
         <div class="text-content">
           <h1 class="animate-slide-up">Hi, I'm Rohit Nair</h1>
-          <p class="animate-slide-up-delay">A Passionate Front-End Developer Specialized in Angular & Node.js. I build exceptional digital experiences that are fast, accessible, visually appealing, and responsive.</p>
+          <p class="animate-slide-up-delay">A Passionate Front-End Developer Specialized in Angular & Node.js. I build
+            exceptional digital experiences that are fast, accessible, visually appealing, and responsive.</p>
           <div class="typing-text animate-slide-up-delay-2">
             <span>Angular</span> • <span>TypeScript</span> • <span>HTML/CSS</span>
           </div>
           <div class="hero-buttons">
-            <button class="cta-button animate-fade-in-delay" (click)="scrollToSection($event, '#projects')">My Work</button>
-            <button class="cta-button outline animate-fade-in-delay" (click)="scrollToSection($event, '#contact')">Contact Me</button>
+            <button class="cta-button animate-fade-in-delay" (click)="scrollToSection($event, '#projects')">My
+              Work</button>
+            <button class="cta-button outline animate-fade-in-delay"
+              (click)="scrollToSection($event, '#contact')">Contact Me</button>
           </div>
         </div>
         <!-- Right: Profile Photo & Resume Button -->
         <div class="profile-photo">
-          <img src="https://images.unsplash.com/photo-1618477247222-acbdb0e159b3?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.0.3"
-              alt="Developer portrait" className="w-[400px] h-[400px] object-cover rounded-full"/>
+          <img
+            src="https://images.unsplash.com/photo-1618477247222-acbdb0e159b3?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.0.3"
+            alt="Developer portrait" className="w-[400px] h-[400px] object-cover rounded-full" />
           <!-- <img src="assets/images/profile.jpg" alt="Rohit Nair" class="animate-fade-in"> -->
           <a class="resume-download-btn" href="assets/Rohit.Nair.pdf" download>
             <span class="material-icons">download</span>
@@ -38,14 +42,23 @@
         <h2>About Me</h2>
         <p>
           Frontend Developer & Angular Specialist.<br>
-          I'm a passionate frontend developer with expertise in Angular, creating responsive and user-friendly web applications. Currently expanding my skillset into Node.js to become a full-stack developer.<br>
-          With over 4+ years of experience in frontend development, I've worked on projects ranging from small business websites to large enterprise applications. My approach combines technical expertise with an eye for design to deliver exceptional user experiences.<br>
-          When I'm not coding, I create content to help other developers learn and grow in the field. I believe in sharing knowledge and contributing to the developer community.
+          Frontend Developer with <span class="highlight">4.5 years of experience</span> building user interfaces for
+          web applications in the <span class="highlight">Finance and Wealth Management</span> sector. Proficient in
+          <span class="highlight">Angular, TypeScript, HTML, CSS</span>, and various UI component libraries. Proven
+          ability to collaborate effectively in team environments and deliver <span class="highlight">high-quality
+          solutions</span>. Seeking to contribute technical expertise in an environment of growth and excellence to
+          achieve both personal and organizational goals.
         </p>
-        <a class="resume-download-btn about-res-width" href="assets/Rohit.Nair.pdf" download>
-          <span class="material-icons">download</span>
-          Resume
-        </a>
+        <div class="group-btn animate-fade-in-up">
+          <a class="resume-download-btn about-res-width" routerLink="/about-me">
+            <span class="material-icons">read_more</span>
+            Read More
+          </a>
+          <a class="resume-download-btn about-res-width" href="assets/Rohit.Nair.pdf" download>
+            <span class="material-icons">download</span>
+            Resume
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -53,15 +66,13 @@
   <section id="projects" class="portfolio-showcase-section">
     <h2 class="animate-fade-in-up">My Work</h2>
     <div class="portfolio-slider-container">
-      <button class="slider-btn left"
-              *ngIf="currentProjectIndex > 0"
-              (click)="slideLeft()">
+      <button class="slider-btn left" *ngIf="currentProjectIndex > 0" (click)="slideLeft()">
         <span class="material-icons">chevron_left</span>
       </button>
       <div class="portfolio-slider-outer">
         <div class="portfolio-slider-inner"
-            [style.transform]="'translateX(-' + (currentProjectIndex * (cardWidth + cardGap)) + 'px)'"
-            [style.transition]="'transform 0.6s cubic-bezier(.77,0,.18,1)'">
+          [style.transform]="'translateX(-' + (currentProjectIndex * (cardWidth + cardGap)) + 'px)'"
+          [style.transition]="'transform 0.6s cubic-bezier(.77,0,.18,1)'">
           <div class="portfolio-card animate-fade-in-up" *ngFor="let project of projects"
             (mouseenter)="hoveredProject = project" (mouseleave)="hoveredProject = null">
             <div class="card-content">
@@ -83,92 +94,98 @@
           </div>
         </div>
       </div>
-      <button class="slider-btn right" *ngIf="currentProjectIndex + projectsPerView < projects.length" (click)="slideRight()">
+      <button class="slider-btn right" *ngIf="currentProjectIndex + projectsPerView < projects.length"
+        (click)="slideRight()">
         <span class="material-icons">chevron_right</span>
       </button>
     </div>
   </section>
 
-<section id="contact" class="cta-section contact-section animate-fade-in-up">
-  <h2>Let's Work Together</h2>
-  <p>Have a project in mind or want to discuss potential opportunities? Feel free to reach out to me through any of the following channels.</p>
-  <div class="contact-grid">
-    <!-- Left: Contact Info Cards -->
-    <div class="contact-info-cards">
-      <div class="contact-card">
-        <span class="material-icons contact-icon">email</span>
-        <div class="text-md-start">
-          <h4>Email</h4>
-          <p>
-            <a href="mailto:rohit123nair@gmail.com" class="contact-link">rohit123nair@gmail.com</a>
-          </p>
+  <section id="contact" class="cta-section contact-section animate-fade-in-up">
+    <h2>Let's Work Together</h2>
+    <p>Have a project in mind or want to discuss potential opportunities? Feel free to reach out to me through any of
+      the following channels.</p>
+    <div class="contact-grid">
+      <!-- Left: Contact Info Cards -->
+      <div class="contact-info-cards">
+        <div class="contact-card">
+          <span class="material-icons contact-icon">email</span>
+          <div class="text-md-start">
+            <h4>Email</h4>
+            <p>
+              <a href="mailto:{{myEmail}}" class="contact-link">{{myEmail}}</a>
+            </p>
+          </div>
+        </div>
+        <div class="contact-card">
+          <span class="material-icons contact-icon">phone</span>
+          <div class="text-md-start">
+            <h4>Phone</h4>
+            <p>
+              <a href="tel:{{myContactNumber}}" class="contact-link">{{myContactNumber}}</a>
+            </p>
+          </div>
+        </div>
+        <div class="contact-card">
+          <span class="material-icons contact-icon">location_on</span>
+          <div class="text-md-start">
+            <h4>Location</h4>
+            <p>{{myAddress}}</p>
+          </div>
         </div>
       </div>
-      <div class="contact-card">
-        <span class="material-icons contact-icon">phone</span>
-        <div class="text-md-start">
-          <h4>Phone</h4>
-          <p>
-            <a href="tel:+918668671077" class="contact-link">+91 8668671077</a>
-          </p>
-        </div>
-      </div>
-      <div class="contact-card">
-        <span class="material-icons contact-icon">location_on</span>
-        <div class="text-md-start">
-          <h4>Location</h4>
-          <p>Hinjewadi, Pune, Maharashtra, India</p>
-        </div>
-      </div>
-    </div>
-    <!-- Right: Contact Form -->
-    <div class="contact-form-card animate-fade-in-right">
-      <form [formGroup]="contactForm" (ngSubmit)="onSubmitContact()">
-        <h3 class="form-title">Send a Message</h3>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="name">Your Name</label>
-            <input id="name" formControlName="name" type="text" placeholder="Enter your name" [class.invalid]="name?.invalid && (name?.touched || name?.dirty)">
-            <div class="form-error" *ngIf="name?.invalid && (name?.touched || name?.dirty)">
-              <small *ngIf="name?.errors?.['required']">Name is required.</small>
-              <small *ngIf="name?.errors?.['maxLength']">Max 50 characters.</small>
+      <!-- Right: Contact Form -->
+      <div class="contact-form-card animate-fade-in-right">
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmitContact()">
+          <h3 class="form-title">Send a Message</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="name">Your Name</label>
+              <input id="name" formControlName="name" type="text" placeholder="Enter your name"
+                [class.invalid]="name?.invalid && (name?.touched || name?.dirty)">
+              <div class="form-error" *ngIf="name?.invalid && (name?.touched || name?.dirty)">
+                <small *ngIf="name?.errors?.['required']">Name is required.</small>
+                <small *ngIf="name?.errors?.['maxLength']">Max 50 characters.</small>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">Your Email</label>
+              <input id="email" formControlName="email" type="email" placeholder="Enter your email"
+                [class.invalid]="email?.invalid && (email?.touched || email?.dirty)">
+              <div class="form-error" *ngIf="email?.invalid && (email?.touched || email?.dirty)">
+                <small *ngIf="email?.errors?.['required']">Email is required.</small>
+                <small *ngIf="email?.errors?.['email']">Invalid email address.</small>
+              </div>
             </div>
           </div>
           <div class="form-group">
-            <label for="email">Your Email</label>
-            <input id="email" formControlName="email" type="email" placeholder="Enter your email" [class.invalid]="email?.invalid && (email?.touched || email?.dirty)">
-            <div class="form-error" *ngIf="email?.invalid && (email?.touched || email?.dirty)">
-              <small *ngIf="email?.errors?.['required']">Email is required.</small>
-              <small *ngIf="email?.errors?.['email']">Invalid email address.</small>
+            <label for="subject">Subject</label>
+            <input id="subject" formControlName="subject" type="text" placeholder="Subject"
+              [class.invalid]="subject?.invalid && (subject?.touched || subject?.dirty)">
+            <div class="form-error" *ngIf="subject?.invalid && (subject?.touched || subject?.dirty)">
+              <small *ngIf="subject?.errors?.['required']">Subject is required.</small>
+              <small *ngIf="subject?.errors?.['maxLength']">Max 60 characters.</small>
             </div>
           </div>
-        </div>
-        <div class="form-group">
-          <label for="subject">Subject</label>
-          <input id="subject" formControlName="subject" type="text" placeholder="Subject" [class.invalid]="subject?.invalid && (subject?.touched || subject?.dirty)">
-          <div class="form-error" *ngIf="subject?.invalid && (subject?.touched || subject?.dirty)">
-            <small *ngIf="subject?.errors?.['required']">Subject is required.</small>
-            <small *ngIf="subject?.errors?.['maxLength']">Max 60 characters.</small>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" formControlName="message" rows="4" placeholder="Type your message..."
+              [class.invalid]="message?.invalid && (message?.touched || message?.dirty)"></textarea>
+            <div class="form-error" *ngIf="message?.invalid && (message?.touched || message?.dirty)">
+              <small *ngIf="message?.errors?.['required']">Message is required.</small>
+              <small *ngIf="message?.errors?.['maxLength']">Max 500 characters.</small>
+            </div>
           </div>
-        </div>
-        <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" formControlName="message" rows="4" placeholder="Type your message..." [class.invalid]="message?.invalid && (message?.touched || message?.dirty)"></textarea>
-          <div class="form-error" *ngIf="message?.invalid && (message?.touched || message?.dirty)">
-            <small *ngIf="message?.errors?.['required']">Message is required.</small>
-            <small *ngIf="message?.errors?.['maxLength']">Max 500 characters.</small>
+          <button type="submit" class="contact-button" [disabled]="sending || contactForm.invalid">
+            <span class="material-icons" *ngIf="!sending">send</span>
+            <span class="spinner" *ngIf="sending"></span>
+            {{ sending ? 'Sending...' : 'Send' }}
+          </button>
+          <div class="form-success" *ngIf="sent">
+            <span class="material-icons">check_circle</span> Message sent!
           </div>
-        </div>
-        <button type="submit" class="contact-button" [disabled]="sending || contactForm.invalid">
-          <span class="material-icons" *ngIf="!sending">send</span>
-          <span class="spinner" *ngIf="sending"></span>
-          {{ sending ? 'Sending...' : 'Send' }}
-        </button>
-        <div class="form-success" *ngIf="sent">
-          <span class="material-icons">check_circle</span> Message sent!
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 </div>
