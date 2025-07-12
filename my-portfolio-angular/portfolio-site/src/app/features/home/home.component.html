@@ -1,30 +1,26 @@
 <!-- home.component.html -->
-<div class="home-page">
+<div class="home-page" *ngIf="homeData">
   <section id="home" class="hero-section">
     <div class="hero-content">
       <div class="profile-container">
         <!-- Left: Text Content -->
         <div class="text-content">
-          <h1 class="animate-slide-up">Hi, I'm Rohit Nair</h1>
-          <p class="animate-slide-up-delay">A Passionate Front-End Developer Specialized in Angular & Node.js. I build
-            exceptional digital experiences that are fast, accessible, visually appealing, and responsive.</p>
+          <h1 class="animate-slide-up">Hi, I'm {{ homeData?.hero?.name }}</h1>
+          <p class="animate-slide-up-delay">{{ homeData?.hero?.description }}</p>
           <div class="typing-text animate-slide-up-delay-2">
-            <span>Angular</span> • <span>TypeScript</span> • <span>HTML/CSS</span>
+            <span *ngFor="let skill of homeData?.hero?.skills; let last = last">
+              {{ skill }}<span *ngIf="!last"> • </span>
+            </span>
           </div>
           <div class="hero-buttons">
-            <button class="cta-button animate-fade-in-delay" (click)="scrollToSection($event, '#projects')">My
-              Work</button>
-            <button class="cta-button outline animate-fade-in-delay"
-              (click)="scrollToSection($event, '#contact')">Contact Me</button>
+            <button class="cta-button animate-fade-in-delay" (click)="scrollToSection($event, '#projects')">My Work</button>
+            <button class="cta-button outline animate-fade-in-delay" (click)="scrollToSection($event, '#contact')">Contact Me</button>
           </div>
         </div>
         <!-- Right: Profile Photo & Resume Button -->
         <div class="profile-photo">
-          <img
-            src="https://images.unsplash.com/photo-1618477247222-acbdb0e159b3?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.0.3"
-            alt="Developer portrait" className="w-[400px] h-[400px] object-cover rounded-full" />
-          <!-- <img src="assets/images/profile.jpg" alt="Rohit Nair" class="animate-fade-in"> -->
-          <a class="resume-download-btn" href="assets/Rohit.Nair.pdf" download>
+          <img [src]="homeData?.hero?.profileImage" alt="Developer portrait" />
+          <a class="resume-download-btn" [href]="homeData?.hero?.resume" download>
             <span class="material-icons">download</span>
             Download Resume
           </a>
@@ -36,25 +32,17 @@
   <section id="about" class="about-teaser-section">
     <div class="about-container">
       <div class="about-photo animate-fade-in-left">
-        <img src="assets/images/profile.jpg" alt="Rohit Nair" />
+        <img [src]="homeData?.aboutTeaser?.photo" alt="Rohit Nair" />
       </div>
       <div class="about-text animate-fade-in-right">
-        <h2>About Me</h2>
-        <p>
-          Frontend Developer & Angular Specialist.<br>
-          Frontend Developer with <span class="highlight">4.5 years of experience</span> building user interfaces for
-          web applications in the <span class="highlight">Finance and Wealth Management</span> sector. Proficient in
-          <span class="highlight">Angular, TypeScript, HTML, CSS</span>, and various UI component libraries. Proven
-          ability to collaborate effectively in team environments and deliver <span class="highlight">high-quality
-          solutions</span>. Seeking to contribute technical expertise in an environment of growth and excellence to
-          achieve both personal and organizational goals.
-        </p>
+        <h2>{{ homeData?.aboutTeaser?.title }}</h2>
+        <p [innerHTML]="homeData?.aboutTeaser?.description"></p>
         <div class="group-btn animate-fade-in-up">
           <a class="resume-download-btn about-res-width" routerLink="/about-me">
             <span class="material-icons">read_more</span>
             Read More
           </a>
-          <a class="resume-download-btn about-res-width" href="assets/Rohit.Nair.pdf" download>
+          <a class="resume-download-btn about-res-width" [href]="homeData?.aboutTeaser?.resume" download>
             <span class="material-icons">download</span>
             Resume
           </a>
@@ -70,41 +58,39 @@
         <span class="material-icons">chevron_left</span>
       </button>
       <div class="portfolio-slider-outer">
-        <div class="portfolio-slider-inner"
-          [style.transform]="'translateX(-' + (currentProjectIndex * (cardWidth + cardGap)) + 'px)'"
-          [style.transition]="'transform 0.6s cubic-bezier(.77,0,.18,1)'">
-          <div class="portfolio-card animate-fade-in-up" *ngFor="let project of projects"
-            (mouseenter)="hoveredProject = project" (mouseleave)="hoveredProject = null">
-            <div class="card-content">
-              <h3>{{ project.title }}</h3>
-              <p>{{ project.description }}</p>
-              <div class="tech-list">
-                <span class="tech-badge" *ngFor="let tech of project.technologies">{{ tech }}</span>
-              </div>
-              <div class="card-links">
-                <a class="live-demo-btn" [href]="project.liveDemo" target="_blank" rel="noopener">
-                  <span class="material-icons">open_in_new</span>
-                  Live Demo
-                </a>
-                <a class="source-link" [href]="project.sourceCode" target="_blank" rel="noopener">
-                  Source
-                </a>
+      <div class="portfolio-slider-inner"
+        [style.transform]="'translateX(-' + (currentProjectIndex * (cardWidth + cardGap)) + 'px)'"
+        [style.transition]="'transform 0.6s cubic-bezier(.77,0,.18,1)'">
+        <div class="portfolio-card animate-fade-in-up" *ngFor="let project of homeData?.projects" (mouseenter)="hoveredProject = project" (mouseleave)="hoveredProject = null">
+          <div class="card-content">
+            <h3>{{ project?.title }}</h3>
+            <p>{{ project?.description }}</p>
+            <div class="tech-list">
+              <span class="tech-badge" *ngFor="let tech of project?.technologies">{{ tech }}</span>
+            </div>
+            <div class="card-links">
+              <a class="live-demo-btn" [href]="project?.liveDemo" target="_blank" rel="noopener">
+                <span class="material-icons">open_in_new</span>
+                Live Demo
+              </a>
+              <a class="source-link" [href]="project?.sourceCode" target="_blank" rel="noopener">
+                Source
+              </a>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <button class="slider-btn right" *ngIf="currentProjectIndex + projectsPerView < projects.length"
+      <button class="slider-btn right" *ngIf="currentProjectIndex + projectsPerView < homeData?.projects.length"
         (click)="slideRight()">
         <span class="material-icons">chevron_right</span>
       </button>
     </div>
   </section>
 
-  <section id="contact" class="cta-section contact-section animate-fade-in-up">
-    <h2>Let's Work Together</h2>
-    <p>Have a project in mind or want to discuss potential opportunities? Feel free to reach out to me through any of
-      the following channels.</p>
+  <section id="contact" class="cta-section contact-section animate-fade-in-up" *ngIf="homeData?.contact">
+    <h2>{{homeData?.contact?.headingText}}</h2>
+    <p>{{homeData?.contact?.subHeadingText}}</p>
     <div class="contact-grid">
       <!-- Left: Contact Info Cards -->
       <div class="contact-info-cards">
@@ -113,7 +99,7 @@
           <div class="text-md-start">
             <h4>Email</h4>
             <p>
-              <a href="mailto:{{myEmail}}" class="contact-link">{{myEmail}}</a>
+              <a [href]="'mailto:' + homeData?.contact?.email" class="contact-link">{{ homeData?.contact?.email }}</a>
             </p>
           </div>
         </div>
@@ -122,7 +108,7 @@
           <div class="text-md-start">
             <h4>Phone</h4>
             <p>
-              <a href="tel:{{myContactNumber}}" class="contact-link">{{myContactNumber}}</a>
+              <a [href]="'tel:' + homeData?.contact?.phone" class="contact-link">{{ homeData?.contact?.phone }}</a>
             </p>
           </div>
         </div>
@@ -130,7 +116,7 @@
           <span class="material-icons contact-icon">location_on</span>
           <div class="text-md-start">
             <h4>Location</h4>
-            <p>{{myAddress}}</p>
+            <p>{{ homeData.contact.address }}</p>
           </div>
         </div>
       </div>

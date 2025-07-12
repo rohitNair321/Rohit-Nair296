@@ -78,6 +78,12 @@
   font-size: 1.2em;
 }
 
+.highlight {
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
 /* Responsive: Stack on small screens */
 @media (max-width: 900px) {
   .profile-container {

@@ -11,6 +11,7 @@ import { CommonModule, HashLocationStrategy, LocationStrategy } from '@angular/c
 import { HomeComponent } from './features/home/home.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AboutMeComponent } from './features/about-me/about-me.component';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { AboutMeComponent } from './features/about-me/about-me.component';
     BrowserModule,
     CommonModule,
     AppRoutingModule,
+    AuthModule,
     CoreModule,
     SharedModule,
     ReactiveFormsModule
