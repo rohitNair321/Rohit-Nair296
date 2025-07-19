@@ -1,5 +1,4 @@
 import { Component, Input, HostBinding, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { GeminiService } from 'src/app/core/services/gemini.service';
 import { OpenAIService } from 'src/app/core/services/open-ai.service';
 
 @Component({
