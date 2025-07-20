@@ -1,55 +1,51 @@
 // Gemini AI Chat Function for Portfolio Assistant
 import { serve } from "https://deno.land/std@0.203.0/http/server.ts";
-const GEMINI_KEY = Deno.env.get("GEMINI_API_KEY");
-const TOGETHER_API_KEY = Deno.env.get("TOGETHER_API_KEY");
-const llamaModel = "meta-llama/llama-4-scout-17b-16e-instruct";
-serve(async (req)=>{
+
+const GEMINI_KEY = Deno.env.get("GEMINI_API_KEY")!;
+
+serve(async (req) => {
   // Log incoming request metadata
   console.log("[Chat Function] Received request:", {
     method: req.method,
     url: req.url
   });
+
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     console.log("[Chat Function] Handling CORS preflight");
     return new Response(null, {
       status: 204,
       headers: {
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin": "*",            // restrict to your domain in prod
         "Access-Control-Allow-Methods": "POST,OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type,Authorization"
       }
     });
   }
+
   // Only allow POST
   if (req.method !== "POST") {
     console.warn("[Chat Function] Method not allowed:", req.method);
-    return new Response("Method Not Allowed", {
-      status: 405
-    });
+    return new Response("Method Not Allowed", { status: 405 });
   }
+
   // Parse JSON payload
   let payload;
   try {
     payload = await req.json();
   } catch (err) {
     console.error("[Chat Function] Error parsing JSON:", err);
-    return new Response(JSON.stringify({
-      error: "Invalid JSON"
-    }), {
-      status: 400
-    });
+    return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
   }
+
   const text = payload.text;
   console.log("[Chat Function] User text:", text);
+
   if (!text) {
     console.warn("[Chat Function] Missing text in request payload");
-    return new Response(JSON.stringify({
-      error: "Missing text"
-    }), {
-      status: 400
-    });
+    return new Response(JSON.stringify({ error: "Missing text" }), { status: 400 });
   }
+
   // Enhanced system prompt with detailed rules
   const systemPrompt = `
     You are Rohit Nair's personal portfolio assistant, your name as AiNg. Your purpose is to help visitors learn about Rohit's professional background.
@@ -126,72 +122,62 @@ serve(async (req)=>{
     3. For out-of-scope requests: "I'm sorry, I'm only programmed to answer questions about Rohit's professional background. Feel free to ask about his skills, projects, or experience!"
     4. For unknown information: "I don't have that specific information, but you can find more details on Rohit's portfolio"
   `;
+
   // Prepare Gemini request body - NEW STRUCTURE
   const requestBody = {
-    // systemInstruction: {
-    //   parts: [{ text: systemPrompt }]
-    // },
-    model: llamaModel,
-    messages: [
+    systemInstruction: {
+      parts: [{ text: systemPrompt }]
+    },
+    contents: [
       {
-        role: 'system',
-        content: systemPrompt
-      },
-      {
-        role: 'user',
-        content: text
+        role: "user",
+        parts: [{ text: text }]
       }
-    ]
+    ],
+    generationConfig: {
+      temperature: 0.2,
+      maxOutputTokens: 512
+    }
   };
+
   console.log("[Chat Function] Sending request to Gemini:", requestBody);
-  console.log("[Chat Function] GEMINI_API_KEY:", Deno.env.get("GEMINI_API_KEY"));
-  console.log("[Chat Function] AI_CHAT_AI_KEY:", Deno.env.get("TOGETHER_API_KEY"));
+  console.log("[Chat Function] GEMINI_API_KEY:", Deno.env.get("GEMINI_API_KEY")!);
+
   // Updated Gemini API endpoint and headers
-  const API_URL = "https://api.groq.com/openai/v1/chat/completions";
-  // const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+  const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
   let geminiResponse;
   try {
-    const resp = await fetch(API_URL, {
+    const resp = await fetch(GEMINI_URL, {
       method: "POST",
-      // headers: {
-      //   "Content-Type": "application/json",
-      //   "x-goog-api-key": GEMINI_KEY  // API KEY IN HEADER
-      // },
       headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${TOGETHER_API_KEY}` // API KEY IN HEADER
+        "x-goog-api-key": GEMINI_KEY  // API KEY IN HEADER
       },
       body: JSON.stringify(requestBody)
     });
+
     if (!resp.ok) {
       const errText = await resp.text();
       console.error("[Chat Function] Gemini API error:", resp.status, errText);
-      return new Response(JSON.stringify({
-        error: "Gemini request failed"
-      }), {
-        status: 502
-      });
+      return new Response(JSON.stringify({ error: "Gemini request failed" }), { status: 502 });
     }
+
     geminiResponse = await resp.json();
     console.log("[Chat Function] Gemini response:", geminiResponse);
   } catch (err) {
     console.error("[Chat Function] Error calling Gemini API:", err);
-    return new Response(JSON.stringify({
-      error: "Server error calling Gemini"
-    }), {
-      status: 502
-    });
+    return new Response(JSON.stringify({ error: "Server error calling Gemini" }), { status: 502 });
   }
+
   // Extract answer - NEW RESPONSE STRUCTURE
   const answer = geminiResponse.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
   console.log("[Chat Function] Final answer:", answer);
+
   // Return the answer with CORS header
-  return new Response(JSON.stringify({
-    answer
-  }), {
+  return new Response(JSON.stringify({ answer }), {
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*" // lock to your domain in prod
+      "Access-Control-Allow-Origin": "*"  // lock to your domain in prod
     }
   });
 });

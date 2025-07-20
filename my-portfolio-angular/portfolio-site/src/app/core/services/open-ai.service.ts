@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environments';
 })
 export class OpenAIService {
 
-  private PROXY_URL = environment.supabaseUrl + '/functions/v1/ai-chat'; // 👈 update with your edge function
+  private PROXY_URL = environment.supabaseUrl + '/functions/v1/proxy-gemini'; // 👈 update with your edge function
 
   constructor(private http: HttpClient) {}
 
