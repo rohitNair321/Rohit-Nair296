@@ -1,12 +1,12 @@
-import { Component, Input, HostBinding, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { OpenAIService } from 'src/app/core/services/open-ai.service';
+import { Component, Input, HostBinding, OnInit, ViewChild, ElementRef, Injector } from '@angular/core';
+import { CommonApp } from 'src/app/core/services/common';
 
 @Component({
   selector: 'app-chat-bot',
   templateUrl: './chat-bot.component.html',
   styleUrls: ['./chat-bot.component.scss']
 })
-export class ChatBotComponent implements OnInit {
+export class ChatBotComponent extends CommonApp implements OnInit {
   @Input() position: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left' = 'bottom-right';
   @Input() primaryColor = '#3f51b5';
   @Input() title = 'How can I help you?';
@@ -33,7 +33,9 @@ export class ChatBotComponent implements OnInit {
     };
   }
 
-  constructor(private aiServices: OpenAIService) {} // Inject service
+  constructor(public override injector: Injector) {
+    super(injector);
+  } // Inject service
 
   ngOnInit() {
     this.setThemeColors();

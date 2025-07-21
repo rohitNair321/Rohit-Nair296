@@ -8,14 +8,14 @@ import { environment } from 'src/environments/environments';
 })
 export class OpenAIService {
 
-  private PROXY_URL = environment.supabaseUrl + '/functions/v1/proxy-gemini'; // 👈 update with your edge function
+  private PROXY_URL = environment.supabaseUrl + '/functions/v1/proxy-gemini';
 
   constructor(private http: HttpClient) {}
 
   sendMessage(userMessage: string): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${environment.supabaseKey}`  // 👈 Required for authentication
+      'Authorization': `Bearer ${environment.supabaseKey}`
     });
     const body = {
       text: userMessage

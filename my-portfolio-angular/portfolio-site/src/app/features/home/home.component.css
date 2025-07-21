@@ -674,3 +674,76 @@ input.invalid, textarea.invalid {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.tech-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.7rem 0 0.2rem 0;
+}
+
+.tech-badge {
+  display: inline-block;
+  padding: 0.25em 0.9em;
+  border-radius: 1em;
+  font-size: 0.93em;
+  font-weight: 500;
+  background: var(--global-surface-color);
+  color: var(--global-primary-color);
+  border: 1.5px solid var(--global-primary-color);
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Use color variables for badges */
+.tech-badge.Angular,
+.tech-badge['Angular 17'],
+.tech-badge['Angular 14'] {
+  background: var(--badge-angular);
+  color: var(--badge-angular-text);
+  border-color: var(--badge-angular-text);
+}
+.tech-badge.Java {
+  background: var(--badge-java);
+  color: var(--badge-java-text);
+  border-color: var(--badge-java-text);
+}
+.tech-badge['.NET Core'] {
+  background: var(--badge-dotnet);
+  color: var(--badge-dotnet-text);
+  border-color: var(--badge-dotnet-text);
+}
+.tech-badge.Bootstrap {
+  background: var(--badge-bootstrap);
+  color: var(--badge-bootstrap-text);
+  border-color: var(--badge-bootstrap-text);
+}
+.tech-badge.Primeng {
+  background: var(--badge-primeng);
+  color: var(--badge-primeng-text);
+  border-color: var(--badge-primeng-text);
+}
+.tech-badge['Custom CSS'] {
+  background: var(--badge-customcss);
+  color: var(--badge-customcss-text);
+  border-color: var(--badge-customcss-text);
+}
+.tech-badge.NGRX {
+  background: var(--badge-ngrx);
+  color: var(--badge-ngrx-text);
+  border-color: var(--badge-ngrx-text);
+}
+.tech-badge['ABP Framework'] {
+  background: var(--badge-abp);
+  color: var(--badge-abp-text);
+  border-color: var(--badge-abp-text);
+}
+.tech-badge.JavaScript {
+  background: var(--badge-js);
+  color: var(--badge-js-text);
+  border-color: var(--badge-js-text);
+}
+.tech-badge.TypeScript {
+  background: var(--badge-ts);
+  color: var(--badge-ts-text);
+  border-color: var(--badge-ts-text);
+}

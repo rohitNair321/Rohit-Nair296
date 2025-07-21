@@ -40,6 +40,28 @@
   --global-transition-speed: 0.3s;
 
   --global-text-color: var(--global-text-primary);
+
+  /* Badges */
+  --badge-angular: #e8f0fe;
+  --badge-angular-text: #d32f2f;
+  --badge-java: #f5f5f5;
+  --badge-java-text: #007396;
+  --badge-dotnet: #f3e6ff;
+  --badge-dotnet-text: #512bd4;
+  --badge-bootstrap: #f0f3fa;
+  --badge-bootstrap-text: #563d7c;
+  --badge-primeng: #e0f7fa;
+  --badge-primeng-text: #009688;
+  --badge-customcss: #fffde7;
+  --badge-customcss-text: #795548;
+  --badge-ngrx: #f3e5f5;
+  --badge-ngrx-text: #8e24aa;
+  --badge-abp: #e3f2fd;
+  --badge-abp-text: #1976d2;
+  --badge-js: #fffde7;
+  --badge-js-text: #fbc02d;
+  --badge-ts: #e3f2fd;
+  --badge-ts-text: #1976d2;
 }
 
 /* Dark Theme */
