@@ -3,6 +3,10 @@ import { serve } from "https://deno.land/std@0.203.0/http/server.ts";
 
 const GEMINI_KEY = Deno.env.get("GEMINI_API_KEY")!;
 
+const GEMINI_V1_15_BETA = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+const GEMINI_V1_15_STB = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent";
+const GEMINI_V1_25_STB = "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent";
+
 serve(async (req) => {
   // Log incoming request metadata
   console.log("[Chat Function] Received request:", {
@@ -48,7 +52,11 @@ serve(async (req) => {
 
   // Enhanced system prompt with detailed rules
   const systemPrompt = `
-    You are Rohit Nair's personal portfolio assistant, your name as AiNg. Your purpose is to help visitors learn about Rohit's professional background.
+    You are Rohit Nair's personal portfolio assistant, your name as AiNg. Your purpose is to help visitors learn about Rohit's profession.
+    *If asked to introduce yourself, you can say "I am AiNg, Rohit Nair's personal portfolio assistant, here to answer questions about his professional background and skills."
+    *If asked to share your name, you can say "My name is AiNg, I am Rohit Nair's personal portfolio assistant."
+    *If asked to share your purpose, you can say "My purpose is to assist visitors in learning about Rohit Nair's professional exprieances.
+    *If asked 'Hi', 'Hello', 'Hey', 'How are you', 'How are you doing', 'How is it going' etc any kind of greeting, you can say "Hello or greet the user per the time of the day, I am AiNg, Rohit Nair's personal assistant, how can I assist you today?"
 
     ## STRICT RULES:
     1. ONLY answer questions about:
@@ -104,8 +112,17 @@ serve(async (req) => {
     - 4.5 + years of experience as frontend developer developer focused on Angular, currenty working as a Technology Analyst at Infosys.
     - Check out my likedin profile for more details on my professional background - Linkedin: www.linkedin.com/in/rohit-nair-007408217
     - Check out my resume for more details on my professional background - Resume: https://rohitnair321.github.io/Rohit-Nair296/#/resume
-    - Check out my Medium article blogs - Medium:https://medium.com/@rohit.nair296 where I write about some life observations and some life changes that would require in life, read and comment 
-      how you feel about it.
+    *If asked what is my total experience, you can say "I have 4.5+ years of experience as a frontend developer.
+    *If asked about my current company, you can say "I am currently working as a Technology Analyst at Infosys,
+    *If asked about my previous company, you can say "I worked at Ikione Systems as a Software Engineer,
+
+    ### Habits:
+    - Daily Diary: I maintain a daily diary to track my progress, jot down ideas, and reflect on my day.
+    - Love to reading books on money making,  like "Rich Dad Poor Dad" by Robert Kiyosaki, Daily Stoic by Ryan Holiday etc. still reading, could not completed it yet.
+    - Write blog whenever gets time, Check out my Medium article blogs - Medium:https://medium.com/@rohit.nair296 where I write about some life observations and some life changes that would require in life, read and comment 
+      how you feel about it. 
+    *If asked to share the Medium link, you can say "Sure, here is the link to my Medium blog - https://medium.com/@rohit.nair296
+    *If asked about 'what I write in my Medium blog', you can say "I write about life observations and changes that I feel are necessary for a better life, also share some Angular questions and answers, and some of my personal experiences that I feel can help others."
 
     ### Contact:
     - Email: rohit296nair@yahoo.com.
@@ -121,22 +138,25 @@ serve(async (req) => {
     2. Maintain professional tone
     3. For out-of-scope requests: "I'm sorry, I'm only programmed to answer questions about Rohit's professional background. Feel free to ask about his skills, projects, or experience!"
     4. For unknown information: "I don't have that specific information, but you can find more details on Rohit's portfolio"
+
+    when user say's Thank you, you can say "You are welcome, if you have any other questions feel free to ask me, otherwise have a (here you can say Good day, Good evening, Good night, etc. based on the time of the day)"
   `;
 
   // Prepare Gemini request body - NEW STRUCTURE
   const requestBody = {
-    systemInstruction: {
-      parts: [{ text: systemPrompt }]
-    },
     contents: [
+      {
+        role: "model",
+        parts: [{ text: systemPrompt }]
+      },
       {
         role: "user",
         parts: [{ text: text }]
       }
     ],
     generationConfig: {
-      temperature: 0.2,
-      maxOutputTokens: 512
+      temperature: 0.3,
+      maxOutputTokens: 1024  
     }
   };
 
@@ -144,9 +164,21 @@ serve(async (req) => {
   console.log("[Chat Function] GEMINI_API_KEY:", Deno.env.get("GEMINI_API_KEY")!);
 
   // Updated Gemini API endpoint and headers
-  const GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+  
+
   let geminiResponse;
   try {
+    let GEMINI_URL;
+    if(payload.modelVersion === "v1.5b") {
+      GEMINI_URL = GEMINI_V1_15_BETA;
+      console.log("[Chat Function] Current model verion - GEMINI_V1_15_BETA", GEMINI_URL);
+    }else if(payload.modelVersion === "v1.5s") {
+      GEMINI_URL = GEMINI_V1_15_STB;
+      console.log("[Chat Function] Current model verion - GEMINI_V1_15_STB", GEMINI_URL);
+    } else if(payload.modelVersion === "v2.5s") {
+      GEMINI_URL = GEMINI_V1_25_STB;
+      console.log("[Chat Function] Current model verion - GEMINI_V1_25_STB", GEMINI_URL);
+    }
     const resp = await fetch(GEMINI_URL, {
       method: "POST",
       headers: {
