@@ -1,5 +1,6 @@
 import { Component, Input, HostBinding, OnInit, ViewChild, ElementRef, Injector } from '@angular/core';
 import { CommonApp } from 'src/app/core/services/common';
+import { AiRequest } from 'src/app/core/services/open-ai.service';
 
 @Component({
   selector: 'app-chat-bot',
@@ -24,6 +25,26 @@ export class ChatBotComponent extends CommonApp implements OnInit {
   }[] = [];
   newMessage: string = '';
   isSending = false;
+  
+  versionList: any[] = [
+    {
+      name: 'v1.5-beta',
+      model: 'v1.5b'
+    },
+    {
+      name: 'v1.5-stb',
+      model: 'v1.5s'
+    },
+    {
+      name: 'v2.5-stb',
+      model: 'v2.5s'
+    }
+  ];
+  selectedVersion: string = this.versionList[0].model;
+  currentReq: AiRequest = {
+    message: '',
+    modelVersion: this.selectedVersion
+  };
 
   @HostBinding('style') get hostStyles() {
     return {
@@ -57,55 +78,10 @@ export class ChatBotComponent extends CommonApp implements OnInit {
     });
   }
 
-  // async sendMessage() {
-  //   const message = this.newMessage.trim();
-  //   if (!message || this.isSending) return;
 
-  //   // Add user message
-  //   this.messages.push({
-  //     text: message,
-  //     sender: 'user',
-  //     timestamp: new Date()
-  //   });
-    
-  //   // Add temporary bot message with loading state
-  //   this.messages.push({
-  //     text: '',
-  //     sender: 'bot',
-  //     timestamp: new Date(),
-  //     loading: true
-  //   });
-    
-  //   this.newMessage = '';
-  //   this.isSending = true;
-  //   this.scrollToBottom();
-
-  //   try {
-  //     // Call Gemini service
-  //     const response = await this.aiServices.sendMessage(message).toPromise();
-      
-  //     // Replace loading message with actual response
-  //     const lastIndex = this.messages.length - 1;
-  //     this.messages[lastIndex] = {
-  //       text: response?.reply || "I couldn't process that request",
-  //       sender: 'bot',
-  //       timestamp: new Date()
-  //     };
-      
-  //   } catch (error) {
-  //     // Replace with error message
-  //     const lastIndex = this.messages.length - 1;
-  //     this.messages[lastIndex] = {
-  //       text: "I'm having trouble connecting. Please try again later.",
-  //       sender: 'bot',
-  //       timestamp: new Date(),
-  //       error: true
-  //     };
-  //   } finally {
-  //     this.isSending = false;
-  //     this.scrollToBottom();
-  //   }
-  // }
+  onVersionChange(event: Event): void {
+    this.selectedVersion = (event.target as HTMLSelectElement).value;
+  }
 
  sendMessage() {
     const message = this.newMessage.trim();
@@ -134,7 +110,9 @@ export class ChatBotComponent extends CommonApp implements OnInit {
     this.scrollToBottom();
 
     // 4) Call the backend via ChatService
-    this.aiServices.sendMessage(message).subscribe({
+    this.currentReq.message = message;
+    this.currentReq.modelVersion = this.selectedVersion;
+    this.aiServices.sendMessage(this.currentReq).subscribe({
       next: (resp) => {
         // Replace the loading placeholder with actual text
         const idx = this.messages.length - 1;

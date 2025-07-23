@@ -12,15 +12,22 @@ export class OpenAIService {
 
   constructor(private http: HttpClient) {}
 
-  sendMessage(userMessage: string): Observable<any> {
+  sendMessage(userMessage: AiRequest): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${environment.supabaseKey}`
     });
     const body = {
-      text: userMessage
+      text: userMessage.message,
+      modelVersion: userMessage.modelVersion,
     };
 
     return this.http.post(this.PROXY_URL, body, {headers} );
   }
+}
+
+
+export interface AiRequest {
+  message: string;
+  modelVersion: string;
 }

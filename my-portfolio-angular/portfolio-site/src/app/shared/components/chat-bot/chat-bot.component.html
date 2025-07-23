@@ -8,6 +8,28 @@
   <div class="chat-window" *ngIf="isOpen">
     <div class="chat-header">
       <h3>{{title}}</h3>
+      <select class="version-selector" [(ngModel)]="selectedVersion" (change)="onVersionChange($event)">
+        <option *ngFor="let version of versionList" [value]="version.model">{{version.name}}</option>
+      </select>
+      <!-- <div class="dropdown version-selector" style="margin-left: 1rem;">
+        <button class="btn btn-sm dropdown-toggle"
+                type="button"
+                id="versionDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                [ngStyle]="{'background': 'var(--global-surface-color)', 'color': 'var(--global-primary-color)', 'border': '1px solid var(--global-border-color)'}">
+          {{ selectedVersion || 'Select Version' }}
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="versionDropdown">
+          <li *ngFor="let version of versionList">
+            <a class="dropdown-item"
+               href="#"
+               (click)="onVersionChange(version)">
+              {{ version }}
+            </a>
+          </li>
+        </ul>
+      </div> -->
       <button class="close-btn" (click)="toggleChat()">&times;</button>
     </div>
     
