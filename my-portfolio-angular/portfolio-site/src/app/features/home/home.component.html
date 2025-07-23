@@ -69,7 +69,7 @@
               <span class="tech-badge" *ngFor="let tech of project?.technologies">{{ tech }}</span>
             </div> -->
             <div class="tech-list">
-              <span class="tech-badge" *ngFor="let tech of project?.technologies" [ngClass]="tech">
+              <span class="tech-badge" *ngFor="let tech of project?.technologies" [ngClass]="techClass(tech)">
                 {{ tech }}
               </span>
             </div>

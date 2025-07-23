@@ -127,4 +127,8 @@ export class HomeComponent extends CommonApp implements OnInit, AfterViewInit{
     });
   }
 
+  techClass(tech: string): string {
+    return tech.replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+  }
+
 }

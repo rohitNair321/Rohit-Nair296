@@ -696,8 +696,14 @@ input.invalid, textarea.invalid {
 
 /* Use color variables for badges */
 .tech-badge.Angular,
-.tech-badge['Angular 17'],
-.tech-badge['Angular 14'] {
+.tech-badge.Angular17,
+.tech-badge.Angular-17 {
+  background: var(--badge-angular);
+  color: var(--badge-angular-text);
+  border-color: var(--badge-angular-text);
+}
+.tech-badge.Angular14,
+.tech-badge.Angular-14 {
   background: var(--badge-angular);
   color: var(--badge-angular-text);
   border-color: var(--badge-angular-text);
@@ -707,7 +713,7 @@ input.invalid, textarea.invalid {
   color: var(--badge-java-text);
   border-color: var(--badge-java-text);
 }
-.tech-badge['.NET Core'] {
+.tech-badge.NET-Core {
   background: var(--badge-dotnet);
   color: var(--badge-dotnet-text);
   border-color: var(--badge-dotnet-text);
@@ -722,7 +728,7 @@ input.invalid, textarea.invalid {
   color: var(--badge-primeng-text);
   border-color: var(--badge-primeng-text);
 }
-.tech-badge['Custom CSS'] {
+.tech-badge.Custom-CSS {
   background: var(--badge-customcss);
   color: var(--badge-customcss-text);
   border-color: var(--badge-customcss-text);
@@ -732,7 +738,7 @@ input.invalid, textarea.invalid {
   color: var(--badge-ngrx-text);
   border-color: var(--badge-ngrx-text);
 }
-.tech-badge['ABP Framework'] {
+.tech-badge.ABP-Framework {
   background: var(--badge-abp);
   color: var(--badge-abp-text);
   border-color: var(--badge-abp-text);
