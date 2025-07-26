@@ -1,5 +1,5 @@
 .sidebar-container {
-  position: relative; // Changed to fixed for sticky behavior
+  position: fixed; // Changed to fixed for sticky behavior
   height: 100vh;
   width: 220px;
   min-width: 60px;
@@ -21,9 +21,19 @@
 .sidebar-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 1rem;
-  background: var(--global-surface-color);
+  // background: var(--global-surface-color);
+}
+
+.sidebar-collapse-btn {
+  display: flex;
+  background: transparent;
+  border: none;
+}
+
+.none{
+  display: none;
 }
 
 // Updated logo styling to match navigation

@@ -4,7 +4,7 @@
 .hero-section {
   background-color: var(--global-primary-color);
   color: var(--global-background-color);
-  padding: 100px 20px;
+  padding: 130px 30px 55px 30px;
 }
 
 .hero-content {

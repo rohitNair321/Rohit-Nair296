@@ -42,10 +42,13 @@ export class SidebarComponent implements OnInit {
     if (!this.isMobile) {
       this.isMobileOpen = false;
     }
+    this.config.navigation.isMobile = this.isMobile;
+    console.log('Is mobile:', this.isMobile);
   }
 
   toggleSidebarCollapse() {
-    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+    this.config.navigation.collapsed = !this.config.navigation.collapsed;
+    console.log('Sidebar collapsed:', this.config.navigation.collapsed);
   }
 
   toggleTheme() {

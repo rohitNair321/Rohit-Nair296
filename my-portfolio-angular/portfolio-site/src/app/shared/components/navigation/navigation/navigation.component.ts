@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';// For Font Awesome 5.x
+import { Component, Input, OnInit, OnDestroy, HostBinding, Output, EventEmitter } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-navigation',
@@ -12,6 +12,17 @@ export class NavigationComponent implements OnInit, OnDestroy {
   isMenuOpen = false;
   isDarkTheme = false;
   isSidebarCollapsed = false;
+  @Output() isSidebarCollapsedChange = new EventEmitter<boolean>();
+
+  @HostBinding('class.sidebar-left') get sidebarLeft() {
+    return this.config?.navigation?.type === 'sidebar' && 
+           this.config?.navigation?.sidebarPosition === 'left';
+  }
+
+  @HostBinding('class.sidebar-right') get sidebarRight() {
+    return this.config?.navigation?.type === 'sidebar' && 
+           this.config?.navigation?.sidebarPosition === 'right';
+  }
 
   menuItems = [
     { label: 'Home', href: '#home', icon: 'home' },
@@ -23,11 +34,15 @@ export class NavigationComponent implements OnInit, OnDestroy {
   constructor(private breakpointObserver: BreakpointObserver) {}
 
   ngOnInit() {
-    console.log(this.config);
     this.setupResponsiveBehavior();
     this.initializeTheme();
     this.checkMobile();
     window.addEventListener('resize', this.checkMobile.bind(this));
+    
+    // Initialize sidebar state
+    if (this.config?.navigation?.type === 'sidebar') {
+      this.isSidebarCollapsed = this.config?.navigation?.collapsed || false;
+    }
   }
 
   ngOnDestroy() {
@@ -54,19 +69,27 @@ export class NavigationComponent implements OnInit, OnDestroy {
     if (!this.isMobile) {
       this.isMenuOpen = false;
     }
+    this.config.navigation.isMobile = this.isMobile;
   }
 
   toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
+    if(this.config?.navigation?.type === 'navbar') {
+      this.isMenuOpen = !this.isMenuOpen;
+    }else if(this.config?.navigation?.type === 'sidebar') {
+      this.isSidebarCollapsed = this.isSidebarCollapsed == true? false : true
+      this.isSidebarCollapsedChange.emit(this.isSidebarCollapsed);
+    }
+  }
+
+  toggleSidebar() {
+    if (!this.isMobile) {
+      this.isSidebarCollapsed = !this.isSidebarCollapsed;
+    }
   }
 
   toggleTheme() {
     this.isDarkTheme = !this.isDarkTheme;
     document.body.classList.toggle('dark-mode', this.isDarkTheme);
-  }
-
-  toggleSidebarCollapse() {
-    this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 
   // Add this method for smooth scrolling

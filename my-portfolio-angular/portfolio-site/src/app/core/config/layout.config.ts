@@ -2,6 +2,9 @@ export interface LayoutConfig {
   navigation: {
     type?: 'navbar' | 'sidebar';
     theme?: 'light' | 'dark';
+    sidebarPosition?: 'right' | 'left';
+    collapsed?: boolean;
+    isMobile: boolean;
     isFixed?: boolean;
   };
   theme: {
@@ -22,7 +25,10 @@ export const defaultConfig: LayoutConfig = {
   navigation: {
     type: 'navbar', // or 'sidebar'
     theme: 'light',
-    isFixed: true
+    sidebarPosition: 'right',
+    collapsed: false,
+    isMobile: true,
+    isFixed: true,
   },
   theme: {
     primary: '#2563eb',

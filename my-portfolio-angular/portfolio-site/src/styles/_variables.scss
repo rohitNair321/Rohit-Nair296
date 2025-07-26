@@ -1,23 +1,46 @@
 /* Color Variables */
 :root {
-  --global-background-color: #F8F5F2;
-  --global-surface-color: #EDE5DE;
-  --global-primary-color: #4A6B7D;
-  --global-secondary-color: #9B7E6B;
-  --global-text-primary: #2D3741;
-  --global-text-secondary: #5C6B7A;
-  --global-accent-color: #C44536;
-  --global-border-color: #D3CEC9;
+      /* Base Colors */
+  --global-background-color: #F8FAFF;
+  --global-surface-color: #FFFFFF;
+  --global-border-color: #E2E8F0;
+  
+  /* Primary Palette */
+  --global-primary-color: #4A3FDB;     /* Deep indigo */
+  --global-primary-light: #EDEBFF;
+  --global-primary-dark: #3A30B8;
+  
+  /* Secondary Palette */
+  --global-secondary-color: #3F8A8F;   /* Sophisticated teal */
+  --global-secondary-light: #EBF5F5;
+  
+  /* Accents & States */
+  --global-accent-color: #FF6B6B;      /* Vibrant coral */
+  --global-accent-light: #FFF0F0;
+  --global-error-color: #E53E3E;
+  --global-warning-color: #DD6B20;
+  --global-success-color: #38A169;
+  
+  /* Text */
+  --global-text-primary: #1A202C;
+  --global-text-secondary: #4A5568;
+  --global-text-tertiary: #718096;
+  
+  /* Neutrals */
+  --global-neutral-50: #F7FAFC;
+  --global-neutral-100: #EDF2F7;
+  
+  /* Logo */
+  --global-logo-bg-gradient-start: #F0F4FF;
+  --global-logo-bg-gradient-end: #E6EDFF;
+  --global-logo-primary: #4A3FDB;
+  --global-logo-secondary: #FF6B6B;
+  --global-logo-border-color: #D6E0FF;
+  --global-logo-hover-border-color: #A3B8FF;
+  --global-logo-main-shadow-color: rgba(74, 63, 219, 0.15);
 
-  --global-logo-bg-gradient-start: #FFF0E1; /* Like, a super light, warm peachy color */
-  --global-logo-bg-gradient-end: #FFDAB9;   /* Kinda light peach/apricot, super soft */
-  --global-logo-letter-r-color: #A0522D;   /* This "Sienna" - a nice, warm brown for the 'R' */
-  --global-logo-letter-n-color: #8B4513;   /* "SaddleBrown" - a bit darker brown for 'N', looks cool */
-  --global-logo-border-color: #E8A87C;     /* A chill terracotta for the border, not too loud */
-  --global-logo-hover-border-color: #E29578; /* A bit richer terracotta when you hover, nice touch! */
-  --global-app-background-color: #FFFFFF;   /* Just your page background, prob white, for that pop-out shadow */
-  --global-logo-main-shadow-color: rgba(200, 120, 80, 0.18); /* Soft shadow, keeps it warm */
-  --global-logo-letter-text-shadow: rgba(255, 255, 255, 0.6); /* Tiny bit of light shadow inside the letters */
+  
+  --global-text-color: var(--global-text-primary);
 
   /* Typography */
   --global-font-family: 'Inter', sans-serif;
@@ -39,7 +62,6 @@
   /* Transitions */
   --global-transition-speed: 0.3s;
 
-  --global-text-color: var(--global-text-primary);
 
   /* Badges */
   --badge-angular: #e8f0fe;
@@ -66,14 +88,35 @@
 
 /* Dark Theme */
 .dark-mode {
-  --global-background-color: #1A242D;
-  --global-surface-color: #24323D;
-  --global-primary-color: #6B9080;
-  --global-secondary-color: #D4A373;
-  --global-text-primary: #E3E9EC;
-  --global-text-secondary: #A8B5BE;
-  --global-accent-color: #E76F51;
-  --global-border-color: #364551;
+/* Base Colors */
+  --global-background-color: #0F1120;
+  --global-surface-color: #1A1D33;
+  --global-border-color: #2D3250;
+  
+  /* Primary Palette */
+  --global-primary-color: #6C63FF;
+  --global-primary-light: rgba(108, 99, 255, 0.18);
+  
+  /* Secondary Palette */
+  --global-secondary-color: #4ECDC4;
+  
+  /* Accents */
+  --global-accent-color: #FF8E8E;
+  --global-accent-light: rgba(255, 142, 142, 0.15);
+  
+  /* Text */
+  --global-text-primary: #F0F2FF;
+  --global-text-secondary: #A1A8C7;
+  --global-text-tertiary: #6B7290;
+  
+  /* Logo */
+  --global-logo-bg-gradient-start: #16182D;
+  --global-logo-bg-gradient-end: #1C1F3D;
+  --global-logo-primary: #6C63FF;
+  --global-logo-secondary: #FF8E8E;
+  --global-logo-border-color: rgba(108, 99, 255, 0.3);
+  --global-logo-hover-border-color: rgba(108, 99, 255, 0.5);
+  --global-logo-main-shadow-color: rgba(15, 17, 32, 0.7);
 
   --global-text-color: var(--global-text-primary);
 }
