@@ -16,6 +16,7 @@ export class ChatBotComponent extends CommonApp implements OnInit {
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
   
   isOpen = false;
+  showWelcomeBubble = true;
   messages: {
     text: string, 
     sender: 'user' | 'bot', 
@@ -64,6 +65,7 @@ export class ChatBotComponent extends CommonApp implements OnInit {
 
   toggleChat() {
     this.isOpen = !this.isOpen;
+    this.showWelcomeBubble = !this.showWelcomeBubble;
     if (this.isOpen && this.messages.length === 0) {
       this.addWelcomeMessage();
     }

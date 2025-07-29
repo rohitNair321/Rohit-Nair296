@@ -140,129 +140,15 @@
   }
 }
 
-// /* Mobile Styles */
-// @media (max-width: 900px) {
-//   // Hide desktop sidebar on mobile
-//   .sidebar-container {
-//     display: none;
-//   }
 
-//   // Show mobile dropdown
-//   .mobile-dropdown {
-//     display: block;
-//     position: fixed;
-//     top: 0;
-//     left: 0;
-//     width: 100%;
-//     z-index: 1000;
-//     background: var(--global-surface-color);
-//     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-
-//     .dropdown-toggle {
-//       display: flex;
-//       align-items: center;
-//       width: 100%;
-//       padding: 1rem;
-//       border: none;
-//       background: var(--global-surface-color);
-//       font-size: 1rem;
-//       color: var(--global-text-color);
-//       cursor: pointer;
-
-//       .logo-initials {
-//         width: 40px;
-//         height: 40px;
-//         margin-right: 1rem;
-//         font-size: 1.8rem;
-//       }
-
-//       .menu-icon {
-//         margin-right: 0.8rem;
-//       }
-
-//       .current-section {
-//         flex: 1;
-//         text-align: left;
-//         font-weight: 500;
-//       }
-
-//       .arrow-icon {
-//         transition: transform 0.3s;
-        
-//         &.open {
-//           transform: rotate(180deg);
-//         }
-//       }
-//     }
-
-//     .dropdown-menu {
-//       position: absolute;
-//       top: 100%;
-//       left: 0;
-//       width: 100%;
-//       background: var(--global-background-color);
-//       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-//       transform-origin: top;
-//       transform: scaleY(0);
-//       opacity: 0;
-//       transition: all 0.3s cubic-bezier(.77,0,.18,1);
-//       visibility: hidden;
-//       max-height: calc(100vh - 60px);
-//       overflow-y: auto;
-
-//       &.open {
-//         transform: scaleY(1);
-//         opacity: 1;
-//         visibility: visible;
-//       }
-
-//       .dropdown-item {
-//         display: flex;
-//         align-items: center;
-//         gap: 1rem;
-//         padding: 1rem;
-//         color: var(--global-text-color);
-//         text-decoration: none;
-//         transition: background-color 0.2s;
-//         border: none;
-//         width: 100%;
-//         text-align: left;
-//         background: none;
-//         cursor: pointer;
-
-//         &:hover {
-//           background: var(--global-primary-color);
-//           color: var(--global-background-color);
-//         }
-
-//         .material-icons {
-//           font-size: 1.5rem;
-//         }
-//       }
-//     }
-//   }
-// }
-
-// /* Hide mobile dropdown on desktop */
-// @media (min-width: 901px) {
-//   .mobile-dropdown {
-//     display: none;
-//   }
-// }
-
-// // Animations
-// @keyframes slideIn {
-//   from {
-//     opacity: 0;
-//     transform: translateX(-30px);
-//   }
-//   to {
-//     opacity: 1;
-//     transform: translateX(0);
-//   }
-// }
-
-// .menu-link {
-//   animation: slideIn 0.3s cubic-bezier(.77,0,.18,1) forwards;
-//   animation-delay: calc(var(--item-index) * 0.05s);
-// }
+.right-side-setting {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1000;
+  right: 0;
+  top: 0;
+  height: 100vh;
+  width: 60px;
+}
