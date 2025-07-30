@@ -1,37 +1,18 @@
-<!-- <button class="mobile-toggle" *ngIf="config?.navigation?.type === 'sidebar' && isMobile" (click)="toggleMobile()">
-  <span class="material-icons">{{ isMobileOpen ? 'close' : 'menu' }}</span>
-</button> -->
-
 <div class="sidebar-container" [class.collapsed]="config.navigation.collapsed" [class.open]="isMobileOpen"
     [ngClass]="{
       'none': config?.navigation?.type === 'sidebar' && isMobile && config.navigation.collapsed,
       '': config?.navigation?.type === 'sidebar' && isMobile && !config.navigation.collapsed,
 
-    }">
+    }" *ngIf="config.navigation.type === 'sidebar'">
   <div class="sidebar-header">
-    <!-- <div class="logo">
-      <span class="logo-initials animate-nav-fade-in">
-        <span class="rn-r">R</span><span class="rn-n">N</span>
-      </span>
-      <span class="logo-name animate-nav-slide-in" *ngIf="!config.navigation.collapsed">
-        <span class="logo-rohit">Rohit</span>
-        <span class="logo-portfolio">Portfolio</span>
-      </span>
-    </div> -->
     <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()" *ngIf="config?.navigation?.type === 'sidebar' && !config.navigation.collapsed">
       <span class="material-icons">
         {{ 'close'}}
       </span>
-      <!-- <span class="material-icons">
-        {{ 'close' }}
-      </span> -->
     </button>
   </div>
   <div class="sidebar-menu" [class.collapsed]="config.navigation.collapsed">
-    <a *ngFor="let item of menuItems"
-       [href]="item.href"
-       class="menu-link"
-       (click)="scrollToSection($event, item.href)">
+    <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link" (click)="scrollToSection($event, item.href)">
       <span class="material-icons menu-icon">{{ item.icon }}</span>
       <span class="menu-label" *ngIf="!config.navigation.collapsed">{{ item.label }}</span>
     </a>
@@ -47,5 +28,40 @@
 </div>
 
 <div class="right-side-setting">
- settings
+ <button class="btn btn-tertiary btn-setting" (click)="toggleSettingSideBar()" *ngIf="!isRightSideSettingOpen">
+  <span class="material-icons material-symbols-outlined setting-icon-rotate">settings</span>
+ </button>
+</div>
+<div class="right-side-setting-content" *ngIf="isRightSideSettingOpen">
+  <div class="sidebar-header">
+    <button class="sidebar-collapse-btn" (click)="toggleSettingSideBar()" >
+      <span class="material-icons">
+        {{ 'close'}}
+      </span>
+    </button>
+  </div>
+  <div class="featurs-content">
+    <span>Use the toggle to switch to sidebar to navbar menu</span>
+    <div class="toggle-container">
+      <label class="radio-inline me-3">
+        <input
+          type="radio"
+          name="navigationType"
+          value="sidebar"
+          [(ngModel)]="navigationType"
+          (change)="onNavigationTypeChange($event)"
+        />
+        Sidebar
+      </label>
+      <label class="radio-inline">
+        <input
+          type="radio"
+          name="navigationType"
+          value="navbar"
+          [(ngModel)]="navigationType"
+          (change)="onNavigationTypeChange($event)"
+        />
+        Navbar
+      </label>
+    </div>
 </div>

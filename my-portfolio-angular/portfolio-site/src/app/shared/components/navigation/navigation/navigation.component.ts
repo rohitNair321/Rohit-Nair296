@@ -11,17 +11,14 @@ export class NavigationComponent implements OnInit, OnDestroy {
   isMobile = false;
   isMenuOpen = false;
   isDarkTheme = false;
-  isSidebarCollapsed = false;
   @Output() isSidebarCollapsedChange = new EventEmitter<boolean>();
 
   @HostBinding('class.sidebar-left') get sidebarLeft() {
-    return this.config?.navigation?.type === 'sidebar' && 
-           this.config?.navigation?.sidebarPosition === 'left';
+    return this.config?.navigation?.type === 'sidebar' && this.config?.navigation?.sidebarPosition === 'left';
   }
 
   @HostBinding('class.sidebar-right') get sidebarRight() {
-    return this.config?.navigation?.type === 'sidebar' && 
-           this.config?.navigation?.sidebarPosition === 'right';
+    return this.config?.navigation?.type === 'sidebar' && this.config?.navigation?.sidebarPosition === 'right';
   }
 
   menuItems = [
@@ -41,7 +38,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     
     // Initialize sidebar state
     if (this.config?.navigation?.type === 'sidebar') {
-      this.isSidebarCollapsed = this.config?.navigation?.collapsed || false;
+      this.config.navigation.collapsed = this.config?.navigation?.collapsed || false;
     }
   }
 
@@ -76,14 +73,14 @@ export class NavigationComponent implements OnInit, OnDestroy {
     if(this.config?.navigation?.type === 'navbar') {
       this.isMenuOpen = !this.isMenuOpen;
     }else if(this.config?.navigation?.type === 'sidebar') {
-      this.isSidebarCollapsed = this.isSidebarCollapsed == true? false : true
-      this.isSidebarCollapsedChange.emit(this.isSidebarCollapsed);
+      this.config.navigation.collapsed = !this.config.navigation.collapsed;
+      this.isSidebarCollapsedChange.emit(this.config.navigation.collapsed);
     }
   }
 
   toggleSidebar() {
     if (!this.isMobile) {
-      this.isSidebarCollapsed = !this.isSidebarCollapsed;
+      this.config.navigation.collapsed = !this.config.navigation.collapsed;
     }
   }
 

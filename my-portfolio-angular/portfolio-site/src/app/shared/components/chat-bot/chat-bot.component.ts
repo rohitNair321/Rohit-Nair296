@@ -47,13 +47,13 @@ export class ChatBotComponent extends CommonApp implements OnInit {
     modelVersion: this.selectedVersion
   };
 
-  @HostBinding('style') get hostStyles() {
-    return {
-      'position': 'fixed',
-      [this.position.split('-')[0]]: '20px',
-      [this.position.split('-')[1]]: '20px'
-    };
-  }
+  // @HostBinding('style') get hostStyles() {
+  //   return {
+  //     'position': 'fixed',
+  //     [this.position.split('-')[0]]: '20px',
+  //     [this.position.split('-')[1]]: '20px'
+  //   };
+  // }
 
   constructor(public override injector: Injector) {
     super(injector);

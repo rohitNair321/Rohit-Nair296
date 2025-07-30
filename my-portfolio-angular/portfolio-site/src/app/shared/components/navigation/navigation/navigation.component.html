@@ -1,8 +1,4 @@
-<nav class="navigation"
-     [class.navbar]="config?.navigation?.type === 'navbar'"
-     [class.sidebar]="config?.navigation?.type === 'sidebar'"
-     [class.sidebar-left]="config?.navigation?.sidebarPosition === 'left'"
-     [class.sidebar-right]="config?.navigation?.sidebarPosition === 'right'">
+<nav class="navigation" [class.navbar]="config?.navigation?.type === 'navbar'"[class.sidebar]="config?.navigation?.type === 'sidebar'">
   
   <!-- Navbar Layout -->
   <div class="nav-container" >
@@ -27,10 +23,8 @@
     <!-- Desktop Menu (right-aligned) -->
     <div class="desktop-menu animate-nav-fade-in" *ngIf="!isMobile && config?.navigation?.type === 'navbar'">
       <div class="menu-items">
-        <a *ngFor="let item of menuItems"
-           [href]="item.href"
-           class="menu-link"
-           (click)="scrollToSection($event, item.href)">
+        <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link"
+          (click)="scrollToSection($event, item.href)">
           {{ item.label }}
         </a>
         <a class="resume-download-btn" href="assets/Rohit.Nair.pdf" download>

@@ -7,6 +7,8 @@ import { FooterComponent } from './components/footer/footer.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ChatBotComponent } from './components/chat-bot/chat-bot.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {MatRadioModule} from '@angular/material/radio';
+
 
 @NgModule({
   declarations: [
@@ -21,7 +23,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     CommonModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    MatRadioModule
   ],
   exports: [
     NavigationComponent,

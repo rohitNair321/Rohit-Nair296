@@ -1,6 +1,6 @@
 <div class="wrapper">
   <app-navigation [config]="config" (isSidebarCollapsedChange)="initSidebarMenu($event)"></app-navigation>
-  <app-sidebar *ngIf="config.navigation.type === 'sidebar'" [config]="config"></app-sidebar>
+  <app-sidebar [config]="config"></app-sidebar>
   <div class="main-content" [class.sidebar-collapsed]="config.navigation.type === 'sidebar' && config.navigation.collapsed" [class.sidebar-expanded]="config.navigation.type === 'sidebar' && !config.navigation.collapsed"
   [class.m-auto]="config.navigation.type === 'navbar'">
     <main class="container">
@@ -8,7 +8,7 @@
     </main>
     <app-footer></app-footer>
   </div>
-  <app-chat-bot [position]="'bottom-right'" [title]="'AiNg Assistant'" [placeholder]="'Ask about my projects...'">
-  </app-chat-bot>
 </div>
+<app-chat-bot [position]="'bottom-right'" [title]="'AiNg Assistant'" [placeholder]="'Ask about my projects...'">
+</app-chat-bot>
 <!-- m-auto -->

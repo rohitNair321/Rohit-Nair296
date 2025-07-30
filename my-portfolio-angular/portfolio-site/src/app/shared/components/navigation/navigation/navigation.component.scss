@@ -268,14 +268,7 @@
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     
-    &.sidebar-left {
-      left: 0;
-    }
-    
-    &.sidebar-right {
-      right: 0;
-    }
-    
+
     .sidebar-container {
       height: 100%;
       display: flex;

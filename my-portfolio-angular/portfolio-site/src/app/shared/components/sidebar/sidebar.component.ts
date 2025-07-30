@@ -8,10 +8,12 @@ import { Component, Input, OnInit, HostListener } from '@angular/core';
 export class SidebarComponent implements OnInit {
   @Input() config: any;
   isSidebarCollapsed = false;
+  isRightSideSettingOpen = false;
   isDarkTheme = false;
   isMobileOpen = false;
   isMobile = false;
   currentSection = '';
+  navigationType: string = '';
 
   menuItems = [
     { label: 'Home', href: '#home', icon: 'home' },
@@ -31,6 +33,7 @@ export class SidebarComponent implements OnInit {
     this.checkMobile();
     this.updateCurrentSection();
     window.addEventListener('resize', this.checkMobile.bind(this));
+    this.navigationType = this.config?.navigation?.type === 'sidebar'? 'sidebar' : 'navbar';
   }
 
   ngOnDestroy() {
@@ -97,5 +100,18 @@ export class SidebarComponent implements OnInit {
         }
       }
     }
+  }
+
+  toggleSettingSideBar(){
+    this.isRightSideSettingOpen = !this.isRightSideSettingOpen;
+  }
+
+  
+
+  onNavigationTypeChange(event: any) {
+    // Update your config or emit an event to switch navigation type
+    this.config.navigation.type = this.navigationType;
+    this.isRightSideSettingOpen = false;
+    // Optionally, persist or broadcast this change as needed
   }
 }
