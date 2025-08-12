@@ -21,9 +21,6 @@ export class HomeComponent extends CommonApp implements OnInit, AfterViewInit{
   contactForm: FormGroup;
   sending = false;
   sent = false;
-  myEmail: string = 'rohit123nair@gmail.com';
-  myAddress: string = 'Hinjewadi, Pune, Maharashtra, India';
-  myContactNumber: string = '+91 8668671077';
 
   constructor(
     public override injector: Injector,

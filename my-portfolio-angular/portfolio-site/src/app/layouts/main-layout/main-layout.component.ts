@@ -22,5 +22,6 @@ export class MainLayoutComponent {
   initSidebarMenu(sidebarEvent: any){
     this.isSidebarCollapsed = sidebarEvent;
     this.config.navigation.collapsed = sidebarEvent;
+    this.config.theme.name = 'theme-1'; // default-theme
   }
 }

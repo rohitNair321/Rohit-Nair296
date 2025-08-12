@@ -42,6 +42,10 @@
             <span class="material-icons">read_more</span>
             Read More
           </a>
+          <a class="resume-download-btn" routerLink="/view-resume">
+            <span class="material-icons">open_in_new</span>
+            View resume
+          </a>
           <a class="resume-download-btn about-res-width" [href]="homeData?.aboutTeaser?.resume" download>
             <span class="material-icons">download</span>
             Resume
@@ -65,9 +69,6 @@
           <div class="card-content">
             <h3>{{ project?.title }}</h3>
             <p>{{ project?.description.length > 60 ? (project?.description | slice:0:160) + '...' : project?.description }}</p>
-            <!-- <div class="tech-list">
-              <span class="tech-badge" *ngFor="let tech of project?.technologies">{{ tech }}</span>
-            </div> -->
             <div class="tech-list">
               <span class="tech-badge" *ngFor="let tech of project?.technologies" [ngClass]="techClass(tech)">
                 {{ tech }}

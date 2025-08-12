@@ -64,4 +64,11 @@
         Navbar
       </label>
     </div>
+    <span>Select a Theme</span>
+    <select [(ngModel)]="selectedTheme" (change)="onThemeChange($event)">
+      <option *ngFor="let theme of availableThemes" [value]="theme.class">
+        {{ theme.label }}
+      </option>
+    </select>
+  </div>
 </div>

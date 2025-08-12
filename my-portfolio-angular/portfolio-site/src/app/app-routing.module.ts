@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { HomeComponent } from './features/home/home.component';
+import { ViewResumeComponent } from './features/view-resume/view-resume.component';
 import { AboutMeComponent } from './features/about-me/about-me.component';
 
 const routes: Routes = [
@@ -11,6 +12,7 @@ const routes: Routes = [
     component: MainLayoutComponent,
     children: [
       { path: '', component: HomeComponent },
+      { path: 'view-resume', component: ViewResumeComponent },
       { path: 'about-me', component: AboutMeComponent },
       { path: '**', redirectTo: '' }
       // {

@@ -8,6 +8,7 @@ export interface LayoutConfig {
     isFixed?: boolean;
   };
   theme: {
+    name: 'theme-1' | 'theme-2' | 'theme-3' | 'theme-4' | 'theme-5';
     primary: string;
     secondary: string;
     background: string;
@@ -31,6 +32,7 @@ export const defaultConfig: LayoutConfig = {
     isFixed: true,
   },
   theme: {
+    name: 'theme-1',
     primary: '#2563eb',
     secondary: '#4f46e5',
     background: '#ffffff',
