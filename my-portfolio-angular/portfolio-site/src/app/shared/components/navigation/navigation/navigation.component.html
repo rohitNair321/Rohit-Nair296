@@ -1,14 +1,14 @@
-<nav class="navigation" [class.navbar]="config?.navigation?.type === 'navbar'"[class.sidebar]="config?.navigation?.type === 'sidebar'">
+<nav class="navigation" [class.navbar]="config?.appConfiguration?.type === 'navbar'"[class.sidebar]="config?.appConfiguration?.type === 'sidebar'">
   
   <!-- Navbar Layout -->
   <div class="nav-container" >
     <!-- Logo Section && config.navigation.isMobile *ngIf="config?.navigation?.type === 'sidebar' && config.navigation.isMobile || config?.navigation?.type === 'navbar'"-->
     <div class="logo" [ngClass]="{
-        'sidebar-navbar-collapsed': config?.navigation?.type === 'sidebar' && config?.navigation?.collapsed && !isMobile,
-        'sidebar-navbar-expanded': (config?.navigation?.type === 'sidebar' && !config?.navigation?.collapsed && !isMobile),
-        'navbar-stretch': config?.navigation?.type === 'sidebar' && isMobile || config?.navigation?.type === 'navbar'
+        'sidebar-navbar-collapsed': config?.appConfiguration?.type === 'sidebar' && config?.appConfiguration?.collapsed && !isMobile,
+        'sidebar-navbar-expanded': (config?.appConfiguration?.type === 'sidebar' && !config?.appConfiguration?.collapsed && !isMobile),
+        'navbar-stretch': config?.appConfiguration?.type === 'sidebar' && isMobile || config?.appConfiguration?.type === 'navbar'
       }">
-      <button class="menu-toggle" (click)="toggleMenu()" *ngIf="config?.navigation?.type === 'sidebar'">
+      <button class="menu-toggle" (click)="toggleMenu()" *ngIf="config?.appConfiguration?.type === 'sidebar'">
         <span class="material-icons">{{ isMenuOpen ? 'close' : 'menu' }}</span>
       </button>
       <span class="logo-initials animate-nav-fade-in">
@@ -21,7 +21,7 @@
     </div>
 
     <!-- Desktop Menu (right-aligned) -->
-    <div class="desktop-menu animate-nav-fade-in" *ngIf="!isMobile && config?.navigation?.type === 'navbar'">
+    <div class="desktop-menu animate-nav-fade-in" *ngIf="!isMobile && config?.appConfiguration?.type === 'navbar'">
       <div class="menu-items">
         <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link"
           (click)="scrollToSection($event, item.href)">
@@ -38,12 +38,12 @@
     </div>
 
     <!-- Mobile Menu Toggle (burger) -->
-    <button class="menu-toggle" *ngIf="isMobile && config?.navigation?.type === 'navbar'" (click)="toggleMenu()">
+    <button class="menu-toggle" *ngIf="isMobile && config?.appConfiguration?.type === 'navbar'" (click)="toggleMenu()">
       <span class="material-icons">{{ isMenuOpen ? 'close' : 'menu' }}</span>
     </button>
 
     <!-- Mobile Menu (right-aligned) -->
-    <div class="mobile-menu right-align" *ngIf="isMobile && isMenuOpen && config?.navigation?.type === 'navbar'">
+    <div class="mobile-menu right-align" *ngIf="isMobile && isMenuOpen && config?.appConfiguration?.type === 'navbar'">
       <div class="menu-items">
         <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link" (click)="scrollToSection($event, item.href)">
           {{ item.label }}

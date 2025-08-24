@@ -1,33 +1,33 @@
-<div class="sidebar-container" [class.collapsed]="config.navigation.collapsed" [class.open]="isMobileOpen"
+<div class="sidebar-container" [class.collapsed]="config.appConfiguration.collapsed" [class.open]="isMobileOpen"
     [ngClass]="{
-      'none': config?.navigation?.type === 'sidebar' && isMobile && config.navigation.collapsed,
-      '': config?.navigation?.type === 'sidebar' && isMobile && !config.navigation.collapsed,
+      'none': config?.appConfiguration?.type === 'sidebar' && isMobile && config.appConfiguration.collapsed,
+      '': config?.appConfiguration?.type === 'sidebar' && isMobile && !config.appConfiguration.collapsed,
 
-    }" *ngIf="config.navigation.type === 'sidebar'">
+    }" *ngIf="config.appConfiguration.type === 'sidebar'">
   <div class="sidebar-header">
-    <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()" *ngIf="config?.navigation?.type === 'sidebar' && !config.navigation.collapsed">
+    <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()" *ngIf="config?.appConfiguration?.type === 'sidebar' && !config.appConfiguration.collapsed">
       <span class="material-icons">
         {{ 'close'}}
       </span>
     </button>
   </div>
-  <div class="sidebar-menu" [class.collapsed]="config.navigation.collapsed">
+  <div class="sidebar-menu" [class.collapsed]="config.appConfiguration.collapsed">
     <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link" (click)="scrollToSection($event, item.href)">
       <span class="material-icons menu-icon">{{ item.icon }}</span>
-      <span class="menu-label" *ngIf="!config.navigation.collapsed">{{ item.label }}</span>
+      <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
     </a>
     <a class="resume-download-btn" href="assets/Rohit.Nair.pdf" download>
       <span class="material-icons menu-icon">download</span>
-      <span class="menu-label" *ngIf="!config.navigation.collapsed">Resume</span>
+      <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Resume</span>
     </a>
     <button class="theme-toggle" (click)="toggleTheme()">
       <span class="material-icons menu-icon">{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</span>
-      <span class="menu-label" *ngIf="!config.navigation.collapsed">Theme</span>
+      <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Theme</span>
     </button>
   </div>
 </div>
 
-<div class="right-side-setting">
+<div class="right-side-setting" *ngIf="config.appConfiguration.showSidebarToggle">
  <button class="btn btn-tertiary btn-setting" (click)="toggleSettingSideBar()" *ngIf="!isRightSideSettingOpen">
   <span class="material-icons material-symbols-outlined setting-icon-rotate">settings</span>
  </button>

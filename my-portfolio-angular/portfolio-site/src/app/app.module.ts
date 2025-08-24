@@ -13,6 +13,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ViewResumeComponent } from './features/view-resume/view-resume.component';
 import { AuthModule } from './auth/auth.module';
 import { AboutMeComponent } from './features/about-me/about-me.component';
+import { CardModule } from 'primeng/card';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { AboutMeComponent } from './features/about-me/about-me.component';
     CoreModule,
     SharedModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    CardModule
   ],
   providers: [{
     provide: LocationStrategy,

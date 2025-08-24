@@ -13,15 +13,17 @@ export class MainLayoutComponent {
 
   constructor() {
     // Example configuration for sidebar
-    this.config.navigation.type = 'sidebar';
-    this.config.navigation.theme = 'light';
-    this.config.navigation.sidebarPosition = 'right'; // 'left' or 'right'
-    this.config.navigation.collapsed = true;
+    this.config.appConfiguration.type = 'sidebar';
+    this.config.appConfiguration.theme = 'light';
+    this.config.appConfiguration.sidebarPosition = 'right'; // 'left' or 'right'
+    this.config.appConfiguration.collapsed = true;
+    this.config.appConfiguration.showSidebarToggle = true;
+    this.config.appConfiguration.showAgentChat = true;
   }
 
   initSidebarMenu(sidebarEvent: any){
     this.isSidebarCollapsed = sidebarEvent;
-    this.config.navigation.collapsed = sidebarEvent;
+    this.config.appConfiguration.collapsed = sidebarEvent;
     this.config.theme.name = 'theme-1'; // default-theme
   }
 }

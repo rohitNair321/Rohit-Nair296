@@ -14,11 +14,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
   @Output() isSidebarCollapsedChange = new EventEmitter<boolean>();
 
   @HostBinding('class.sidebar-left') get sidebarLeft() {
-    return this.config?.navigation?.type === 'sidebar' && this.config?.navigation?.sidebarPosition === 'left';
+    return this.config?.appConfiguration?.type === 'sidebar' && this.config?.appConfiguration?.sidebarPosition === 'left';
   }
 
   @HostBinding('class.sidebar-right') get sidebarRight() {
-    return this.config?.navigation?.type === 'sidebar' && this.config?.navigation?.sidebarPosition === 'right';
+    return this.config?.appConfiguration?.type === 'sidebar' && this.config?.appConfiguration?.sidebarPosition === 'right';
   }
 
   menuItems = [
@@ -37,8 +37,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
     window.addEventListener('resize', this.checkMobile.bind(this));
     
     // Initialize sidebar state
-    if (this.config?.navigation?.type === 'sidebar') {
-      this.config.navigation.collapsed = this.config?.navigation?.collapsed || false;
+    if (this.config?.appConfiguration?.type === 'sidebar') {
+      this.config.appConfiguration.collapsed = this.config?.appConfiguration?.collapsed || false;
     }
   }
 
@@ -57,7 +57,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   private initializeTheme() {
-    this.isDarkTheme = this.config.navigation.theme == 'dark'?true:false;
+    this.isDarkTheme = this.config.appConfiguration.theme == 'dark'?true:false;
     this.isDarkTheme = document.body.classList.toggle('dark-mode',this.isDarkTheme);
   }
 
@@ -66,21 +66,21 @@ export class NavigationComponent implements OnInit, OnDestroy {
     if (!this.isMobile) {
       this.isMenuOpen = false;
     }
-    this.config.navigation.isMobile = this.isMobile;
+    this.config.appConfiguration.isMobile = this.isMobile;
   }
 
   toggleMenu() {
-    if(this.config?.navigation?.type === 'navbar') {
+    if(this.config?.appConfiguration?.type === 'navbar') {
       this.isMenuOpen = !this.isMenuOpen;
-    }else if(this.config?.navigation?.type === 'sidebar') {
-      this.config.navigation.collapsed = !this.config.navigation.collapsed;
-      this.isSidebarCollapsedChange.emit(this.config.navigation.collapsed);
+    }else if(this.config?.appConfiguration?.type === 'sidebar') {
+      this.config.appConfiguration.collapsed = !this.config.appConfiguration.collapsed;
+      this.isSidebarCollapsedChange.emit(this.config.appConfiguration.collapsed);
     }
   }
 
   toggleSidebar() {
     if (!this.isMobile) {
-      this.config.navigation.collapsed = !this.config.navigation.collapsed;
+      this.config.appConfiguration.collapsed = !this.config.appConfiguration.collapsed;
     }
   }
 

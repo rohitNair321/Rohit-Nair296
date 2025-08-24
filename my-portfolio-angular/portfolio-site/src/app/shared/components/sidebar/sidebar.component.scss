@@ -1,6 +1,6 @@
 .sidebar-container {
   position: fixed; // Changed to fixed for sticky behavior
-  height: 100vh;
+  height: 100%;
   width: 220px;
   min-width: 60px;
   background: var(--global-background-color);
@@ -191,7 +191,7 @@
   z-index: 1000;
   right: 0;
   top: 0;
-  height: 100vh;
+  height: 100%;
   width: 260px;
 }
 

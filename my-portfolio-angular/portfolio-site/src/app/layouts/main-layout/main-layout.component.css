@@ -94,5 +94,6 @@
   }
   .wrapper .main-content {
     margin: 0 !important;
+    padding-top: unset;
   }
 }

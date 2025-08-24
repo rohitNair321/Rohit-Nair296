@@ -1,8 +1,10 @@
 export interface LayoutConfig {
-  navigation: {
+  appConfiguration: {
     type?: 'navbar' | 'sidebar';
     theme?: 'light' | 'dark';
     sidebarPosition?: 'right' | 'left';
+    showSidebarToggle?: boolean;
+    showAgentChat?: boolean;
     collapsed?: boolean;
     isMobile: boolean;
     isFixed?: boolean;
@@ -23,10 +25,12 @@ export interface LayoutConfig {
 }
 
 export const defaultConfig: LayoutConfig = {
-  navigation: {
+  appConfiguration: {
     type: 'navbar', // or 'sidebar'
     theme: 'light',
     sidebarPosition: 'right',
+    showSidebarToggle: false,
+    showAgentChat: false,
     collapsed: false,
     isMobile: true,
     isFixed: true,

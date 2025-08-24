@@ -38,7 +38,7 @@ export class SidebarComponent implements OnInit {
     this.checkMobile();
     this.updateCurrentSection();
     window.addEventListener('resize', this.checkMobile.bind(this));
-    this.navigationType = this.config?.navigation?.type === 'sidebar'? 'sidebar' : 'navbar';
+    this.navigationType = this.config?.appConfiguration?.type === 'sidebar'? 'sidebar' : 'navbar';
     this.applyTheme(this.config?.theme?.name);
   }
 
@@ -77,12 +77,12 @@ export class SidebarComponent implements OnInit {
     if (!this.isMobile) {
       this.isMobileOpen = false;
     }
-    this.config.navigation.isMobile = this.isMobile;
+    this.config.appConfiguration.isMobile = this.isMobile;
   }
 
   toggleSidebarCollapse() {
-    this.config.navigation.collapsed = !this.config.navigation.collapsed;
-    console.log('Sidebar collapsed:', this.config.navigation.collapsed);
+    this.config.appConfiguration.collapsed = !this.config.appConfiguration.collapsed;
+    console.log('Sidebar collapsed:', this.config.appConfiguration.collapsed);
   }
 
   toggleTheme() {
@@ -139,7 +139,7 @@ export class SidebarComponent implements OnInit {
 
   onNavigationTypeChange(event: any) {
     // Update your config or emit an event to switch navigation type
-    this.config.navigation.type = this.navigationType;
+    this.config.appConfiguration.type = this.navigationType;
     this.isRightSideSettingOpen = false;
     // Optionally, persist or broadcast this change as needed
   }

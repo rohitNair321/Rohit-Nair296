@@ -1,9 +1,9 @@
 @import 'src/styles/_variables.scss';
 .chat-container {
   z-index: 1000;
-  bottom: 20px;
+  bottom: 30px;
   position: fixed;
-  right: 20px;
+  right: 30px;
   transition: all var(--global-transition-speed) ease;
 
   .chat-button {
