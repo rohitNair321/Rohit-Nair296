@@ -1,0 +1,43 @@
+<!-- The trigger (avatar button) -->
+<button #avatarBtn class="avatar-btn" type="button" aria-haspopup="menu" aria-expanded="false" (click)="toggle()">
+    <img *ngIf="user.avatarUrl; else initials" [src]="user.avatarUrl" alt="Profile" />
+    <ng-template #initials>
+        <span class="avatar-initials">
+            {{ user.name[0] || 'U' }}
+        </span>
+    </ng-template>
+</button>
+
+<!-- The popover content rendered through CDK Portal -->
+<ng-template #menuPortal>
+    <div class="profile-menu" cdkTrapFocus (keydown)="onKeydown($event)" role="menu" aria-label="Profile menu">
+        <div class="profile-header">
+            <div class="avatar-lg">
+                <img *ngIf="user.avatarUrl; else lgInit" [src]="user.avatarUrl" alt="Profile" />
+                <ng-template #lgInit>
+                    <span class="avatar-initials-lg">{{ user.name[0] || 'U' }}</span>
+                </ng-template>
+            </div>
+            <div class="user-meta">
+                <div class="name" title="{{ user.name }}">{{ user.name }}</div>
+                <div class="email" title="{{ user.email }}">{{ user.email }}</div>
+            </div>
+        </div>
+
+        <ul class="menu" role="none">
+            <li *ngFor="let item of menu" role="none">
+                <button class="menu-item" role="menuitem" type="button" (click)="navigate(item)">
+                    <span class="material-symbols-outlined">{{ item.icon }}</span>
+                    <span class="label">{{ item.label }}</span>
+                </button>
+            </li>
+        </ul>
+
+        <div class="footer">
+            <button type="button" class="logout-btn" (click)="logout()">
+                <span class="material-symbols-outlined">logout</span>
+                <span>Log out</span>
+            </button>
+        </div>
+    </div>
+</ng-template>

@@ -1,3 +1,4 @@
+<!-- Menu side bar -->
 <div class="sidebar-container" [class.collapsed]="config.appConfiguration.collapsed" [class.open]="isMobileOpen"
     [ngClass]="{
       'none': config?.appConfiguration?.type === 'sidebar' && isMobile && config.appConfiguration.collapsed,
@@ -27,6 +28,7 @@
   </div>
 </div>
 
+<!-- feature side bar, if require custom design can be made if required -->
 <div class="right-side-setting" *ngIf="config.appConfiguration.showSidebarToggle">
  <button class="btn btn-tertiary btn-setting" (click)="toggleSettingSideBar()" *ngIf="!isRightSideSettingOpen">
   <span class="material-icons material-symbols-outlined setting-icon-rotate">settings</span>
@@ -42,33 +44,40 @@
   </div>
   <div class="featurs-content">
     <span>Use the toggle to switch to sidebar to navbar menu</span>
-    <div class="toggle-container">
-      <label class="radio-inline me-3">
-        <input
-          type="radio"
-          name="navigationType"
-          value="sidebar"
-          [(ngModel)]="navigationType"
-          (change)="onNavigationTypeChange($event)"
-        />
-        Sidebar
-      </label>
-      <label class="radio-inline">
-        <input
-          type="radio"
-          name="navigationType"
-          value="navbar"
-          [(ngModel)]="navigationType"
-          (change)="onNavigationTypeChange($event)"
-        />
-        Navbar
-      </label>
+    <div class="d-flex gap-3">
+      <div class="flex align-items-center">
+        <p-radioButton (click)="onNavigationTypeChange('sidebar')" 
+            name="navigationType" 
+            value="sidebar" 
+            [(ngModel)]="navigationType" 
+            inputId="sidebar" />
+        <label for="sidebar" class="ml-2">
+            Sidebar
+        </label>
+    </div>
+    
+    <div class="flex align-items-center">
+        <p-radioButton (click)="onNavigationTypeChange('navbar')"
+            name="navigationType" 
+            value="navbar" 
+            [(ngModel)]="navigationType" 
+            inputId="navbar" />
+        <label for="navbar" class="ml-2">
+            Navbar
+        </label>
+    </div>
     </div>
     <span>Select a Theme</span>
-    <select [(ngModel)]="selectedTheme" (change)="onThemeChange($event)">
+    <!-- <select [(ngModel)]="selectedTheme" (change)="onThemeChange($event)">
       <option *ngFor="let theme of availableThemes" [value]="theme.class">
         {{ theme.label }}
       </option>
-    </select>
+    </select> -->
+    <div class="d-flex flex-wrap gap-3">
+      <p-button *ngFor="let theme of availableThemes"[ngStyle]="{background: theme.color, color: '#fff', 
+        border: theme.selected?'2px solid var(--global-common-border)':'none', width: '50px', borderRadius: '50px', }"
+         class="custom-theme-btn" (click)="onThemeChange(theme)">
+      </p-button>
+    </div>
   </div>
 </div>

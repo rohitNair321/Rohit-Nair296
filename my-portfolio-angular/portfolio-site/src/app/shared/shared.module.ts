@@ -7,7 +7,9 @@ import { FooterComponent } from './components/footer/footer.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { ChatBotComponent } from './components/chat-bot/chat-bot.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MatRadioModule} from '@angular/material/radio';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { ButtonModule } from 'primeng/button';
+import { ProfileMenuComponent } from './components/profile-menu/profile-menu.component';
 
 
 @NgModule({
@@ -16,6 +18,7 @@ import {MatRadioModule} from '@angular/material/radio';
     FooterComponent,
     SidebarComponent,
     ChatBotComponent,
+    ProfileMenuComponent,
     // Add shared pipes/directives here
   ],
   imports: [
@@ -24,13 +27,15 @@ import {MatRadioModule} from '@angular/material/radio';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
-    MatRadioModule
+    RadioButtonModule,
+    ButtonModule
   ],
   exports: [
     NavigationComponent,
     FooterComponent,
     SidebarComponent,
-    ChatBotComponent
+    ChatBotComponent,
+    ProfileMenuComponent
     // Export shared pipes/directives here
   ]
 })

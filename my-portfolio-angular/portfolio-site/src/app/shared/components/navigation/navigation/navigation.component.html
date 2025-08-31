@@ -35,12 +35,20 @@
       <button class="theme-toggle" (click)="toggleTheme()">
         <span class="material-icons">{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</span>
       </button>
+      <div class="nav-actions">
+        <app-profile-menu></app-profile-menu>
+      </div>
     </div>
 
     <!-- Mobile Menu Toggle (burger) -->
-    <button class="menu-toggle" *ngIf="isMobile && config?.appConfiguration?.type === 'navbar'" (click)="toggleMenu()">
-      <span class="material-icons">{{ isMenuOpen ? 'close' : 'menu' }}</span>
-    </button>
+    <div class="mobile-menu-toggle" *ngIf="isMobile && config?.appConfiguration?.type === 'navbar'">
+      <button class="menu-toggle"(click)="toggleMenu()">
+        <span class="material-icons">{{ isMenuOpen ? 'close' : 'menu' }}</span>
+      </button>
+      <div class="nav-actions">
+        <app-profile-menu></app-profile-menu>
+      </div>
+    </div>
 
     <!-- Mobile Menu (right-aligned) -->
     <div class="mobile-menu right-align" *ngIf="isMobile && isMenuOpen && config?.appConfiguration?.type === 'navbar'">

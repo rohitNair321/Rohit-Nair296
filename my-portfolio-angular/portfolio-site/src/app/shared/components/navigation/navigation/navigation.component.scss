@@ -80,11 +80,13 @@
 .theme-toggle .material-icons {
   font-size: 1.2rem;
 }
+
 }
 .nav-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--global-spacing-md);
   width: 100%;
   padding: var(--global-spacing-md) var(--global-spacing-xl);
 
@@ -109,13 +111,18 @@
     margin-left: auto; // Ensures menu is at the far right
     display: flex;
     align-items: center;
-    gap: var(--global-spacing-xl);
+    gap: var(--global-spacing-md);
 
     .menu-items {
       display: flex;
       gap: var(--global-spacing-lg);
       align-items: center;
     }
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+    gap: var(--global-spacing-md)
   }
 }
 
@@ -475,4 +482,11 @@
 .navigation.sidebar {
   position: fixed;
   top: 0;
+}
+
+.nav-actions {
+  margin-left: auto; /* push to right in a flex row */
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
 }

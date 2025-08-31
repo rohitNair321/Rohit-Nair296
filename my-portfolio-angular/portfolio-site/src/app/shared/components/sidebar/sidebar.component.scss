@@ -173,6 +173,7 @@
   animation: rotate-setting 1.2s linear infinite;
 }
 
+
 @keyframes rotate-setting {
   0% {
     transform: rotate(0deg);
@@ -201,6 +202,10 @@
   gap: 1rem;
   padding: 1rem;
   color: var(--global-text-color);
+}
+
+.featurs-content label {
+  margin-bottom: unset;
 }
 
 .form-check-label {
@@ -232,4 +237,19 @@
   to {
     opacity: 1;
   }
+}
+
+::ng-deep .custom-theme-btn .p-button {
+  cursor: pointer;
+  background: inherit !important;
+  color: inherit !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: unset !important;
+}
+
+::ng-deep .custom-theme-btn .p-button:hover,
+::ng-deep .custom-theme-btn .p-button:focus {
+  filter: brightness(0.95);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
 }

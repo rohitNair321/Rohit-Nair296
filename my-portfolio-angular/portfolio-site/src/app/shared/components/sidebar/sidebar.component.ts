@@ -17,10 +17,10 @@ export class SidebarComponent implements OnInit {
   navigationType: string = '';
   selectedTheme: string = 'theme-1';
   availableThemes = [
-    { label: 'Theme 1 (Peachy Warm)', class: 'theme-1' },
-    { label: 'Theme 2 (Blue Modern)', class: 'theme-2' },
-    { label: 'Theme 3 (Indigo Teal)', class: 'theme-3' },
-    { label: 'Theme 4 (Plum Seafoam)', class: 'theme-4' },
+    { name: 'Theme 1 (Peachy Warm)', label: 'Peachy Warm', class: 'theme-1', color: '#9B7E6B', selected: false },
+    { name: 'Theme 2 (Blue Modern)', label: 'Blue Modern', class: 'theme-2', color: '#7B61FF', selected: false },
+    { name: 'Theme 3 (Indigo Teal)', label: 'Indigo Teal', class: 'theme-3', color: '#3F8A8F', selected: false },
+    { name: 'Theme 4 (Plum Seafoam)', label: 'Plum Seafoam', class: 'theme-4', color: '#4FA49C', selected: false },
   ];
   menuItems = [
     { label: 'Home', href: '#home', icon: 'home' },
@@ -40,6 +40,9 @@ export class SidebarComponent implements OnInit {
     window.addEventListener('resize', this.checkMobile.bind(this));
     this.navigationType = this.config?.appConfiguration?.type === 'sidebar'? 'sidebar' : 'navbar';
     this.applyTheme(this.config?.theme?.name);
+    this.availableThemes.forEach(theme => {
+      theme.selected = theme.class === this.config?.theme?.name;
+    });
   }
 
   @HostListener('window:scroll', ['$event'])
@@ -54,8 +57,11 @@ export class SidebarComponent implements OnInit {
   }
 
   onThemeChange(event: any) {
-    this.config.theme.name = event.target.value;
+    this.config.theme.name = event.class;
     this.applyTheme(this.config.theme.name);
+    this.availableThemes.forEach(theme => {
+      theme.selected = theme.class === event.class?true:false;
+    });
   }
 
   applyTheme(themeClass: string) {
@@ -137,10 +143,10 @@ export class SidebarComponent implements OnInit {
     this.isRightSideSettingOpen = !this.isRightSideSettingOpen;
   }
 
-  onNavigationTypeChange(event: any) {
+  onNavigationTypeChange(navigationType: any) {
     // Update your config or emit an event to switch navigation type
+    navigationType
     this.config.appConfiguration.type = this.navigationType;
     this.isRightSideSettingOpen = false;
-    // Optionally, persist or broadcast this change as needed
   }
 }

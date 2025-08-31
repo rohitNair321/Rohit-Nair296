@@ -1,0 +1,152 @@
+/* Uses your CSS custom properties if already defined; fall back where needed. */
+:host {
+  display: inline-flex;
+}
+
+/* Trigger button (avatar in navbar) */
+.avatar-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--global-surface-color, #e5e7eb);
+  background: var(--global-surface-color, #f8fafc);
+  padding: 0;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  outline: none;
+  transition: box-shadow .15s ease, transform .05s ease;
+
+  &:hover { box-shadow: 0 1px 8px rgba(0,0,0,.08); }
+  &:active { transform: translateY(1px); }
+
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    object-fit: cover;
+    display: block;
+  }
+
+  .avatar-initials {
+    font: 600 14px/1 system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif;
+    color: var(--global-text-primary, #111827);
+  }
+}
+
+/* Overlay panel container */
+.profile-menu-panel {
+  border-radius: 12px;
+  box-shadow:
+    0 10px 15px -3px rgba(0,0,0,.1),
+    0 4px 6px -2px rgba(0,0,0,.05);
+}
+
+/* Popover content */
+.profile-menu {
+  width: 280px;
+  background: var(--global-surface-color, #ffffff);
+  border: 1px solid var(--global-surface-color, #e5e7eb);
+  border-radius: 12px;
+  overflow: hidden;
+  color: var(--global-text-primary, #111827);
+
+  .profile-header {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid var(--global-surface-color, #e5e7eb);
+
+    .avatar-lg {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: var(--global-primary-color, #4a6b7d);
+      display: grid;
+      place-items: center;
+
+      img {
+        width: 100%; height: 100%; object-fit: cover;
+      }
+      .avatar-initials-lg {
+        color: #fff; font-weight: 700;
+      }
+    }
+    .user-meta {
+      min-width: 0;
+      .name {
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 1.2;
+        color: var(--global-text-primary, #111827);
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      }
+      .email {
+        font-size: 12px;
+        color: var(--global-text-secondary, #6b7280);
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      }
+    }
+  }
+
+  .menu {
+    list-style: none;
+    margin: 0;
+    padding: 8px;
+
+    .menu-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+
+      &:hover { background: rgba(0,0,0,.04); }
+      &:focus-visible {
+        outline: 2px solid var(--global-primary-color, #4a6b7d);
+        outline-offset: 2px;
+      }
+
+      .material-symbols-outlined {
+        font-size: 20px;
+        color: var(--global-text-secondary, #6b7280);
+      }
+      .label {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .footer {
+    border-top: 1px solid var(--global-surface-color, #e5e7eb);
+    padding: 8px;
+    display: flex;
+    justify-content: flex-end;
+
+    .logout-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: var(--global-primary-color, #4a6b7d);
+      color: #fff;
+      cursor: pointer;
+
+      &:hover { filter: brightness(0.95); }
+      &:focus-visible {
+        outline: 2px solid var(--global-primary-color, #4a6b7d);
+        outline-offset: 2px;
+      }
+
+      .material-symbols-outlined { font-size: 18px; color: currentColor; }
+    }
+  }
+}
