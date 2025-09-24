@@ -8,16 +8,16 @@
   width: 36px;
   height: 36px;
   border-radius: 999px;
-  border: 1px solid var(--global-surface-color, #e5e7eb);
+  border: 1px solid var(--global-border-color, #e5e7eb);
   background: var(--global-surface-color, #f8fafc);
   padding: 0;
   display: grid;
   place-items: center;
   cursor: pointer;
   outline: none;
-  transition: box-shadow .15s ease, transform .05s ease;
+  transition: box-shadow .15s ease, transform .05s ease, background .15s ease;
 
-  &:hover { box-shadow: 0 1px 8px rgba(0,0,0,.08); }
+  &:hover { box-shadow: 0 1px 8px rgba(0,0,0,.06); background: var(--global-surface-hover, rgba(0,0,0,0.03)); }
   &:active { transform: translateY(1px); }
 
   img {
@@ -29,7 +29,7 @@
   }
 
   .avatar-initials {
-    font: 600 14px/1 system-ui, -apple-system, Segoe UI, Roboto, Inter, sans-serif;
+    font: 600 14px/1 system-ui, -apple-system, "Segoe UI", Roboto, Inter, sans-serif;
     color: var(--global-text-primary, #111827);
   }
 }
@@ -38,15 +38,15 @@
 .profile-menu-panel {
   border-radius: 12px;
   box-shadow:
-    0 10px 15px -3px rgba(0,0,0,.1),
-    0 4px 6px -2px rgba(0,0,0,.05);
+    0 10px 15px -3px rgba(0,0,0,.12),
+    0 4px 6px -2px rgba(0,0,0,.06);
 }
 
 /* Popover content */
 .profile-menu {
   width: 280px;
   background: var(--global-surface-color, #ffffff);
-  border: 1px solid var(--global-surface-color, #e5e7eb);
+  border: 1px solid var(--global-border-color, #e5e7eb);
   border-radius: 12px;
   overflow: hidden;
   color: var(--global-text-primary, #111827);
@@ -55,7 +55,7 @@
     display: flex;
     gap: 12px;
     padding: 16px;
-    border-bottom: 1px solid var(--global-surface-color, #e5e7eb);
+    border-bottom: 1px solid var(--global-border-color, #e5e7eb);
 
     .avatar-lg {
       width: 48px;
@@ -70,7 +70,7 @@
         width: 100%; height: 100%; object-fit: cover;
       }
       .avatar-initials-lg {
-        color: #fff; font-weight: 700;
+        color: var(--global-on-primary, #fff); font-weight: 700;
       }
     }
     .user-meta {
@@ -106,11 +106,13 @@
       background: transparent;
       cursor: pointer;
       text-align: left;
+      color: var(--global-text-primary, #111827);
 
-      &:hover { background: rgba(0,0,0,.04); }
+      &:hover { background: var(--global-surface-hover, rgba(0,0,0,.04)); }
       &:focus-visible {
         outline: 2px solid var(--global-primary-color, #4a6b7d);
         outline-offset: 2px;
+        background: var(--global-surface-hover, rgba(0,0,0,.04));
       }
 
       .material-symbols-outlined {
@@ -119,15 +121,17 @@
       }
       .label {
         font-size: 14px;
+        color: var(--global-text-primary, #111827);
       }
     }
   }
 
   .footer {
-    border-top: 1px solid var(--global-surface-color, #e5e7eb);
+    border-top: 1px solid var(--global-border-color, #e5e7eb);
     padding: 8px;
     display: flex;
     justify-content: flex-end;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,0.01));
 
     .logout-btn {
       display: inline-flex;
@@ -137,10 +141,10 @@
       border-radius: 8px;
       border: 1px solid transparent;
       background: var(--global-primary-color, #4a6b7d);
-      color: #fff;
+      color: var(--global-on-primary, #fff);
       cursor: pointer;
 
-      &:hover { filter: brightness(0.95); }
+      &:hover { filter: brightness(0.96); }
       &:focus-visible {
         outline: 2px solid var(--global-primary-color, #4a6b7d);
         outline-offset: 2px;

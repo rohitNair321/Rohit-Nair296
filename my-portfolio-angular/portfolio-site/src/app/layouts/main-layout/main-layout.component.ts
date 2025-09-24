@@ -19,6 +19,7 @@ export class MainLayoutComponent {
     this.config.appConfiguration.collapsed = true;
     this.config.appConfiguration.showSidebarToggle = true;
     this.config.appConfiguration.showAgentChat = true;
+    this.config.appConfiguration.showUserProfileView = true;
   }
 
   initSidebarMenu(sidebarEvent: any){

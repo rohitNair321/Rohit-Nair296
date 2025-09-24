@@ -18,7 +18,7 @@ import { ProfileMenuComponent } from './components/profile-menu/profile-menu.com
     FooterComponent,
     SidebarComponent,
     ChatBotComponent,
-    ProfileMenuComponent,
+    ProfileMenuComponent
     // Add shared pipes/directives here
   ],
   imports: [
@@ -28,7 +28,7 @@ import { ProfileMenuComponent } from './components/profile-menu/profile-menu.com
     ReactiveFormsModule,
     FormsModule,
     RadioButtonModule,
-    ButtonModule
+    ButtonModule,
   ],
   exports: [
     NavigationComponent,

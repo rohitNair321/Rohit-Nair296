@@ -45,9 +45,9 @@ export class ProfileMenuComponent implements OnDestroy {
   };
 
   readonly menu: MenuItem[] = [
-    { icon: 'account_circle', label: 'My Profile', route: '/profile' },
-    { icon: 'settings', label: 'Settings', route: '/settings' },
-    { icon: 'help', label: 'Help & Support', route: '/help' },
+    { icon: 'account_circle', label: 'My Profile', route: 'user-profile' },
+    { icon: 'settings', label: 'Settings', route: 'user-settings' },
+    { icon: 'help', label: 'Help & Support', route: 'help-and-support' },
   ];
 
   toggle(): void {

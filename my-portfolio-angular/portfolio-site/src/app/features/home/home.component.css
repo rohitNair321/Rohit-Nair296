@@ -616,10 +616,10 @@
   .portfolio-slider-outer {
     max-width: 98vw;
   }
-  .portfolio-card {
+  /* .portfolio-card {
     min-width: 90vw;
     max-width: 95vw;
-  }
+  } */
 }
 
 /* Animation classes */
@@ -785,28 +785,63 @@ input.invalid, textarea.invalid {
 }
 
 @media (max-width: 1100px) {
-  .portfolio-card {
+  /* .portfolio-card {
     flex: 0 0 48%;
     min-width: 260px;
     max-width: 95vw;
-  }
+  } */
 }
 
 @media (max-width: 900px) {
-  .portfolio-card {
+  /* .portfolio-card {
     flex: 0 0 90vw;
     min-width: 90vw;
     max-width: 95vw;
-  }
+  } */
   .portfolio-card-list {
     gap: 1rem;
   }
 }
 
 @media (max-width: 600px) {
-  .portfolio-card {
+  /* .portfolio-card {
     flex: 0 0 98vw;
     min-width: 98vw;
     max-width: 99vw;
+  } */
+}
+
+
+/* Default: Desktop (≥1100px) → 3 cards */
+.portfolio-card {
+  flex: 0 0 32%;
+  min-width: 320px;
+  max-width: 340px;
+}
+
+/* Tablets (≤1100px) → 2 cards */
+@media (max-width: 1100px) {
+  .portfolio-card {
+    flex: 0 0 48%;
+    min-width: 260px;
+    max-width: 430px; /* flexible but not full width */
+  }
+}
+
+/* Small tablets / large phones (≤900px) → 1 card per row (wide) */
+@media (max-width: 900px) {
+  .portfolio-card {
+    flex: 0 0 90%;
+    min-width: 300px;
+    max-width: 42vw;
+  }
+}
+
+/* Mobile (≤600px) → full width */
+@media (max-width: 600px) {
+  .portfolio-card {
+    flex: 0 0 98%;
+    min-width: 280px;
+    max-width: 85vw;
   }
 }

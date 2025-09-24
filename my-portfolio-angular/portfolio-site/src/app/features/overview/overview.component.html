@@ -1,0 +1,199 @@
+<!-- Overview / View Profile -->
+<section class="profile-page">
+  <!-- Hero header -->
+  <header class="profile-hero">
+    <div class="avatar-wrap">
+      <img src="assets/images/avatar.png" alt="Profile photo" />
+      <button class="edit-photo-btn" type="button">
+        <span class="material-icons">photo_camera</span>
+      </button>
+    </div>
+
+    <div class="identity">
+      <h1 class="name">
+        Rohit Nair
+        <span class="verified" title="Verified">
+          <span class="material-icons">verified</span>
+        </span>
+      </h1>
+      <div class="id-meta">
+        <span class="username">@rohitnair</span>
+        <span class="separator">•</span>
+        <a class="email" href="mailto:rohit@example.com">rohit@example.com</a>
+      </div>
+      <div class="quick-actions">
+        <button class="btn primary" type="button">Edit profile</button>
+        <button class="btn soft" type="button">Settings</button>
+        <a class="btn soft" href="assets/Rohit.Nair.pdf" target="_blank" rel="noopener">
+          <span class="material-icons">open_in_new</span> Resume
+        </a>
+        <button class="btn danger outline" type="button">
+          <span class="material-icons">logout</span> Logout
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Stats -->
+  <section class="stats">
+    <div class="stat-card">
+      <div class="label">Projects</div>
+      <div class="value">12</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Posts</div>
+      <div class="value">34</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Followers</div>
+      <div class="value">287</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Following</div>
+      <div class="value">142</div>
+    </div>
+  </section>
+
+  <!-- Content grid -->
+  <section class="grid">
+    <!-- Left column -->
+    <div class="col">
+      <!-- About -->
+      <article class="card">
+        <div class="card-header">
+          <h2>About</h2>
+        </div>
+        <p class="about">
+          Angular developer focused on clean UI, accessibility, and scalable frontends.
+        </p>
+        <ul class="info-list">
+          <li>
+            <span class="material-icons">location_on</span>
+            <span>Pune, India</span>
+          </li>
+          <li>
+            <span class="material-icons">business_center</span>
+            <span>Self-employed</span>
+          </li>
+          <li>
+            <span class="material-icons">link</span>
+            <a href="https://rohitnair321.github.io/dev-content-hub" target="_blank" rel="noopener">
+              rohitnair321.github.io/dev-content-hub
+            </a>
+          </li>
+          <li>
+            <span class="material-icons">event</span>
+            <span>Joined May 2023</span>
+          </li>
+        </ul>
+        <div class="chip-group">
+          <span class="chip Angular">Angular</span>
+          <span class="chip TypeScript">TypeScript</span>
+          <span class="chip JavaScript">JavaScript</span>
+          <span class="chip Primeng">Primeng</span>
+          <span class="chip Custom-CSS">Custom CSS</span>
+        </div>
+      </article>
+
+      <!-- Contact preferences -->
+      <article class="card">
+        <div class="card-header">
+          <h2>Contact</h2>
+        </div>
+        <div class="contact-grid">
+          <a href="mailto:rohit@example.com" class="contact-item">
+            <span class="material-icons">email</span>
+            <div>
+              <div class="label">Email</div>
+              <div class="value">rohit@example.com</div>
+            </div>
+          </a>
+          <a href="tel:+911234567890" class="contact-item">
+            <span class="material-icons">phone</span>
+            <div>
+              <div class="label">Phone</div>
+              <div class="value">+91 12345 67890</div>
+            </div>
+          </a>
+          <a href="https://github.com/rohitnair321" target="_blank" rel="noopener" class="contact-item">
+            <span class="material-icons">code</span>
+            <div>
+              <div class="label">GitHub</div>
+              <div class="value">github.com/rohitnair321</div>
+            </div>
+          </a>
+          <a href="https://linkedin.com/in/rohitnair321" target="_blank" rel="noopener" class="contact-item">
+            <span class="material-icons">business</span>
+            <div>
+              <div class="label">LinkedIn</div>
+              <div class="value">linkedin.com/in/rohitnair321</div>
+            </div>
+          </a>
+        </div>
+      </article>
+    </div>
+
+    <!-- Right column -->
+    <div class="col">
+      <!-- Security summary -->
+      <article class="card">
+        <div class="card-header">
+          <h2>Security</h2>
+        </div>
+        <ul class="security-list">
+          <li>
+            <span class="material-icons ok">verified_user</span>
+            <div>
+              <div class="label">Two-factor authentication</div>
+              <div class="muted">Enabled</div>
+            </div>
+          </li>
+          <li>
+            <span class="material-icons">schedule</span>
+            <div>
+              <div class="label">Last login</div>
+              <div class="muted">Sep 20, 2025, 10:15 AM</div>
+            </div>
+          </li>
+          <li>
+            <span class="material-icons">password</span>
+            <div>
+              <div class="label">Password health</div>
+              <div class="muted">Strong</div>
+            </div>
+          </li>
+        </ul>
+      </article>
+
+      <!-- Recent activity -->
+      <article class="card">
+        <div class="card-header">
+          <h2>Recent activity</h2>
+        </div>
+        <ul class="activity">
+          <li>
+            <span class="dot"></span>
+            <div class="text">
+              <div class="desc">Pushed changes to Portfolio UI</div>
+              <div class="muted">Sep 24, 2025, 9:05 AM</div>
+            </div>
+          </li>
+          <li>
+            <span class="dot"></span>
+            <div class="text">
+              <div class="desc">Published Medium article on Reactive Forms</div>
+              <div class="muted">Sep 23, 2025, 4:30 PM</div>
+            </div>
+          </li>
+          <li>
+            <span class="dot"></span>
+            <div class="text">
+              <div class="desc">Replied to a LinkedIn comment</div>
+              <div class="muted">Sep 22, 2025, 11:45 AM</div>
+            </div>
+          </li>
+        </ul>
+      </article>
+    </div>
+  </section>
+</section>

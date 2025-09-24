@@ -21,8 +21,8 @@
     </div>
 
     <!-- Desktop Menu (right-aligned) -->
-    <div class="desktop-menu animate-nav-fade-in" *ngIf="!isMobile && config?.appConfiguration?.type === 'navbar'">
-      <div class="menu-items">
+    <div class="desktop-menu animate-nav-fade-in">
+      <div class="menu-items" *ngIf="!isMobile && config?.appConfiguration?.type === 'navbar'">
         <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link"
           (click)="scrollToSection($event, item.href)">
           {{ item.label }}
@@ -32,7 +32,7 @@
           Resume
         </a>
       </div>
-      <button class="theme-toggle" (click)="toggleTheme()">
+      <button class="theme-toggle" (click)="toggleTheme()" *ngIf="!isMobile && config?.appConfiguration?.type === 'navbar'">
         <span class="material-icons">{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</span>
       </button>
       <div class="nav-actions">

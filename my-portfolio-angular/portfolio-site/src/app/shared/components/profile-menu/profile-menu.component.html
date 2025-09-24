@@ -27,15 +27,14 @@
         <ul class="menu" role="none">
             <li *ngFor="let item of menu" role="none">
                 <button class="menu-item" role="menuitem" type="button" (click)="navigate(item)">
-                    <span class="material-symbols-outlined">{{ item.icon }}</span>
+                    <span class="material-icons">{{ item.icon }}</span>
                     <span class="label">{{ item.label }}</span>
                 </button>
             </li>
         </ul>
-
         <div class="footer">
             <button type="button" class="logout-btn" (click)="logout()">
-                <span class="material-symbols-outlined">logout</span>
+                <span class="material-icons">logout</span>
                 <span>Log out</span>
             </button>
         </div>
