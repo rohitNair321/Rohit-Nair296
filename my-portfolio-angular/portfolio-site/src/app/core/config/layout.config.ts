@@ -1,10 +1,17 @@
 export interface LayoutConfig {
-  navigation: {
+  appConfiguration: {
     type?: 'navbar' | 'sidebar';
     theme?: 'light' | 'dark';
+    sidebarPosition?: 'right' | 'left';
+    showSidebarToggle?: boolean;
+    showAgentChat?: boolean;
+    showUserProfileView?: boolean;
+    collapsed?: boolean;
+    isMobile: boolean;
     isFixed?: boolean;
   };
   theme: {
+    name: 'theme-1' | 'theme-2' | 'theme-3' | 'theme-4' | 'theme-5';
     primary: string;
     secondary: string;
     background: string;
@@ -19,12 +26,19 @@ export interface LayoutConfig {
 }
 
 export const defaultConfig: LayoutConfig = {
-  navigation: {
+  appConfiguration: {
     type: 'navbar', // or 'sidebar'
     theme: 'light',
-    isFixed: true
+    sidebarPosition: 'right',
+    showSidebarToggle: false,
+    showAgentChat: false,
+    showUserProfileView: false,
+    collapsed: false,
+    isMobile: true,
+    isFixed: true,
   },
   theme: {
+    name: 'theme-1',
     primary: '#2563eb',
     secondary: '#4f46e5',
     background: '#ffffff',

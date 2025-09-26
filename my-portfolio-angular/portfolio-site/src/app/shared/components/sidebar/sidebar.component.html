@@ -1,39 +1,83 @@
-<button class="mobile-toggle" *ngIf="isMobile" (click)="toggleMobile()">
-  <span class="material-icons">{{ isMobileOpen ? 'close' : 'menu' }}</span>
-</button>
+<!-- Menu side bar -->
+<div class="sidebar-container" [class.collapsed]="config.appConfiguration.collapsed" [class.open]="isMobileOpen"
+    [ngClass]="{
+      'none': config?.appConfiguration?.type === 'sidebar' && isMobile && config.appConfiguration.collapsed,
+      '': config?.appConfiguration?.type === 'sidebar' && isMobile && !config.appConfiguration.collapsed,
 
-<div class="sidebar-container" [class.collapsed]="isSidebarCollapsed" [class.open]="isMobileOpen">
+    }" *ngIf="config.appConfiguration.type === 'sidebar'">
   <div class="sidebar-header">
-    <div class="logo">
-      <span class="logo-initials animate-nav-fade-in">
-        <span class="rn-r">R</span><span class="rn-n">N</span>
-      </span>
-      <span class="logo-name animate-nav-slide-in" *ngIf="!isSidebarCollapsed">
-        <span class="logo-rohit">Rohit</span>
-        <span class="logo-portfolio">Portfolio</span>
-      </span>
-    </div>
-    <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()">
+    <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()" *ngIf="config?.appConfiguration?.type === 'sidebar' && !config.appConfiguration.collapsed">
       <span class="material-icons">
-        {{ isSidebarCollapsed ? 'arrow_forward_ios' : 'arrow_back_ios' }}
+        {{ 'close'}}
       </span>
     </button>
   </div>
-  <div class="sidebar-menu" [class.collapsed]="isSidebarCollapsed">
-    <a *ngFor="let item of menuItems"
-       [href]="item.href"
-       class="menu-link"
-       (click)="scrollToSection($event, item.href)">
+  <div class="sidebar-menu" [class.collapsed]="config.appConfiguration.collapsed">
+    <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link" (click)="scrollToSection($event, item.href)">
       <span class="material-icons menu-icon">{{ item.icon }}</span>
-      <span class="menu-label" *ngIf="!isSidebarCollapsed">{{ item.label }}</span>
+      <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
     </a>
     <a class="resume-download-btn" href="assets/Rohit.Nair.pdf" download>
       <span class="material-icons menu-icon">download</span>
-      <span class="menu-label" *ngIf="!isSidebarCollapsed">Resume</span>
+      <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Resume</span>
     </a>
     <button class="theme-toggle" (click)="toggleTheme()">
       <span class="material-icons menu-icon">{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</span>
-      <span class="menu-label" *ngIf="!isSidebarCollapsed">Theme</span>
+      <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Theme</span>
     </button>
+  </div>
+</div>
+
+<!-- feature side bar, if require custom design can be made if required -->
+<div class="right-side-setting" *ngIf="config.appConfiguration.showSidebarToggle">
+ <button class="btn btn-tertiary btn-setting" (click)="toggleSettingSideBar()" *ngIf="!isRightSideSettingOpen">
+  <span class="material-icons material-symbols-outlined setting-icon-rotate">settings</span>
+ </button>
+</div>
+<div class="right-side-setting-content" *ngIf="isRightSideSettingOpen">
+  <div class="sidebar-header">
+    <button class="sidebar-collapse-btn" (click)="toggleSettingSideBar()" >
+      <span class="material-icons">
+        {{ 'close'}}
+      </span>
+    </button>
+  </div>
+  <div class="featurs-content">
+    <span>Use the toggle to switch to sidebar to navbar menu</span>
+    <div class="d-flex gap-3">
+      <div class="flex align-items-center">
+        <p-radioButton (click)="onNavigationTypeChange('sidebar')" 
+            name="navigationType" 
+            value="sidebar" 
+            [(ngModel)]="navigationType" 
+            inputId="sidebar" />
+        <label for="sidebar" class="ml-2">
+            Sidebar
+        </label>
+    </div>
+    
+    <div class="flex align-items-center">
+        <p-radioButton (click)="onNavigationTypeChange('navbar')"
+            name="navigationType" 
+            value="navbar" 
+            [(ngModel)]="navigationType" 
+            inputId="navbar" />
+        <label for="navbar" class="ml-2">
+            Navbar
+        </label>
+    </div>
+    </div>
+    <span>Select a Theme</span>
+    <!-- <select [(ngModel)]="selectedTheme" (change)="onThemeChange($event)">
+      <option *ngFor="let theme of availableThemes" [value]="theme.class">
+        {{ theme.label }}
+      </option>
+    </select> -->
+    <div class="d-flex flex-wrap gap-3">
+      <p-button *ngFor="let theme of availableThemes"[ngStyle]="{background: theme.color, color: '#fff', 
+        border: theme.selected?'2px solid var(--global-common-border)':'none', width: '50px', borderRadius: '50px', }"
+         class="custom-theme-btn" (click)="onThemeChange(theme)">
+      </p-button>
+    </div>
   </div>
 </div>

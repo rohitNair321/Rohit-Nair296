@@ -1,88 +1,99 @@
-/* Remove top margin for sidebar layout */
-.container {
-  margin-top: 0;
-}
-
-/* Sidebar pushes content right, not down */
-.navigation.sidebar + .container {
-  margin-left: 220px;
-  transition: margin-left 0.3s cubic-bezier(.77,0,.18,1);
-}
-.navigation.sidebar.collapsed + .container {
-  margin-left: 95px;
-}
-
-@media (max-width: 900px) {
-  .navigation.sidebar + .container,
-  .navigation.sidebar.collapsed + .container {
-    margin-left: 0;
-  }
-}
+/* Updated to handle sidebar layout */
 .wrapper {
   display: flex;
   flex-direction: column;
   /* min-height: 100vh; */
+  padding-top: 6rem;
 }
 
-app-sidebar {
-  flex-shrink: 0;
-  /* width: 220px; */
-  transition: width 0.3s cubic-bezier(.77,0,.18,1);
-}
-
-.main-content {
-  flex: 1 1 auto;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  transition: margin-left 0.3s cubic-bezier(.77,0,.18,1);
-}
-
-.main-content.sidebar-collapsed {
-  margin-left: 95px;
-}
-.main-content.sidebar-expanded {
-  /* margin-left: 220px; */
-}
-
-/* Hide sidebar and margin on mobile or navbar mode */
-@media (max-width: 900px) {
-  app-sidebar {
-    display: none;
-  }
-  .main-content {
-    margin-left: 0 !important;
-  }
-}
-
-/* Sidebar expanded */
-.navigation.sidebar + .container,
-.footer-sidebar .footer {
+/* Sidebar layout adjustments */
+.navigation.sidebar + .main-content {
   margin-left: 220px;
   width: calc(100% - 220px);
-  transition: margin-left 0.3s cubic-bezier(.77,0,.18,1), width 0.3s cubic-bezier(.77,0,.18,1);
+  transition: margin-left var(--global-transition-speed);
 }
 
-/* Sidebar collapsed */
-.navigation.sidebar.collapsed + .container,
-.footer.footer-sidebar.collapsed {
-  margin-left: 95px;
-  width: calc(100% - 95px);
+.navigation.sidebar.sidebar-collapsed + .main-content {
+  margin-left: 70px;
+  width: calc(100% - 70px);
 }
 
-/* Navbar or mobile: full width */
-.navigation.navbar + .container,
-.footer-navbar .footer {
+.navigation.sidebar.sidebar-right + .main-content {
+  margin-left: 0;
+  margin-right: 220px;
+}
+
+.navigation.sidebar.sidebar-right.sidebar-collapsed + .main-content {
+  margin-right: 70px;
+}
+
+/* Navbar layout adjustments */
+.navigation.navbar + .main-content {
   margin-left: 0;
   width: 100%;
 }
 
+/* Mobile adjustments */
 @media (max-width: 900px) {
-  .navigation.sidebar + .container,
-  .navigation.sidebar.collapsed + .container,
-  .footer-sidebar .footer,
-  .footer.footer-sidebar.collapsed {
+  .navigation.sidebar + .main-content,
+  .navigation.sidebar.sidebar-collapsed + .main-content,
+  .navigation.sidebar.sidebar-right + .main-content,
+  .navigation.sidebar.sidebar-right.sidebar-collapsed + .main-content {
     margin-left: 0;
+    margin-right: 0;
     width: 100%;
+  }
+  
+  .main-content {
+    padding-top: 95px; /* Space for mobile topbar */
+  }
+}
+
+.main-content {
+  flex: 1;
+  transition: margin var(--global-transition-speed);
+}
+
+/* For left sidebar */
+.sidebar-container {
+  left: 0;
+}
+.wrapper .main-content {
+  margin-left: 220px; /* match sidebar width */
+  transition: margin-left 0.3s;
+}
+
+/* For right sidebar */
+.sidebar-container.sidebar-right {
+  left: auto;
+  right: 0;
+}
+.wrapper .main-content.sidebar-right {
+  margin-left: 0;
+  margin-right: 220px;
+}
+
+/* Collapsed sidebar */
+.sidebar-container.collapsed {
+  width: 70px;
+}
+.wrapper .main-content.sidebar-collapsed {
+  margin-left: 70px;
+}
+
+
+@media (max-width: 900px) {
+  .sidebar-container {
+    position: fixed;
+    width: 100vw;
+    left: 0;
+    top: 0;
+    z-index: 2000;
+    height: 100vh;
+    /* Optionally add a background overlay */
+  }
+  .wrapper .main-content {
+    margin: 0 !important;
+    padding-top: unset;
   }
 }

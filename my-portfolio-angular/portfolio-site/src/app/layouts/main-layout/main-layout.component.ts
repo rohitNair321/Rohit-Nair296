@@ -8,12 +8,23 @@ import { defaultConfig, LayoutConfig } from 'src/app/core/config/layout.config';
 })
 export class MainLayoutComponent {
   config: LayoutConfig = defaultConfig;
-  isSidebarCollapsed = false;
+  isSidebarCollapsed = true;
   isDarkTheme = false;
 
   constructor() {
-    // You can modify the config here if needed
-    this.config.navigation.type = 'navbar'; // Example of changing primary color
-    this.config.navigation.theme = 'light';
+    // Example configuration for sidebar
+    this.config.appConfiguration.type = 'sidebar';
+    this.config.appConfiguration.theme = 'light';
+    this.config.appConfiguration.sidebarPosition = 'right'; // 'left' or 'right'
+    this.config.appConfiguration.collapsed = true;
+    this.config.appConfiguration.showSidebarToggle = true;
+    this.config.appConfiguration.showAgentChat = true;
+    this.config.appConfiguration.showUserProfileView = true;
+  }
+
+  initSidebarMenu(sidebarEvent: any){
+    this.isSidebarCollapsed = sidebarEvent;
+    this.config.appConfiguration.collapsed = sidebarEvent;
+    this.config.theme.name = 'theme-1'; // default-theme
   }
 }

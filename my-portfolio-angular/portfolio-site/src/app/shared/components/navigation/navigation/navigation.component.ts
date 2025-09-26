@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';// For Font Awesome 5.x
+import { Component, Input, OnInit, OnDestroy, HostBinding, Output, EventEmitter } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-navigation',
@@ -11,7 +11,15 @@ export class NavigationComponent implements OnInit, OnDestroy {
   isMobile = false;
   isMenuOpen = false;
   isDarkTheme = false;
-  isSidebarCollapsed = false;
+  @Output() isSidebarCollapsedChange = new EventEmitter<boolean>();
+
+  @HostBinding('class.sidebar-left') get sidebarLeft() {
+    return this.config?.appConfiguration?.type === 'sidebar' && this.config?.appConfiguration?.sidebarPosition === 'left';
+  }
+
+  @HostBinding('class.sidebar-right') get sidebarRight() {
+    return this.config?.appConfiguration?.type === 'sidebar' && this.config?.appConfiguration?.sidebarPosition === 'right';
+  }
 
   menuItems = [
     { label: 'Home', href: '#home', icon: 'home' },
@@ -23,11 +31,15 @@ export class NavigationComponent implements OnInit, OnDestroy {
   constructor(private breakpointObserver: BreakpointObserver) {}
 
   ngOnInit() {
-    console.log(this.config);
     this.setupResponsiveBehavior();
     this.initializeTheme();
     this.checkMobile();
     window.addEventListener('resize', this.checkMobile.bind(this));
+    
+    // Initialize sidebar state
+    if (this.config?.appConfiguration?.type === 'sidebar') {
+      this.config.appConfiguration.collapsed = this.config?.appConfiguration?.collapsed || false;
+    }
   }
 
   ngOnDestroy() {
@@ -45,7 +57,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   private initializeTheme() {
-    this.isDarkTheme = this.config.navigation.theme == 'dark'?true:false;
+    this.isDarkTheme = this.config.appConfiguration.theme == 'dark'?true:false;
     this.isDarkTheme = document.body.classList.toggle('dark-mode',this.isDarkTheme);
   }
 
@@ -54,19 +66,27 @@ export class NavigationComponent implements OnInit, OnDestroy {
     if (!this.isMobile) {
       this.isMenuOpen = false;
     }
+    this.config.appConfiguration.isMobile = this.isMobile;
   }
 
   toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
+    if(this.config?.appConfiguration?.type === 'navbar') {
+      this.isMenuOpen = !this.isMenuOpen;
+    }else if(this.config?.appConfiguration?.type === 'sidebar') {
+      this.config.appConfiguration.collapsed = !this.config.appConfiguration.collapsed;
+      this.isSidebarCollapsedChange.emit(this.config.appConfiguration.collapsed);
+    }
+  }
+
+  toggleSidebar() {
+    if (!this.isMobile) {
+      this.config.appConfiguration.collapsed = !this.config.appConfiguration.collapsed;
+    }
   }
 
   toggleTheme() {
     this.isDarkTheme = !this.isDarkTheme;
     document.body.classList.toggle('dark-mode', this.isDarkTheme);
-  }
-
-  toggleSidebarCollapse() {
-    this.isSidebarCollapsed = !this.isSidebarCollapsed;
   }
 
   // Add this method for smooth scrolling

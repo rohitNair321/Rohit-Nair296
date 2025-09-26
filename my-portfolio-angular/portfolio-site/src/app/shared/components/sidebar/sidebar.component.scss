@@ -1,6 +1,6 @@
 .sidebar-container {
-  position: relative; // Changed to fixed for sticky behavior
-  height: 100vh;
+  position: fixed; // Changed to fixed for sticky behavior
+  height: 100%;
   width: 220px;
   min-width: 60px;
   background: var(--global-background-color);
@@ -8,10 +8,19 @@
   display: flex;
   flex-direction: column;
   transition: all 0.3s cubic-bezier(.77,0,.18,1);
+  animation: sidebarSlideIn 0.5s cubic-bezier(.77,0,.18,1) 0.1s both;
   z-index: 1000;
   left: 0;
   top: 0;
 
+  &.sidebar-left {
+    left: 0;
+  }
+  
+  &.sidebar-right {
+    right: 0;
+  }
+    
   &.collapsed {
     width: 95px;
     min-width: 60px;
@@ -21,9 +30,20 @@
 .sidebar-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   padding: 1rem;
-  background: var(--global-surface-color);
+  // background: var(--global-surface-color);
+}
+
+.sidebar-collapse-btn {
+  display: flex;
+  background: transparent;
+  border: none;
+  color: var(--global-text-color);
+}
+
+.none{
+  display: none;
 }
 
 // Updated logo styling to match navigation
@@ -73,6 +93,7 @@
   flex: 1;
   overflow-y: auto;
   transition: all 0.3s cubic-bezier(.77,0,.18,1);
+  animation: sidebarFadeIn 0.7s cubic-bezier(.77,0,.18,1) 0.2s both;
 
   &.collapsed {
     padding: 1rem 0.5rem;
@@ -130,129 +151,105 @@
   }
 }
 
-// /* Mobile Styles */
-// @media (max-width: 900px) {
-//   // Hide desktop sidebar on mobile
-//   .sidebar-container {
-//     display: none;
-//   }
+// right setting container
+.right-side-setting {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1000;
+  right: 0;
+  top: 0;
+  height: 100vh;
+}
 
-//   // Show mobile dropdown
-//   .mobile-dropdown {
-//     display: block;
-//     position: fixed;
-//     top: 0;
-//     left: 0;
-//     width: 100%;
-//     z-index: 1000;
-//     background: var(--global-surface-color);
-//     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+.btn-setting{
+  max-width: fit-content;
+  display: flex;
+  justify-content: center;
+}
 
-//     .dropdown-toggle {
-//       display: flex;
-//       align-items: center;
-//       width: 100%;
-//       padding: 1rem;
-//       border: none;
-//       background: var(--global-surface-color);
-//       font-size: 1rem;
-//       color: var(--global-text-color);
-//       cursor: pointer;
+.setting-icon-rotate {
+  animation: rotate-setting 1.2s linear infinite;
+}
 
-//       .logo-initials {
-//         width: 40px;
-//         height: 40px;
-//         margin-right: 1rem;
-//         font-size: 1.8rem;
-//       }
 
-//       .menu-icon {
-//         margin-right: 0.8rem;
-//       }
+@keyframes rotate-setting {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.right-side-setting-content {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  // justify-content: center;
+  background: var(--global-background-color);
+  box-shadow: 2px 0 12px rgba(0,0,0,0.07);
+  z-index: 1000;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 260px;
+}
 
-//       .current-section {
-//         flex: 1;
-//         text-align: left;
-//         font-weight: 500;
-//       }
+.featurs-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  color: var(--global-text-color);
+}
 
-//       .arrow-icon {
-//         transition: transform 0.3s;
-        
-//         &.open {
-//           transform: rotate(180deg);
-//         }
-//       }
-//     }
+.featurs-content label {
+  margin-bottom: unset;
+}
 
-//     .dropdown-menu {
-//       position: absolute;
-//       top: 100%;
-//       left: 0;
-//       width: 100%;
-//       background: var(--global-background-color);
-//       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-//       transform-origin: top;
-//       transform: scaleY(0);
-//       opacity: 0;
-//       transition: all 0.3s cubic-bezier(.77,0,.18,1);
-//       visibility: hidden;
-//       max-height: calc(100vh - 60px);
-//       overflow-y: auto;
+.form-check-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+}
 
-//       &.open {
-//         transform: scaleY(1);
-//         opacity: 1;
-//         visibility: visible;
-//       }
+.mat-radio-label label{
+  margin-bottom: unset;
+}
 
-//       .dropdown-item {
-//         display: flex;
-//         align-items: center;
-//         gap: 1rem;
-//         padding: 1rem;
-//         color: var(--global-text-color);
-//         text-decoration: none;
-//         transition: background-color 0.2s;
-//         border: none;
-//         width: 100%;
-//         text-align: left;
-//         background: none;
-//         cursor: pointer;
+@keyframes sidebarSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-40px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
 
-//         &:hover {
-//           background: var(--global-primary-color);
-//           color: var(--global-background-color);
-//         }
+@keyframes sidebarFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
-//         .material-icons {
-//           font-size: 1.5rem;
-//         }
-//       }
-//     }
-//   }
-// }
+::ng-deep .custom-theme-btn .p-button {
+  cursor: pointer;
+  background: inherit !important;
+  color: inherit !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: unset !important;
+}
 
-// /* Hide mobile dropdown on desktop */
-// @media (min-width: 901px) {
-//   .mobile-dropdown {
-//     display: none;
-//   }
-// }
-
-// // Animations
-// @keyframes slideIn {
-//   from {
-//     opacity: 0;
-//     transform: translateX(-30px);
-//   }
-//   to {
-//     opacity: 1;
-//     transform: translateX(0);
-//   }
-// }
-
-// .menu-link {
-//   animation: slideIn 0.3s cubic-bezier(.77,0,.18,1) forwards;
-//   animation-delay: calc(var(--item-index) * 0.05s);
-// }
+::ng-deep .custom-theme-btn .p-button:hover,
+::ng-deep .custom-theme-btn .p-button:focus {
+  filter: brightness(0.95);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}

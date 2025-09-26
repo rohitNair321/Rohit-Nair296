@@ -1,13 +1,14 @@
 <div class="wrapper">
-  <app-sidebar *ngIf="config.navigation.type === 'sidebar'" [config]="config"></app-sidebar>
-  <div>
-    <app-navigation *ngIf="config.navigation.type === 'navbar'" [config]="config"></app-navigation>
-  </div>
-  <div class="main-content" [class.sidebar-collapsed]="isSidebarCollapsed && config.navigation.type === 'sidebar'"
-       [class.sidebar-expanded]="!isSidebarCollapsed && config.navigation.type === 'sidebar'">
+  <app-navigation [config]="config" (isSidebarCollapsedChange)="initSidebarMenu($event)"></app-navigation>
+  <app-sidebar [config]="config"></app-sidebar>
+  <div class="main-content" [class.sidebar-collapsed]="config.appConfiguration.type === 'sidebar' && config.appConfiguration.collapsed" [class.sidebar-expanded]="config.appConfiguration.type === 'sidebar' && !config.appConfiguration.collapsed"
+  [class.m-4]="config.appConfiguration.type === 'navbar'">
     <main class="container">
       <router-outlet></router-outlet>
     </main>
     <app-footer></app-footer>
   </div>
 </div>
+<app-chat-bot *ngIf="config.appConfiguration.showAgentChat" [position]="'bottom-right'" [title]="'AiNg Assistant'" [placeholder]="'Ask about my projects...'">
+</app-chat-bot>
+<!-- m-auto -->

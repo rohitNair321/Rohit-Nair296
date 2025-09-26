@@ -1,0 +1,57 @@
+<div class="chat-container" >
+  <!-- Chat Button -->
+  <div class="welcome-bubble" *ngIf="showWelcomeBubble">
+    👋 Hi there! I am AiNg, Need help?
+  </div>
+  <button class="chat-button" (click)="toggleChat()">
+    <i class="fas fa-comment"></i>
+  </button>
+
+  <!-- Chat Window -->
+  <div class="chat-window" *ngIf="isOpen">
+    <div class="chat-header">
+      <h3>{{title}}</h3>
+      <select class="version-selector" [(ngModel)]="selectedVersion" (change)="onVersionChange($event)">
+        <option *ngFor="let version of versionList" [value]="version.model">{{version.name}}</option>
+      </select>
+      <button class="close-btn" (click)="toggleChat()">&times;</button>
+    </div>
+    
+    <div #messagesContainer class="chat-messages">
+      <div *ngFor="let msg of messages" [class.user]="msg.sender === 'user'" [class.loading]="msg?.loading"
+           [class.error]="msg.error" class="message">
+        
+        <div class="message-content">
+          <!-- Loading indicator -->
+          <div *ngIf="msg.loading" class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          
+          <!-- Error message -->
+          <div *ngIf="msg.error" class="error-message">
+            <i class="fas fa-exclamation-triangle"></i> {{msg.text}}
+          </div>
+          
+          <!-- Normal message -->
+          <div *ngIf="!msg.loading && !msg.error">
+            {{msg.text}}
+          </div>
+        </div>
+        
+        <div class="message-time"  *ngIf="!msg.loading">
+          {{msg.timestamp | date:'shortTime'}}
+        </div>
+      </div>
+    </div>
+    
+    <div class="chat-input">
+      <input type="text" [(ngModel)]="newMessage" [placeholder]="placeholder" [disabled]="isSending" (keyup.enter)="sendMessage()">
+      <button (click)="sendMessage()" [disabled]="isSending || !newMessage.trim()">
+        <i class="fas fa-paper-plane"></i>
+        <!-- <i *ngIf="isSending" class="fas fa-spinner fa-spin"></i> -->
+      </button>
+    </div>
+  </div>
+</div>

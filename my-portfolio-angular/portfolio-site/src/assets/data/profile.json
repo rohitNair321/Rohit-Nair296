@@ -16,58 +16,36 @@
         },
         "projects": [
             {
-                "title": "E-Commerce Dashboard",
-                "description": "A comprehensive admin dashboard for an e-commerce platform built with Angular. Features include data visualization, product management, order tracking, and user management.",
-                "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-                "technologies": ["Angular", "TypeScript", "RxJS", "NgRx", "Chart.js", "Angular Material"],
-                "liveDemo": "https://example.com",
-                "sourceCode": "https://github.com",
+                "title": "PFM (Personal Finance Management)",
+                "description": "A comprehensive personal finance management product application for Fiserv, Inc. Re-developed PFM in new technology: Angular v17 (Frontend), Java (Backend). The entire application was built with custom classes and components, no component library or Bootstrap used. Created custom UI architecture so the product can be used by multiple financial institutes. Designed architecture for SSO using NGRX for state management to optimize performance. Implemented ADA (Americans with Disabilities Act) compliance for accessibility. Status: Live.",
+                "technologies": ["Angular 17", "Java", "NGRX", "Custom CSS"],
+                "liveDemo": "",
+                "sourceCode": "",
                 "featured": true
             },
             {
-                "title": "Task Management Application",
-                "description": "A Kanban-style task management application that helps teams track project progress. Includes features like drag-and-drop task management, user assignments, and deadline tracking.",
-                "image": "https://images.unsplash.com/photo-1611224885990-ab7363d7f2a1?q=80&w=2039&auto=format&fit=crop&ixlib=rb-4.0.3",
-                "technologies": ["Angular", "TypeScript", "Firebase", "Angular CDK", "SCSS"],
-                "liveDemo": "https://example.com",
-                "sourceCode": "https://github.com",
+                "title": "HBNO-Wealthermapper (Neples)",
+                "description": "Developed a secure investment web application for managing investments in funds and stocks for Handelsbanken. Built using Angular 14 and .NET Core. Utilized Bootstrap classes and Primeng component library for responsive design. Status: Live.",
+                "technologies": ["Angular 14", ".NET Core", "Bootstrap", "Primeng"],
+                "liveDemo": "",
+                "sourceCode": "",
                 "featured": true
             },
             {
-                "title": "Weather Forecast App",
-                "description": "A responsive weather application that provides current weather information and 5-day forecasts for any location. Utilizes geolocation and weather APIs for accurate data.",
-                "image": "https://images.unsplash.com/photo-1592210454359-9043f067919b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-                "technologies": ["Angular", "TypeScript", "RxJS", "OpenWeatherMap API", "Progressive Web App"],
-                "liveDemo": "https://example.com",
-                "sourceCode": "https://github.com",
-                "featured": false
-            },
-            {
-                "title": "Personal Blog Platform",
-                "description": "A full-stack blog platform built with Angular frontend and Node.js backend. Features include article publishing, commenting system, and user authentication.",
-                "image": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-                "technologies": ["Angular", "Node.js", "Express", "MongoDB", "JWT Authentication"],
-                "liveDemo": "https://example.com",
-                "sourceCode": "https://github.com",
+                "title": "Suitability Test Web Application",
+                "description": "Created a web-based suitability test for Handelsbanken to assess customer knowledge before investment. This survey/assessment helps suggest suitable funds for investment. Used Bootstrap classes and Primeng component library for responsive design. Status: Live.",
+                "technologies": ["Angular", "Bootstrap", "Primeng"],
+                "liveDemo": "",
+                "sourceCode": "",
                 "featured": true
-            }, 
-            {
-                "title": "Fitness Tracking Application",
-                "description": "A fitness application that allows users to track workouts, set goals, and monitor progress. Includes features like workout timers, progress charts, and personalized recommendations.",
-                "image": "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-                "technologies": ["Angular", "TypeScript", "NgRx", "Firebase", "Chart.js"],
-                "liveDemo": "https://example.com",
-                "sourceCode": "https://github.com",
-                "featured": false
             },
             {
-                "title": "Real-Time Chat Application",
-                "description": "A real-time messaging application with features like group chats, direct messaging, and file sharing. Uses WebSockets for instant message delivery.",
-                "image": "https://images.unsplash.com/photo-1611606063065-ee7946f0787a?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3",
-                "technologies": ["Angular", "Socket.io", "Node.js", "Express", "MongoDB"],
-                "liveDemo": "https://example.com",
-                "sourceCode": "https://github.com",
-                "featured": false
+                "title": "I1Wealth (Product)",
+                "description": "Contributed to the development of a modular Wealth Management platform. The application combines wealth management and insurance management. Built using Angular 8, ABP framework, Bootstrap classes, and Primeng component library for responsive design.",
+                "technologies": ["Angular 8", "ABP Framework", "Bootstrap", "Primeng"],
+                "liveDemo": "",
+                "sourceCode": "",
+                "featured": true
             }
         ],
         "contact": {

@@ -13,7 +13,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { SharedModule } from './shared/shared.module';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
-import { ErrorInterceptor } from './core/services/error.service';
+import { ErrorInterceptor } from './core/interceptors/error.interceptor';
 import { LandingModule } from './features/landing.module';
 import { AuthService } from './core/services/auth.service';
 

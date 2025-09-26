@@ -9,9 +9,11 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout.component
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { CommonModule, HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { HomeComponent } from './features/home/home.component';
-import { ReactiveFormsModule } from '@angular/forms';
-import { AboutMeComponent } from './features/about-me/about-me.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ViewResumeComponent } from './features/view-resume/view-resume.component';
 import { AuthModule } from './auth/auth.module';
+import { AboutMeComponent } from './features/about-me/about-me.component';
+import { CardModule } from 'primeng/card';
 
 @NgModule({
   declarations: [
@@ -19,6 +21,7 @@ import { AuthModule } from './auth/auth.module';
     MainLayoutComponent,
     AuthLayoutComponent,
     HomeComponent,
+    ViewResumeComponent,
     AboutMeComponent
   ],
   imports: [
@@ -28,7 +31,9 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
     CoreModule,
     SharedModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule,
+    CardModule
   ],
   providers: [{
     provide: LocationStrategy,

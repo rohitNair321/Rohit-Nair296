@@ -3,7 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { HomeComponent } from './features/home/home.component';
+import { ViewResumeComponent } from './features/view-resume/view-resume.component';
 import { AboutMeComponent } from './features/about-me/about-me.component';
+import { OverviewComponent } from './features/overview/overview.component';
+import { SettingsComponent } from './features/settings/settings.component';
+import { HelpComponent } from './features/help/help.component';
 
 const routes: Routes = [
   {
@@ -11,7 +15,11 @@ const routes: Routes = [
     component: MainLayoutComponent,
     children: [
       { path: '', component: HomeComponent },
+      { path: 'view-resume', component: ViewResumeComponent },
       { path: 'about-me', component: AboutMeComponent },
+      { path: 'user-profile', component: OverviewComponent },
+      { path: 'user-settings', component: SettingsComponent },
+      { path: 'help-and-support', component: HelpComponent },
       { path: '**', redirectTo: '' }
       // {
       //   path: 'home',
@@ -38,7 +46,6 @@ const routes: Routes = [
       // Auth routes here
     ],
   },
-  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({

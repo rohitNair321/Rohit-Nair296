@@ -4,7 +4,7 @@
 .hero-section {
   background-color: var(--global-primary-color);
   color: var(--global-background-color);
-  padding: 100px 20px;
+  padding: 55px 20px 55px 20px;
 }
 
 .hero-content {
@@ -148,7 +148,7 @@
 .portfolio-showcase-section {
   background-color: var(--global-background-color);
   color: var(--global-text-color);
-  padding: 50px 20px;
+  padding: 35px 17px;
   text-align: center;
 }
 .portfolio-grid {
@@ -521,6 +521,7 @@
 .group-btn {
   display: flex;
   gap: 4px;
+  flex-wrap: wrap;
 }
 
 
@@ -536,7 +537,7 @@
     height: 160px;
   }
   .about-res-width {
-    width: auto;
+    width: 100%;
   }
 }
 
@@ -577,10 +578,10 @@
   background-color: var(--global-surface-color);
   border: 2px solid var(--global-primary-color);
 }
-.portfolio-card:hover {
+/* .portfolio-card:hover {
   transform: scale(1.04) translateY(-8px);
   box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-}
+} */
 
 .slider-btn {
   background: var(--global-primary-color);
@@ -594,7 +595,7 @@
   justify-content: center;
   font-size: 2rem;
   position: relative;
-  z-index: 3;
+  /* z-index: 3; */
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0,0,0,0.10);
   transition: background 0.2s;
@@ -615,10 +616,10 @@
   .portfolio-slider-outer {
     max-width: 98vw;
   }
-  .portfolio-card {
+  /* .portfolio-card {
     min-width: 90vw;
     max-width: 95vw;
-  }
+  } */
 }
 
 /* Animation classes */
@@ -673,4 +674,174 @@ input.invalid, textarea.invalid {
 }
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+.tech-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.7rem 0 0.2rem 0;
+}
+
+.tech-badge {
+  display: inline-block;
+  padding: 0.25em 0.9em;
+  border-radius: 1em;
+  font-size: 0.93em;
+  font-weight: 500;
+  background: var(--global-surface-color);
+  color: var(--global-primary-color);
+  border: 1.5px solid var(--global-primary-color);
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Use color variables for badges */
+.tech-badge.Angular,
+.tech-badge.Angular17,
+.tech-badge.Angular-17 {
+  background: var(--badge-angular);
+  color: var(--badge-angular-text);
+  border-color: var(--badge-angular-text);
+}
+.tech-badge.Angular14,
+.tech-badge.Angular-14 {
+  background: var(--badge-angular);
+  color: var(--badge-angular-text);
+  border-color: var(--badge-angular-text);
+}
+.tech-badge.Java {
+  background: var(--badge-java);
+  color: var(--badge-java-text);
+  border-color: var(--badge-java-text);
+}
+.tech-badge.NET-Core {
+  background: var(--badge-dotnet);
+  color: var(--badge-dotnet-text);
+  border-color: var(--badge-dotnet-text);
+}
+.tech-badge.Bootstrap {
+  background: var(--badge-bootstrap);
+  color: var(--badge-bootstrap-text);
+  border-color: var(--badge-bootstrap-text);
+}
+.tech-badge.Primeng {
+  background: var(--badge-primeng);
+  color: var(--badge-primeng-text);
+  border-color: var(--badge-primeng-text);
+}
+.tech-badge.Custom-CSS {
+  background: var(--badge-customcss);
+  color: var(--badge-customcss-text);
+  border-color: var(--badge-customcss-text);
+}
+.tech-badge.NGRX {
+  background: var(--badge-ngrx);
+  color: var(--badge-ngrx-text);
+  border-color: var(--badge-ngrx-text);
+}
+.tech-badge.ABP-Framework {
+  background: var(--badge-abp);
+  color: var(--badge-abp-text);
+  border-color: var(--badge-abp-text);
+}
+.tech-badge.JavaScript {
+  background: var(--badge-js);
+  color: var(--badge-js-text);
+  border-color: var(--badge-js-text);
+}
+.tech-badge.TypeScript {
+  background: var(--badge-ts);
+  color: var(--badge-ts-text);
+  border-color: var(--badge-ts-text);
+}
+
+.portfolio-scroll-container {
+  overflow-x: auto;
+  /* padding-bottom: 1rem; */
+  margin: 0 auto;
+  max-width: 1100px;
+}
+
+.portfolio-card-list {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: nowrap;
+  width: max-content;
+}
+
+.portfolio-card {
+  min-width: 320px;
+  max-width: 340px;
+  flex: 0 0 32%;
+  box-sizing: border-box;
+  margin-bottom: 1rem;
+  transition: box-shadow 0.2s;
+}
+
+.view-project-detail {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+}
+
+@media (max-width: 1100px) {
+  /* .portfolio-card {
+    flex: 0 0 48%;
+    min-width: 260px;
+    max-width: 95vw;
+  } */
+}
+
+@media (max-width: 900px) {
+  /* .portfolio-card {
+    flex: 0 0 90vw;
+    min-width: 90vw;
+    max-width: 95vw;
+  } */
+  .portfolio-card-list {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  /* .portfolio-card {
+    flex: 0 0 98vw;
+    min-width: 98vw;
+    max-width: 99vw;
+  } */
+}
+
+
+/* Default: Desktop (≥1100px) → 3 cards */
+.portfolio-card {
+  flex: 0 0 32%;
+  min-width: 320px;
+  max-width: 340px;
+}
+
+/* Tablets (≤1100px) → 2 cards */
+@media (max-width: 1100px) {
+  .portfolio-card {
+    flex: 0 0 48%;
+    min-width: 260px;
+    max-width: 430px; /* flexible but not full width */
+  }
+}
+
+/* Small tablets / large phones (≤900px) → 1 card per row (wide) */
+@media (max-width: 900px) {
+  .portfolio-card {
+    flex: 0 0 90%;
+    min-width: 300px;
+    max-width: 42vw;
+  }
+}
+
+/* Mobile (≤600px) → full width */
+@media (max-width: 600px) {
+  .portfolio-card {
+    flex: 0 0 98%;
+    min-width: 280px;
+    max-width: 85vw;
+  }
 }

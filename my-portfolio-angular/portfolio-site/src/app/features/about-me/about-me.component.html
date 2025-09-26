@@ -1,121 +1,121 @@
-<div class="resume-container animate-fade-in" *ngIf="aboutMeData">
-        <div class="resume-header animate-slide-up">
-            <h1 class="name animate-fade-in-delay">{{ aboutMeData.name }}</h1>
-            <div class="title animate-fade-in-delay">{{ aboutMeData.title }}</div>
-            <div class="contact-info animate-fade-in-delay">
-                <div class="contact-item">
-                    <i class="fas fa-phone contact-icon"></i>
-                    <span>{{ aboutMeData.contact.phone }}</span>
+<section class="about-container">
+    <div class="profile-header fade-in-up">
+        <div class="intro-content">
+            <h1>👋 Hi, I'm Rohit</h1>
+            <p class="tagline">Full-Stack Web Developer & AI Specialist</p>
+            <p class="mission">Creating intelligent web experiences that merge cutting-edge technology with intuitive design. Angular is my canvas for innovation.</p>
+        </div>
+        <div class="specialization-card">
+            <div class="focus-pill">Angular Specialist</div>
+            <div class="focus-pill">AI Integration</div>
+            <div class="focus-pill">Cloud Solutions</div>
+            <div class="focus-pill">UX Engineering</div>
+            <div class="focus-pill">Startup Mindset</div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="about-grid">
+        <!-- Current Projects -->
+        <div class="about-card fade-in-up" style="animation-delay: 0.1s;">
+            <h2 class="section-title">🚀 Current Projects</h2>
+            <div class="highlight-item">
+                <div class="icon-badge">💡</div>
+                <div>
+                    <h3>AI-Powered Portfolio</h3>
+                    <p>Building an interactive portfolio with Gemini, Groq (LLaMA), and Supabase Edge Functions that responds to user queries about my work.</p>
                 </div>
-                <div class="contact-item">
-                    <i class="fas fa-envelope contact-icon"></i>
-                    <span>{{ aboutMeData.contact.email }}</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-map-marker-alt contact-icon"></i>
-                    <span>{{ aboutMeData.contact.location }}</span>
+            </div>
+            <div class="highlight-item">
+                <div class="icon-badge">🚀</div>
+                <div>
+                    <h3>Productivity SaaS</h3>
+                    <p>Developing a smart productivity tool that leverages AI to automate task management and optimize workflows.</p>
                 </div>
             </div>
         </div>
-        
-        <div class="resume-body">
-            <div class="main-content">
-                <div class="section animate-slide-up">
-                    <h2 class="section-title">Professional Summary</h2>
-                    <p class="summary-text">{{ aboutMeData.summary }}</p>
+
+        <!-- Technical Expertise -->
+        <div class="about-card fade-in-up" style="animation-delay: 0.2s;">
+            <h2 class="section-title">🛠️ Technical Expertise</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Frontend</h3>
+                    <ul class="skill-list">
+                        <li class="skill-badge angular">Angular</li>
+                        <li class="skill-badge ts">TypeScript</li>
+                        <li class="skill-badge rxjs">RxJS</li>
+                    </ul>
                 </div>
-                <div class="section animate-slide-up-delay">
-                    <h2 class="section-title">Work Experience</h2>
-                    <div class="experience-item" *ngFor="let exp of aboutMeData.workExperience">
-                        <div class="company">
-                            <span>{{ exp.company }}</span>
-                            <span>{{ exp.location }}</span>
-                        </div>
-                        <div class="role">{{ exp.role }}</div>
-                        <div class="duration">{{ exp.duration }}</div>
-                        <ul class="responsibilities">
-                            <li *ngFor="let resp of exp.responsibilities">{{ resp }}</li>
-                        </ul>
-                        <div *ngFor="let proj of exp.projects">
-                            <h3 class="project-title"><i class="fas fa-project-diagram"></i>Projects{{ proj.client ? ' - Client: ' + proj.client : '' }}</h3>
-                            <div class="project-name">{{ proj.title }}</div>
-                            <ul class="responsibilities">
-                                <li *ngFor="let resp of proj.responsibilities">{{ resp }}</li>
-                            </ul>
-                        </div>
+                <div class="skill-category">
+                    <h3>Backend</h3>
+                    <ul class="skill-list">
+                        <li class="skill-badge node">Node.js</li>
+                        <li class="skill-badge supabase">Supabase</li>
+                        <li class="skill-badge firebase">Firebase</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>AI/ML</h3>
+                    <ul class="skill-list">
+                        <li class="skill-badge ai">Gemini API</li>
+                        <li class="skill-badge ai">LLaMA</li>
+                        <li class="skill-badge cloud">Cloud AI</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Path -->
+        <div class="about-card fade-in-up" style="animation-delay: 0.3s;">
+            <h2 class="section-title">📚 Learning Path</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3>Current Focus</h3>
+                        <p>Advanced cloud deployments & serverless architecture with AWS and GCP</p>
                     </div>
                 </div>
-                <div class="section animate-slide-up-delay">
-                    <h2 class="section-title">Education</h2>
-                    <div class="education-item" *ngFor="let edu of aboutMeData.education">
-                        <div class="degree">{{ edu.degree }}</div>
-                        <div class="institution">{{ edu.institution }}</div>
-                        <div class="year">{{ edu.year }}</div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3>2024 Targets</h3>
+                        <p>Master Kubernetes and distributed systems for scalable applications</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <h3>Long-term Vision</h3>
+                        <p>Found an AI-focused SaaS startup by 2026</p>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="cta-card fade-in-up" style="animation-delay: 0.4s;">
+        <div class="cta-content">
+            <h2>🤝 Let's Build Something Amazing</h2>
+            <p>I'm actively exploring new opportunities, collaborations, and innovative projects. Whether you want to discuss technology, AI implementations, or potential partnerships, I'd love to connect and explore how we can create value together.</p>
             
-            <div class="sidebar animate-fade-in-delay">
-                <div class="section animate-slide-up">
-                    <h2 class="section-title">Technical Skills</h2>
-                    <div class="skill-category">
-                        <div class="skill-category-title">Languages</div>
-                        <div class="skills-container">
-                            <div class="skill-tag" *ngFor="let skill of aboutMeData.skills.languages">{{ skill }}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="skill-category">
-                        <div class="skill-category-title">Web Technologies</div>
-                        <div class="skills-container">
-                            <div class="skill-tag">HTML5</div>
-                            <div class="skill-tag">CSS3</div>
-                            <div class="skill-tag">Responsive Design</div>
-                        </div>
-                    </div>
-                    
-                    <div class="skill-category">
-                        <div class="skill-category-title">Frameworks & Libraries</div>
-                        <div class="skills-container">
-                            <div class="skill-tag">Angular (8,10,12,14,17)</div>
-                            <div class="skill-tag">Bootstrap</div>
-                            <div class="skill-tag">Highcharts</div>
-                            <div class="skill-tag">Component Libraries</div>
-                            <div class="skill-tag">NGRX</div>
-                        </div>
-                    </div>
-                    
-                    <div class="skill-category">
-                        <div class="skill-category-title">Tools & Practices</div>
-                        <div class="skills-container">
-                            <div class="skill-tag">Git & GitHub</div>
-                            <div class="skill-tag">RESTful APIs</div>
-                            <div class="skill-tag">ADA Compliance</div>
-                            <div class="skill-tag">SSO Implementation</div>
-                            <div class="skill-tag">Agile Methodologies</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="section animate-slide-up-delay">
-                    <h2 class="section-title">Key Strengths</h2>
-                    <div class="skills-container">
-                        <div class="skill-tag" *ngFor="let strength of aboutMeData.strengths">{{ strength }}</div>
-                    </div>
-                </div>
-                
-                <div class="section animate-slide-up-delay">
-                    <h2 class="section-title">Industry Experience</h2>
-                    <div class="skills-container">
-                        <div class="skill-tag" *ngFor="let ind of aboutMeData.industryExperience">{{ ind }}</div>
-                    </div>
-                </div>
+            <div class="cta-actions">
+                <button class="cta-button">
+                    ✉️ Send Message
+                </button>
+                <button class="cta-button outlined">
+                    📄 View Resume
+                </button>
+                <button class="cta-button outlined">
+                    💼 Project Inquiry
+                </button>
             </div>
         </div>
+        <div class="status-indicator">
+            <span class="status-dot"></span>
+            <span>Currently available for freelance projects</span>
+        </div>
     </div>
-    
-    <div class="action-container animate-fade-in-delay">
-        <a class="download-btn" [href]="aboutMeData.resume" download>
-            <span class="material-icons">download</span> Download Resume as PDF
-        </a>
-    </div>
+</section>
