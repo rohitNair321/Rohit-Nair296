@@ -23,7 +23,7 @@ jobs:
           node-version: '18'  # Angular 15 is compatible with Node 16 or 18
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Build Angular app
         run: npx ng build --configuration production --base-href "/Rohit-Nair296/"
