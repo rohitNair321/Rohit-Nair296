@@ -1,121 +1,116 @@
-<div class="resume-container animate-fade-in" *ngIf="aboutMeData">
-        <div class="resume-header animate-slide-up">
-            <h1 class="name animate-fade-in-delay">{{ aboutMeData.name }}</h1>
-            <div class="title animate-fade-in-delay">{{ aboutMeData.title }}</div>
-            <div class="contact-info animate-fade-in-delay">
-                <div class="contact-item">
-                    <i class="fas fa-phone contact-icon"></i>
-                    <span>{{ aboutMeData.contact.phone }}</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-envelope contact-icon"></i>
-                    <span>{{ aboutMeData.contact.email }}</span>
-                </div>
-                <div class="contact-item">
-                    <i class="fas fa-map-marker-alt contact-icon"></i>
-                    <span>{{ aboutMeData.contact.location }}</span>
-                </div>
-            </div>
-        </div>
-        
-        <div class="resume-body">
-            <div class="main-content">
-                <div class="section animate-slide-up">
-                    <h2 class="section-title">Professional Summary</h2>
-                    <p class="summary-text">{{ aboutMeData.summary }}</p>
-                </div>
-                <div class="section animate-slide-up-delay">
-                    <h2 class="section-title">Work Experience</h2>
-                    <div class="experience-item" *ngFor="let exp of aboutMeData.workExperience">
-                        <div class="company">
-                            <span>{{ exp.company }}</span>
-                            <span>{{ exp.location }}</span>
-                        </div>
-                        <div class="role">{{ exp.role }}</div>
-                        <div class="duration">{{ exp.duration }}</div>
-                        <ul class="responsibilities">
-                            <li *ngFor="let resp of exp.responsibilities">{{ resp }}</li>
-                        </ul>
-                        <div *ngFor="let proj of exp.projects">
-                            <h3 class="project-title"><i class="fas fa-project-diagram"></i>Projects{{ proj.client ? ' - Client: ' + proj.client : '' }}</h3>
-                            <div class="project-name">{{ proj.title }}</div>
-                            <ul class="responsibilities">
-                                <li *ngFor="let resp of proj.responsibilities">{{ resp }}</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="section animate-slide-up-delay">
-                    <h2 class="section-title">Education</h2>
-                    <div class="education-item" *ngFor="let edu of aboutMeData.education">
-                        <div class="degree">{{ edu.degree }}</div>
-                        <div class="institution">{{ edu.institution }}</div>
-                        <div class="year">{{ edu.year }}</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="sidebar animate-fade-in-delay">
-                <div class="section animate-slide-up">
-                    <h2 class="section-title">Technical Skills</h2>
-                    <div class="skill-category">
-                        <div class="skill-category-title">Languages</div>
-                        <div class="skills-container">
-                            <div class="skill-tag" *ngFor="let skill of aboutMeData.skills.languages">{{ skill }}</div>
-                        </div>
-                    </div>
-                    
-                    <div class="skill-category">
-                        <div class="skill-category-title">Web Technologies</div>
-                        <div class="skills-container">
-                            <div class="skill-tag">HTML5</div>
-                            <div class="skill-tag">CSS3</div>
-                            <div class="skill-tag">Responsive Design</div>
-                        </div>
-                    </div>
-                    
-                    <div class="skill-category">
-                        <div class="skill-category-title">Frameworks & Libraries</div>
-                        <div class="skills-container">
-                            <div class="skill-tag">Angular (8,10,12,14,17)</div>
-                            <div class="skill-tag">Bootstrap</div>
-                            <div class="skill-tag">Highcharts</div>
-                            <div class="skill-tag">Component Libraries</div>
-                            <div class="skill-tag">NGRX</div>
-                        </div>
-                    </div>
-                    
-                    <div class="skill-category">
-                        <div class="skill-category-title">Tools & Practices</div>
-                        <div class="skills-container">
-                            <div class="skill-tag">Git & GitHub</div>
-                            <div class="skill-tag">RESTful APIs</div>
-                            <div class="skill-tag">ADA Compliance</div>
-                            <div class="skill-tag">SSO Implementation</div>
-                            <div class="skill-tag">Agile Methodologies</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="section animate-slide-up-delay">
-                    <h2 class="section-title">Key Strengths</h2>
-                    <div class="skills-container">
-                        <div class="skill-tag" *ngFor="let strength of aboutMeData.strengths">{{ strength }}</div>
-                    </div>
-                </div>
-                
-                <div class="section animate-slide-up-delay">
-                    <h2 class="section-title">Industry Experience</h2>
-                    <div class="skills-container">
-                        <div class="skill-tag" *ngFor="let ind of aboutMeData.industryExperience">{{ ind }}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="action-container animate-fade-in-delay">
-        <a class="download-btn" [href]="aboutMeData.resume" download>
-            <span class="material-icons">download</span> Download Resume as PDF
+<div class="resume-page" *ngIf="aboutMeData">
+  <header class="resume-header" role="banner" aria-labelledby="resume-name">
+    <div class="header-left">
+      <h1 id="resume-name" class="name">{{ aboutMeData.name }}</h1>
+      <div class="title">{{ aboutMeData.title }}</div>
+
+      <div class="contact-row" aria-label="Contact information">
+        <a class="contact-pill" href="tel:{{ aboutMeData.contact.phone }}" aria-label="Phone">
+          <i class="fas fa-phone contact-icon" aria-hidden="true"></i>
+          <span class="sr-only">Phone</span>
+          <span class="contact-val">{{ aboutMeData.contact.phone }}</span>
         </a>
+
+        <a class="contact-pill" href="mailto:{{ aboutMeData.contact.email }}" aria-label="Email">
+          <i class="fas fa-envelope contact-icon" aria-hidden="true"></i>
+          <span class="contact-val">{{ aboutMeData.contact.email }}</span>
+        </a>
+
+        <div class="contact-pill" aria-hidden="false" aria-label="Location">
+          <i class="fas fa-map-marker-alt contact-icon" aria-hidden="true"></i>
+          <span class="contact-val">{{ aboutMeData.contact.location }}</span>
+        </div>
+      </div>
     </div>
+
+    <div class="header-actions">
+      <a class="download-btn" [href]="aboutMeData.resume" download aria-label="Download resume as PDF">
+        <span class="material-icons" aria-hidden="true">download</span>
+        <span>Download PDF</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="resume-body" role="main">
+    <section class="main-column" aria-labelledby="summary-title">
+      <section class="card summary" id="summary-title">
+        <h2 class="section-title">Professional Summary</h2>
+        <p class="summary-text">{{ aboutMeData.summary }}</p>
+      </section>
+
+      <section class="card experience" aria-labelledby="experience-title">
+        <h2 id="experience-title" class="section-title">Work Experience</h2>
+        <article class="experience-item" *ngFor="let exp of aboutMeData.workExperience">
+          <header class="exp-head">
+            <div class="company"><strong>{{ exp.company }}</strong> <span class="muted">• {{ exp.location }}</span></div>
+            <div class="period muted">{{ exp.duration }}</div>
+          </header>
+
+          <div class="role muted">{{ exp.role }}</div>
+
+          <ul class="responsibilities" *ngIf="exp.responsibilities?.length">
+            <li *ngFor="let resp of exp.responsibilities">{{ resp }}</li>
+          </ul>
+
+          <div class="projects" *ngIf="exp.projects?.length">
+            <div class="project" *ngFor="let proj of exp.projects">
+              <h3 class="project-title">{{ proj.title }} <span class="muted" *ngIf="proj.client">— {{ proj.client }}</span></h3>
+              <ul class="responsibilities">
+                <li *ngFor="let pr of proj.responsibilities">{{ pr }}</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="card education" aria-labelledby="education-title">
+        <h2 id="education-title" class="section-title">Education</h2>
+        <div class="education-item" *ngFor="let edu of aboutMeData.education">
+          <div class="degree">{{ edu.degree }}</div>
+          <div class="institution muted">{{ edu.institution }} <span class="muted">• {{ edu.year }}</span></div>
+        </div>
+      </section>
+    </section>
+
+    <aside class="side-column" aria-labelledby="skills-title">
+      <section class="card skills" id="skills-title">
+        <h2 class="section-title">Technical Skills</h2>
+
+        <div class="skill-category" *ngIf="aboutMeData.skills">
+          <div class="skill-category-title">Languages</div>
+          <div class="skills-container">
+            <span class="skill-tag" *ngFor="let s of aboutMeData.skills.languages">{{ s }}</span>
+          </div>
+        </div>
+
+        <div class="skill-category">
+          <div class="skill-category-title">Frameworks & Tools</div>
+          <div class="skills-container">
+            <span class="skill-tag" *ngFor="let s of aboutMeData.skills.frameworks">{{ s }}</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card strengths" aria-labelledby="strengths-title">
+        <h3 id="strengths-title" class="section-title">Key Strengths</h3>
+        <div class="skills-container">
+          <span class="skill-tag" *ngFor="let st of aboutMeData.strengths">{{ st }}</span>
+        </div>
+      </section>
+
+      <section class="card industries" aria-labelledby="industries-title">
+        <h3 id="industries-title" class="section-title">Industry Experience</h3>
+        <div class="skills-container">
+          <span class="skill-tag" *ngFor="let ind of aboutMeData.industryExperience">{{ ind }}</span>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <nav class="action-container" aria-label="Resume actions">
+    <a class="download-btn secondary" [href]="aboutMeData.resume" download>
+      <span class="material-icons" aria-hidden="true">download</span>
+      <span>Download</span>
+    </a>
+  </nav>
+</div>
