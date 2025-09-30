@@ -1,1 +1,93 @@
-<p>settings works!</p>
+<section class="settings-page" [formGroup]="profileForm">
+  <header class="settings-hero card">
+    <div class="hero-left">
+      <h1>Settings</h1>
+      <p class="muted">Manage your profile and application preferences. Changes persist in your browser.</p>
+    </div>
+
+    <div class="hero-actions">
+      <button type="button" class="btn primary" (click)="saveSettings()">Save</button>
+      <button type="button" class="btn outline" (click)="resetDefaults()">Reset</button>
+    </div>
+  </header>
+
+  <div class="settings-grid">
+    <section class="card profile-card" aria-labelledby="profile-heading">
+      <h2 id="profile-heading" class="section-title">Profile</h2>
+
+      <div class="profile-form">
+        <label class="avatar-wrap" title="Upload avatar">
+          <input type="file" accept="image/*" (change)="onAvatarChange($event)" />
+          <ng-container *ngIf="avatarDataUrl; else initials">
+            <img [src]="avatarDataUrl" alt="Avatar preview" />
+          </ng-container>
+          <ng-template #initials>
+            <div class="avatar-initials">{{ (profileForm.get('name')?.value || 'U').charAt(0) }}</div>
+          </ng-template>
+        </label>
+
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" type="text" formControlName="name" placeholder="Your name" />
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" formControlName="email" placeholder="you@domain.com" />
+        </div>
+
+        <div class="field">
+          <label for="bio">Bio</label>
+          <textarea id="bio" rows="4" formControlName="bio" placeholder="Short bio"></textarea>
+        </div>
+
+        <div class="field actions-row">
+          <button type="button" class="btn soft" (click)="removeAvatar()" [disabled]="!avatarDataUrl">Remove Avatar</button>
+          <small class="muted">Avatar stored locally (base64)</small>
+        </div>
+      </div>
+    </section>
+
+    <aside class="card app-settings-card" aria-labelledby="app-settings-heading">
+      <h2 id="app-settings-heading" class="section-title">Application</h2>
+
+      <div class="field">
+        <label for="theme">Theme</label>
+        <select id="theme" formControlName="theme" (change)="applyThemeClass()">
+          <option *ngFor="let t of availableThemes" [value]="t">{{ t }}</option>
+        </select>
+      </div>
+
+      <div class="field toggle-row">
+        <label for="darkMode">Dark mode</label>
+        <input id="darkMode" type="checkbox" formControlName="darkMode" (change)="applyThemeClass()" />
+      </div>
+
+      <div class="field toggle-row">
+        <label for="reduceMotion">Reduce motion</label>
+        <input id="reduceMotion" type="checkbox" formControlName="reduceMotion" (change)="applyReduceMotion()" />
+      </div>
+
+      <div class="field">
+        <label>Preview</label>
+        <div class="preview-surface card small">
+          <div class="preview-header">
+            <div class="preview-avatar">
+              <img *ngIf="avatarDataUrl; else pInit" [src]="avatarDataUrl" alt="preview" />
+              <ng-template #pInit><div class="avatar-initials">{{ (profileForm.get('name')?.value || 'U').charAt(0) }}</div></ng-template>
+            </div>
+            <div>
+              <div class="preview-name">{{ profileForm.get('name')?.value || 'Your name' }}</div>
+              <div class="muted preview-email">{{ profileForm.get('email')?.value || 'you@example.com' }}</div>
+            </div>
+          </div>
+          <p class="muted preview-bio">{{ profileForm.get('bio')?.value || 'Short bio preview...' }}</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="settings-footer">
+    <div class="muted">All changes saved locally. Use Reset to restore defaults.</div>
+  </footer>
+</section>

@@ -1,121 +1,124 @@
-<section class="about-container">
-    <div class="profile-header fade-in-up">
-        <div class="intro-content">
-            <h1>👋 Hi, I'm Rohit</h1>
-            <p class="tagline">Full-Stack Web Developer & AI Specialist</p>
-            <p class="mission">Creating intelligent web experiences that merge cutting-edge technology with intuitive design. Angular is my canvas for innovation.</p>
-        </div>
-        <div class="specialization-card">
-            <div class="focus-pill">Angular Specialist</div>
-            <div class="focus-pill">AI Integration</div>
-            <div class="focus-pill">Cloud Solutions</div>
-            <div class="focus-pill">UX Engineering</div>
-            <div class="focus-pill">Startup Mindset</div>
-        </div>
+<section class="about-container" role="main" aria-labelledby="about-heading">
+  <header class="profile-header" role="banner">
+    <div class="intro-content">
+      <h1 id="about-heading">👋 Hi, I'm Rohit</h1>
+      <p class="tagline">Full-Stack Web Developer & AI Specialist</p>
+      <p class="mission">Creating intelligent web experiences that merge cutting-edge technology with intuitive design. Angular is my canvas for innovation.</p>
     </div>
 
-    <!-- Main Content Grid -->
-    <div class="about-grid">
-        <!-- Current Projects -->
-        <div class="about-card fade-in-up" style="animation-delay: 0.1s;">
-            <h2 class="section-title">🚀 Current Projects</h2>
-            <div class="highlight-item">
-                <div class="icon-badge">💡</div>
-                <div>
-                    <h3>AI-Powered Portfolio</h3>
-                    <p>Building an interactive portfolio with Gemini, Groq (LLaMA), and Supabase Edge Functions that responds to user queries about my work.</p>
-                </div>
-            </div>
-            <div class="highlight-item">
-                <div class="icon-badge">🚀</div>
-                <div>
-                    <h3>Productivity SaaS</h3>
-                    <p>Developing a smart productivity tool that leverages AI to automate task management and optimize workflows.</p>
-                </div>
-            </div>
+    <aside class="specialization-card" aria-label="Specializations">
+      <div class="pill-list">
+        <span class="focus-pill" tabindex="0">Angular Specialist</span>
+        <span class="focus-pill" tabindex="0">AI Integration</span>
+        <span class="focus-pill" tabindex="0">Cloud Solutions</span>
+        <span class="focus-pill" tabindex="0">UX Engineering</span>
+        <span class="focus-pill" tabindex="0">Startup Mindset</span>
+      </div>
+    </aside>
+  </header>
+
+  <div class="about-grid" aria-hidden="false">
+    <section class="about-card" aria-labelledby="projects-title">
+      <h2 id="projects-title" class="section-title">🚀 Current Projects</h2>
+
+      <ul class="highlights" role="list">
+        <li class="highlight-item">
+          <div class="icon-badge" aria-hidden="true">💡</div>
+          <div class="highlight-body">
+            <h3>AI-Powered Portfolio</h3>
+            <p>Interactive portfolio with Gemini, Groq (LLaMA), and Supabase Edge Functions that responds to user queries about my work.</p>
+          </div>
+        </li>
+
+        <li class="highlight-item">
+          <div class="icon-badge" aria-hidden="true">🚀</div>
+          <div class="highlight-body">
+            <h3>Productivity SaaS</h3>
+            <p>Smart productivity tooling that leverages AI to automate task management and optimize workflows.</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="about-card" aria-labelledby="expertise-title">
+      <h2 id="expertise-title" class="section-title">🛠️ Technical Expertise</h2>
+
+      <div class="skills-grid" role="list">
+        <div class="skill-category" role="listitem">
+          <h3>Frontend</h3>
+          <ul class="skill-list">
+            <li class="skill-badge angular">Angular</li>
+            <li class="skill-badge ts">TypeScript</li>
+            <li class="skill-badge rxjs">RxJS</li>
+          </ul>
         </div>
 
-        <!-- Technical Expertise -->
-        <div class="about-card fade-in-up" style="animation-delay: 0.2s;">
-            <h2 class="section-title">🛠️ Technical Expertise</h2>
-            <div class="skills-grid">
-                <div class="skill-category">
-                    <h3>Frontend</h3>
-                    <ul class="skill-list">
-                        <li class="skill-badge angular">Angular</li>
-                        <li class="skill-badge ts">TypeScript</li>
-                        <li class="skill-badge rxjs">RxJS</li>
-                    </ul>
-                </div>
-                <div class="skill-category">
-                    <h3>Backend</h3>
-                    <ul class="skill-list">
-                        <li class="skill-badge node">Node.js</li>
-                        <li class="skill-badge supabase">Supabase</li>
-                        <li class="skill-badge firebase">Firebase</li>
-                    </ul>
-                </div>
-                <div class="skill-category">
-                    <h3>AI/ML</h3>
-                    <ul class="skill-list">
-                        <li class="skill-badge ai">Gemini API</li>
-                        <li class="skill-badge ai">LLaMA</li>
-                        <li class="skill-badge cloud">Cloud AI</li>
-                    </ul>
-                </div>
-            </div>
+        <div class="skill-category" role="listitem">
+          <h3>Backend</h3>
+          <ul class="skill-list">
+            <li class="skill-badge node">Node.js</li>
+            <li class="skill-badge supabase">Supabase</li>
+            <li class="skill-badge firebase">Firebase</li>
+          </ul>
         </div>
 
-        <!-- Learning Path -->
-        <div class="about-card fade-in-up" style="animation-delay: 0.3s;">
-            <h2 class="section-title">📚 Learning Path</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3>Current Focus</h3>
-                        <p>Advanced cloud deployments & serverless architecture with AWS and GCP</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3>2024 Targets</h3>
-                        <p>Master Kubernetes and distributed systems for scalable applications</p>
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <h3>Long-term Vision</h3>
-                        <p>Found an AI-focused SaaS startup by 2026</p>
-                    </div>
-                </div>
-            </div>
+        <div class="skill-category" role="listitem">
+          <h3>AI / Cloud</h3>
+          <ul class="skill-list">
+            <li class="skill-badge ai">Gemini API</li>
+            <li class="skill-badge llama">LLaMA</li>
+            <li class="skill-badge cloud">Cloud AI</li>
+          </ul>
         </div>
+      </div>
+    </section>
+
+    <section class="about-card" aria-labelledby="learning-title">
+      <h2 id="learning-title" class="section-title">📚 Learning Path</h2>
+
+      <div class="timeline" role="list">
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-marker" aria-hidden="true"></div>
+          <div class="timeline-content">
+            <h3>Current Focus</h3>
+            <p>Advanced cloud deployments & serverless architecture with AWS and GCP</p>
+          </div>
+        </div>
+
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-marker" aria-hidden="true"></div>
+          <div class="timeline-content">
+            <h3>2025 Targets</h3>
+            <p>Master Kubernetes and distributed systems for scalable applications</p>
+          </div>
+        </div>
+
+        <div class="timeline-item" role="listitem">
+          <div class="timeline-marker" aria-hidden="true"></div>
+          <div class="timeline-content">
+            <h3>Long-term Vision</h3>
+            <p>Found an AI-focused SaaS startup by 2026</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <aside class="cta-card" role="region" aria-label="Call to action">
+    <div class="cta-content">
+      <h2>🤝 Let's Build Something Amazing</h2>
+      <p>I'm actively exploring opportunities, collaborations and innovative projects. Reach out to discuss ideas or partnerships.</p>
+
+      <div class="cta-actions">
+        <button class="cta-button">✉️ Send Message</button>
+        <button class="cta-button outlined">📄 View Resume</button>
+        <button class="cta-button outlined">💼 Project Inquiry</button>
+      </div>
     </div>
 
-    <!-- Call to Action -->
-    <div class="cta-card fade-in-up" style="animation-delay: 0.4s;">
-        <div class="cta-content">
-            <h2>🤝 Let's Build Something Amazing</h2>
-            <p>I'm actively exploring new opportunities, collaborations, and innovative projects. Whether you want to discuss technology, AI implementations, or potential partnerships, I'd love to connect and explore how we can create value together.</p>
-            
-            <div class="cta-actions">
-                <button class="cta-button">
-                    ✉️ Send Message
-                </button>
-                <button class="cta-button outlined">
-                    📄 View Resume
-                </button>
-                <button class="cta-button outlined">
-                    💼 Project Inquiry
-                </button>
-            </div>
-        </div>
-        <div class="status-indicator">
-            <span class="status-dot"></span>
-            <span>Currently available for freelance projects</span>
-        </div>
+    <div class="status-indicator" aria-live="polite">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span class="status-text">Currently available for freelance projects</span>
     </div>
+  </aside>
 </section>

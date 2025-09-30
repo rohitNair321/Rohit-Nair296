@@ -14,6 +14,7 @@ import { ViewResumeComponent } from './features/view-resume/view-resume.componen
 import { AuthModule } from './auth/auth.module';
 import { AboutMeComponent } from './features/about-me/about-me.component';
 import { CardModule } from 'primeng/card';
+import { SettingsComponent } from './features/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { CardModule } from 'primeng/card';
     AuthLayoutComponent,
     HomeComponent,
     ViewResumeComponent,
-    AboutMeComponent
+    AboutMeComponent,
+    SettingsComponent 
   ],
   imports: [
     BrowserModule,
