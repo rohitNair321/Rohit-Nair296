@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SharedModule } from '../../shared/shared.module';
 
 import { ViewResumeComponent } from './view-resume.component';
 
@@ -8,7 +10,8 @@ describe('ViewResumeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ViewResumeComponent ]
+      declarations: [ ViewResumeComponent ],
+      imports: [HttpClientTestingModule, SharedModule]
     })
     .compileComponents();
 

@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SharedModule } from '../../shared.module';
 
 import { ChatBotComponent } from './chat-bot.component';
 
@@ -8,7 +11,8 @@ describe('ChatBotComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ChatBotComponent ]
+      declarations: [ ChatBotComponent ],
+      imports: [RouterTestingModule, HttpClientTestingModule, SharedModule]
     })
     .compileComponents();
 
