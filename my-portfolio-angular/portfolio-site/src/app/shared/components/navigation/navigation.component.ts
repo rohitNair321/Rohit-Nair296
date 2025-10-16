@@ -1,8 +1,24 @@
 import { Component, Input, OnInit, OnDestroy, HostBinding, Output, EventEmitter } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { ProfileMenuComponent } from '../profile-menu/profile-menu.component';
 
 @Component({
   selector: 'app-navigation',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CardModule,
+    RadioButtonModule,
+    ButtonModule,
+    ProfileMenuComponent
+  ],
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
@@ -28,14 +44,14 @@ export class NavigationComponent implements OnInit, OnDestroy {
     { label: 'Contact', href: '#contact', icon: 'mail' },
   ];
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  constructor(private breakpointObserver: BreakpointObserver) { }
 
   ngOnInit() {
     this.setupResponsiveBehavior();
     this.initializeTheme();
     this.checkMobile();
     window.addEventListener('resize', this.checkMobile.bind(this));
-    
+
     // Initialize sidebar state
     if (this.config?.appConfiguration?.type === 'sidebar') {
       this.config.appConfiguration.collapsed = this.config?.appConfiguration?.collapsed || false;
@@ -57,8 +73,8 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   private initializeTheme() {
-    this.isDarkTheme = this.config.appConfiguration.theme == 'dark'?true:false;
-    this.isDarkTheme = document.body.classList.toggle('dark-mode',this.isDarkTheme);
+    this.isDarkTheme = this.config.appConfiguration.theme == 'dark' ? true : false;
+    this.isDarkTheme = document.body.classList.toggle('dark-mode', this.isDarkTheme);
   }
 
   checkMobile() {
@@ -70,9 +86,9 @@ export class NavigationComponent implements OnInit, OnDestroy {
   }
 
   toggleMenu() {
-    if(this.config?.appConfiguration?.type === 'navbar') {
+    if (this.config?.appConfiguration?.type === 'navbar') {
       this.isMenuOpen = !this.isMenuOpen;
-    }else if(this.config?.appConfiguration?.type === 'sidebar') {
+    } else if (this.config?.appConfiguration?.type === 'sidebar') {
       this.config.appConfiguration.collapsed = !this.config.appConfiguration.collapsed;
       this.isSidebarCollapsedChange.emit(this.config.appConfiguration.collapsed);
     }

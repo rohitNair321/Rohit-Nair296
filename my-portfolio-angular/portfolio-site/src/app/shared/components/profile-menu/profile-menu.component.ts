@@ -12,6 +12,11 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { Router, Event as RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 interface MenuItem {
   icon?: string;
@@ -22,6 +27,15 @@ interface MenuItem {
 
 @Component({
   selector: 'app-profile-menu',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CardModule,
+    RadioButtonModule,
+    ButtonModule,
+  ],
   templateUrl: './profile-menu.component.html',
   styleUrls: ['./profile-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,9 +59,9 @@ export class ProfileMenuComponent implements OnDestroy {
   };
 
   readonly menu: MenuItem[] = [
-    { icon: 'account_circle', label: 'My Profile', route: 'user-profile' },
-    { icon: 'settings', label: 'Settings', route: 'user-settings' },
-    { icon: 'help', label: 'Help & Support', route: 'help-and-support' },
+    { icon: 'account_circle', label: 'My Profile', route: 'overview' },
+    { icon: 'settings', label: 'Settings', route: 'settings' },
+    { icon: 'help', label: 'Help & Support', route: 'help' },
   ];
 
   toggle(): void {

@@ -5,16 +5,16 @@
       <div class="profile-container">
         <!-- Left: Text Content -->
         <div class="text-content">
-          <h1 class="animate-slide-up">Hi, I'm {{ homeData?.hero?.name }}</h1>
-          <p class="animate-slide-up-delay">{{ homeData?.hero?.description }}</p>
-          <div class="typing-text animate-slide-up-delay-2">
+          <h1 class="animate-slide-up" appInView>Hi, I'm {{ homeData?.hero?.name }}</h1>
+          <p class="animate-slide-up-delay" appInView>{{ homeData?.hero?.description }}</p>
+          <div class="typing-text animate-slide-up-delay-2" appInView>
             <span *ngFor="let skill of homeData?.hero?.skills; let last = last">
               {{ skill }}<span *ngIf="!last"> • </span>
             </span>
           </div>
           <div class="hero-buttons">
-            <button class="cta-button animate-fade-in-delay" (click)="scrollToSection($event, '#projects')">My Work</button>
-            <button class="cta-button outline animate-fade-in-delay" (click)="scrollToSection($event, '#contact')">Contact Me</button>
+            <button class="cta-button animate-fade-in-delay" appInView (click)="scrollToSection($event, '#projects')">My Work</button>
+            <button class="cta-button outline animate-fade-in-delay" appInView (click)="scrollToSection($event, '#contact')">Contact Me</button>
           </div>
         </div>
         <!-- Right: Profile Photo & Resume Button -->
@@ -31,18 +31,18 @@
 
   <section id="about" class="about-teaser-section">
     <div class="about-container">
-      <div class="about-photo animate-fade-in-left">
+      <div class="about-photo animate-fade-in-left" appInView>
         <img [src]="homeData?.aboutTeaser?.photo" alt="Rohit Nair" />
       </div>
-      <div class="about-text animate-fade-in-right">
+      <div class="about-text animate-fade-in-right" appInView>
         <h2>{{ homeData?.aboutTeaser?.title }}</h2>
         <p [innerHTML]="homeData?.aboutTeaser?.description"></p>
-        <div class="group-btn animate-fade-in-up">
-          <a class="resume-download-btn about-res-width" routerLink="/about-me">
+        <div class="group-btn animate-fade-in-up" appInView>
+          <a class="resume-download-btn about-res-width" routerLink="/about">
             <span class="material-icons">read_more</span>
             Read More
           </a>
-          <a class="resume-download-btn about-res-width" routerLink="/view-resume">
+          <a class="resume-download-btn about-res-width" routerLink="/resume">
             <span class="material-icons">open_in_new</span>
             View resume
           </a>
@@ -56,7 +56,7 @@
   </section>
 
   <section id="projects" class="portfolio-showcase-section">
-  <h2 class="animate-fade-in-up">My Work</h2>
+  <h2 class="animate-fade-in-up" appInView>My Work</h2>
   <div class="portfolio-scroll-container">
     <div class="portfolio-card-list">
       <p-card class="portfolio-card" *ngFor="let project of homeData?.projects">
@@ -95,7 +95,7 @@
   </div>
   </section>
 
-  <section id="contact" class="cta-section contact-section animate-fade-in-up">
+  <section id="contact" class="cta-section contact-section animate-fade-in-up" appInView>
     <h2>{{homeData?.contact?.headingText}}</h2>
     <p>{{homeData?.contact?.subHeadingText}}</p>
     <div class="contact-grid">
@@ -128,7 +128,7 @@
         </div>
       </div>
       <!-- Right: Contact Form -->
-      <div class="contact-form-card animate-fade-in-right">
+      <div class="contact-form-card animate-fade-in-right" appInView>
         <form [formGroup]="contactForm" (ngSubmit)="onSubmitContact()">
           <h3 class="form-title">Send a Message</h3>
           <div class="form-row">

@@ -1,15 +1,33 @@
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Injector, OnInit, Renderer2, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { AppService } from 'src/app/auth/services/app.service';
 import { CommonApp } from 'src/app/core/services/common';
+import { InViewDirective } from 'src/app/shared/directives/in-view.directive';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterLink,
+    ReactiveFormsModule,
+    CardModule,
+    ButtonModule,
+    InputTextModule,
+    InputTextareaModule,
+    InViewDirective
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent extends CommonApp implements OnInit, AfterViewInit{
-  
+export class HomeComponent extends CommonApp implements OnInit, AfterViewInit {
+
   cardWidth = 320; // px, match your CSS .portfolio-card max-width
   cardGap = 32;    // px, match your CSS .portfolio-slider-inner gap (2rem = 32px)
   projectsPerView = 3; // or calculate based on screen size
@@ -21,6 +39,7 @@ export class HomeComponent extends CommonApp implements OnInit, AfterViewInit{
   contactForm: FormGroup;
   sending = false;
   sent = false;
+  
 
   constructor(
     public override injector: Injector,
@@ -114,14 +133,30 @@ export class HomeComponent extends CommonApp implements OnInit, AfterViewInit{
   get subject() { return this.contactForm.get('subject'); }
   get message() { return this.contactForm.get('message'); }
 
-    
+
   getData() {
-    this.services.getCombinedData().subscribe({
-      next: data => {
-        this.homeData = data.home; // Wait for DOM update
-        setTimeout(() => this.runAnimations(), 0);
+    this.loading.show();
+    this.portfolioServices.getProfile().subscribe({
+      next: res => {
+        console.log('Profile Data:', res);
+        this.homeData = res.home; // Wait for DOM update
+        this.loading.hide();
       },
+      error: err => {
+        console.error('Error fetching profile data:', err);
+        this.loading.hide();
+      }
     });
+    // this.portfolioServices.listProjects().subscribe({
+    //   next: res => {
+    //     console.log('Project list:', res);
+    //     // this.loading.hide();
+    //   },
+    //   error: err => {
+    //     console.error('Error fetching project list:', err);
+    //     this.loading.hide();
+    //   }
+    // });
   }
 
   techClass(tech: string): string {

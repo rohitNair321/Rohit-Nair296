@@ -1,5 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
 
 interface AppSettings {
   name: string;
@@ -13,6 +17,14 @@ interface AppSettings {
 
 @Component({
   selector: 'app-settings',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterLink,
+    ReactiveFormsModule,
+    CardModule,
+    ButtonModule,
+  ],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })

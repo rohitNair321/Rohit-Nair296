@@ -50,7 +50,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Key Packages Used
 
-- **Angular** (v15+) – Main framework
+- **Angular** (v17) – Main framework (migrated from v15)
 - **@angular/forms** – Template-driven and reactive forms
 - **@angular/router** – Routing and navigation
 - **rxjs** – Reactive programming
@@ -79,8 +79,117 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ---
 
-## Getting Started
+# 🚀 Migration Guide: Angular v15 ➜ Angular v17 (Standalone)
 
-1. **Install dependencies:**
-   ```bash
-   npm install
+This project was successfully migrated from an NgModule-based Angular v15 setup to a fully **standalone Angular v17** application.
+
+### 🧭 Migration Strategy (Phase-by-Phase)
+
+1. **Bootstrap conversion** → `AppModule` removed, replaced with `bootstrapApplication(AppComponent, appConfig)` in `main.ts`.
+2. **Routing update** → `app-routing.module.ts` replaced with `app.routes.ts` using `provideRouter(routes)`.
+3. **Global providers** → moved into `app.config.ts` using `provideHttpClient`, `provideAnimations`, and `importProvidersFrom()`.
+4. **Layouts** → `MainLayout` & `AuthLayout` converted to standalone components.
+5. **Feature pages** → each component imports its own dependencies (`CommonModule`, `ReactiveFormsModule`, PrimeNG modules).
+6. **Core/Shared cleanup** → removed `BrowserModule`, used `CommonModule`, and migrated services to `providedIn:'root'`.
+7. **Added functional interceptors** → new `HttpInterceptorFn` approach with `withInterceptors()`.
+
+---
+
+### ⚙️ Key Changes
+
+#### ✅ Root Bootstrap
+```ts
+// main.ts
+bootstrapApplication(AppComponent, appConfig);
+```
+
+#### ✅ Global Providers
+```ts
+// app.config.ts
+provideRouter(routes);
+provideHttpClient(withFetch(), withInterceptors([authInterceptor]));
+provideAnimations();
+```
+
+#### ✅ Routing
+```ts
+// app.routes.ts
+{ path: 'about-me', loadComponent: () => import('./features/about-me/about-me.component').then(m => m.AboutMeComponent) }
+```
+
+#### ✅ Layouts (Standalone)
+```ts
+@Component({
+  selector: 'app-main-layout',
+  standalone: true,
+  imports: [CommonModule, RouterOutlet],
+  templateUrl: './main-layout.component.html',
+})
+export class MainLayoutComponent {}
+```
+
+#### ✅ Interceptor (Functional Style)
+```ts
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const token = inject(AuthService).getToken?.();
+  const cloned = token ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
+  return next(cloned);
+};
+```
+
+---
+
+### 🧠 Common Errors & Fixes
+
+| Error | Cause | Fix |
+|-------|--------|-----|
+| `'p-card' is not a known element` | PrimeNG module not imported in standalone component | Add `CardModule` to `imports` |
+| `No pipe found with name 'slice'` | Missing `CommonModule` | Import `CommonModule` |
+| `Can't bind to 'formGroup'` | Missing `ReactiveFormsModule` | Import `ReactiveFormsModule` |
+| **NG05100** | `BrowserModule` still imported somewhere | Replace with `CommonModule` |
+| `routerLink` not working | `RouterLink` not imported | Add `RouterLink` to `imports` |
+| `app-profile-menu not a known element` | Child not imported in parent standalone component | Add `ProfileMenuComponent` to parent’s `imports` |
+
+---
+
+### 🔍 Debugging Tips
+
+- **Template errors (NG8001/NG8002)** → Missing imports in that component.  
+- **Runtime NG05100** → Remove all `BrowserModule` imports (use `CommonModule` instead).  
+- **Routing issues** → Verify path and import `RouterLink`.  
+- **HTTP not working** → Ensure `provideHttpClient(withFetch())` is registered.  
+- **Duplicate providers** → Remove `HttpClientModule` or `BrowserAnimationsModule` from old modules.
+
+---
+
+### ✅ Final Cleanup
+
+After all features are standalone:
+- Delete `AppModule`, `AppRoutingModule`, `CoreModule`, and `SharedModule`.
+- Remove `importProvidersFrom(CoreModule, SharedModule)` from `app.config.ts`.
+- Verify no usage of `BrowserModule` or `BrowserAnimationsModule`.
+- Run `ng serve` → should compile cleanly with only standalone components.
+
+---
+
+### 💡 New Angular v17 Features (for future use)
+- **Signals** → Lightweight reactivity system.
+- **@if, @for** → New structural directives.
+- **@defer** → Lazy rendering for performance.
+- **SSR/SSG** → Add `@angular/ssr` for SEO-friendly pre-rendering.
+
+---
+
+### ✅ Sanity Checklist
+
+- [x] App builds with `bootstrapApplication()`  
+- [x] Routing works via `app.routes.ts`  
+- [x] Layouts and features compile with correct imports  
+- [x] PrimeNG + Forms + Pipes working  
+- [x] Interceptors registered using `withInterceptors()`  
+- [x] No `BrowserModule` or duplicate providers  
+
+---
+
+### 📘 Summary
+This migration moved **PortfolioSite** from a module-based v15 architecture to a clean **standalone Angular v17** structure — improving performance, clarity, and maintainability while unlocking Angular’s newest features.
