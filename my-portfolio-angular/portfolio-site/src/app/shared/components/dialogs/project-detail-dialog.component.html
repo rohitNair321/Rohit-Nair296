@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <h5 class="modal-title">{{ data.title }}</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="close()"></button>
+</div>
+
+<div class="modal-body">
+    <img *ngIf="data?.image" [src]="data.image" class="img-fluid rounded mb-3" alt="{{data.title}}" />
+    <p class="mb-3">{{ data.description }}</p>
+
+    <div *ngIf="data?.technologies?.length" class="d-flex flex-wrap gap-2">
+        <span class="badge rounded-pill tech-badge" *ngFor="let t of data?.technologies">{{ t }}</span>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <a *ngIf="data?.sourceCode" class="btn btn-outline-primary" [href]="data.sourceCode" target="_blank" rel="noopener">
+        Source
+    </a>
+    <a *ngIf="data?.liveDemo" class="btn btn-primary" [href]="data.liveDemo" target="_blank" rel="noopener">
+        Live Demo
+    </a>
+    <button class="btn btn-secondary" (click)="close()">Close</button>
+</div>

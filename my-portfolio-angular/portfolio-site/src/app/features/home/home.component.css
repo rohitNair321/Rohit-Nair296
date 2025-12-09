@@ -784,6 +784,98 @@ input.invalid, textarea.invalid {
   gap: 2px;
 }
 
+/* ===== Projects: Bootstrap Card Skin (Only this section) ===== */
+.portfolio-scroll-container .portfolio-card.card {
+  background: var(--global-background-color);
+  border: 1.5px solid var(--global-surface-color);
+  border-radius: var(--global-border-radius-lg);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.portfolio-scroll-container .portfolio-card.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+}
+
+/* Cover area (image or placeholder) */
+.portfolio-card-cover {
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--global-surface-color);
+}
+
+.portfolio-card-cover.placeholder {
+  /* subtle diagonal placeholder using theme colors */
+  background-image:
+    linear-gradient(135deg,
+      color-mix(in oklab, var(--global-primary-color) 16%, transparent),
+      color-mix(in oklab, var(--global-secondary-color) 16%, transparent)
+    );
+}
+
+/* Header */
+.portfolio-card .card-header {
+  background: var(--global-background-color);
+  color: var(--global-primary-color);
+  border-bottom: 1px solid var(--global-surface-color);
+  font-weight: 600;
+}
+
+/* Body */
+.portfolio-card .card-body {
+  color: var(--global-text-primary);
+}
+
+.portfolio-card .card-body p {
+  margin: .25rem 0 .75rem 0;
+  color: var(--global-text-primary);
+}
+
+/* Footer / Actions */
+.portfolio-card .card-footer {
+  background: var(--global-background-color);
+  border-top: 1px solid var(--global-surface-color);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .25rem .5rem;
+}
+
+.portfolio-card .view-project-detail,
+.portfolio-card .live-demo-btn,
+.portfolio-card .source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--global-text-primary);
+  padding: .35rem .6rem;
+  border-radius: var(--global-border-radius-sm);
+  border: 1px solid transparent;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.portfolio-card .view-project-detail:hover,
+.portfolio-card .live-demo-btn:hover,
+.portfolio-card .source-link:hover {
+  /* background: var(--global-surface-color); */
+  border-color: var(--global-surface-color);
+}
+
+/* Title */
+.portfolio-card-title {
+  font-family: var(--global-heading-font);
+  font-size: 1.05rem;
+}
+
+/* Keep your existing responsive widths/gaps intact.
+   We only improved visuals within the card structure. */
+
+
 @media (max-width: 1100px) {
   /* .portfolio-card {
     flex: 0 0 48%;

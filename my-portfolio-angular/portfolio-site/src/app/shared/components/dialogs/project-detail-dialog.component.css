@@ -1,0 +1,26 @@
+    :host {
+        display: block;
+        background: var(--global-background-color);
+        color: var(--global-text-primary);
+        border: 1px solid var(--global-surface-color);
+        border-radius: var(--global-border-radius-lg);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, .24);
+        max-width: min(720px, 92vw);
+    }
+
+    .modal-header,
+    .modal-footer {
+        border-color: var(--global-surface-color);
+    }
+
+    .btn-close {
+        filter: invert(var(--btn-close-invert, 0));
+    }
+
+    /* optional if your dark theme needs it */
+    .tech-badge {
+        background: var(--global-surface-color);
+        color: var(--global-text-primary);
+        border: 1px solid var(--global-surface-color);
+        font-weight: 600;
+    }

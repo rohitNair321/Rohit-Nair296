@@ -40,6 +40,7 @@
     "@angular/cli": "~17.3.17",
     "@angular/compiler-cli": "^17.3.12",
     "@types/jasmine": "~4.3.0",
+    "baseline-browser-mapping": "^2.8.32",
     "concurrently": "^9.2.0",
     "gh-pages": "^6.3.0",
     "jasmine-core": "~4.5.0",

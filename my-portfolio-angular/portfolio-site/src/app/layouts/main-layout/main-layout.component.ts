@@ -19,7 +19,6 @@ import { SpinnerComponent } from 'src/app/shared/components/ui/spinner-overlay/s
 export class MainLayoutComponent extends CommonApp{
   config: LayoutConfig = defaultConfig;
   isSidebarCollapsed = true;
-  isDarkTheme = false;
 
   constructor(public override injector: Injector,) {
     super(injector);
@@ -30,7 +29,7 @@ export class MainLayoutComponent extends CommonApp{
     this.config.appConfiguration.collapsed = true;
     this.config.appConfiguration.showSidebarToggle = true;
     this.config.appConfiguration.showAgentChat = true;
-    this.config.appConfiguration.showUserProfileView = true;
+    this.config.appConfiguration.showUserProfileView = false;
   }
 
   ngOnInit() {

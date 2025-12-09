@@ -1,20 +1,22 @@
+<!-- settings.component.html (replace existing settings file if present) -->
 <section class="settings-page" [formGroup]="profileForm">
   <header class="settings-hero card">
-    <div class="hero-left">
-      <h1>Settings</h1>
-      <p class="muted">Manage your profile and application preferences. Changes persist in your browser.</p>
-    </div>
-
-    <div class="hero-actions">
-      <button type="button" class="btn primary" (click)="saveSettings()">Save</button>
-      <button type="button" class="btn outline" (click)="resetDefaults()">Reset</button>
+    <div class="hero-content">
+      <div>
+        <h1>User Profile Settings</h1>
+        <p class="muted">Update your public profile, resume, and contact details.</p>
+      </div>
+      <div class="hero-actions">
+        <button type="button" class="btn primary" (click)="saveSettings()">Save Changes</button>
+        <button type="button" class="btn outline" (click)="resetDefaults()">Reset</button>
+      </div>
     </div>
   </header>
 
   <div class="settings-grid">
+    <!-- Profile Card -->
     <section class="card profile-card" aria-labelledby="profile-heading">
       <h2 id="profile-heading" class="section-title">Profile</h2>
-
       <div class="profile-form">
         <label class="avatar-wrap" title="Upload avatar">
           <input type="file" accept="image/*" (change)="onAvatarChange($event)" />
@@ -25,69 +27,112 @@
             <div class="avatar-initials">{{ (profileForm.get('name')?.value || 'U').charAt(0) }}</div>
           </ng-template>
         </label>
-
-        <div class="field">
-          <label for="name">Name</label>
-          <input id="name" type="text" formControlName="name" placeholder="Your name" />
+        <div class="field-group">
+          <div class="field">
+            <label for="name">Full Name</label>
+            <input id="name" type="text" formControlName="name" placeholder="Your full name" />
+          </div>
+          <div class="field">
+            <label for="description">Short Bio</label>
+            <textarea id="description" rows="2" formControlName="description" placeholder="One-line bio"></textarea>
+          </div>
         </div>
-
-        <div class="field">
-          <label for="email">Email</label>
-          <input id="email" type="email" formControlName="email" placeholder="you@domain.com" />
+        <div class="field-group">
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" formControlName="email" placeholder="you@domain.com" />
+          </div>
+          <div class="field">
+            <label for="location">Location</label>
+            <input id="location" type="text" formControlName="location" placeholder="City, Country" />
+          </div>
         </div>
-
-        <div class="field">
-          <label for="bio">Bio</label>
-          <textarea id="bio" rows="4" formControlName="bio" placeholder="Short bio"></textarea>
+        <div class="field-group">
+          <div class="field">
+            <label for="primaryPhone">Primary Phone</label>
+            <input id="primaryPhone" formControlName="primaryPhone" placeholder="+91 98xxxxxxxx" />
+          </div>
+          <div class="field">
+            <label for="secondaryPhone">Secondary Phone</label>
+            <input id="secondaryPhone" formControlName="secondaryPhone" placeholder="+91 98xxxxxxxx" />
+          </div>
         </div>
-
-        <div class="field actions-row">
-          <button type="button" class="btn soft" (click)="removeAvatar()" [disabled]="!avatarDataUrl">Remove Avatar</button>
-          <small class="muted">Avatar stored locally (base64)</small>
+        <div class="field-group">
+          <div class="field">
+            <label for="website">Website</label>
+            <input id="website" formControlName="website" placeholder="https://your-site.com" />
+          </div>
+          <div class="field">
+            <label for="linkedin">LinkedIn</label>
+            <input id="linkedin" formControlName="linkedin" placeholder="https://linkedin.com/in/..." />
+          </div>
+        </div>
+        <div class="field toggle-row">
+          <label for="openToWork">Open to work</label>
+          <input id="openToWork" type="checkbox" formControlName="openToWork" />
         </div>
       </div>
     </section>
 
-    <aside class="card app-settings-card" aria-labelledby="app-settings-heading">
-      <h2 id="app-settings-heading" class="section-title">Application</h2>
-
+    <!-- Resume Card -->
+    <section class="card resume-card" aria-labelledby="resume-heading">
+      <h2 id="resume-heading" class="section-title">Resume</h2>
       <div class="field">
-        <label for="theme">Theme</label>
-        <select id="theme" formControlName="theme" (change)="applyThemeClass()">
-          <option *ngFor="let t of availableThemes" [value]="t">{{ t }}</option>
-        </select>
-      </div>
-
-      <div class="field toggle-row">
-        <label for="darkMode">Dark mode</label>
-        <input id="darkMode" type="checkbox" formControlName="darkMode" (change)="applyThemeClass()" />
-      </div>
-
-      <div class="field toggle-row">
-        <label for="reduceMotion">Reduce motion</label>
-        <input id="reduceMotion" type="checkbox" formControlName="reduceMotion" (change)="applyReduceMotion()" />
-      </div>
-
-      <div class="field">
-        <label>Preview</label>
-        <div class="preview-surface card small">
-          <div class="preview-header">
-            <div class="preview-avatar">
-              <img *ngIf="avatarDataUrl; else pInit" [src]="avatarDataUrl" alt="preview" />
-              <ng-template #pInit><div class="avatar-initials">{{ (profileForm.get('name')?.value || 'U').charAt(0) }}</div></ng-template>
-            </div>
-            <div>
-              <div class="preview-name">{{ profileForm.get('name')?.value || 'Your name' }}</div>
-              <div class="muted preview-email">{{ profileForm.get('email')?.value || 'you@example.com' }}</div>
-            </div>
-          </div>
-          <p class="muted preview-bio">{{ profileForm.get('bio')?.value || 'Short bio preview...' }}</p>
+        <label for="resumeFile">Upload Resume (PDF)</label>
+        <input id="resumeFile" type="file" accept="application/pdf" (change)="onResumeChange($event)" />
+        <div class="muted small" *ngIf="resumeFileName">{{ resumeFileName }}</div>
+        <div class="form-error" *ngIf="profileForm.get('resume')?.errors?.['fileType']">
+          <small>Only PDF files are allowed.</small>
         </div>
       </div>
-    </aside>
+    </section>
+
+    <!-- Skills Card -->
+    <section class="card skills-card" aria-labelledby="skills-heading">
+      <h2 id="skills-heading" class="section-title">Skills</h2>
+      <div class="field">
+        <div class="skill-input">
+          <input #skillInput type="text" placeholder="Add skill and press Enter" (keydown.enter)="$event.preventDefault(); addSkill(skillInput.value); skillInput.value=''" />
+          <button type="button" class="btn soft" (click)="addSkill(skillInput.value); skillInput.value=''">Add</button>
+        </div>
+        <div class="chip-list">
+          <span class="chip" *ngFor="let s of skills.controls; let i=index">
+            {{ s.value }}
+            <button type="button" class="chip-remove" (click)="removeSkill(i)">✕</button>
+          </span>
+          <div *ngIf="skills.length === 0" class="muted small">Add skills that highlight your strengths (Angular, TypeScript, Node, UX...)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience Card -->
+    <section class="card experience-card" aria-labelledby="exp-heading">
+      <h2 id="exp-heading" class="section-title">Work Experience</h2>
+      <div class="field">
+        <div class="experiences">
+          <div class="experience-item card small" *ngFor="let exp of experienceForms; let i=index" [formGroup]="exp">
+            <div class="exp-row">
+              <input placeholder="Role" formControlName="role" />
+              <input placeholder="Company" formControlName="company" />
+            </div>
+            <div class="exp-row">
+              <input type="month" formControlName="startDate" />
+              <input type="month" formControlName="endDate" />
+              <label><input type="checkbox" formControlName="present" /> Present</label>
+            </div>
+            <textarea formControlName="description" placeholder="Describe your work & achievements"></textarea>
+            <div class="actions-row">
+              <button type="button" class="btn outline small" (click)="removeExperience(i)">Remove</button>
+            </div>
+          </div>
+          <button type="button" class="btn soft" (click)="addExperience()">+ Add experience</button>
+          <div class="muted small">Tip: Add 3–5 most relevant roles with a short achievement-oriented description.</div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <footer class="settings-footer">
-    <div class="muted">All changes saved locally. Use Reset to restore defaults.</div>
+    <div class="muted">All changes are saved locally. Connect to your backend to persist server-side.</div>
   </footer>
 </section>

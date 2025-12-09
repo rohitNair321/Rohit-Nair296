@@ -189,7 +189,7 @@ After all features are standalone:
 - [x] Interceptors registered using `withInterceptors()`  
 - [x] No `BrowserModule` or duplicate providers  
 
----
+--- ng g c --standalone --change-detection OnPush --export
 
 ### 📘 Summary
 This migration moved **PortfolioSite** from a module-based v15 architecture to a clean **standalone Angular v17** structure — improving performance, clarity, and maintainability while unlocking Angular’s newest features.

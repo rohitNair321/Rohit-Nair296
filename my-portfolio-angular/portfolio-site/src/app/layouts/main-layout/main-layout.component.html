@@ -12,4 +12,6 @@
 <app-chat-bot *ngIf="config.appConfiguration.showAgentChat" [position]="'bottom-right'" [title]="'AiNg Assistant'" [placeholder]="'Ask about my projects...'">
 </app-chat-bot>
 <app-spinner></app-spinner>
+
+<router-outlet name="modal"></router-outlet>
 <!-- m-auto -->

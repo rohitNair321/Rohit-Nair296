@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { defaultConfig, LayoutConfig } from 'src/app/core/config/layout.config';
+import { CommonApp } from 'src/app/core/services/common';
 
 @Component({
   selector: 'app-auth-layout',
@@ -9,6 +11,14 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './auth-layout.component.html',
   styleUrls: ['./auth-layout.component.css']
 })
-export class AuthLayoutComponent {
+export class AuthLayoutComponent extends CommonApp {
 
+  config: LayoutConfig = defaultConfig;
+
+  constructor(public override injector: Injector,) {
+    super(injector);
+    this.config.theme.name = 'theme-2';
+    this.config.appConfiguration.theme = 'light';
+    this.initializeTheme();
+  }
 }

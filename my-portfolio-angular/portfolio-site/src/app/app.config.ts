@@ -7,8 +7,8 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
-import { authInterceptor } from './core/interceptors/app.interceptor';
 import { DialogModule } from '@angular/cdk/dialog';
+import { authInterceptor } from './core/interceptors/app.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [

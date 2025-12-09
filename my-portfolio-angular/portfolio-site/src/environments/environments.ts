@@ -5,5 +5,7 @@ export const environment = {
   // taskApiUrl: 'https://dummyjson.com/todos',
   supabaseUrl: 'https://dblmvfhxyruivhzzpdrq.supabase.co',
   supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRibG12Zmh4eXJ1aXZoenpwZHJxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1MTUwOTIsImV4cCI6MjA2ODA5MTA5Mn0.CqqWFVD28yjqDU6Zs_8kLRF94d6Yc_66DxAxZTOZxzE',
+  authFirst: false,
+  baseUrl:'http://localhost:3000'
 };
 // 'http://localhost:5000/api/auth'

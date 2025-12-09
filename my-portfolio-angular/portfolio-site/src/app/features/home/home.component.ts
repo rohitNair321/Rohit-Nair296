@@ -1,3 +1,4 @@
+import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Injector, OnInit, Renderer2, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -6,9 +7,20 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { AppService } from 'src/app/auth/services/app.service';
 import { CommonApp } from 'src/app/core/services/common';
+import { ProjectDetailDialogComponent } from 'src/app/shared/components/dialogs/project-detail-dialog.component';
 import { InViewDirective } from 'src/app/shared/directives/in-view.directive';
+
+interface Hero {
+  name: string;
+  description: string;
+  skills: string[];
+  profileImage?: string;
+  resume?: string; // URL or blob URL
+}
+interface AboutTeaser { title: string; description: string; photo?: string; resume?: string; }
+interface ContactInfo { headingText?: string; subHeadingText?: string; email?: string; phone?: string; address?: string; }
+interface HomeData { hero: Hero; aboutTeaser?: AboutTeaser; contact?: ContactInfo; }
 
 @Component({
   selector: 'app-home',
@@ -21,7 +33,8 @@ import { InViewDirective } from 'src/app/shared/directives/in-view.directive';
     ButtonModule,
     InputTextModule,
     InputTextareaModule,
-    InViewDirective
+    InViewDirective,
+    DialogModule
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
@@ -39,6 +52,8 @@ export class HomeComponent extends CommonApp implements OnInit, AfterViewInit {
   contactForm: FormGroup;
   sending = false;
   sent = false;
+  projectList: any[] = [];
+  private dialog = inject(Dialog);
   
 
   constructor(
@@ -147,17 +162,28 @@ export class HomeComponent extends CommonApp implements OnInit, AfterViewInit {
         this.loading.hide();
       }
     });
-    // this.portfolioServices.listProjects().subscribe({
-    //   next: res => {
-    //     console.log('Project list:', res);
-    //     // this.loading.hide();
-    //   },
-    //   error: err => {
-    //     console.error('Error fetching project list:', err);
-    //     this.loading.hide();
-    //   }
-    // });
+    this.portfolioServices.listProjects().subscribe({
+      next: res => {
+        this.projectList = res;
+        console.log('Project list:', res);
+        this.loading.hide();
+      },
+      error: err => {
+        console.error('Error fetching project list:', err);
+        this.loading.hide();
+      }
+    });
   }
+
+  openProject(project: any) {
+    this.dialog.open(ProjectDetailDialogComponent, {
+      data: project,
+      backdropClass: ['cdk-overlay-dark-backdrop'], // nice dim on all themes
+      panelClass: ['p-3'] // bootstrap spacing class on container
+      // disableClose: true, // uncomment if you don't want backdrop click to close
+    });
+  }
+
 
   techClass(tech: string): string {
     return tech.replace(/\s+/g, '-').replace(/[^\w-]/g, '');

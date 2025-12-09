@@ -13,8 +13,10 @@
             </span>
           </div>
           <div class="hero-buttons">
-            <button class="cta-button animate-fade-in-delay" appInView (click)="scrollToSection($event, '#projects')">My Work</button>
-            <button class="cta-button outline animate-fade-in-delay" appInView (click)="scrollToSection($event, '#contact')">Contact Me</button>
+            <button class="cta-button animate-fade-in-delay" appInView (click)="scrollToSection($event, '#projects')">My
+              Work</button>
+            <button class="cta-button outline animate-fade-in-delay" appInView
+              (click)="scrollToSection($event, '#contact')">Contact Me</button>
           </div>
         </div>
         <!-- Right: Profile Photo & Resume Button -->
@@ -55,44 +57,62 @@
     </div>
   </section>
 
-  <section id="projects" class="portfolio-showcase-section">
-  <h2 class="animate-fade-in-up" appInView>My Work</h2>
-  <div class="portfolio-scroll-container">
-    <div class="portfolio-card-list">
-      <p-card class="portfolio-card" *ngFor="let project of homeData?.projects">
-        <ng-template pTemplate="header">
-          <div class="portfolio-card-header">
+  <section id="projects" class="">
+    <!-- <h2 class="animate-fade-in-up" appInView>My Work</h2> -->
+    <div class="section-header d-flex align-items-center justify-content-between">
+      <h2 class="mb-0">My Work</h2>
+      <a class="btn btn-outline-primary btn-sm" routerLink="/projects">View all</a>
+    </div>
+    <div class="portfolio-scroll-container">
+      <div class="portfolio-card-list">
+        <div class="portfolio-card card" *ngFor="let project of projectList">
+          <!-- Optional cover image (if you have project.image); otherwise we paint a themed placeholder -->
+          <div class="card-img-top portfolio-card-cover" *ngIf="project?.image"
+            [style.background-image]="'url(' + project.image + ')'"></div>
+          <div class="card-img-top portfolio-card-cover placeholder" *ngIf="!project?.image"></div>
+
+          <div class="card-header d-flex align-items-center justify-content-between">
             <span class="portfolio-card-title">{{ project?.title }}</span>
           </div>
-        </ng-template>
-        <div class="portfolio-card-content">
-          <p>
-            {{ project?.description.length > 160 ? (project?.description | slice:0:160) + '...' : project?.description }}
-          </p>
-          <div class="tech-list">
-            <span class="tech-badge" *ngFor="let tech of project?.technologies" [ngClass]="techClass(tech)">
-              {{ tech }}
-            </span>
+
+          <div class="card-body portfolio-card-content">
+            <p>
+              {{ project?.description.length > 160 ? (project?.description | slice:0:160) + '...' : project?.description
+              }}
+            </p>
+
+            <div class="tech-list">
+              <span class="tech-badge" *ngFor="let tech of project?.technologies" [ngClass]="techClass(tech)">
+                {{ tech }}
+              </span>
+            </div>
           </div>
-        </div>
-        <ng-template pTemplate="footer">
-          <div class="portfolio-card-actions">
-            <a class="view-project-detail" [href]="project?.liveDemo" target="_blank" rel="noopener">
+
+          <div class="card-footer portfolio-card-actions">
+            <!-- <a class="view-project-detail" [routerLink]="[{ outlets: { modal: ['project', project.id] } }]"
+              [state]="{ project: project }" [queryParamsHandling]="'preserve'">
               <span class="material-icons">open_in_new</span>
               Read More
-            </a>
-            <a class="live-demo-btn" *ngIf="project?.liveDemo" [href]="project?.liveDemo" target="_blank" rel="noopener">
+            </a> -->
+            <button type="button" class="view-project-detail" (click)="openProject(project)">
+              <span class="material-icons">open_in_new</span>
+              Read More
+            </button>
+
+            <a class="live-demo-btn ms-3" *ngIf="project?.liveDemo" [href]="project?.liveDemo" target="_blank"
+              rel="noopener">
               <span class="material-icons">open_in_new</span>
               Live Demo
             </a>
-            <a class="source-link" *ngIf="project?.sourceCode" [href]="project?.sourceCode" target="_blank" rel="noopener">
+
+            <a class="source-link ms-3" *ngIf="project?.sourceCode" [href]="project?.sourceCode" target="_blank"
+              rel="noopener">
               Source
             </a>
           </div>
-        </ng-template>
-      </p-card>
+        </div>
+      </div>
     </div>
-  </div>
   </section>
 
   <section id="contact" class="cta-section contact-section animate-fade-in-up" appInView>

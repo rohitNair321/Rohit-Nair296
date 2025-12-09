@@ -34,7 +34,7 @@ $portfolio-site-theme: mat.define-light-theme((
 @include mat.all-component-themes($portfolio-site-theme);
 
 /* Import Google Fonts */
-@import 'variables';
+@import '_variables';
 @import 'mixins';
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');

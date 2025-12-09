@@ -17,6 +17,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { CommonApp } from 'src/app/core/services/common';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 interface MenuItem {
   icon?: string;
@@ -43,6 +45,8 @@ interface MenuItem {
 export class ProfileMenuComponent implements OnDestroy {
   private overlay = inject(Overlay);
   private router = inject(Router);
+
+  private readonly authService = inject(AuthService);
 
   @ViewChild('avatarBtn', { static: true }) avatarBtn!: ElementRef<HTMLElement>;
   @ViewChild('menuPortal') menuPortal!: TemplateRef<any>;
@@ -113,9 +117,10 @@ export class ProfileMenuComponent implements OnDestroy {
   }
 
   logout(): void {
-    // TODO: Integrate with your auth service
-    // this.auth.logout();
-    this.router.navigateByUrl('/auth/login');
+    this.authService.logout();
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
+    this.router.navigateByUrl('/login');
     this.close();
   }
 
