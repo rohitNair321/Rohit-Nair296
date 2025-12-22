@@ -11,7 +11,7 @@ export interface LayoutConfig {
     isFixed?: boolean;
   };
   theme: {
-    name: 'theme-1' | 'theme-2' | 'theme-3' | 'theme-4' | 'theme-5';
+    name: string;
     primary: string;
     secondary: string;
     background: string;

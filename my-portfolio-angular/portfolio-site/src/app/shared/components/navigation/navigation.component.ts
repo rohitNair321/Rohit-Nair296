@@ -7,6 +7,8 @@ import { CardModule } from 'primeng/card';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ProfileMenuComponent } from '../profile-menu/profile-menu.component';
 import { CommonApp } from 'src/app/core/services/common';
+import { AppService } from 'src/app/core/services/app.service';
+import { ThemeService } from 'src/app/core/theme/theme.service';
 
 @Component({
   selector: 'app-navigation',
@@ -45,13 +47,13 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
     { label: 'Contact', href: '#contact', icon: 'mail' },
   ];
 
-  constructor(public override injector: Injector, private breakpointObserver: BreakpointObserver) {
+  constructor(public override injector: Injector, private breakpointObserver: BreakpointObserver, private appService: AppService) {
     super(injector);
-   }
+  }
 
   ngOnInit() {
     this.setupResponsiveBehavior();
-    this.darkTheme = this.initializeTheme();
+    // this.darkTheme = this.initializeTheme();
     this.checkMobile();
     window.addEventListener('resize', this.checkMobile.bind(this));
 
@@ -103,9 +105,12 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
     }
   }
 
+  get isDarkTheme(): boolean {
+    return this.themeService.isDarkTheme();
+  }
+
   toggleTheme() {
-    this.darkTheme = !this.darkTheme;
-    document.body.classList.toggle('dark-mode', this.darkTheme);
+    this.themeToggle();
   }
 
   // Add this method for smooth scrolling

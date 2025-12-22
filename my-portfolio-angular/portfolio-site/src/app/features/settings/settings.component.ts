@@ -1,21 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, Injector, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, Injector, OnInit, signal } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
-import { finalize } from 'rxjs';
+import { DialogModule } from 'primeng/dialog';
+import { finalize, take } from 'rxjs';
+import { AppService, Experience, ExperienceDTO, Profile, ProfileUpdateDTO } from 'src/app/core/services/app.service';
 import { CommonApp } from 'src/app/core/services/common';
 
-interface AppSettings {
-  name: string;
-  email: string;
-  bio: string;
-  avatarDataUrl?: string | null;
-  theme: string;
-  darkMode: boolean;
-  reduceMotion: boolean;
-}
 
 @Component({
   selector: 'app-settings',
@@ -26,6 +20,8 @@ interface AppSettings {
     ReactiveFormsModule,
     CardModule,
     ButtonModule,
+    CalendarModule,
+    DialogModule
   ],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
@@ -34,67 +30,321 @@ export class SettingsComponent extends CommonApp implements OnInit {
   profileForm!: FormGroup;
   avatarDataUrl: string | null = null;
   resumeFileName: string | null = null;
+  profileSignal = this.appService.profile;
+  selectedAvatar?: File;
+  selectedResume?: File;
+  // Add these properties to the class
+  experienceDialogVisible = false;
+  selectedExperienceIndex: number | null = null;
+  isAddingNewExperience = false;
+  experienceDialogForm!: FormGroup;
 
-  constructor(public override injector: Injector, private fb: FormBuilder) {
+
+  constructor(public override injector: Injector, private fb: FormBuilder, private appService: AppService) {
     super(injector);
   }
 
   ngOnInit(): void {
+    this.buildForm();
+    if (this.appService.profile()) {
+      this.patchFromProfile(this.appService.profile());
+    } else {
+      this.getMyProfile();
+    }
+  }
+
+  getMyProfile(): void {
+    this.loading.show();
+    this.appService.getProfile().pipe(take(1)).subscribe({
+      next: (p) => {
+        this.patchFromProfile(p);
+        this.loading.hide();
+      },
+      error: (e) => {
+        console.error(e.error.message);
+        this.loading.hide();
+      }
+    });
+  }
+
+  private buildForm() {
     this.profileForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(80)]],
+      name: ['', [Validators.maxLength(80)]],
       description: ['', [Validators.maxLength(600)]],
-      email: ['', [Validators.required, Validators.email]],
-      primaryPhone: ['', [Validators.required, Validators.pattern(/^\+?[0-9\s\-]{7,20}$/)]],
+      email: ['', [Validators.email]],
+      primaryPhone: ['', [Validators.pattern(/^\+?[0-9\s\-]{7,20}$/)]],
       secondaryPhone: [''],
       location: ['', Validators.maxLength(120)],
       website: ['', Validators.pattern(/https?:\/\/.+/i)],
       linkedin: [''],
       github: [''],
       openToWork: [false],
-      skills: this.fb.array([], Validators.required),
-      resume: [null, pdfFileValidator],
+      skills: this.fb.array([]),
+      resume: [null],
       avatar: [null],
       experiences: this.fb.array([])
     });
+    this.initDialogForm();
+  }
+  // In ngOnInit, initialize the dialog form
+  private initDialogForm() {
+    this.experienceDialogForm = this.fb.group({
+      role: ['', Validators.required],
+      company: ['', Validators.required],
+      startDate: ['', Validators.required],
+      endDate: [''],
+      present: [false],
+      description: ['', Validators.maxLength(1000)],
+      projects: this.fb.array([])
+    });
+  }
 
-    // load persisted data if available (localStorage stub)
-    const saved = localStorage.getItem('profileForm');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      this.profileForm.patchValue(parsed);
-      if (parsed.avatarDataUrl) this.avatarDataUrl = parsed.avatarDataUrl;
-      if (parsed.resumeFileName) this.resumeFileName = parsed.resumeFileName;
-      (parsed.skills || []).forEach((s: string) => this.addSkill(s));
-      (parsed.experiences || []).forEach((exp: any) => this.addExperience(exp));
-    }
+  // helpers to patch form from profile data
+  get skills(): FormArray {
+    return this.profileForm.get('skills') as FormArray;
   }
-  // Skills helpers
-  get skills(): FormArray { return this.profileForm.get('skills') as FormArray; }
-  addSkill(value = '') {
-    this.skills.push(this.fb.control(value, Validators.maxLength(50)));
+  get experiences(): FormArray {
+    return this.profileForm.get('experiences') as FormArray;
   }
-  removeSkill(i: number) { this.skills.removeAt(i); }
-
-  // Experiences helpers
-  get experiences(): FormArray { 
-    return this.profileForm.get('experiences') as FormArray; 
-  }
-  
   get experienceForms(): FormGroup[] {
     return this.experiences.controls as FormGroup[];
   }
-  createExperience(data?: any) {
+
+  // Update your existing getter to return typed FormArray
+  get projectsArray(): FormArray<FormGroup> {
+    return this.experienceDialogForm.get('projects') as FormArray<FormGroup>;
+  }
+  // Add this method to get typed project form groups
+  get projectForms(): FormGroup[] {
+    return this.projectsArray.controls as FormGroup[];
+  }
+
+  // addSkill(value = '') {
+  //   this.skills.push(this.fb.control(value, Validators.maxLength(50)));
+  // }
+  addSkill(value = '') {
+    if (!value || !value.trim()) return;
+    this.skills.push(new FormControl(value.trim()));
+  }
+  removeSkill(i: number) {
+    this.skills.removeAt(i);
+  }
+
+  // Helper to get technologies array for a project
+  getTechnologiesArray(projectIndex: number): FormArray {
+    const project = this.projectForms[projectIndex];
+    return project.get('technologies') as FormArray;
+  }
+  // Helper to get technologies controls as FormControl[]
+  getTechnologyControls(projectIndex: number): FormControl[] {
+    return (this.getTechnologiesArray(projectIndex).controls as FormControl[]);
+  }
+
+  createExperience(data?: ExperienceDTO) {
     return this.fb.group({
       role: [data?.role || '', Validators.required],
       company: [data?.company || '', Validators.required],
       startDate: [data?.startDate || '', Validators.required],
       endDate: [data?.endDate || ''],
       present: [!!data?.present],
-      description: [data?.description || '', Validators.maxLength(1000)]
+      description: [data?.description || '', Validators.maxLength(1000)],
+      projects: this.fb.array((data?.projects || []).map((p: any) => this.createProject(p)))
     });
   }
-  addExperience(data?: any) { this.experiences.push(this.createExperience(data)); }
-  removeExperience(i: number) { this.experiences.removeAt(i); }
+
+  // Create project form group
+  createProject(data?: any) {
+    return this.fb.group({
+      title: [data?.title || '', Validators.required],
+      description: [data?.description || ''],
+      url: [data?.url || ''],
+      technologies: this.fb.array(data?.technologies || [])
+    });
+  }
+
+  addExperience(data?: any) {
+    this.experiences.push(this.createExperience(data));
+
+  }
+  // Updated addExperience method to open dialog
+  addNewExperience() {
+    this.isAddingNewExperience = true;
+    this.selectedExperienceIndex = null;
+    this.initDialogForm();
+    this.experienceDialogVisible = true;
+  }
+
+  // View experience details
+  viewExperience(index: number) {
+    this.selectedExperienceIndex = index;
+    this.isAddingNewExperience = false;
+
+    // Load existing experience data into dialog form
+    const exp = this.experienceForms[index];
+    this.experienceDialogForm = this.fb.group({
+      role: [exp.get('role')?.value || '', Validators.required],
+      company: [exp.get('company')?.value || '', Validators.required],
+      startDate: [exp.get('startDate')?.value || '', Validators.required],
+      endDate: [exp.get('endDate')?.value || ''],
+      present: [exp.get('present')?.value || false],
+      description: [exp.get('description')?.value || '', Validators.maxLength(1000)],
+      projects: this.fb.array([])
+    });
+
+    // Copy projects
+    const projects = exp.get('projects')?.value || [];
+    projects.forEach((project: any) => {
+      this.projectsArray.push(this.createProject(project));
+    });
+
+    this.experienceDialogVisible = true;
+  }
+
+  // Edit experience
+  editExperience(index: number) {
+    this.selectedExperienceIndex = index;
+    this.isAddingNewExperience = false;
+    this.viewExperience(index); // Same as view but we'll handle save differently if needed
+  }
+
+  // Add project to dialog
+  addProject() {
+    this.projectsArray.push(this.createProject());
+  }
+
+  // Remove project from dialog
+  removeProject(index: number) {
+    this.projectsArray.removeAt(index);
+  }
+
+  // Add technology to project
+  addTechnology(projectIndex: number, value: string) {
+    if (!value || !value.trim()) return;
+
+    const techArray = this.getTechnologiesArray(projectIndex);
+    if (!techArray) return;
+
+    techArray.push(new FormControl(value.trim()));
+  }
+
+  // Remove technology from project
+  removeTechnology(projectIndex: number, techIndex: number) {
+    const techArray = this.getTechnologiesArray(projectIndex);
+    if (techArray) {
+      techArray.removeAt(techIndex);
+    }
+  }
+
+  // Save experience from dialog
+  saveExperience() {
+    if (this.experienceDialogForm.invalid) {
+      this.experienceDialogForm.markAllAsTouched();
+      return;
+    }
+
+    const experienceData = this.experienceDialogForm.value;
+
+    // Format dates
+    experienceData.startDate = this.formatMonth(experienceData.startDate);
+    experienceData.endDate = experienceData.present ? null : this.formatMonth(experienceData.endDate);
+
+    if (this.selectedExperienceIndex !== null) {
+      // Update existing experience
+      const expGroup = this.createExperience(experienceData);
+      this.experiences.setControl(this.selectedExperienceIndex, expGroup);
+    } else {
+      // Add new experience
+      this.experiences.push(this.createExperience(experienceData));
+    }
+    const profileData = this.buildFormData();
+    console.log('Built profile data with experiences:', profileData);
+    this.closeDialog();
+  }
+
+  // Cancel editing
+  cancelExperienceEdit() {
+    this.closeDialog();
+  }
+
+  // Close dialog
+  closeDialog() {
+    this.experienceDialogVisible = false;
+    this.selectedExperienceIndex = null;
+    this.isAddingNewExperience = false;
+  }
+
+  // Dialog hide callback
+  onDialogHide() {
+    this.closeDialog();
+  }
+
+  // Helper method to format date for display
+  formatDisplayDate(date: any): string {
+    if (!date) return 'Not specified';
+
+    try {
+      const d = typeof date === 'string' ? this.parseMonthString(date) : date;
+      if (!d) return 'Invalid date';
+
+      return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    } catch {
+      return 'Invalid date';
+    }
+  }
+
+  removeExperience(i: number) {
+    this.experiences.removeAt(i);
+  }
+
+  patchFromProfile(p: Profile | null) {
+    if (!p) return;
+    // map server fields to form
+    this.profileForm.patchValue({
+      name: p.full_name ?? '',
+      description: p.description ?? '',
+      email: p.email ?? '',
+      primaryPhone: p.primary_phone ?? '',
+      secondaryPhone: p.secondary_phone ?? '',
+      location: p.location ?? '',
+      website: p.website ?? '',
+      linkedin: p.linkedin ?? '',
+      github: p.github ?? '',
+      openToWork: !!p.open_to_work
+    });
+
+    // skills
+    while (this.skills.length) this.skills.removeAt(0);
+    (p.skills || []).forEach(s => this.skills.push(new FormControl(s)));
+
+    // // experiences
+    // while (this.experiences.length) this.experiences.removeAt(0);
+    // (p.experiences || []).forEach(e => this.addExperience({
+    //   ...e,
+    //   startDate: e.startDate ? this.parseMonthString(e.startDate) : null,
+    //   endDate: e.endDate ? this.parseMonthString(e.endDate) : null
+    // }));
+    // experiences with projects
+    while (this.experiences.length) this.experiences.removeAt(0);
+    (p.experiences || []).forEach(e => {
+      const expData = {
+        ...e,
+        startDate: e.startDate ? this.parseMonthString(e.startDate) : null,
+        endDate: e.endDate ? this.parseMonthString(e.endDate) : null,
+        projects: e.projects || [] // Add projects from server
+      };
+      this.addExperience(expData);
+    });
+
+    // avatar url (public)
+    this.avatarDataUrl = p.avatar_url ?? null;
+    // resume file name: the server stores resume_url as path (e.g. resumes/<id>/uuid.pdf)
+    if (p.resume_url) {
+      const parts = p.resume_url.split('/');
+      this.resumeFileName = parts[parts.length - 1] ?? null;
+    } else {
+      this.resumeFileName = null;
+    }
+  }
 
   onAvatarChange(ev: Event) {
     const input = ev.target as HTMLInputElement;
@@ -120,6 +370,85 @@ export class SettingsComponent extends CommonApp implements OnInit {
     this.profileForm.patchValue({ resume: f });
   }
 
+  // Build FormData: convert arrays to JSON strings because server expects JSON strings for some fields
+  private buildFormData(): FormData {
+    const fd = new FormData();
+    const v = this.profileForm.value;
+    fd.append('name', v.name || '');
+    fd.append('full_name', v.name || '');
+    fd.append('description', v.description || '');
+    fd.append('email', v.email || '');
+    fd.append('primaryPhone', v.primaryPhone || '');
+    fd.append('secondaryPhone', v.secondaryPhone || '');
+    fd.append('location', v.location || '');
+    fd.append('website', v.website || '');
+    fd.append('linkedin', v.linkedin || '');
+    fd.append('github', v.github || '');
+    fd.append('openToWork', String(!!v.openToWork));
+
+    // arrays → stringify
+    fd.append('skills', JSON.stringify(this.skills.value || []));
+    const experiences = this.experiences.value.map((exp: any) => ({
+      ...exp,
+      startDate: exp.startDate ? this.formatMonth(exp.startDate) : '',
+      endDate: exp.endDate ? this.formatMonth(exp.endDate) : '',
+      projects: exp.projects || [] // Include projects
+    }));
+    fd.append('experiences', JSON.stringify(experiences || []));
+
+    const avatarFile = this.profileForm.get('avatar')?.value as File | null;
+    if (avatarFile) fd.append('avatar', avatarFile, avatarFile.name);
+
+    const resumeFile = this.profileForm.get('resume')?.value as File | null;
+    if (resumeFile) fd.append('resume', resumeFile, resumeFile.name);
+
+    return fd;
+  }
+
+  saveSettings() {
+    this.profileForm.markAllAsTouched();
+    this.loading.show();
+    const profileData = this.buildFormData();
+    this.appService.updateProfile(profileData).pipe(take(1)).subscribe({
+      next: (updatedProfile) => {
+        this.patchFromProfile(updatedProfile);
+        this.loading.hide();
+      },
+      error: (err) => {
+        this.loading.hide();
+        console.error('Save error', err);
+      }
+    });
+  }
+
+  // Download resume (uses service to get signed url)
+  downloadResume() {
+    this.appService.getResumeSignedUrl().pipe(take(1)).subscribe({
+      next: (res) => {
+        if (res?.url) {
+          // open in new tab
+          window.open(res.url, '_blank');
+        } else {
+          alert('No resume available.');
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Unable to get resume URL.');
+      }
+    });
+  }
+
+  // Called when user selects a date in p-calendar
+  onDateSelect(date: Date, exp: FormGroup, controlName: 'startDate' | 'endDate') {
+    exp.get(controlName)?.setValue(date);
+  }
+
+  // Called when ngModel changes (for manual input)
+  onCalendarChange(date: Date, exp: FormGroup, controlName: 'startDate' | 'endDate') {
+    exp.get(controlName)?.setValue(this.formatMonth(date));
+  }
+
   removeAvatar() {
     this.avatarDataUrl = null;
     this.profileForm.patchValue({ avatar: null });
@@ -130,53 +459,53 @@ export class SettingsComponent extends CommonApp implements OnInit {
     this.profileForm.patchValue({ resume: null });
   }
 
-  saveSettings() {
-    if (this.profileForm.invalid) {
-      this.profileForm.markAllAsTouched();
-      return;
-    }
-
-    // Build payload — use FormData if uploading files
-    const formData = new FormData();
-    formData.append('payload', JSON.stringify({
-      ...this.profileForm.value,
-      // remove file objects from JSON payload, they'll be attached below
-      resume: undefined,
-      avatar: undefined
-    }));
-
-    const resumeFile = this.profileForm.get('resume')?.value as File | null;
-    if (resumeFile) formData.append('resume', resumeFile, resumeFile.name);
-    const avatarFile = this.profileForm.get('avatar')?.value as File | null;
-    if (avatarFile) formData.append('avatar', avatarFile, avatarFile.name);
-
-    // Example: send to API via HttpClient (not included here)
-    // this.http.post('/api/profile', formData).subscribe(...)
-
-    // Persist locally as fallback
-    const persist = {
-      ...this.profileForm.value,
-      avatarDataUrl: this.avatarDataUrl,
-      resumeFileName: this.resumeFileName,
-      skills: this.skills.value,
-      experiences: this.experiences.value
-    };
-    localStorage.setItem('profileForm', JSON.stringify(persist));
-
-    // Feedback to user
-    alert('Settings saved locally (and prepared for upload).');
-  }
-
   resetDefaults() {
     this.profileForm.reset();
     while (this.skills.length) this.skills.removeAt(0);
     while (this.experiences.length) this.experiences.removeAt(0);
     this.avatarDataUrl = null;
     this.resumeFileName = null;
-    localStorage.removeItem('profileForm');
+    // Optionally reset server-side as well
+  }
+
+  // Helper: convert 'YYYY-MM' string to Date (first day of month)
+  private parseMonthString(monthStr: any | null): Date | null {
+    if (!monthStr) return null;
+
+    // If already a Date object
+    if (monthStr instanceof Date) return monthStr;
+
+    // If it's a string in YYYY-MM format
+    if (typeof monthStr === 'string' && /^\d{4}-\d{2}$/.test(monthStr)) {
+      const [year, month] = monthStr.split('-').map(Number);
+      if (!year || !month || month < 1 || month > 12) return null;
+      return new Date(year, month - 1, 1);
+    }
+
+    return null;
+  }
+
+  // Helper: convert Date to 'YYYY-MM'
+  private formatMonth(date: Date | null): string | null {
+    if (!date) return null;
+
+    // If it's already in YYYY-MM format (string from PrimeNG calendar)
+    if (typeof date === 'string' && /^\d{4}-\d{2}$/.test(date)) {
+      return date;
+    }
+
+    // If it's a Date object
+    if (date instanceof Date) {
+      const y = date.getFullYear();
+      const m = (date.getMonth() + 1).toString().padStart(2, '0');
+      return `${y}-${m}`;
+    }
+
+    // If PrimeNG returns an object (check the actual structure by logging)
+    console.log('Unexpected date format:', date);
+    return null;
   }
 }
-
 
 function pdfFileValidator(control: AbstractControl) {
   const file = control.value as File | null;

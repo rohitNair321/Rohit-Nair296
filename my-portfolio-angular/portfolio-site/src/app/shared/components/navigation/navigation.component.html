@@ -45,7 +45,7 @@
       <button class="menu-toggle"(click)="toggleMenu()">
         <span class="material-icons">{{ isMenuOpen ? 'close' : 'menu' }}</span>
       </button>
-      <div class="nav-actions" *ngIf="config.appConfiguration.showUserProfileView">
+      <div class="nav-actions" *ngIf="config.appConfiguration.showUserProfileView ">
         <app-profile-menu></app-profile-menu>
       </div>
     </div>

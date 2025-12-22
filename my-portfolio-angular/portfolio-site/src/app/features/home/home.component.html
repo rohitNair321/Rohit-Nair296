@@ -5,24 +5,24 @@
       <div class="profile-container">
         <!-- Left: Text Content -->
         <div class="text-content">
-          <h1 class="animate-slide-up" appInView>Hi, I'm {{ homeData?.hero?.name }}</h1>
-          <p class="animate-slide-up-delay" appInView>{{ homeData?.hero?.description }}</p>
-          <div class="typing-text animate-slide-up-delay-2" appInView>
-            <span *ngFor="let skill of homeData?.hero?.skills; let last = last">
+          <h1 class="animate-slide-up">Hi, I'm {{ homeData?.full_name }}</h1>
+          <p class="animate-slide-up-delay">{{ homeData?.description }}</p>
+          <div class="typing-text">
+            <span *ngFor="let skill of homeData?.skills; let last = last">
               {{ skill }}<span *ngIf="!last"> • </span>
             </span>
           </div>
           <div class="hero-buttons">
-            <button class="cta-button animate-fade-in-delay" appInView (click)="scrollToSection($event, '#projects')">My
+            <button class="cta-button" (click)="scrollToSection($event, '#projects')">My
               Work</button>
-            <button class="cta-button outline animate-fade-in-delay" appInView
+            <button class="cta-button outline"
               (click)="scrollToSection($event, '#contact')">Contact Me</button>
           </div>
         </div>
         <!-- Right: Profile Photo & Resume Button -->
         <div class="profile-photo">
-          <img [src]="homeData?.hero?.profileImage" alt="Developer portrait" />
-          <a class="resume-download-btn" [href]="homeData?.hero?.resume" download>
+          <img [src]="homeData?.avatar_url" alt="Developer portrait" />
+          <a class="resume-download-btn" [href]="homeData?.resume_url" download>
             <span class="material-icons">download</span>
             Download Resume
           </a>
@@ -33,13 +33,13 @@
 
   <section id="about" class="about-teaser-section">
     <div class="about-container">
-      <div class="about-photo animate-fade-in-left" appInView>
-        <img [src]="homeData?.aboutTeaser?.photo" alt="Rohit Nair" />
+      <div class="about-photo" >
+        <img [src]="homeData?.avatar_url" alt="Rohit Nair" />
       </div>
-      <div class="about-text animate-fade-in-right" appInView>
+      <div class="about-text" >
         <h2>{{ homeData?.aboutTeaser?.title }}</h2>
-        <p [innerHTML]="homeData?.aboutTeaser?.description"></p>
-        <div class="group-btn animate-fade-in-up" appInView>
+        <p [innerHTML]="homeData?.description"></p>
+        <div class="group-btn" >
           <a class="resume-download-btn about-res-width" routerLink="/about">
             <span class="material-icons">read_more</span>
             Read More
@@ -48,7 +48,7 @@
             <span class="material-icons">open_in_new</span>
             View resume
           </a>
-          <a class="resume-download-btn about-res-width" [href]="homeData?.aboutTeaser?.resume" download>
+          <a class="resume-download-btn about-res-width" [href]="homeData?.resume_url" download>
             <span class="material-icons">download</span>
             Resume
           </a>
@@ -58,14 +58,14 @@
   </section>
 
   <section id="projects" class="">
-    <!-- <h2 class="animate-fade-in-up" appInView>My Work</h2> -->
+    <!-- <h2 class="animate-fade-in-up">My Work</h2> -->
     <div class="section-header d-flex align-items-center justify-content-between">
       <h2 class="mb-0">My Work</h2>
       <a class="btn btn-outline-primary btn-sm" routerLink="/projects">View all</a>
     </div>
     <div class="portfolio-scroll-container">
       <div class="portfolio-card-list">
-        <div class="portfolio-card card" *ngFor="let project of projectList">
+        <div class="portfolio-card card" *ngFor="let project of homeData?.experiences[1]?.projects">
           <!-- Optional cover image (if you have project.image); otherwise we paint a themed placeholder -->
           <div class="card-img-top portfolio-card-cover" *ngIf="project?.image"
             [style.background-image]="'url(' + project.image + ')'"></div>
@@ -89,12 +89,7 @@
           </div>
 
           <div class="card-footer portfolio-card-actions">
-            <!-- <a class="view-project-detail" [routerLink]="[{ outlets: { modal: ['project', project.id] } }]"
-              [state]="{ project: project }" [queryParamsHandling]="'preserve'">
-              <span class="material-icons">open_in_new</span>
-              Read More
-            </a> -->
-            <button type="button" class="view-project-detail" (click)="openProject(project)">
+            <button pButton type="button" class="view-project-detail" (click)="openProject(project)">
               <span class="material-icons">open_in_new</span>
               Read More
             </button>
@@ -115,7 +110,7 @@
     </div>
   </section>
 
-  <section id="contact" class="cta-section contact-section animate-fade-in-up" appInView>
+  <section id="contact" class="cta-section contact-section">
     <h2>{{homeData?.contact?.headingText}}</h2>
     <p>{{homeData?.contact?.subHeadingText}}</p>
     <div class="contact-grid">
@@ -126,7 +121,7 @@
           <div class="text-md-start">
             <h4>Email</h4>
             <p>
-              <a [href]="'mailto:' + homeData?.contact?.email" class="contact-link">{{ homeData?.contact?.email }}</a>
+              <a [href]="'mailto:' + homeData?.email" class="contact-link">{{ homeData?.email }}</a>
             </p>
           </div>
         </div>
@@ -135,7 +130,7 @@
           <div class="text-md-start">
             <h4>Phone</h4>
             <p>
-              <a [href]="'tel:' + homeData?.contact?.phone" class="contact-link">{{ homeData?.contact?.phone }}</a>
+              <a [href]="'tel:' + homeData?.primary_phone" class="contact-link">{{ homeData?.primary_phone }}</a>
             </p>
           </div>
         </div>
@@ -143,12 +138,12 @@
           <span class="material-icons contact-icon">location_on</span>
           <div class="text-md-start">
             <h4>Location</h4>
-            <p>{{ homeData.contact.address }}</p>
+            <p>{{ homeData?.location }}</p>
           </div>
         </div>
       </div>
       <!-- Right: Contact Form -->
-      <div class="contact-form-card animate-fade-in-right" appInView>
+      <div class="contact-form-card">
         <form [formGroup]="contactForm" (ngSubmit)="onSubmitContact()">
           <h3 class="form-title">Send a Message</h3>
           <div class="form-row">

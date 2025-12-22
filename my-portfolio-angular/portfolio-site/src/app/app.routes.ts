@@ -2,8 +2,8 @@ import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { environment } from 'src/environments/environments';
-import { authGuard } from './core/app-gards/auth-guard';
-import { guestGuard } from './core/app-gards/guest-guard';
+import { PageNotFoundComponent } from './layouts/page-not-found/page-not-found/page-not-found.component';
+import { tokenGuard } from './core/app-gards/token.guard';
 
 const AUTH_FIRST = environment.authFirst; // move to env later
 
@@ -11,7 +11,6 @@ const AUTH_ROUTES: Routes = [
   {
     path: '',
     component: AuthLayoutComponent,
-    canActivate: [guestGuard],
     children: [
       {
         path: 'login',
@@ -45,7 +44,7 @@ const AUTH_ROUTES: Routes = [
   {
     path: 'app',
     component: MainLayoutComponent,
-    canActivate: [authGuard],
+    canActivate: [tokenGuard],
     children: [
       {
         path: '',
@@ -67,6 +66,7 @@ const AUTH_ROUTES: Routes = [
         path: 'settings',
         loadComponent: () =>
           import('./features/settings/settings.component').then(m => m.SettingsComponent),
+        canActivate: [tokenGuard],
       },
       {
         path: 'resume',
@@ -186,6 +186,7 @@ const MAIN_ROUTES: Routes = [
       import('./shared/components/dialogs/project-dialog-route-bridge.component')
         .then(m => m.ProjectDialogRouteBridgeComponent),
   },
+  { path: '**', component: PageNotFoundComponent},
 ];
 
 // export const routes: Routes = [
@@ -281,5 +282,5 @@ const MAIN_ROUTES: Routes = [
 //   { path: '**', redirectTo: '' },
 // ];
 
-export const routes: Routes = AUTH_FIRST?
-AUTH_ROUTES:MAIN_ROUTES;
+export const routes: Routes = AUTH_FIRST ?
+  AUTH_ROUTES : MAIN_ROUTES;

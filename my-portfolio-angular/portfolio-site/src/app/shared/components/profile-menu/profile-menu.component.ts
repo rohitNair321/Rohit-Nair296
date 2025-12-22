@@ -7,6 +7,7 @@ import {
   inject,
   ViewContainerRef,
   TemplateRef,
+  computed,
 } from '@angular/core';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -19,6 +20,8 @@ import { CardModule } from 'primeng/card';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CommonApp } from 'src/app/core/services/common';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { environment } from 'src/environments/environments';
+import { AppService } from 'src/app/core/services/app.service';
 
 interface MenuItem {
   icon?: string;
@@ -53,8 +56,14 @@ export class ProfileMenuComponent implements OnDestroy {
 
   overlayRef?: OverlayRef;
   private routeSub?: Subscription;
+  profileData = computed(() => {
+    return (
+      this.appService.profile()
+    );
+  });
 
-  constructor(private viewContainerRef: ViewContainerRef) { }
+  constructor(private viewContainerRef: ViewContainerRef, private appService: AppService) {
+  }
 
   user = {
     name: 'Rohit Nair',
@@ -109,7 +118,11 @@ export class ProfileMenuComponent implements OnDestroy {
 
   navigate(item: MenuItem): void {
     if (item.route) {
-      this.router.navigateByUrl(item.route);
+      if (environment.authFirst) {
+        this.router.navigateByUrl('app/' + item.route);
+      } else {
+        this.router.navigateByUrl(item.route);
+      }
     } else if (item.action) {
       item.action();
     }
@@ -120,7 +133,7 @@ export class ProfileMenuComponent implements OnDestroy {
     this.authService.logout();
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_user');
-    this.router.navigateByUrl('/login');
+    this.router.navigateByUrl('/');
     this.close();
   }
 

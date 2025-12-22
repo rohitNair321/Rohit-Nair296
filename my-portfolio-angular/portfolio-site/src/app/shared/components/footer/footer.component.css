@@ -1,9 +1,9 @@
 /* Footer Styling */
 .footer {
-  background-color: var(--global-secondary-color);
-  color: var(--global-background-color);
+background-color: var(--surface);
+  color: var(--text-primary);
   padding: 2rem 0 1rem 0;
-  border-top: 1px solid var(--global-border-color);
+  border-top: 1px solid var(--border);
   transition: background-color 0.3s, color 0.3s, margin-left 0.3s cubic-bezier(.77,0,.18,1), width 0.3s cubic-bezier(.77,0,.18,1);
 }
 
@@ -44,13 +44,13 @@
 .footer-tagline {
   font-size: 0.95rem;
   margin-top: 0.3rem;
-  color: var(--global-background-color);
+  color: var(--text-secondary);
   opacity: 0.8;
 }
 
 /* Footer Social Links */
 .footer-social a {
-  color: var(--global-background-color);
+  color: var(--text-secondary);
   margin-right: 1rem;
   font-size: 1.4rem;
   transition: color 0.2s;

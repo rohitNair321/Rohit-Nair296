@@ -1,15 +1,18 @@
-import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Injector, OnInit, Renderer2, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Injector, OnInit, Renderer2, computed, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import * as e from 'cors';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { DialogModule } from 'primeng/dialog';
+import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { take } from 'rxjs';
+import { AppService } from 'src/app/core/services/app.service';
 import { CommonApp } from 'src/app/core/services/common';
 import { ProjectDetailDialogComponent } from 'src/app/shared/components/dialogs/project-detail-dialog.component';
-import { InViewDirective } from 'src/app/shared/directives/in-view.directive';
 
 interface Hero {
   name: string;
@@ -33,34 +36,38 @@ interface HomeData { hero: Hero; aboutTeaser?: AboutTeaser; contact?: ContactInf
     ButtonModule,
     InputTextModule,
     InputTextareaModule,
-    InViewDirective,
-    DialogModule
+    DialogModule,
+    TagModule
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent extends CommonApp implements OnInit, AfterViewInit {
+export class HomeComponent extends CommonApp implements OnInit {
 
-  cardWidth = 320; // px, match your CSS .portfolio-card max-width
-  cardGap = 32;    // px, match your CSS .portfolio-slider-inner gap (2rem = 32px)
-  projectsPerView = 3; // or calculate based on screen size
-
-  currentProjectIndex = 0;
-  hoveredProject: any = null;
   homeData: any;
 
   contactForm: FormGroup;
   sending = false;
   sent = false;
   projectList: any[] = [];
-  private dialog = inject(Dialog);
-  
+  experienceYears = 5;
+  totalProjects = 20;
+
+  showContactDialog = false;
+  // private dialog = inject(Dialog);
+  profileData = computed(() => {
+    return (
+      this.appService.profile()
+    );
+  });
+
 
   constructor(
     public override injector: Injector,
     private el: ElementRef,
     private renderer: Renderer2,
     private fb: FormBuilder,
+    private appService: AppService
   ) {
     super(injector);
     this.contactForm = this.fb.group({
@@ -72,29 +79,12 @@ export class HomeComponent extends CommonApp implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.getData();
-  }
-
-  ngAfterViewInit() {
-    this.runAnimations();
-  }
-
-  runAnimations() {
-    const animatedEls = this.el.nativeElement.querySelectorAll(
-      '.animate-fade-in-left, .animate-fade-in-right, .animate-fade-in-up'
-    );
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            this.renderer.addClass(entry.target, 'in-view');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-    animatedEls.forEach((el: Element) => observer.observe(el));
+    // this.getData();
+    if (this.profileData()) {
+      this.homeData = this.profileData();
+    } else {
+      this.getMyProfile();
+    }
   }
 
   scrollToSection(event: Event, sectionId: string) {
@@ -105,26 +95,26 @@ export class HomeComponent extends CommonApp implements OnInit, AfterViewInit {
     }
   }
 
-  visibleProjects() {
-    // Use homeData.projects instead of this.projects
-    return this.homeData?.projects
-      ? this.homeData.projects.slice(this.currentProjectIndex, this.currentProjectIndex + this.projectsPerView)
-      : [];
-  }
+  // visibleProjects() {
+  //   // Use homeData.projects instead of this.projects
+  //   return this.homeData?.projects
+  //     ? this.homeData.projects.slice(this.currentProjectIndex, this.currentProjectIndex + this.projectsPerView)
+  //     : [];
+  // }
 
-  slideLeft() {
-    if (this.currentProjectIndex > 0) {
-      this.currentProjectIndex--;
-    }
-  }
-  slideRight() {
-    if (
-      this.homeData?.projects &&
-      this.currentProjectIndex + this.projectsPerView < this.homeData.projects.length
-    ) {
-      this.currentProjectIndex++;
-    }
-  }
+  // slideLeft() {
+  //   if (this.currentProjectIndex > 0) {
+  //     this.currentProjectIndex--;
+  //   }
+  // }
+  // slideRight() {
+  //   if (
+  //     this.homeData?.projects &&
+  //     this.currentProjectIndex + this.projectsPerView < this.homeData.projects.length
+  //   ) {
+  //     this.currentProjectIndex++;
+  //   }
+  // }
 
   onSubmitContact() {
     if (this.contactForm.invalid) {
@@ -148,40 +138,53 @@ export class HomeComponent extends CommonApp implements OnInit, AfterViewInit {
   get subject() { return this.contactForm.get('subject'); }
   get message() { return this.contactForm.get('message'); }
 
-
-  getData() {
+  getMyProfile(): void {
     this.loading.show();
-    this.portfolioServices.getProfile().subscribe({
-      next: res => {
-        console.log('Profile Data:', res);
-        this.homeData = res.home; // Wait for DOM update
+    this.appService.getProfile().pipe(take(1)).subscribe({
+      next: (profile) => {
+        this.homeData = profile;
         this.loading.hide();
       },
-      error: err => {
-        console.error('Error fetching profile data:', err);
-        this.loading.hide();
-      }
-    });
-    this.portfolioServices.listProjects().subscribe({
-      next: res => {
-        this.projectList = res;
-        console.log('Project list:', res);
-        this.loading.hide();
-      },
-      error: err => {
-        console.error('Error fetching project list:', err);
+      error: (e) => {
+        console.error(e.error.message);
         this.loading.hide();
       }
     });
   }
 
+  getData() {
+    this.loading.hide();
+    // this.portfolioServices.getProfile().subscribe({
+    //   next: res => {
+    //     console.log('Profile Data:', res);
+    //     this.homeData = res.home; // Wait for DOM update
+    //     this.loading.hide();
+    //   },
+    //   error: err => {
+    //     console.error('Error fetching profile data:', err);
+    //     this.loading.hide();
+    //   }
+    // });
+    // this.portfolioServices.listProjects().subscribe({
+    //   next: res => {
+    //     this.projectList = res;
+    //     console.log('Project list:', res);
+    //     this.loading.hide();
+    //   },
+    //   error: err => {
+    //     console.error('Error fetching project list:', err);
+    //     this.loading.hide();
+    //   }
+    // });
+  }
+
   openProject(project: any) {
-    this.dialog.open(ProjectDetailDialogComponent, {
-      data: project,
-      backdropClass: ['cdk-overlay-dark-backdrop'], // nice dim on all themes
-      panelClass: ['p-3'] // bootstrap spacing class on container
-      // disableClose: true, // uncomment if you don't want backdrop click to close
-    });
+    // this.dialog.open(ProjectDetailDialogComponent, {
+    //   data: project,
+    //   backdropClass: ['cdk-overlay-dark-backdrop'], // nice dim on all themes
+    //   panelClass: ['p-3'] // bootstrap spacing class on container
+    //   // disableClose: true, // uncomment if you don't want backdrop click to close
+    // });
   }
 
 

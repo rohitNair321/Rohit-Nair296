@@ -19,6 +19,5 @@ export class AuthLayoutComponent extends CommonApp {
     super(injector);
     this.config.theme.name = 'theme-2';
     this.config.appConfiguration.theme = 'light';
-    this.initializeTheme();
   }
 }

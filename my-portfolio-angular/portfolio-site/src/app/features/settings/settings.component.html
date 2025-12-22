@@ -92,7 +92,8 @@
       <h2 id="skills-heading" class="section-title">Skills</h2>
       <div class="field">
         <div class="skill-input">
-          <input #skillInput type="text" placeholder="Add skill and press Enter" (keydown.enter)="$event.preventDefault(); addSkill(skillInput.value); skillInput.value=''" />
+          <input #skillInput type="text" placeholder="Add skill and press Enter"
+            (keydown.enter)="$event.preventDefault(); addSkill(skillInput.value); skillInput.value=''" />
           <button type="button" class="btn soft" (click)="addSkill(skillInput.value); skillInput.value=''">Add</button>
         </div>
         <div class="chip-list">
@@ -100,34 +101,63 @@
             {{ s.value }}
             <button type="button" class="chip-remove" (click)="removeSkill(i)">✕</button>
           </span>
-          <div *ngIf="skills.length === 0" class="muted small">Add skills that highlight your strengths (Angular, TypeScript, Node, UX...)</div>
+          <div *ngIf="skills.length === 0" class="muted small">Add skills that highlight your strengths (Angular,
+            TypeScript, Node, UX...)</div>
         </div>
       </div>
     </section>
 
-    <!-- Experience Card -->
+    <!-- Experience Card - Updated -->
     <section class="card experience-card" aria-labelledby="exp-heading">
       <h2 id="exp-heading" class="section-title">Work Experience</h2>
-      <div class="field">
-        <div class="experiences">
-          <div class="experience-item card small" *ngFor="let exp of experienceForms; let i=index" [formGroup]="exp">
-            <div class="exp-row">
-              <input placeholder="Role" formControlName="role" />
-              <input placeholder="Company" formControlName="company" />
+
+      <!-- Experiences List Display -->
+      <div class="experiences-list">
+        <div class="experience-item card" *ngFor="let exp of experienceForms; let i = index">
+          <div class="exp-header">
+            <div class="exp-title">
+              <h3>{{ exp.get('role')?.value || 'Untitled Role' }}</h3>
+              <p class="company">{{ exp.get('company')?.value || 'No company specified' }}</p>
             </div>
-            <div class="exp-row">
-              <input type="month" formControlName="startDate" />
-              <input type="month" formControlName="endDate" />
-              <label><input type="checkbox" formControlName="present" /> Present</label>
-            </div>
-            <textarea formControlName="description" placeholder="Describe your work & achievements"></textarea>
-            <div class="actions-row">
-              <button type="button" class="btn outline small" (click)="removeExperience(i)">Remove</button>
+            <div class="exp-dates">
+              <span class="date">{{ formatDisplayDate(exp.get('startDate')?.value) }}</span>
+              <span class="date-separator">–</span>
+              <span class="date">{{ exp.get('present')?.value ? 'Present' : formatDisplayDate(exp.get('endDate')?.value)
+                }}</span>
             </div>
           </div>
-          <button type="button" class="btn soft" (click)="addExperience()">+ Add experience</button>
-          <div class="muted small">Tip: Add 3–5 most relevant roles with a short achievement-oriented description.</div>
+
+          <p class="exp-description">{{ exp.get('description')?.value || 'No description provided' }}</p>
+
+          <!-- Projects Section -->
+          <div class="projects-section" *ngIf="exp.get('projects')?.value?.length > 0">
+            <div class="projects-header">
+              <h4>Projects ({{ exp.get('projects')?.value?.length }})</h4>
+            </div>
+            <div class="projects-list">
+              <div class="project-item" *ngFor="let project of exp.get('projects')?.value; let pIndex = index">
+                <div class="project-info">
+                  <h5>{{ project.title || 'Untitled Project' }}</h5>
+                  <p class="project-description">{{ project.description || 'No description' }}</p>
+                  <div class="project-tech" *ngIf="project.technologies?.length > 0">
+                    <span class="tech-tag" *ngFor="let tech of project.technologies">{{ tech }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="exp-actions">
+            <button type="button" class="btn outline small" (click)="viewExperience(i)">View Details</button>
+            <button type="button" class="btn soft small" (click)="editExperience(i)">Edit</button>
+            <button type="button" class="btn outline small danger" (click)="removeExperience(i)">Remove</button>
+          </div>
         </div>
+      </div>
+
+      <div class="add-experience-section">
+        <button type="button" class="btn primary" (click)="addNewExperience()">+ Add Experience</button>
+        <div class="muted small">Click to add a new work experience with associated projects</div>
       </div>
     </section>
   </div>
@@ -136,3 +166,112 @@
     <div class="muted">All changes are saved locally. Connect to your backend to persist server-side.</div>
   </footer>
 </section>
+
+<!-- Experience Dialog -->
+<p-dialog header="Work Experience" [(visible)]="experienceDialogVisible" [style]="{ width: '90vw', maxWidth: '800px' }"
+  [modal]="true" [draggable]="false" [resizable]="false" (onHide)="onDialogHide()">
+
+  <div *ngIf="selectedExperienceIndex !== null || isAddingNewExperience">
+    <div class="dialog-content" [formGroup]="experienceDialogForm">
+      <div class="dialog-row">
+        <div class="field">
+          <label for="role">Role *</label>
+          <input id="role" type="text" formControlName="role" placeholder="e.g., Senior Frontend Developer" />
+        </div>
+        <div class="field">
+          <label for="company">Company *</label>
+          <input id="company" type="text" formControlName="company" placeholder="e.g., Tech Corp Inc." />
+        </div>
+      </div>
+
+      <div class="dialog-row">
+        <div class="field">
+          <label for="startDate">Start Date *</label>
+          <p-calendar formControlName="startDate" view="month" dateFormat="yy-mm" [showIcon]="true"
+            [yearNavigator]="true" [monthNavigator]="true" placeholder="Select month"></p-calendar>
+        </div>
+        <div class="field">
+          <label for="endDate">End Date</label>
+          <p-calendar formControlName="endDate" view="month" dateFormat="yy-mm" [showIcon]="true" [yearNavigator]="true"
+            [monthNavigator]="true" placeholder="Select month"
+            [disabled]="experienceDialogForm.get('present')?.value"></p-calendar>
+        </div>
+        <div class="field toggle-field">
+          <label for="present">
+            <input type="checkbox" id="present" formControlName="present" />
+            Currently working here
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea id="description" rows="4" formControlName="description"
+          placeholder="Describe your responsibilities, achievements, and impact..."></textarea>
+      </div>
+
+      <!-- Projects Section in Dialog -->
+      <div class="projects-section-dialog">
+        <div class="section-header">
+          <h3>Projects</h3>
+          <button type="button" class="btn soft small" (click)="addProject()">+ Add Project</button>
+        </div>
+
+        <div class="projects-list-dialog">
+          <div class="project-item-dialog" *ngFor="let project of projectsArray.controls; let pIndex = index"
+            [formGroup]="project">
+            <div class="project-header">
+              <h4>Project {{ pIndex + 1 }}</h4>
+              <button type="button" class="btn outline small danger" (click)="removeProject(pIndex)">Remove</button>
+            </div>
+
+            <div class="dialog-row">
+              <div class="field">
+                <label [for]="'projectTitle' + pIndex">Title *</label>
+                <input [id]="'projectTitle' + pIndex" type="text" formControlName="title" placeholder="Project name" />
+              </div>
+              <div class="field">
+                <label [for]="'projectUrl' + pIndex">Project URL</label>
+                <input [id]="'projectUrl' + pIndex" type="text" formControlName="url"
+                  placeholder="https://example.com" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label [for]="'projectDesc' + pIndex">Description</label>
+              <textarea [id]="'projectDesc' + pIndex" rows="3" formControlName="description"
+                placeholder="Describe the project, your role, and key achievements..."></textarea>
+            </div>
+
+            <div class="field">
+              <label>Technologies Used</label>
+              <div class="tech-input-group">
+                <input #techInput type="text" placeholder="Add technology and press Enter"
+                  (keydown.enter)="$event.preventDefault(); addTechnology(pIndex, techInput.value); techInput.value=''" />
+                <button type="button" class="btn soft small"
+                  (click)="addTechnology(pIndex, techInput.value); techInput.value=''">Add</button>
+              </div>
+              <div class="tech-tags-list">
+                <span class="tech-tag" *ngFor="let tech of getTechnologyControls(pIndex); let tIndex = index">
+                  {{ tech.value }}
+                  <button type="button" class="tech-tag-remove" (click)="removeTechnology(pIndex, tIndex)">✕</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="projectsArray.length === 0" class="no-projects">
+          <p class="muted">No projects added yet. Click "Add Project" to include relevant projects.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-actions">
+      <button type="button" class="btn outline" (click)="cancelExperienceEdit()">Cancel</button>
+      <button type="button" class="btn primary" (click)="saveExperience()" [disabled]="experienceDialogForm.invalid">
+        {{ selectedExperienceIndex !== null ? 'Update' : 'Save' }} Experience
+      </button>
+    </div>
+  </div>
+</p-dialog>

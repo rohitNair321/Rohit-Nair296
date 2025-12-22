@@ -2,7 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, Injector } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { defaultConfig, LayoutConfig } from 'src/app/core/config/layout.config';
+import { THEME_NAME_MAP } from 'src/app/core/config/theme.config';
 import { CommonApp } from 'src/app/core/services/common';
+import { ThemeService } from 'src/app/core/theme/theme.service';
 import { ChatBotComponent } from 'src/app/shared/components/chat-bot/chat-bot.component';
 import { FooterComponent } from 'src/app/shared/components/footer/footer.component';
 import { NavigationComponent } from 'src/app/shared/components/navigation/navigation.component';
@@ -16,23 +18,29 @@ import { SpinnerComponent } from 'src/app/shared/components/ui/spinner-overlay/s
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.css']
 })
-export class MainLayoutComponent extends CommonApp{
+export class MainLayoutComponent extends CommonApp {
   config: LayoutConfig = defaultConfig;
   isSidebarCollapsed = true;
 
-  constructor(public override injector: Injector,) {
+  constructor(public override injector: Injector) {
     super(injector);
-    this.config.theme.name = 'theme-2';
+    this.config.theme.name = 'theme-5';
     this.config.appConfiguration.type = 'sidebar';
     this.config.appConfiguration.theme = 'light';
     this.config.appConfiguration.sidebarPosition = 'right';
     this.config.appConfiguration.collapsed = true;
     this.config.appConfiguration.showSidebarToggle = true;
     this.config.appConfiguration.showAgentChat = true;
-    this.config.appConfiguration.showUserProfileView = false;
+    this.config.appConfiguration.showUserProfileView = true;
   }
 
   ngOnInit() {
+    const layoutThemeName = this.config?.theme?.name; // e.g. 'theme-5'
+
+    const resolvedTheme =
+      THEME_NAME_MAP[layoutThemeName] || 'tron';
+
+    this.themeService.setTheme(resolvedTheme);
   }
 
   initSidebarMenu(sidebarEvent: any) {

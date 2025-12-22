@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { CommonApp } from 'src/app/core/services/common';
 
 @Component({
   selector: 'app-sidebar',
@@ -19,11 +20,10 @@ import { RadioButtonModule } from 'primeng/radiobutton';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent extends CommonApp implements OnInit {
   @Input() config: any;
   isSidebarCollapsed = false;
   isRightSideSettingOpen = false;
-  isDarkTheme = false;
   isMobileOpen = false;
   isMobile = false;
   currentSection = '';
@@ -34,6 +34,7 @@ export class SidebarComponent implements OnInit {
     { name: 'Theme 2 (Blue Modern)', label: 'Blue Modern', class: 'theme-2', color: '#7B61FF', selected: false },
     { name: 'Theme 3 (Indigo Teal)', label: 'Indigo Teal', class: 'theme-3', color: '#3F8A8F', selected: false },
     { name: 'Theme 4 (Plum Seafoam)', label: 'Plum Seafoam', class: 'theme-4', color: '#4FA49C', selected: false },
+    { name: 'Theme 5 (TRON: Ares)', label: 'TRON: Ares', class: 'theme-5', color: '#4FA49C', selected: false },
   ];
   menuItems = [
     { label: 'Home', href: '#home', icon: 'home' },
@@ -42,8 +43,8 @@ export class SidebarComponent implements OnInit {
     { label: 'Contact', href: '#contact', icon: 'mail' },
   ];
 
-  constructor(@Inject(DOCUMENT) private document: Document) {
-
+  constructor(public override injector: Injector, @Inject(DOCUMENT) private document: Document) {
+    super(injector);
   }
 
 
@@ -58,7 +59,7 @@ export class SidebarComponent implements OnInit {
     });
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll')
   onScroll() {
     if (this.isMobile) {
       this.updateCurrentSection();
@@ -78,17 +79,9 @@ export class SidebarComponent implements OnInit {
   }
 
   applyTheme(themeClass: string) {
-    const body = this.document.body;
-    this.availableThemes.forEach(theme => {
-      body.classList.remove(theme.class);
-    });
-    body.classList.add(themeClass);
-    // Apply new theme class
-    // body.classList.add(themeClass);
-    // this.selectedTheme = themeClass;
 
-    // Apply dark mode if active
-    body.classList.toggle('dark-mode', this.isDarkTheme);
+    // body.classList.toggle('dark-mode', this.isDarkTheme);
+    this.config.theme.name = themeClass;
   }
 
   checkMobile() {
@@ -104,9 +97,12 @@ export class SidebarComponent implements OnInit {
     console.log('Sidebar collapsed:', this.config.appConfiguration.collapsed);
   }
 
+  get isDarkTheme(): boolean {
+    return this.themeService.isDarkTheme();
+  }
+
   toggleTheme() {
-    this.isDarkTheme = !this.isDarkTheme;
-    document.body.classList.toggle('dark-mode', this.isDarkTheme);
+    this.themeToggle();
   }
 
   scrollToSection(event: Event, href: string) {
