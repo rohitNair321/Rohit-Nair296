@@ -10,6 +10,7 @@ import { FooterComponent } from 'src/app/shared/components/footer/footer.compone
 import { NavigationComponent } from 'src/app/shared/components/navigation/navigation.component';
 import { SidebarComponent } from 'src/app/shared/components/sidebar/sidebar.component';
 import { SpinnerComponent } from 'src/app/shared/components/ui/spinner-overlay/spinner/spinner.component';
+import { environment } from 'src/environments/environments';
 
 @Component({
   selector: 'app-main-layout',
@@ -31,7 +32,7 @@ export class MainLayoutComponent extends CommonApp {
     this.config.appConfiguration.collapsed = true;
     this.config.appConfiguration.showSidebarToggle = true;
     this.config.appConfiguration.showAgentChat = true;
-    this.config.appConfiguration.showUserProfileView = true;
+    this.config.appConfiguration.showUserProfileView = environment.authFirst;
   }
 
   ngOnInit() {
