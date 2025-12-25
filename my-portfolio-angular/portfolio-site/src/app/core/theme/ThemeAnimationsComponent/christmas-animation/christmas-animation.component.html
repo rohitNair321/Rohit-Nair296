@@ -1,0 +1,18 @@
+<!-- 🎄 CHRISTMAS THEME -->
+<div class="christmas-wrapper" *ngIf="isChristmas()">
+
+    <!-- Sparkling lights -->
+    <div class="sparkle-layer">
+        <span *ngFor="let i of sparkles" class="sparkle"></span>
+    </div>
+
+
+    <!-- Bottom gifts -->
+    <div class="gift-row">
+        <div class="gift gift-red"></div>
+        <div class="gift gift-green"></div>
+        <div class="gift gift-gold"></div>
+        <div class="gift gift-red"></div>
+    </div>
+
+</div>

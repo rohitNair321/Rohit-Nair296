@@ -146,38 +146,37 @@
 }
 
 /* =========================================================
-   RIGHT SIDE SETTINGS TOGGLE
+   SETTINGS TRIGGER (FLOATING BUTTON)
 ========================================================= */
-.right-side-setting {
+.settings-trigger {
   position: fixed;
   top: 50%;
   right: 0;
   transform: translateY(-50%);
-  z-index: 1001;
+  z-index: 1100;
 }
 
-.btn-setting {
+.settings-trigger-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
   background: linear-gradient(
     135deg,
     var(--primary),
     var(--accent)
   );
   color: var(--background);
-  border-radius: 50%;
-  border: none;
-  padding: 0.6rem;
   cursor: pointer;
-  height: 40px;
-}
-
-.setting-icon-rotate {
-  animation: none; /* keep static, clean look */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* =========================================================
-   RIGHT SIDE SETTINGS PANEL
+   SETTINGS PANEL
 ========================================================= */
-.right-side-setting-content {
+.settings-panel {
   position: fixed;
   top: 0;
   right: 0;
@@ -189,22 +188,103 @@
     var(--background)
   );
   border-left: 1px solid var(--border);
-  z-index: 1002;
+  z-index: 1200;
   display: flex;
   flex-direction: column;
 }
 
-.featurs-content {
-  padding: 1.5rem;
+/* =========================================================
+   HEADER
+========================================================= */
+.settings-header {
+  height: 56px;
+  padding: 0 1rem;
   display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-title {
+  font-size: 1rem;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
-.featurs-content span {
-  font-size: 0.95rem;
+.settings-close-btn {
+  background: transparent;
+  border: none;
   color: var(--text-secondary);
+  cursor: pointer;
+}
+
+/* =========================================================
+   CONTENT SECTIONS
+========================================================= */
+.settings-section {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.settings-description {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+/* =========================================================
+   RADIO GROUP
+========================================================= */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+/* =========================================================
+   THEME GRID
+========================================================= */
+.theme-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.theme-swatch {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.theme-swatch.active {
+  border-color: var(--text-primary);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 768px) {
+  .settings-panel {
+    width: 100%;
+  }
 }
 
 /* =========================================================

@@ -1,20 +1,34 @@
-import { Injectable } from "@angular/core";
+import { Injectable, signal } from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
   private readonly THEME_KEY = 'app-theme';
 
-  setTheme(theme: string) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem(this.THEME_KEY, theme);
+  private _currentTheme = signal<string>(this.loadInitialTheme());
+
+  currentTheme = this._currentTheme.asReadonly();
+
+  constructor() {
+    // Ensure theme is applied on app start
+    this.applyTheme(this._currentTheme());
   }
 
-  getTheme(): string {
+  private loadInitialTheme(): string {
     return localStorage.getItem(this.THEME_KEY) || 'basic';
   }
 
+  setTheme(theme: string) {
+    this.applyTheme(theme);
+    this._currentTheme.set(theme);
+    localStorage.setItem(this.THEME_KEY, theme);
+  }
+
+   getTheme(): string {
+    return this._currentTheme();
+  }
+
   toggleDarkMode() {
-    const current = this.getTheme();
+    const current = this._currentTheme();
 
     if (current.endsWith('-dark')) {
       this.setTheme(current.replace('-dark', ''));
@@ -24,8 +38,11 @@ export class ThemeService {
   }
 
   isDarkTheme(): boolean {
-    const theme = this.getTheme();
-    return theme.endsWith('-dark');
+    return this._currentTheme().endsWith('-dark');
+  }
+
+  private applyTheme(theme: string) {
+    document.documentElement.setAttribute('data-theme', theme);
   }
 
 }

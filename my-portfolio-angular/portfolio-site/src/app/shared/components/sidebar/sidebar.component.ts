@@ -1,9 +1,10 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, HostListener, Injector, Inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { defaultConfig, LayoutConfig } from 'src/app/core/config/layout.config';
 import { CommonApp } from 'src/app/core/services/common';
 
 @Component({
@@ -21,21 +22,60 @@ import { CommonApp } from 'src/app/core/services/common';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent extends CommonApp implements OnInit {
-  @Input() config: any;
+  @Input() config: LayoutConfig = defaultConfig;
   isSidebarCollapsed = false;
   isRightSideSettingOpen = false;
   isMobileOpen = false;
   isMobile = false;
   currentSection = '';
-  navigationType: string = '';
-  selectedTheme: string = 'theme-1';
+  navigationType: any = '';
+  selectedTheme: string = this.config.theme.name;
   availableThemes = [
-    { name: 'Theme 1 (Peachy Warm)', label: 'Peachy Warm', class: 'theme-1', color: '#9B7E6B', selected: false },
-    { name: 'Theme 2 (Blue Modern)', label: 'Blue Modern', class: 'theme-2', color: '#7B61FF', selected: false },
-    { name: 'Theme 3 (Indigo Teal)', label: 'Indigo Teal', class: 'theme-3', color: '#3F8A8F', selected: false },
-    { name: 'Theme 4 (Plum Seafoam)', label: 'Plum Seafoam', class: 'theme-4', color: '#4FA49C', selected: false },
-    { name: 'Theme 5 (TRON: Ares)', label: 'TRON: Ares', class: 'theme-5', color: '#4FA49C', selected: false },
+    {
+      key: 'theme-one',
+      label: 'Peachy Warm',
+      theme: 'theme-1',
+      swatch: '#4A6B7D',
+      selected: false
+    },
+    {
+      key: 'theme-two',
+      label: 'Blue Modern',
+      theme: 'theme-2',
+      swatch: '#4361EE',
+      selected: false
+    },
+    {
+      key: 'theme-three',
+      label: 'Indigo Teal',
+      theme: 'theme-3',
+      swatch: '#4A3FDB',
+      selected: false
+    },
+    {
+      key: 'theme-four',
+      label: 'Plum Seafoam',
+      theme: 'theme-4',
+      swatch: '#5D3A5F',
+      selected: false
+    },
+    {
+      key: 'theme-tron',
+      label: 'TRON: Ares',
+      theme: 'theme-5',
+      swatch: '#2FB8C6',
+      selected: false
+    },
+    {
+      key: 'theme-christmas',
+      label: 'Christmas',
+      theme: 'theme-6',
+      swatch: '#C62828',
+      selected: false
+    }
   ];
+
+
   menuItems = [
     { label: 'Home', href: '#home', icon: 'home' },
     { label: 'About', href: '#about', icon: 'person' },
@@ -43,7 +83,7 @@ export class SidebarComponent extends CommonApp implements OnInit {
     { label: 'Contact', href: '#contact', icon: 'mail' },
   ];
 
-  constructor(public override injector: Injector, @Inject(DOCUMENT) private document: Document) {
+  constructor(public override injector: Injector) {
     super(injector);
   }
 
@@ -52,11 +92,7 @@ export class SidebarComponent extends CommonApp implements OnInit {
     this.checkMobile();
     this.updateCurrentSection();
     window.addEventListener('resize', this.checkMobile.bind(this));
-    this.navigationType = this.config?.appConfiguration?.type === 'sidebar'? 'sidebar' : 'navbar';
-    this.applyTheme(this.config?.theme?.name);
-    this.availableThemes.forEach(theme => {
-      theme.selected = theme.class === this.config?.theme?.name;
-    });
+    this.navigationType = this.config?.appConfiguration?.type === 'sidebar' ? 'sidebar' : 'navbar';
   }
 
   @HostListener('window:scroll')
@@ -71,17 +107,11 @@ export class SidebarComponent extends CommonApp implements OnInit {
   }
 
   onThemeChange(event: any) {
-    this.config.theme.name = event.class;
-    this.applyTheme(this.config.theme.name);
+    this.config.theme.name = event.theme;
+    this.themeService.setTheme(event.key);
     this.availableThemes.forEach(theme => {
-      theme.selected = theme.class === event.class?true:false;
+      theme.selected = theme.key === event.key ? true : false;
     });
-  }
-
-  applyTheme(themeClass: string) {
-
-    // body.classList.toggle('dark-mode', this.isDarkTheme);
-    this.config.theme.name = themeClass;
   }
 
   checkMobile() {
@@ -148,7 +178,7 @@ export class SidebarComponent extends CommonApp implements OnInit {
     }
   }
 
-  toggleSettingSideBar(){
+  toggleSettingSideBar() {
     this.isRightSideSettingOpen = !this.isRightSideSettingOpen;
   }
 

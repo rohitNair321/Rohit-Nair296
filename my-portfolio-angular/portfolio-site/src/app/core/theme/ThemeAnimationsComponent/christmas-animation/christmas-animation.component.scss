@@ -1,0 +1,119 @@
+@use "sass:math";
+/* =========================================================
+   BASE WRAPPER
+========================================================= */
+.christmas-wrapper {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+}
+/* =========================================================
+   SPARKLING LIGHTS
+========================================================= */
+.sparkle-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.sparkle {
+  position: absolute;
+  top: -10px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff, var(--accent));
+  opacity: 0.9;
+  animation-name: sparkle-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* Randomize each sparkle */
+.sparkle:nth-child(odd) {
+  width: 4px;
+  height: 4px;
+}
+
+.sparkle:nth-child(even) {
+  width: 7px;
+  height: 7px;
+}
+
+/* Position + delay randomness */
+@for $i from 1 through 50 {
+  .sparkle:nth-child(#{$i}) {
+    left: percentage(math.div(random(90), 100));
+    animation-duration: #{random(6) + 5}s;
+    animation-delay: -#{random(12)}s;
+    opacity: #{math.div(random(5), 10) + 0.4};
+  }
+}
+
+/* Falling motion */
+@keyframes sparkle-fall {
+  from {
+    transform: translateY(-10vh);
+  }
+  to {
+    transform: translateY(110vh);
+  }
+}
+
+/* =========================================================
+   GIFTS AT BOTTOM
+========================================================= */
+.gift-row {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+/* Gift box */
+.gift {
+  width: 60px;
+  height: 60px;
+  border-radius: 0.75rem;
+  position: relative;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Ribbon */
+.gift::before,
+.gift::after {
+  content: '';
+  position: absolute;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.gift::before {
+  width: 10px;
+  height: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.gift::after {
+  height: 10px;
+  width: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Color variants */
+.gift-red {
+  background: linear-gradient(#c62828, #8e0000);
+}
+
+.gift-green {
+  background: linear-gradient(#2e7d32, #1b5e20);
+}
+
+.gift-gold {
+  background: linear-gradient(#ffca28, #f9a825);
+}

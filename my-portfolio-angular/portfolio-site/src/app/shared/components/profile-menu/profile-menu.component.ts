@@ -85,7 +85,7 @@ export class ProfileMenuComponent extends CommonApp {
   ];
 
   navigate(route: string) {
-    // router navigation
+    this.router.navigateByUrl('app' + route);
   }
 
   logout() {
