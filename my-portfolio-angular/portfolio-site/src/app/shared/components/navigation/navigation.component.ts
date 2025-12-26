@@ -9,6 +9,7 @@ import { ProfileMenuComponent } from '../profile-menu/profile-menu.component';
 import { CommonApp } from 'src/app/core/services/common';
 import { AppService } from 'src/app/core/services/app.service';
 import { ThemeService } from 'src/app/core/theme/theme.service';
+import { MenuModule } from "primeng/menu";
 
 @Component({
   selector: 'app-navigation',
@@ -20,8 +21,9 @@ import { ThemeService } from 'src/app/core/theme/theme.service';
     CardModule,
     RadioButtonModule,
     ButtonModule,
-    ProfileMenuComponent
-  ],
+    ProfileMenuComponent,
+    MenuModule
+],
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
 })
@@ -47,7 +49,7 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
     { label: 'Contact', href: '#contact', icon: 'mail' },
   ];
 
-  constructor(public override injector: Injector, private breakpointObserver: BreakpointObserver, private appService: AppService) {
+  constructor(public override injector: Injector, private breakpointObserver: BreakpointObserver) {
     super(injector);
   }
 
@@ -114,12 +116,12 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
   }
 
   // Add this method for smooth scrolling
-  scrollToSection(event: Event, href: string) {
-    event.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      if (this.isMobile) this.isMenuOpen = false;
-    }
-  }
+  // scrollToSection(event: Event, href: string) {
+  //   event.preventDefault();
+  //   const element = document.querySelector(href);
+  //   if (element) {
+  //     element.scrollIntoView({ behavior: 'smooth' });
+  //     if (this.isMobile) this.isMenuOpen = false;
+  //   }
+  // }
 }

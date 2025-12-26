@@ -5,6 +5,7 @@ import { defaultConfig, LayoutConfig } from 'src/app/core/config/layout.config';
 import { THEME_NAME_MAP } from 'src/app/core/config/theme.config';
 import { CommonApp } from 'src/app/core/services/common';
 import { ThemeService } from 'src/app/core/theme/theme.service';
+import { ChristmasAnimationComponent } from 'src/app/core/theme/ThemeAnimationsComponent/christmas-animation/christmas-animation.component';
 import { ChatBotComponent } from 'src/app/shared/components/chat-bot/chat-bot.component';
 import { FooterComponent } from 'src/app/shared/components/footer/footer.component';
 import { NavigationComponent } from 'src/app/shared/components/navigation/navigation.component';
@@ -15,7 +16,7 @@ import { environment } from 'src/environments/environments';
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ChatBotComponent, NavigationComponent, SidebarComponent, FooterComponent, SpinnerComponent],
+  imports: [CommonModule, RouterOutlet, ChatBotComponent, NavigationComponent, SidebarComponent, FooterComponent, SpinnerComponent, ChristmasAnimationComponent],
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.css']
 })

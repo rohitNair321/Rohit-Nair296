@@ -12,7 +12,7 @@ export class CommonApp {
     public loading;
     public services;
     public aiServices;
-    public appServices;
+    public appService;
     public portfolioServices;
     public themeService;
     public appConfig: LayoutConfig = defaultConfig;
@@ -20,18 +20,39 @@ export class CommonApp {
     constructor(public injector: Injector) {
         this.loading = this.injector.get(LoadingService);
         this.services = this.injector.get(AuthService);
-        this.appServices = this.injector.get(AppService);
+        this.appService = this.injector.get(AppService);
         this.aiServices = this.injector.get(OpenAIService);
         this.portfolioServices = this.injector.get(SupabaseService);
         this.themeService = this.injector.get(ThemeService);
     }
-
-    // public initializeTheme() {
-    //     document.body.classList.toggle('dark-mode', this.isDarkTheme);
-    //     return this.isDarkTheme = this.appConfig.appConfiguration.theme == 'dark' ? true : false;
-    // }
-
+    
     public themeToggle() {
         this.themeService.toggleDarkMode();
     }
+
+  /**
+   * Scrolls the window to a specific section smoothly
+   * @param event The mouse event to prevent default anchor behavior
+   * @param target The ID of the element (e.g., '#home')
+   */
+  scrollToSection(event: Event, target: string): void {
+    event.preventDefault();
+
+    // Find the element by the ID provided (stripping the '#' if present)
+    const element = document.querySelector(target);
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+        inline: 'nearest'
+      });
+    } else {
+      // Fallback: If #home doesn't exist, scroll to the absolute top of the page
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+  }
 }

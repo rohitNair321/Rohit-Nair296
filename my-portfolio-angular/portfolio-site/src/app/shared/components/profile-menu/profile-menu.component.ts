@@ -40,7 +40,7 @@ export class ProfileMenuComponent extends CommonApp {
 
   profileData = computed(() => {
     return (
-      this.appServices.profile()
+      this.appService.profile()
     );
   });
 
@@ -89,7 +89,10 @@ export class ProfileMenuComponent extends CommonApp {
   }
 
   logout() {
-    // logout logic
+    this.authService.logout();
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_user');
+    this.router.navigateByUrl('/');
   }
 
 }

@@ -344,83 +344,79 @@ $themes: (
 
   // THEME — CHRISTMAS (LIGHT)
   theme-christmas: (
-    /* Backgrounds */
-    background: #F6FBF8,
+    /* Backgrounds: Added a touch of 'Frost' */
+    background: #F8FBFA,
     surface: #FFFFFF,
-    surface-alt: #ECF7F1,
+    surface-alt: #F0F7F4,
 
-    /* Text */
-    text-primary: #1E3A2B,
-    text-secondary: #3F6F57,
-    text-muted: #6FA38A,
+    /* Text: Deep Forest shades for readability */
+    text-primary: #12261B,
+    text-secondary: #2D523E,
+    text-muted: #5C8A73,
 
-    /* Brand */
-    primary: #C62828,
-    /* Christmas Red */
-    accent: #2E7D32,
-    /* Christmas Green */
-    primary-glow: rgba(198, 40, 40, 0.25),
+    /* Brand: Vibrant Berry Red & Deep Pine Green */
+    primary: #D32F2F,
+    accent: #1B5E20,
+    primary-glow: rgba(211, 47, 47, 0.15),
 
     /* Borders */
-    border: #D7E8DD,
+    border: #E0EDE5,
 
-    /* Status */
+    /* Status: Metallic Gold and Deep Red */
     success: #2E7D32,
-    warning: #FFD54F,
-    error: #B71C1C,
+    warning: #FBC02D, // Warm Gold
+    error: #C62828,
 
-    /* Highlight */
-    highlight: #FFD54F,
+    /* Highlight: Champagne Gold */
+    highlight: #FFD700,
 
     /* Logo */
-    logo-primary: #C62828,
-    logo-secondary: #2E7D32,
-    logo-border: #D7E8DD,
-    logo-border-hover: #A5D6A7,
-    logo-shadow: rgba(46, 125, 50, 0.25),
+    logo-primary: #D32F2F,
+    logo-secondary: #1B5E20,
+    logo-border: #E0EDE5,
+    logo-border-hover: #81C784,
+    logo-shadow: rgba(27, 94, 32, 0.15),
 
     /* Badges */
-    badge-angular-bg: rgba(198, 40, 40, 0.15),
-    badge-angular-text: #C62828),
+    badge-angular-bg: rgba(211, 47, 47, 0.1),
+    badge-angular-text: #D32F2F),
 
   // THEME — CHRISTMAS (DARK)
   theme-christmas-dark: (
-    /* Backgrounds */
-    background: #0B1F14,
-    surface: #123D2A,
-    surface-alt: #1E5A3F,
+    /* Backgrounds: Deep Midnight Forest */
+    background: #050F0A,
+    surface: #0A1E14,
+    surface-alt: #122D1F,
 
     /* Text */
-    text-primary: #FFFFFF,
-    text-secondary: #C8F7DC,
-    text-muted: #9FD8B7,
+    text-primary: #F0F7F4,
+    text-secondary: #B2D8C5,
+    text-muted: #7DA891,
 
-    /* Brand */
-    primary: #C62828,
-    /* Red stays strong */
-    accent: #2E7D32,
-    /* Green stays rich */
-    primary-glow: rgba(198, 40, 40, 0.45),
+    /* Brand: Brighter Red for Dark Mode visibility */
+    primary: #FF5252,
+    accent: #4CAF50,
+    primary-glow: rgba(255, 82, 82, 0.3),
 
     /* Borders */
-    border: rgba(255, 255, 255, 0.2),
+    border: rgba(255, 255, 255, 0.1),
 
     /* Status */
-    success: #2E7D32,
-    warning: #FFD54F,
-    error: #B71C1C,
+    success: #4CAF50,
+    warning: #FFD700,
+    error: #FF5252,
 
     /* Highlight */
-    highlight: #FFD54F,
+    highlight: #FFD700,
 
     /* Logo */
-    logo-primary: #C62828,
-    logo-secondary: #2E7D32,
-    logo-border: rgba(255, 255, 255, 0.25),
-    logo-border-hover: rgba(255, 255, 255, 0.4),
-    logo-shadow: rgba(0, 0, 0, 0.6),
+    logo-primary: #FF5252,
+    logo-secondary: #4CAF50,
+    logo-border: rgba(255, 255, 255, 0.15),
+    logo-border-hover: rgba(255, 255, 255, 0.3),
+    logo-shadow: rgba(0, 0, 0, 0.5),
 
     /* Badges */
-    badge-angular-bg: rgba(198, 40, 40, 0.25),
-    badge-angular-text: #FFEBEE)
+    badge-angular-bg: rgba(255, 82, 82, 0.15),
+    badge-angular-text: #FF8A80)
 );

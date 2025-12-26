@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ThemeService } from '../../theme.service';
 import { NgFor, NgIf } from '@angular/common';
 
@@ -25,5 +25,9 @@ export class ChristmasAnimationComponent {
   isChristmas = computed(() =>
     this.currentTheme()?.includes('christmas')
   );
-  
+  // Toggle for user preference
+  showAnimations = signal(true);
+  toggleAnimations() {
+    this.showAnimations.update(v => !v);
+  }
 }

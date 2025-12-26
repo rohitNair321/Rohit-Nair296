@@ -1,21 +1,68 @@
-<footer class="footer animate-footer-fade-in-up">
-  <div class="footer-container">
-    <div class="footer-section footer-brand">
-      <span class="footer-logo">
-        <!-- Optionally add a logo image here -->
-        <strong>RohitPortfolio</strong>
-      </span>
-      <p class="footer-tagline">Crafted with Angular &hearts;</p>
+<footer class="modern-footer animate-footer-fade-in-up">
+  <div class="footer-wave">
+    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+      <path
+        d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
+        class="shape-fill"></path>
+    </svg>
+  </div>
+
+  <div class="container footer-grid">
+    <div class="footer-col brand-col">
+      <div class="footer-logo">
+        <span class="logo-dot"></span>
+        <strong>Rohit<span>Portfolio</span></strong>
+      </div>
+      <p class="footer-bio">
+        Passionate Professional Developer focused on crafting clean, high-performance, and user-centric digital
+        experiences.
+      </p>
+      <div class="social-links">
+        <a href="#" class="social-icon" aria-label="LinkedIn"><i class="material-icons">linkedin</i></a>
+        <a href="#" class="social-icon" aria-label="GitHub"><i class="material-icons">code</i></a>
+        <a href="#" class="social-icon" aria-label="Twitter"><i class="material-icons">flutter_dash</i></a>
+      </div>
     </div>
-    <div class="footer-section footer-copyright">
-      <p>© 2025 RohitPortfolio. All Rights Reserved.</p>
+
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul class="footer-links">
+        <li *ngFor="let item of menuItems">
+          <a [href]="item.href" class="menu-link"
+            (click)="scrollToSection($event, item.href)">
+            {{ item.label }}
+          </a>
+        </li>
+      </ul>
     </div>
-    <!--
-    <div class="footer-section footer-social">
-      <a href="#" aria-label="LinkedIn"><span class="material-icons">linkedin</span></a>
-      <a href="#" aria-label="GitHub"><span class="material-icons">code</span></a>
-      <a href="#" aria-label="Twitter"><span class="material-icons">twitter</span></a>
+
+    <div class="footer-col">
+      <h4>Services</h4>
+      <ul class="footer-links">
+        <li><span>Web Development</span></li>
+        <li><span>UI/UX Design</span></li>
+        <li><span>API Integration</span></li>
+        <li><span>Consultation</span></li>
+      </ul>
     </div>
-    -->
+
+    <div class="footer-col">
+      <h4>Say Hello</h4>
+      <a href="mailto:hello@rohit.com" class="footer-email">{{profileInfo?.email}}</a>
+      <p class="footer-location">Available for Remote Work Worldwide</p>
+      <button class="back-to-top" aria-label="Back to top" (click)="scrollToSection($event, '#home')">
+        <i class="material-icons">arrow_upward</i>
+      </button>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container bottom-flex">
+      <p>© 2025 RohitPortfolio. Built with <span class="heart">&hearts;</span> and Angular.</p>
+      <div class="legal-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
   </div>
 </footer>

@@ -12,13 +12,15 @@
       <button class="menu-toggle" (click)="toggleMenu()" *ngIf="config?.appConfiguration?.type === 'sidebar'">
         <span class="material-icons">{{ isMenuOpen ? 'close' : 'menu' }}</span>
       </button>
-      <span class="logo-initials animate-nav-fade-in">
-        <span class="rn-r">R</span><span class="rn-n">N</span>
-      </span>
-      <span class="logo-name animate-nav-slide-in">
-        <span class="logo-rohit">Rohit</span>
-        <span class="logo-portfolio">Portfolio</span>
-      </span>
+      <a routerLink="/app" class="logo-container">
+        <span class="logo-initials animate-nav-fade-in">
+          <span class="rn-r">R</span><span class="rn-n">N</span>
+        </span>
+        <span class="logo-name animate-nav-slide-in">
+          <span class="logo-rohit">Rohit</span>
+          <span class="logo-portfolio">Portfolio</span>
+        </span>
+      </a>
     </div>
 
     <!-- Desktop Menu (right-aligned) -->
@@ -52,7 +54,8 @@
       </div>
     </div>
 
-    <div class="nav-actions" *ngIf="config.appConfiguration.showUserProfileView && isMobile && config?.appConfiguration?.type === 'sidebar'">
+    <div class="nav-actions"
+      *ngIf="config.appConfiguration.showUserProfileView && isMobile && config?.appConfiguration?.type === 'sidebar'">
       <app-profile-menu></app-profile-menu>
     </div>
     <!-- Mobile Menu (right-aligned) -->

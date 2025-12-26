@@ -601,3 +601,22 @@
   text-shadow:
     0 0 10px color-mix(in oklab, var(--accent) 60%, transparent);
 }
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Removes the underline */
+  color: inherit;       /* Keeps your current text colors */
+  cursor: pointer;
+  gap: 12px;            /* Adjust spacing between initials and name */
+  transition: opacity 0.3s ease;
+}
+
+.logo-container:hover {
+  opacity: 0.8;         /* Subtle visual feedback on hover */
+}
+
+/* Ensure the spans inside don't break layout */
+.logo-initials, .logo-name {
+  display: inline-flex;
+}

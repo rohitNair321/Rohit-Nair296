@@ -135,13 +135,13 @@ export class SidebarComponent extends CommonApp implements OnInit {
     this.themeToggle();
   }
 
-  scrollToSection(event: Event, href: string) {
-    event.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
+  // scrollToSection(event: Event, href: string) {
+  //   event.preventDefault();
+  //   const element = document.querySelector(href);
+  //   if (element) {
+  //     element.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  // }
 
   toggleMobile() {
     this.isMobileOpen = !this.isMobileOpen;

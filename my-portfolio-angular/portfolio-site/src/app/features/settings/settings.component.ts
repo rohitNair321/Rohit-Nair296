@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Component, Injector, OnInit, signal } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -21,7 +21,9 @@ import { CommonApp } from 'src/app/core/services/common';
     CardModule,
     ButtonModule,
     CalendarModule,
-    DialogModule
+    DialogModule,
+    NgFor,
+    NgIf
   ],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
@@ -37,10 +39,11 @@ export class SettingsComponent extends CommonApp implements OnInit {
   experienceDialogVisible = false;
   selectedExperienceIndex: number | null = null;
   isAddingNewExperience = false;
+  showExperienceDialog: boolean = false;
   experienceDialogForm!: FormGroup;
 
 
-  constructor(public override injector: Injector, private fb: FormBuilder, private appService: AppService) {
+  constructor(public override injector: Injector, private fb: FormBuilder) {
     super(injector);
   }
 
@@ -72,6 +75,7 @@ export class SettingsComponent extends CommonApp implements OnInit {
       name: ['', [Validators.maxLength(80)]],
       description: ['', [Validators.maxLength(600)]],
       email: ['', [Validators.email]],
+      logo_initials: ['RN', [Validators.maxLength(3)]],
       primaryPhone: ['', [Validators.pattern(/^\+?[0-9\s\-]{7,20}$/)]],
       secondaryPhone: [''],
       location: ['', Validators.maxLength(120)],
@@ -97,6 +101,40 @@ export class SettingsComponent extends CommonApp implements OnInit {
       description: ['', Validators.maxLength(1000)],
       projects: this.fb.array([])
     });
+  }
+
+  /**
+   * Main Method: Opens the dialog and populates data if editing
+   * @param exp The experience object (optional)
+   * @param index The index in the main array (optional)
+   */
+  openExperienceDialog(exp?: any, index: number | null = null) {
+    this.selectedExperienceIndex = index;
+    this.initDialogForm(); // Reset form for fresh state
+
+    if (exp) {
+      // 1. Patch basic fields
+      this.experienceDialogForm.patchValue({
+        role: exp.role,
+        company: exp.company,
+        title: exp.title,
+        description: exp.description,
+        present: exp.present || false,
+        location: exp.location,
+        startDate: exp.startDate ? new Date(exp.startDate) : null,
+        endDate: exp.endDate ? new Date(exp.endDate) : null
+      });
+
+      // 2. Clear and Rebuild Projects FormArray
+      const projectFormArray = this.experienceDialogForm.get('projects') as FormArray;
+      if (exp.projects && exp.projects.length > 0) {
+        exp.projects.forEach((proj: any) => {
+          projectFormArray.push(this.createProject(proj));
+        });
+      }
+    }
+
+    this.showExperienceDialog = true;
   }
 
   // helpers to patch form from profile data
@@ -226,6 +264,15 @@ export class SettingsComponent extends CommonApp implements OnInit {
 
     techArray.push(new FormControl(value.trim()));
   }
+  addTech(projectIndex: number, input: HTMLInputElement) {
+    const value = input.value.trim();
+    if (value) {
+      const project = this.projectsArray.at(projectIndex);
+      const techs = project.get('technologies')?.value || [];
+      project.get('technologies')?.setValue([...techs, value]);
+      input.value = '';
+    }
+  }
 
   // Remove technology from project
   removeTechnology(projectIndex: number, techIndex: number) {
@@ -233,6 +280,16 @@ export class SettingsComponent extends CommonApp implements OnInit {
     if (techArray) {
       techArray.removeAt(techIndex);
     }
+  }
+  removeTech(projectIndex: number, techIndex: number) {
+    const project = this.projectsArray.at(projectIndex);
+    const techs = [...project.get('technologies')?.value];
+    techs.splice(techIndex, 1);
+    project.get('technologies')?.setValue(techs);
+  }
+
+  getTechs(index: number): string[] {
+    return this.projectsArray.at(index).get('technologies')?.value || [];
   }
 
   // Save experience from dialog
@@ -271,6 +328,7 @@ export class SettingsComponent extends CommonApp implements OnInit {
     this.experienceDialogVisible = false;
     this.selectedExperienceIndex = null;
     this.isAddingNewExperience = false;
+    this.showExperienceDialog = false;
   }
 
   // Dialog hide callback

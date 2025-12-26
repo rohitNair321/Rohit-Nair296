@@ -13,6 +13,7 @@ import { take } from 'rxjs';
 import { AppService } from 'src/app/core/services/app.service';
 import { CommonApp } from 'src/app/core/services/common';
 import { ProjectDetailDialogComponent } from 'src/app/shared/components/dialogs/project-detail-dialog.component';
+import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 
 interface Hero {
   name: string;
@@ -40,7 +41,19 @@ interface HomeData { hero: Hero; aboutTeaser?: AboutTeaser; contact?: ContactInf
     TagModule
   ],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  animations: [
+    trigger('pageAnimations', [
+      transition(':enter', [
+        query('.animate-section', [
+          style({ opacity: 0, transform: 'translateY(20px)' }),
+          stagger(150, [
+            animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+          ])
+        ], { optional: true })
+      ])
+    ])
+  ]
 })
 export class HomeComponent extends CommonApp implements OnInit {
 
@@ -52,6 +65,9 @@ export class HomeComponent extends CommonApp implements OnInit {
   projectList: any[] = [];
   experienceYears = 5;
   totalProjects = 20;
+  // Dialog State
+  showProjectDialog = false;
+  selectedProject: any = null;
 
   showContactDialog = false;
   // private dialog = inject(Dialog);
@@ -66,55 +82,25 @@ export class HomeComponent extends CommonApp implements OnInit {
     public override injector: Injector,
     private el: ElementRef,
     private renderer: Renderer2,
-    private fb: FormBuilder,
-    private appService: AppService
+    private fb: FormBuilder
   ) {
     super(injector);
     this.contactForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(50)]],
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      subject: ['', [Validators.required, Validators.maxLength(60)]],
+      subject: ['', [Validators.required]],
       message: ['', [Validators.required, Validators.maxLength(500)]]
     });
   }
 
   ngOnInit() {
-    // this.getData();
     if (this.profileData()) {
       this.homeData = this.profileData();
     } else {
       this.getMyProfile();
     }
   }
-
-  scrollToSection(event: Event, sectionId: string) {
-    event.preventDefault();
-    const element = document.querySelector(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
-
-  // visibleProjects() {
-  //   // Use homeData.projects instead of this.projects
-  //   return this.homeData?.projects
-  //     ? this.homeData.projects.slice(this.currentProjectIndex, this.currentProjectIndex + this.projectsPerView)
-  //     : [];
-  // }
-
-  // slideLeft() {
-  //   if (this.currentProjectIndex > 0) {
-  //     this.currentProjectIndex--;
-  //   }
-  // }
-  // slideRight() {
-  //   if (
-  //     this.homeData?.projects &&
-  //     this.currentProjectIndex + this.projectsPerView < this.homeData.projects.length
-  //   ) {
-  //     this.currentProjectIndex++;
-  //   }
-  // }
 
   onSubmitContact() {
     if (this.contactForm.invalid) {
@@ -133,7 +119,8 @@ export class HomeComponent extends CommonApp implements OnInit {
     }, 2000);
   }
 
-  get name() { return this.contactForm.get('name'); }
+  get firstName() { return this.contactForm.get('firstName'); }
+  get lastName() { return this.contactForm.get('lastName'); }
   get email() { return this.contactForm.get('email'); }
   get subject() { return this.contactForm.get('subject'); }
   get message() { return this.contactForm.get('message'); }
@@ -152,44 +139,9 @@ export class HomeComponent extends CommonApp implements OnInit {
     });
   }
 
-  getData() {
-    this.loading.hide();
-    // this.portfolioServices.getProfile().subscribe({
-    //   next: res => {
-    //     console.log('Profile Data:', res);
-    //     this.homeData = res.home; // Wait for DOM update
-    //     this.loading.hide();
-    //   },
-    //   error: err => {
-    //     console.error('Error fetching profile data:', err);
-    //     this.loading.hide();
-    //   }
-    // });
-    // this.portfolioServices.listProjects().subscribe({
-    //   next: res => {
-    //     this.projectList = res;
-    //     console.log('Project list:', res);
-    //     this.loading.hide();
-    //   },
-    //   error: err => {
-    //     console.error('Error fetching project list:', err);
-    //     this.loading.hide();
-    //   }
-    // });
-  }
-
   openProject(project: any) {
-    // this.dialog.open(ProjectDetailDialogComponent, {
-    //   data: project,
-    //   backdropClass: ['cdk-overlay-dark-backdrop'], // nice dim on all themes
-    //   panelClass: ['p-3'] // bootstrap spacing class on container
-    //   // disableClose: true, // uncomment if you don't want backdrop click to close
-    // });
-  }
-
-
-  techClass(tech: string): string {
-    return tech.replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+    this.selectedProject = project;
+    this.showProjectDialog = true;
   }
 
 }
