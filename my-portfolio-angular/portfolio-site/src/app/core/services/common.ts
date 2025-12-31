@@ -9,26 +9,26 @@ import { ThemeService } from "../theme/theme.service";
 
 export class CommonApp {
 
-    public loading;
-    public services;
-    public aiServices;
-    public appService;
-    public portfolioServices;
-    public themeService;
-    public appConfig: LayoutConfig = defaultConfig;
+  public loading;
+  public services;
+  public aiServices;
+  public appService;
+  public portfolioServices;
+  public themeService;
+  public appConfig: LayoutConfig = defaultConfig;
 
-    constructor(public injector: Injector) {
-        this.loading = this.injector.get(LoadingService);
-        this.services = this.injector.get(AuthService);
-        this.appService = this.injector.get(AppService);
-        this.aiServices = this.injector.get(OpenAIService);
-        this.portfolioServices = this.injector.get(SupabaseService);
-        this.themeService = this.injector.get(ThemeService);
-    }
-    
-    public themeToggle() {
-        this.themeService.toggleDarkMode();
-    }
+  constructor(public injector: Injector) {
+    this.loading = this.injector.get(LoadingService);
+    this.services = this.injector.get(AuthService);
+    this.appService = this.injector.get(AppService);
+    this.aiServices = this.injector.get(OpenAIService);
+    this.portfolioServices = this.injector.get(SupabaseService);
+    this.themeService = this.injector.get(ThemeService);
+  }
+
+  public themeToggle() {
+    this.themeService.toggleDarkMode();
+  }
 
   /**
    * Scrolls the window to a specific section smoothly
@@ -53,6 +53,42 @@ export class CommonApp {
         top: 0,
         behavior: 'smooth'
       });
+    }
+  }
+
+  public normalizeThemesResponse(raw: any): any[] {
+    // 1. Handle stringified input from DB
+    let data = typeof raw === 'string' ? JSON.parse(raw) : raw;
+    if (!data) return [];
+
+    // 2. If it's an object with keys (your current "corrupted" state), convert to clean array
+    if (!Array.isArray(data) && typeof data === 'object') {
+      return Object.entries(data).map(([key, value]: [string, any]) => {
+        // Check if the value is nested (like your "0": { "theme-warm": ... } example)
+        const isNested = value && typeof value === 'object' && !value.tokens;
+        const themeData = isNested ? Object.values(value)[0] : value;
+        const actualId = isNested ? Object.keys(value)[0] : key;
+
+        return {
+          id: actualId,
+          ...themeData
+        };
+      }).filter(t => t.name); // Remove empty entries
+    }
+
+    // 3. If it's already a clean array, just return it
+    return Array.isArray(data) ? data : [];
+  }
+
+  applyThemeFromProfile(profile: any) {
+    if (!profile) return;
+    const themeList = this.normalizeThemesResponse(profile.themes);
+    const currentTheme = themeList.find(theme => theme.name === profile.currenttheme);
+    this.themeService.registerThemes(themeList);
+
+    // Apply selected theme
+    if (currentTheme) {
+      this.themeService.setTheme(currentTheme.id);
     }
   }
 }

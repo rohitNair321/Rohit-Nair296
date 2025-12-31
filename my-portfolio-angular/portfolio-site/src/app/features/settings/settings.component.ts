@@ -6,8 +6,8 @@ import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { finalize, take } from 'rxjs';
-import { AppService, Experience, ExperienceDTO, Profile, ProfileUpdateDTO } from 'src/app/core/services/app.service';
+import { take } from 'rxjs';
+import { ExperienceDTO, Profile, } from 'src/app/core/services/app.service';
 import { CommonApp } from 'src/app/core/services/common';
 
 
@@ -40,7 +40,14 @@ export class SettingsComponent extends CommonApp implements OnInit {
   selectedExperienceIndex: number | null = null;
   isAddingNewExperience = false;
   showExperienceDialog: boolean = false;
+  showThemeBuilder = false;
+  customThemeForm!: FormGroup;
+  currentTheme: string = '';
   experienceDialogForm!: FormGroup;
+  activeTab: 'light' | 'dark' = 'light';
+  themesList: any[] = [];
+  isEditingTheme = false;
+  editingThemeId: string | null = null;
 
 
   constructor(public override injector: Injector, private fb: FormBuilder) {
@@ -75,7 +82,7 @@ export class SettingsComponent extends CommonApp implements OnInit {
       name: ['', [Validators.maxLength(80)]],
       description: ['', [Validators.maxLength(600)]],
       email: ['', [Validators.email]],
-      logo_initials: ['RN', [Validators.maxLength(3)]],
+      logo_initials: ['', [Validators.maxLength(3)]],
       primaryPhone: ['', [Validators.pattern(/^\+?[0-9\s\-]{7,20}$/)]],
       secondaryPhone: [''],
       location: ['', Validators.maxLength(120)],
@@ -86,7 +93,9 @@ export class SettingsComponent extends CommonApp implements OnInit {
       skills: this.fb.array([]),
       resume: [null],
       avatar: [null],
-      experiences: this.fb.array([])
+      currentTheme: ['', [Validators.maxLength(80)]],
+      experiences: this.fb.array([]),
+      themes: this.fb.array([])
     });
     this.initDialogForm();
   }
@@ -101,7 +110,118 @@ export class SettingsComponent extends CommonApp implements OnInit {
       description: ['', Validators.maxLength(1000)],
       projects: this.fb.array([])
     });
+    this.initThemeForm();
   }
+
+  initThemeForm() {
+    this.customThemeForm = this.fb.group({
+      theme_name: ['', Validators.required],
+
+      tokens: this.fb.group({
+        primary: ['', Validators.required],
+        accent: ['', Validators.required],
+        primary_glow: ['', Validators.required],
+        background: ['', Validators.required],
+        surface: ['', Validators.required],
+        surface_alt: ['', Validators.required],
+        text_primary: ['', Validators.required],
+        text_secondary: ['', Validators.required],
+        text_muted: ['', Validators.required],
+        success: ['', Validators.required],
+        warning: ['', Validators.required],
+        error: ['', Validators.required],
+        border: ['', Validators.required],
+      }),
+
+      dark_tokens: this.fb.group({
+        primary: ['', Validators.required],
+        accent: ['', Validators.required],
+        primary_glow: ['', Validators.required],
+        background: ['', Validators.required],
+        surface: ['', Validators.required],
+        surface_alt: ['', Validators.required],
+        text_primary: ['', Validators.required],
+        text_secondary: ['', Validators.required],
+        text_muted: ['', Validators.required],
+        success: ['', Validators.required],
+        warning: ['', Validators.required],
+        error: ['', Validators.required],
+        border: ['', Validators.required],
+      })
+    });
+  }
+
+  openThemeBuilder() {
+    this.initThemeForm();
+    this.showThemeBuilder = true;
+  }
+
+  selectAndSaveTheme(theme: any) {
+    this.themeService.setTheme(theme.id);
+    this.currentTheme = theme.name;
+  }
+
+  saveThemePreference() {
+    this.loading.show();
+    const profileData = this.buildFormData();
+    this.saveProfile(profileData);
+  }
+
+  // Method to open the builder in Edit Mode
+  editTheme(theme: any) {
+    this.isEditingTheme = true;
+    this.editingThemeId = theme.id;
+    this.showThemeBuilder = true;
+
+    this.customThemeForm.patchValue({
+      theme_name: theme.name,
+      tokens: theme.tokens,
+      dark_tokens: theme.dark_tokens
+    });
+  }
+
+  deleteTheme(themeId: string, event: Event) {
+    this.loading.show();
+    event.stopPropagation(); // Don't select the theme while deleting
+
+    let themesList = this.normalizeThemesResponse(this.profileSignal()?.themes);
+    themesList = themesList.filter(t => t.id !== themeId);
+
+    const fd = this.buildFormData();
+    fd.set('themes', JSON.stringify(themesList));
+    this.saveProfile(fd);
+  }
+
+
+  saveCustomTheme() {
+    if (this.customThemeForm.invalid) return;
+
+    const formVal = this.customThemeForm.value;
+    let themesList = this.normalizeThemesResponse(this.profileSignal()?.themes);
+
+    const newTheme = {
+      id: this.isEditingTheme && this.editingThemeId
+        ? this.editingThemeId
+        : 'theme-' + Date.now(),
+      name: formVal.theme_name,
+      tokens: formVal.tokens,
+      dark_tokens: formVal.dark_tokens
+    };
+
+    if (this.isEditingTheme) {
+      const index = themesList.findIndex(t => t.id === this.editingThemeId);
+      if (index > -1) themesList[index] = newTheme;
+    } else {
+      themesList.push(newTheme);
+    }
+
+    const fd = this.buildFormData();
+    fd.set('themes', JSON.stringify(themesList));
+
+    this.showThemeBuilder = false;
+    this.saveProfile(fd);
+  }
+
 
   /**
    * Main Method: Opens the dialog and populates data if editing
@@ -148,6 +268,10 @@ export class SettingsComponent extends CommonApp implements OnInit {
     return this.experiences.controls as FormGroup[];
   }
 
+  get themes(): FormArray {
+    return this.profileForm.get('themes') as FormArray;
+  }
+
   // Update your existing getter to return typed FormArray
   get projectsArray(): FormArray<FormGroup> {
     return this.experienceDialogForm.get('projects') as FormArray<FormGroup>;
@@ -157,9 +281,6 @@ export class SettingsComponent extends CommonApp implements OnInit {
     return this.projectsArray.controls as FormGroup[];
   }
 
-  // addSkill(value = '') {
-  //   this.skills.push(this.fb.control(value, Validators.maxLength(50)));
-  // }
   addSkill(value = '') {
     if (!value || !value.trim()) return;
     this.skills.push(new FormControl(value.trim()));
@@ -202,7 +323,6 @@ export class SettingsComponent extends CommonApp implements OnInit {
 
   addExperience(data?: any) {
     this.experiences.push(this.createExperience(data));
-
   }
   // Updated addExperience method to open dialog
   addNewExperience() {
@@ -361,6 +481,7 @@ export class SettingsComponent extends CommonApp implements OnInit {
       name: p.full_name ?? '',
       description: p.description ?? '',
       email: p.email ?? '',
+      logo_initials: p.logo_initials ?? '',
       primaryPhone: p.primary_phone ?? '',
       secondaryPhone: p.secondary_phone ?? '',
       location: p.location ?? '',
@@ -374,14 +495,6 @@ export class SettingsComponent extends CommonApp implements OnInit {
     while (this.skills.length) this.skills.removeAt(0);
     (p.skills || []).forEach(s => this.skills.push(new FormControl(s)));
 
-    // // experiences
-    // while (this.experiences.length) this.experiences.removeAt(0);
-    // (p.experiences || []).forEach(e => this.addExperience({
-    //   ...e,
-    //   startDate: e.startDate ? this.parseMonthString(e.startDate) : null,
-    //   endDate: e.endDate ? this.parseMonthString(e.endDate) : null
-    // }));
-    // experiences with projects
     while (this.experiences.length) this.experiences.removeAt(0);
     (p.experiences || []).forEach(e => {
       const expData = {
@@ -393,6 +506,17 @@ export class SettingsComponent extends CommonApp implements OnInit {
       this.addExperience(expData);
     });
 
+    this.applyThemeFromProfile(p);
+    this.themesList = this.normalizeThemesResponse(p.themes || []);
+    // this.themeService.registerThemes(this.themesList);
+
+    const selectedTheme = this.themesList.find(t => t.name === p.currenttheme);
+    // 3. Apply current theme
+    if (p.currenttheme) {
+      this.currentTheme = p.currenttheme;
+      // this.themeService.setTheme(selectedTheme?.id);
+    }
+
     // avatar url (public)
     this.avatarDataUrl = p.avatar_url ?? null;
     // resume file name: the server stores resume_url as path (e.g. resumes/<id>/uuid.pdf)
@@ -402,6 +526,8 @@ export class SettingsComponent extends CommonApp implements OnInit {
     } else {
       this.resumeFileName = null;
     }
+
+    console.log('Profile patched into form:', this.themesList);
   }
 
   onAvatarChange(ev: Event) {
@@ -428,6 +554,49 @@ export class SettingsComponent extends CommonApp implements OnInit {
     this.profileForm.patchValue({ resume: f });
   }
 
+
+
+
+  private normalizeThemesObject(raw: any): Record<string, any> {
+    if (!raw) return {};
+
+    // If already correct
+    if (typeof raw === 'object' && !Array.isArray(raw)) {
+      return raw;
+    }
+
+    // If stringified JSON
+    if (typeof raw === 'string') {
+      try {
+        return JSON.parse(raw);
+      } catch {
+        return {};
+      }
+    }
+
+    // If legacy array format (failsafe)
+    if (Array.isArray(raw)) {
+      const result: Record<string, any> = {};
+      raw.forEach(item => {
+        if (typeof item === 'string') {
+          try {
+            item = JSON.parse(item);
+          } catch {
+            return;
+          }
+        }
+        if (typeof item === 'object') {
+          Object.assign(result, item);
+        }
+      });
+      return result;
+    }
+
+    return {};
+  }
+
+
+
   // Build FormData: convert arrays to JSON strings because server expects JSON strings for some fields
   private buildFormData(): FormData {
     const fd = new FormData();
@@ -436,12 +605,14 @@ export class SettingsComponent extends CommonApp implements OnInit {
     fd.append('full_name', v.name || '');
     fd.append('description', v.description || '');
     fd.append('email', v.email || '');
+    fd.append('logo_initials', v.logo_initials || '');
     fd.append('primaryPhone', v.primaryPhone || '');
     fd.append('secondaryPhone', v.secondaryPhone || '');
     fd.append('location', v.location || '');
     fd.append('website', v.website || '');
     fd.append('linkedin', v.linkedin || '');
     fd.append('github', v.github || '');
+    fd.append('currenttheme', this.currentTheme || '');
     fd.append('openToWork', String(!!v.openToWork));
 
     // arrays → stringify
@@ -460,6 +631,26 @@ export class SettingsComponent extends CommonApp implements OnInit {
     const resumeFile = this.profileForm.get('resume')?.value as File | null;
     if (resumeFile) fd.append('resume', resumeFile, resumeFile.name);
 
+    // const existingThemes = this.profileSignal()?.themes || {};
+
+    // if (this.customThemeForm) {
+    //   const t = this.customThemeForm.value;
+    //   // Generate a slug-based ID: "Warm Earth" -> "theme-warm-earth"
+    //   const themeId = 'theme-' + t.theme_name.toLowerCase().replace(/\s+/g, '-');
+
+    //   const updatedThemes = {
+    //     ...existingThemes,
+    //     [themeId]: {
+    //       name: t.theme_name,
+    //       tokens: t.tokens,
+    //       dark_tokens: t.dark_tokens
+    //     }
+    //   };
+
+    //   // Append the entire themes collection as a stringified JSON for the Postgres JSONB column
+    //   fd.append('themes', JSON.stringify(updatedThemes));
+    // }
+
     return fd;
   }
 
@@ -467,6 +658,10 @@ export class SettingsComponent extends CommonApp implements OnInit {
     this.profileForm.markAllAsTouched();
     this.loading.show();
     const profileData = this.buildFormData();
+    this.saveProfile(profileData);
+  }
+
+  saveProfile(profileData: FormData) {
     this.appService.updateProfile(profileData).pipe(take(1)).subscribe({
       next: (updatedProfile) => {
         this.patchFromProfile(updatedProfile);

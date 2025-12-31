@@ -22,8 +22,8 @@
       <span class="material-icons menu-icon">download</span>
       <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Resume</span>
     </a>
-    <button class="theme-toggle" (click)="toggleTheme()">
-      <span class="material-icons menu-icon">{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</span>
+    <button class="theme-toggle" (click)="themeService.toggleDarkMode()">
+      <span class="material-icons menu-icon">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
       <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Theme</span>
     </button>
   </div>
@@ -75,9 +75,20 @@
     </p>
 
     <div class="theme-grid">
-      <button *ngFor="let theme of availableThemes" class="theme-swatch" [class.active]="theme.selected"
-        [ngStyle]="{ background: theme.swatch }" (click)="onThemeChange(theme)" aria-label="Select theme">
-      </button>
+      <div *ngFor="let theme of availableThemes()" class="theme-card"
+        [class.active]="themeService.currentThemeId() === theme.id" (click)="onThemeChange(theme)">
+
+        <div class="theme-preview">
+          <div class="color-dot" [style.background]="theme.tokens['primary']"></div>
+          <div class="color-dot" [style.background]="theme.tokens['accent']"></div>
+          <div class="color-dot shadow" [style.background]="theme.tokens['surface']"></div>
+        </div>
+
+        <div class="theme-info">
+          <span class="theme-name">{{ theme.name }}</span>
+          <i class="material-icons check-icon" *ngIf="themeService.currentThemeId() === theme.id">check_circle</i>
+        </div>
+      </div>
     </div>
   </section>
 </aside>

@@ -1,90 +1,99 @@
 <div class="auth-page">
-  <div class="auth-card">
-    <div class="auth-header">
-      <h1>Create account</h1>
-      <p>Let's get you set up in a few seconds.</p>
+  <div class="auth-card register-card">
+    
+    <div class="auth-branding">
+      <div class="logo-initials">
+        <span class="rn-r">R</span><span class="rn-n">N</span>
+      </div>
+      <div class="auth-header">
+        <h1>Create Account</h1>
+        <p>Join the community and build your portfolio</p>
+      </div>
     </div>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-      <div class="form-field" [class.invalid]="name?.invalid && name?.touched">
-        <label for="name">Full name</label>
-        <input id="name" type="text" formControlName="name" placeholder="Rohit Nair" />
-        <div class="field-error" *ngIf="name?.errors && name?.touched">
-          <span *ngIf="name?.errors?.['required']">Name is required.</span>
-          <span *ngIf="name?.errors?.['minlength']">
-            Name must be at least 2 characters.
-          </span>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="auth-form">
+      
+      <div class="form-row">
+        <div class="form-field" [class.invalid]="name?.invalid && name?.touched">
+          <label for="name">Full Name</label>
+          <div class="input-wrapper">
+            <i class="material-icons">person_outline</i>
+            <input id="name" type="text" formControlName="name" placeholder="Rohit Nair" />
+          </div>
+          <div class="field-error" *ngIf="name?.errors && name?.touched">
+            <small *ngIf="name?.errors?.['required']">Name is required</small>
+          </div>
         </div>
       </div>
 
       <div class="form-field" [class.invalid]="email?.invalid && email?.touched">
-        <label for="email">Email</label>
-        <input id="email" type="email" formControlName="email" placeholder="you@example.com" />
+        <label for="email">Email Address</label>
+        <div class="input-wrapper">
+          <i class="material-icons">mail_outline</i>
+          <input id="email" type="email" formControlName="email" placeholder="name@example.com" />
+        </div>
         <div class="field-error" *ngIf="email?.errors && email?.touched">
-          <span *ngIf="email?.errors?.['required']">Email is required.</span>
-          <span *ngIf="email?.errors?.['email']">Enter a valid email.</span>
+          <small *ngIf="email?.errors?.['required']">Email is required</small>
+          <small *ngIf="email?.errors?.['email']">Invalid email format</small>
         </div>
       </div>
 
-      <div class="form-row">
+      <div class="form-grid">
         <div class="form-field" [class.invalid]="password?.invalid && password?.touched">
           <label for="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            formControlName="password"
-            placeholder="••••••••"
-          />
-          <div class="field-error" *ngIf="password?.errors && password?.touched">
-            <span *ngIf="password?.errors?.['required']">Password is required.</span>
-            <span *ngIf="password?.errors?.['minlength']">
-              At least 6 characters required.
-            </span>
+          <div class="input-wrapper">
+            <i class="material-icons">lock_open</i>
+            <input id="password" type="password" formControlName="password" placeholder="••••••••" />
           </div>
         </div>
 
-        <div
-          class="form-field"
-          [class.invalid]="(confirmPassword?.touched && form.hasError('passwordMismatch'))"
-        >
+        <div class="form-field" [class.invalid]="confirmPassword?.touched && form.hasError('passwordMismatch')">
           <label for="confirmPassword">Confirm</label>
-          <input
-            id="confirmPassword"
-            type="password"
-            formControlName="confirmPassword"
-            placeholder="Repeat password"
-          />
-          <div class="field-error" *ngIf="confirmPassword?.touched && form.hasError('passwordMismatch')">
-            Passwords do not match.
+          <div class="input-wrapper">
+            <i class="material-icons">done_all</i>
+            <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="••••••••" />
           </div>
         </div>
       </div>
+      <div class="field-error password-mismatch" *ngIf="confirmPassword?.touched && form.hasError('passwordMismatch')">
+        <small>Passwords do not match</small>
+      </div>
 
-      <div class="terms" [class.invalid]="acceptTerms?.invalid && acceptTerms?.touched">
-        <label>
+      <div class="form-meta terms-container" [class.invalid]="acceptTerms?.invalid && acceptTerms?.touched">
+        <label class="remember-me">
           <input type="checkbox" formControlName="acceptTerms" />
-          <span>
-            I accept the
-            <a class="link" href="javascript:void(0)">Terms &amp; Conditions</a>
+          <span class="custom-checkbox"></span>
+          <span class="terms-text">
+            I agree to the <a href="javascript:void(0)" class="forgot-link">Terms & Conditions</a>
           </span>
         </label>
-        <div class="field-error" *ngIf="acceptTerms?.invalid && acceptTerms?.touched">
-          You must accept the terms to continue.
-        </div>
       </div>
 
-      <button class="btn primary w-100" type="submit" [disabled]="loading">
-        <span *ngIf="!loading">Create account</span>
-        <span *ngIf="loading" class="spinner"></span>
+      <button type="submit" class="btn-primary-auth" [disabled]="loading || form.invalid">
+        <div *ngIf="!loading">Create Account</div>
+        <div *ngIf="loading" class="spinner-container">
+          <span class="auth-spinner"></span>
+          <span>Creating...</span>
+        </div>
       </button>
 
-      <p class="auth-footer-text">
-        Already have an account?
-        <a class="link" [routerLink]="['/login']">Login</a>
-      </p>
+      <div class="divider">
+        <span>or register with</span>
+      </div>
 
-      <p *ngIf="error" class="global-error">
-        {{ error }}
+      <div class="social-grid">
+        <button type="button" class="btn-social" (click)="onLoginWithGoogle()">
+          <img src="assets/icons/google.svg" alt="">
+          <span>Google</span>
+        </button>
+        <button type="button" class="btn-social" (click)="onLoginWithFacebook()">
+          <img src="assets/icons/facebook.svg" alt="">
+          <span>Facebook</span>
+        </button>
+      </div>
+
+      <p class="auth-footer-text">
+        Already have an account? <a routerLink="/login">Sign In</a>
       </p>
     </form>
   </div>

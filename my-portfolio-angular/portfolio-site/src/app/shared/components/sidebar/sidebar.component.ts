@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, HostListener, Injector, Inject } from '@angular/core';
+import { Component, Input, OnInit, HostListener, Injector, Inject, computed } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -30,51 +30,16 @@ export class SidebarComponent extends CommonApp implements OnInit {
   currentSection = '';
   navigationType: any = '';
   selectedTheme: string = this.config.theme.name;
-  availableThemes = [
-    {
-      key: 'theme-one',
-      label: 'Peachy Warm',
-      theme: 'theme-1',
-      swatch: '#4A6B7D',
-      selected: false
-    },
-    {
-      key: 'theme-two',
-      label: 'Blue Modern',
-      theme: 'theme-2',
-      swatch: '#4361EE',
-      selected: false
-    },
-    {
-      key: 'theme-three',
-      label: 'Indigo Teal',
-      theme: 'theme-3',
-      swatch: '#4A3FDB',
-      selected: false
-    },
-    {
-      key: 'theme-four',
-      label: 'Plum Seafoam',
-      theme: 'theme-4',
-      swatch: '#5D3A5F',
-      selected: false
-    },
-    {
-      key: 'theme-tron',
-      label: 'TRON: Ares',
-      theme: 'theme-5',
-      swatch: '#2FB8C6',
-      selected: false
-    },
-    {
-      key: 'theme-christmas',
-      label: 'Christmas',
-      theme: 'theme-6',
-      swatch: '#C62828',
-      selected: false
-    }
-  ];
-
+  profileSignal = computed(() => {
+    return (
+      this.appService.profile()
+    );
+  });
+  availableThemes = computed(() => {
+    const profile = this.profileSignal();
+    const themes = this.normalizeThemesResponse(profile?.themes || []);
+    return themes;
+  });
 
   menuItems = [
     { label: 'Home', href: '#home', icon: 'home' },
@@ -93,6 +58,7 @@ export class SidebarComponent extends CommonApp implements OnInit {
     this.updateCurrentSection();
     window.addEventListener('resize', this.checkMobile.bind(this));
     this.navigationType = this.config?.appConfiguration?.type === 'sidebar' ? 'sidebar' : 'navbar';
+    // this.availableThemes = this.normalizeThemesResponse(this.profileSignal()?.themes);
   }
 
   @HostListener('window:scroll')
@@ -107,11 +73,11 @@ export class SidebarComponent extends CommonApp implements OnInit {
   }
 
   onThemeChange(event: any) {
-    this.config.theme.name = event.theme;
-    this.themeService.setTheme(event.key);
-    this.availableThemes.forEach(theme => {
-      theme.selected = theme.key === event.key ? true : false;
-    });
+    this.config.theme.name = event.name;
+    this.themeService.setTheme(event.id);
+    // this.availableThemes.forEach(theme => {
+    //   theme.selected = theme.name === event.name ? true : false;
+    // });
   }
 
   checkMobile() {
@@ -127,21 +93,13 @@ export class SidebarComponent extends CommonApp implements OnInit {
     console.log('Sidebar collapsed:', this.config.appConfiguration.collapsed);
   }
 
-  get isDarkTheme(): boolean {
-    return this.themeService.isDarkTheme();
-  }
+  // get isDarkTheme(): boolean {
+  //   return this.themeService.isDarkTheme();
+  // }
 
   toggleTheme() {
     this.themeToggle();
   }
-
-  // scrollToSection(event: Event, href: string) {
-  //   event.preventDefault();
-  //   const element = document.querySelector(href);
-  //   if (element) {
-  //     element.scrollIntoView({ behavior: 'smooth' });
-  //   }
-  // }
 
   toggleMobile() {
     this.isMobileOpen = !this.isMobileOpen;
@@ -187,5 +145,10 @@ export class SidebarComponent extends CommonApp implements OnInit {
     navigationType
     this.config.appConfiguration.type = this.navigationType;
     this.isRightSideSettingOpen = false;
+  }
+
+  selectTheme(theme: any) {
+    this.selectedTheme = theme.name;
+    this.onThemeChange(theme);
   }
 }

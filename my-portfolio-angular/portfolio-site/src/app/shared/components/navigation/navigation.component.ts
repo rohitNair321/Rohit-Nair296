@@ -107,9 +107,9 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
     }
   }
 
-  get isDarkTheme(): boolean {
-    return this.themeService.isDarkTheme();
-  }
+  // get isDarkTheme(): boolean {
+  //   return this.themeService.isDarkTheme();
+  // }
 
   toggleTheme() {
     this.themeToggle();

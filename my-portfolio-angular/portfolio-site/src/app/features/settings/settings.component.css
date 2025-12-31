@@ -13,6 +13,12 @@
   margin-bottom: 30px;
 }
 
+.settings-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .avatar-upload p {
   color: var(--text-primary);
 }
@@ -294,35 +300,9 @@
   align-items: center;
 }
 
-/* --- NESTED PROJECT CARDS --- */
-/* .project-sub-card {
-  background: var(--surface-alt);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
-  overflow: hidden;
-  transition: transform 0.2s;
-} */
-
 .project-sub-card:hover {
   border-color: var(--primary);
-  /* transform: translateX(4px); */
 }
-
-/* .sub-card-header {
-  background: rgba(var(--primary-rgb), 0.05);
-  padding: 10px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border);
-} */
-
-/* .project-number {
-  font-weight: 700;
-  font-size: 0.8rem;
-  color: var(--primary);
-} */
 
 .sub-card-body {
   padding: 16px;
@@ -494,4 +474,328 @@
   font-weight: 800;
   color: var(--accent);
   text-transform: uppercase;
+}
+
+/* --- THEME CUSTOMIZER --- */
+.theme-card {
+  /* margin-top: 24px; */
+}
+
+/* Container Grid */
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+}
+
+/* Individual Card */
+.theme-card {
+  position: relative;
+  border-radius: 12px;
+  background: var(--surface-alt);
+  border: 2px solid var(--border);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.theme-card.active {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary), transparent 95%);
+}
+
+/* Preview Section */
+.theme-preview {
+  height: 80px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.color-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.color-dots span {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+/* Badge for active theme */
+.active-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  color: var(--primary);
+}
+
+.active-badge i {
+  font-size: 18px;
+}
+
+/* Info & Actions Footer */
+.theme-footer {
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface);
+}
+
+.theme-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Action Buttons */
+.theme-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.action-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.action-btn i {
+  font-size: 18px;
+}
+
+/* Specific Button Behaviors */
+.action-btn.edit:hover {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.action-btn.delete:hover {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+/* Hide actions by default, show on card hover (Optional) */
+.theme-actions {
+  opacity: 0.2;
+  transition: opacity 0.2s;
+}
+
+.theme-card:hover .theme-actions {
+  opacity: 1;
+}
+
+.theme-preview {
+  height: 40px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+}
+
+.color-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.color-dots span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.theme-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.check-icon {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 18px;
+  color: var(--primary);
+  background: var(--surface-alt);
+  border-radius: 50%;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.card-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+/* --- THEME BUILDER MODAL --- */
+.theme-builder-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.theme-builder-modal {
+  width: 100%;
+  /* max-width: 650px; */
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--surface-alt);
+  padding: 2rem;
+  border-radius: 20px;
+}
+
+.theme-token-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.token-section h4 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 5px;
+}
+
+.token-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.token-input {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.token-input label {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.token-input input[type="color"] {
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.token-input input[type="text"] {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.theme-tabs {
+  display: flex;
+  background: var(--surface);
+  padding: 4px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+
+.theme-tabs button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.theme-tabs button.active {
+  background: var(--surface-alt);
+  color: var(--primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.input-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.cp-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cp-wrap label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.cp-wrap input[type="color"] {
+  width: 100%;
+  height: 38px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  padding: 2px;
+}
+
+.name-field input {
+  font-size: 1.1rem;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  width: 100%;
+  background: var(--surface);
+}
+
+.mt-2 {
+  margin-top: 12px;
 }

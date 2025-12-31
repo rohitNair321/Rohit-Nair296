@@ -71,12 +71,7 @@ export class HomeComponent extends CommonApp implements OnInit {
 
   showContactDialog = false;
   // private dialog = inject(Dialog);
-  profileData = computed(() => {
-    return (
-      this.appService.profile()
-    );
-  });
-
+  profileData = this.appService.profile;
 
   constructor(
     public override injector: Injector,
@@ -97,6 +92,7 @@ export class HomeComponent extends CommonApp implements OnInit {
   ngOnInit() {
     if (this.profileData()) {
       this.homeData = this.profileData();
+      this.applyThemeFromProfile(this.profileData());
     } else {
       this.getMyProfile();
     }
@@ -130,6 +126,7 @@ export class HomeComponent extends CommonApp implements OnInit {
     this.appService.getProfile().pipe(take(1)).subscribe({
       next: (profile) => {
         this.homeData = profile;
+        this.applyThemeFromProfile(this.profileData());
         this.loading.hide();
       },
       error: (e) => {

@@ -80,4 +80,15 @@ export class RegisterComponent {
       },
     });
   }
+
+  onLoginWithGoogle(): void {
+    if (this.loading) {
+      return;
+    }
+  }
+  onLoginWithFacebook(): void {
+    if (this.loading) {
+      return;
+    }
+  }
 }

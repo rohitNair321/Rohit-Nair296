@@ -75,6 +75,7 @@ export interface Profile {
     description?: string;
     email?: string;
     primary_phone?: string;
+    logo_initials?: string;
     secondary_phone?: string;
     location?: string;
     website?: string;
@@ -83,6 +84,8 @@ export interface Profile {
     open_to_work?: boolean;
     skills?: string[];
     experiences?: ExperienceDTO[];
+    currenttheme?: string;
+    themes?: ThemeDefinition[];
     avatar_url?: string; // public url for avatar (if public)
     resume_url?: string; // stored path on server (not public url)
     created_at?: string;
@@ -121,4 +124,11 @@ export interface ProjectDTO {
     techStack?: string[];
     link?: string;
     highlights?: string[];
+}
+
+export interface ThemeDefinition {
+  id: string;
+  name: string;
+  tokens: Record<string, string>;
+  darkTokens?: Record<string, string>;
 }

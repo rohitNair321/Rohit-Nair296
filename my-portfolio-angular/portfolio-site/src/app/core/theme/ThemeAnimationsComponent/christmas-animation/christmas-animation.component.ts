@@ -13,18 +13,16 @@ import { NgFor, NgIf } from '@angular/common';
 export class ChristmasAnimationComponent {
   private themeService = inject(ThemeService);
 
-  currentTheme = computed(() => this.themeService.currentTheme());
+  // currentTheme = computed(() => this.themeService.currentTheme());
   sparkles = Array.from({ length: 50 });
   winds = Array.from({ length: 6 });
 
   constructor() {
-    console.log('Current theme:', this.themeService.currentTheme());
+    // console.log('Current theme:', this.themeService.currentTheme());
 
   }
 
-  isChristmas = computed(() =>
-    this.currentTheme()?.includes('christmas')
-  );
+  isChristmas = computed(() => this.themeService.isChristmasTheme());
   // Toggle for user preference
   showAnimations = signal(true);
   toggleAnimations() {

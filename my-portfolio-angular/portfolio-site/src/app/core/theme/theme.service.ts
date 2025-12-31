@@ -1,48 +1,91 @@
-import { Injectable, signal } from "@angular/core";
+import { Injectable, signal, effect, computed, inject } from "@angular/core";
+import { AppService } from "../services/app.service";
+
+export interface ThemeDefinition {
+  id: string;
+  name: string;
+  tokens: Record<string, string>;
+  dark_tokens: Record<string, string>;
+}
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
-  private readonly THEME_KEY = 'app-theme';
+  private readonly THEME_KEY = 'selected-theme-id';
+  private readonly DARK_KEY = 'is-dark-mode';
+  appService = inject(AppService);
+  profileSignal = this.appService.profile;
+  // Signals for reactive UI
+  currentThemeId = signal<string>(localStorage.getItem(this.THEME_KEY) || 'basic');
+  isDark = signal<boolean>(localStorage.getItem(this.DARK_KEY) === 'true');
 
-  private _currentTheme = signal<string>(this.loadInitialTheme());
-
-  currentTheme = this._currentTheme.asReadonly();
+  // Registry to hold theme data
+  private themeRegistry = new Map<string, ThemeDefinition>();
 
   constructor() {
-    // Ensure theme is applied on app start
-    this.applyTheme(this._currentTheme());
+    // Automatically re-apply theme tokens whenever the ID or Dark Mode changes
+    effect(() => {
+      this.applyTheme(this.currentThemeId(), this.isDark());
+    });
   }
 
-  private loadInitialTheme(): string {
-    return localStorage.getItem(this.THEME_KEY) || 'basic';
+  // A computed signal that returns the full object of the active theme
+  activeTheme = computed(() => {
+    return this.themeRegistry.get(this.currentThemeId());
+  });
+
+  // A helper to check if the active theme is festive
+  isChristmasTheme = computed(() => {
+    const theme = this.activeTheme();
+    if (!theme) return false;
+
+    // Check if ID OR the display Name contains "christmas"
+    const searchStr = 'christmas';
+    return theme.id.toLowerCase().includes(searchStr) ||
+      theme.name.toLowerCase().includes(searchStr);
+  });
+
+  isNewYearTheme = computed(() => {
+    const theme = this.activeTheme();
+    if (!theme) return false;
+
+    // Check if ID OR the display Name contains "new year" or "celebration"
+    const searchStrs = ['new year', 'celebration'];
+    return searchStrs.some(str =>
+      theme.id.toLowerCase().includes(str) ||
+      theme.name.toLowerCase().includes(str)
+    );
+  });
+
+  // Register themes coming from API or Static files
+  registerThemes(themes: ThemeDefinition[]) {
+    themes.forEach(t => this.themeRegistry.set(t.id, t));
+    // Re-apply in case the current theme data was just loaded
+    this.applyTheme(this.currentThemeId(), this.isDark());
   }
 
-  setTheme(theme: string) {
-    this.applyTheme(theme);
-    this._currentTheme.set(theme);
-    localStorage.setItem(this.THEME_KEY, theme);
-  }
-
-   getTheme(): string {
-    return this._currentTheme();
+  setTheme(themeId: string) {
+    localStorage.setItem(this.THEME_KEY, themeId);
+    this.currentThemeId.set(themeId);
   }
 
   toggleDarkMode() {
-    const current = this._currentTheme();
-
-    if (current.endsWith('-dark')) {
-      this.setTheme(current.replace('-dark', ''));
-    } else {
-      this.setTheme(`${current}-dark`);
-    }
+    const newValue = !this.isDark();
+    localStorage.setItem(this.DARK_KEY, String(newValue));
+    this.isDark.set(newValue);
   }
 
-  isDarkTheme(): boolean {
-    return this._currentTheme().endsWith('-dark');
+  private applyTheme(id: string, dark: boolean) {
+    const theme = this.themeRegistry.get(id);
+    if (!theme) return;
+
+    const tokens = dark ? theme.dark_tokens : theme.tokens;
+    const root = document.documentElement;
+
+    Object.entries(tokens).forEach(([key, value]) => {
+      root.style.setProperty(`--${key.replace(/_/g, '-')}`, value);
+    });
   }
 
-  private applyTheme(theme: string) {
-    document.documentElement.setAttribute('data-theme', theme);
-  }
+
 
 }

@@ -454,24 +454,3 @@
 
 
 
-
-
-
-/* =====================================
-   THEME TOKEN → GLOBAL VARIABLE BRIDGE
-   (Backward Compatibility)
-===================================== */
-
-[data-theme] {
-  --global-bg-primary: var(--background);
-  --global-bg-secondary: var(--surface);
-
-  --global-text-primary: var(--text-primary);
-  --global-text-secondary: var(--text-secondary);
-  --global-text-muted: var(--text-muted);
-
-  --global-border-color: var(--border);
-
-  --global-accent-color: var(--accent);
-  --global-primary-color: var(--primary);
-}

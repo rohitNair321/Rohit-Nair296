@@ -1,0 +1,26 @@
+<div class="ny-wrapper" *ngIf="isNewYear()" [class.disabled]="!showAnimations()">
+  <button class="ny-toggle" (click)="toggleAnimations()">
+    {{ showAnimations() ? '🎆' : '✨' }}
+  </button>
+
+  <ng-container *ngIf="showAnimations()">
+    <div *ngFor="let f of fireworks" class="firework"></div>
+
+      <div *ngFor="let c of confetti" class="confetti" 
+           [style.left.%]="c.x" 
+           [style.animation-delay.s]="c.delay"
+           [style.background-color]="c.color"></div>
+      
+      <div class="firework"></div>
+      <div class="firework" style="left: 70%; animation-delay: 1.5s"></div>
+
+
+
+    <div class="countdown-toast">
+      <span>Happy New Year! 🥂</span>
+    </div>
+  </ng-container>
+</div>
+<!-- <div class="ny-wrapper" *ngIf="isNewYear()">
+
+    </div> -->

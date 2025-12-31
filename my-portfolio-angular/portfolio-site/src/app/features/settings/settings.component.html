@@ -39,7 +39,8 @@
             <div class="input-group">
               <label>Resume Link</label>
               <div class="file-input-wrapper">
-                <input id="resumeFile" formControlName="resume" type="file" accept="application/pdf" (change)="onResumeChange($event)" />
+                <input id="resumeFile" formControlName="resume" type="file" accept="application/pdf"
+                  (change)="onResumeChange($event)" />
                 <label for="resumeFile" class="file-custom-btn">
                   <i class="material-icons">upload_file</i> {{ resumeFileName || 'Upload New Resume' }}
                 </label>
@@ -128,16 +129,59 @@
           <p class="muted">This is how your branding appears in the top navigation bar.</p>
         </div>
       </div>
+
+      <section class="settings-card theme-card">
+        <div class="card-header-flex">
+          <h3 class="card-title"><i class="material-icons">palette</i> Themes</h3>
+          <button type="button" class="btn-add-sub" (click)="openThemeBuilder()">
+            <i class="material-icons">add_circle_outline</i> New Theme
+          </button>
+        </div>
+
+        <div class="theme-grid">
+          <div *ngFor="let theme of themesList" class="theme-card"
+            [class.active]="themeService.currentThemeId() === theme.id" (click)="selectAndSaveTheme(theme)">
+
+            <div class="theme-preview" [style.background]="theme.tokens.background">
+              <div class="color-dots">
+                <span [style.background]="theme.tokens.primary"></span>
+                <span [style.background]="theme.tokens.accent"></span>
+              </div>
+
+              <div class="active-badge" *ngIf="themeService.currentThemeId() === theme.id">
+                <i class="material-icons">check_circle</i>
+              </div>
+            </div>
+
+            <div class="theme-footer">
+              <span class="theme-name">{{ theme.name }}</span>
+
+              <div class="theme-actions">
+                <button class="action-btn edit" title="Edit Theme" (click)="editTheme(theme); $event.stopPropagation()">
+                  <i class="material-icons">edit</i>
+                </button>
+                <button class="action-btn delete" title="Delete Theme" (click)="deleteTheme(theme.id, $event)">
+                  <i class="material-icons">delete_outline</i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn-primary w-100" (click)="saveThemePreference()" style="margin-top: 1rem;">
+          Apply Theme
+        </button>
+      </section>
     </aside>
   </div>
 </section>
 
-<p-dialog [(visible)]="showExperienceDialog" [modal]="true" 
-          [header]="selectedExperienceIndex !== null ? 'Edit Professional Experience' : 'Add New Experience'" 
-          [style]="{width: '80vw', maxWidth: '900px'}" class="modern-dialog">
-  
+<p-dialog [(visible)]="showExperienceDialog" [modal]="true"
+  [header]="selectedExperienceIndex !== null ? 'Edit Professional Experience' : 'Add New Experience'"
+  [style]="{width: '80vw', maxWidth: '900px'}" class="modern-dialog">
+
   <div [formGroup]="experienceDialogForm" class="dialog-content-wrapper">
-    
+
     <div class="form-section">
       <h4 class="section-subtitle">Company Details</h4>
       <div class="input-grid">
@@ -174,9 +218,9 @@
       </div>
 
       <div formArrayName="projects" class="nested-projects-list">
-        <div *ngFor="let proj of projectsArray.controls; let pIndex = index" 
-             [formGroupName]="pIndex" class="project-sub-card">
-          
+        <div *ngFor="let proj of projectsArray.controls; let pIndex = index" [formGroupName]="pIndex"
+          class="project-sub-card">
+
           <div class="sub-card-header">
             <span class="project-number">Project #{{ pIndex + 1 }}</span>
             <button type="button" class="btn-delete-sub" (click)="removeProject(pIndex)">
@@ -189,9 +233,10 @@
               <input type="text" formControlName="title" placeholder="Project Name (e.g. E-commerce Dashboard)">
             </div>
             <div class="input-group">
-              <textarea formControlName="description" rows="2" placeholder="What was your specific contribution?"></textarea>
+              <textarea formControlName="description" rows="2"
+                placeholder="What was your specific contribution?"></textarea>
             </div>
-            
+
             <div class="tech-tags-container">
               <label>Technologies</label>
               <div class="tags-wrapper">
@@ -217,4 +262,121 @@
       </button>
     </div>
   </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="showThemeBuilder" [modal]="true" [style]="{width: '80vw', maxWidth: '900px'}"
+  class="modern-dialog">
+  <div class="theme-builder-modal card animate-slide-up">
+
+    <div class="modal-header">
+      <div class="header-title">
+        <i class="material-icons">palette</i>
+        <h3>Create New Theme</h3>
+      </div>
+    </div>
+
+    <form [formGroup]="customThemeForm" class="theme-form-container">
+      <div class="form-field name-field">
+        <label>Theme Name</label>
+        <input type="text" formControlName="theme_name" placeholder="e.g., Midnight Neon or Cyberpunk">
+      </div>
+
+      <div class="theme-tabs">
+        <button type="button" [class.active]="activeTab === 'light'" (click)="activeTab = 'light'">
+          <i class="material-icons">light_mode</i> Light Mode
+        </button>
+        <button type="button" [class.active]="activeTab === 'dark'" (click)="activeTab = 'dark'">
+          <i class="material-icons">dark_mode</i> Dark Mode
+        </button>
+      </div>
+
+      <div class="tab-content" *ngIf="activeTab === 'light'" formGroupName="tokens">
+        <div class="token-grid">
+          <div class="token-section">
+            <h4>Brand & Status</h4>
+            <div class="input-row">
+              <div class="cp-wrap"><label>Primary</label><input type="color" formControlName="primary"></div>
+              <div class="cp-wrap"><label>Accent</label><input type="color" formControlName="accent"></div>
+              <div class="cp-wrap"><label>Success</label><input type="color" formControlName="success"></div>
+              <div class="cp-wrap"><label>Warning</label><input type="color" formControlName="warning"></div>
+              <div class="cp-wrap"><label>Error</label><input type="color" formControlName="error"></div>
+            </div>
+          </div>
+
+          <div class="token-section">
+            <h4>Surfaces & Text</h4>
+            <div class="input-row">
+              <div class="cp-wrap"><label>Background</label><input type="color" formControlName="background">
+              </div>
+              <div class="cp-wrap"><label>Surface</label><input type="color" formControlName="surface"></div>
+              <div class="cp-wrap"><label>Surface Alt</label><input type="color" formControlName="surface_alt"></div>
+              <div class="cp-wrap"><label>Border</label><input type="color" formControlName="border"></div>
+            </div>
+            <div class="input-row mt-2">
+              <div class="cp-wrap"><label>Text Prim.</label><input type="color" formControlName="text_primary">
+              </div>
+              <div class="cp-wrap"><label>Text Sec.</label><input type="color" formControlName="text_secondary">
+              </div>
+              <div class="cp-wrap"><label>Text Muted</label><input type="color" formControlName="text_muted">
+              </div>
+            </div>
+          </div>
+
+          <div class="token-section">
+            <h4>Effects</h4>
+            <div class="form-field">
+              <label>Primary Glow (RGBA)</label>
+              <input type="text" formControlName="primary_glow" placeholder="rgba(74,107,125,0.4)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" *ngIf="activeTab === 'dark'" formGroupName="dark_tokens">
+        <div class="token-grid">
+          <div class="token-section">
+            <h4>Dark Mode Overrides</h4>
+            <p class="muted small">Adjust background and text for the dark version of your theme.</p>
+            <div class="input-row">
+              <div class="cp-wrap"><label>Primary</label><input type="color" formControlName="primary"></div>
+              <div class="cp-wrap"><label>Accent</label><input type="color" formControlName="accent"></div>
+              <div class="cp-wrap"><label>Success</label><input type="color" formControlName="success"></div>
+              <div class="cp-wrap"><label>Warning</label><input type="color" formControlName="warning"></div>
+              <div class="cp-wrap"><label>Error</label><input type="color" formControlName="error"></div>
+            </div>
+            <div class="input-row">
+              <div class="cp-wrap"><label>Background</label><input type="color" formControlName="background">
+              </div>
+              <div class="cp-wrap"><label>Surface</label><input type="color" formControlName="surface"></div>
+              <div class="cp-wrap"><label>Surface Alt</label><input type="color" formControlName="surface_alt"></div>
+              <div class="cp-wrap"><label>Border</label><input type="color" formControlName="border"></div>
+            </div>
+            <div class="input-row mt-2">
+              <div class="cp-wrap"><label>Text Prim.</label><input type="color" formControlName="text_primary">
+              </div>
+              <div class="cp-wrap"><label>Text Sec.</label><input type="color" formControlName="text_secondary">
+              </div>
+              <div class="cp-wrap"><label>Text Muted</label><input type="color" formControlName="text_muted">
+              </div>
+            </div>
+          </div>
+          <div class="token-section">
+            <h4>Effects</h4>
+            <div class="form-field">
+              <label>Primary Glow (RGBA)</label>
+              <input type="text" formControlName="primary_glow" placeholder="rgba(74,107,125,0.4)">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+    <div class="modal-footer">
+      <button class="btn-outline" (click)="showThemeBuilder = false">Cancel</button>
+      <button class="btn-primary" [disabled]="customThemeForm.invalid" (click)="saveCustomTheme()">
+        <i class="material-icons">save</i> Save Theme to Database
+      </button>
+    </div>
+  </div>
 </p-dialog>

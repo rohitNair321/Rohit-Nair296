@@ -6,6 +6,7 @@ import { THEME_NAME_MAP } from 'src/app/core/config/theme.config';
 import { CommonApp } from 'src/app/core/services/common';
 import { ThemeService } from 'src/app/core/theme/theme.service';
 import { ChristmasAnimationComponent } from 'src/app/core/theme/ThemeAnimationsComponent/christmas-animation/christmas-animation.component';
+import { NewYearAnimationComponent } from 'src/app/core/theme/ThemeAnimationsComponent/new-year-animation/new-year-animation.component';
 import { ChatBotComponent } from 'src/app/shared/components/chat-bot/chat-bot.component';
 import { FooterComponent } from 'src/app/shared/components/footer/footer.component';
 import { NavigationComponent } from 'src/app/shared/components/navigation/navigation.component';
@@ -16,7 +17,9 @@ import { environment } from 'src/environments/environments';
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ChatBotComponent, NavigationComponent, SidebarComponent, FooterComponent, SpinnerComponent, ChristmasAnimationComponent],
+  imports: [CommonModule, RouterOutlet, ChatBotComponent, NavigationComponent, SidebarComponent, FooterComponent, SpinnerComponent, ChristmasAnimationComponent,
+    NewYearAnimationComponent
+  ],
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.css']
 })
