@@ -162,7 +162,7 @@ export class SettingsComponent extends CommonApp implements OnInit {
   }
 
   saveThemePreference() {
-    this.loading.show();
+    this.loading.show('Saving theme preference...');
     const profileData = this.buildFormData();
     this.saveProfile(profileData);
   }
@@ -181,7 +181,7 @@ export class SettingsComponent extends CommonApp implements OnInit {
   }
 
   deleteTheme(themeId: string, event: Event) {
-    this.loading.show();
+    this.loading.show('Deleting theme...');
     event.stopPropagation(); // Don't select the theme while deleting
 
     let themesList = this.normalizeThemesResponse(this.profileSignal()?.themes);
@@ -194,6 +194,7 @@ export class SettingsComponent extends CommonApp implements OnInit {
 
 
   saveCustomTheme() {
+    this.loading.show('Saving theme...');
     if (this.customThemeForm.invalid) return;
 
     const formVal = this.customThemeForm.value;
@@ -656,7 +657,7 @@ export class SettingsComponent extends CommonApp implements OnInit {
 
   saveSettings() {
     this.profileForm.markAllAsTouched();
-    this.loading.show();
+    this.loading.show('Saving profile details...');
     const profileData = this.buildFormData();
     this.saveProfile(profileData);
   }

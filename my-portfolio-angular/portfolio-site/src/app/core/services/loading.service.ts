@@ -4,9 +4,11 @@ import { Injectable, signal } from '@angular/core';
 export class LoadingService {
   // signal is reactive like BehaviorSubject but simpler
   isLoading = signal(false);
+  loadingMessage = signal<string | null>(null);
 
-  show(): void {
+  show(message: string | null = null): void {
     this.isLoading.set(true);
+    this.loadingMessage.set(message);
   }
 
   hide(): void {

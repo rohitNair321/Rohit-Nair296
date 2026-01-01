@@ -11,13 +11,12 @@ import { ChatBotComponent } from 'src/app/shared/components/chat-bot/chat-bot.co
 import { FooterComponent } from 'src/app/shared/components/footer/footer.component';
 import { NavigationComponent } from 'src/app/shared/components/navigation/navigation.component';
 import { SidebarComponent } from 'src/app/shared/components/sidebar/sidebar.component';
-import { SpinnerComponent } from 'src/app/shared/components/ui/spinner-overlay/spinner/spinner.component';
 import { environment } from 'src/environments/environments';
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ChatBotComponent, NavigationComponent, SidebarComponent, FooterComponent, SpinnerComponent, ChristmasAnimationComponent,
+  imports: [CommonModule, RouterOutlet, ChatBotComponent, NavigationComponent, SidebarComponent, FooterComponent, ChristmasAnimationComponent,
     NewYearAnimationComponent
   ],
   templateUrl: './main-layout.component.html',

@@ -122,7 +122,7 @@ export class HomeComponent extends CommonApp implements OnInit {
   get message() { return this.contactForm.get('message'); }
 
   getMyProfile(): void {
-    this.loading.show();
+    this.loading.show('Loading profile...');
     this.appService.getProfile().pipe(take(1)).subscribe({
       next: (profile) => {
         this.homeData = profile;

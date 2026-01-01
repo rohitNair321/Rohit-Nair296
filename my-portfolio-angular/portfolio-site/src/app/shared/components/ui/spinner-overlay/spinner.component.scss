@@ -1,0 +1,52 @@
+:host { pointer-events: none; }
+
+.overlay {
+  pointer-events: auto;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  /* Using your surface color with transparency for the backdrop */
+  background: rgba(0, 0, 0, 0.6); 
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Updated to use theme tokens */
+.spinner {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  /* Track uses the border or surface-alt token */
+  border: 5px solid var(--border); 
+  /* Moving part uses the primary brand color */
+  border-top-color: var(--primary);
+  animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  filter: drop-shadow(0 0 8px var(--primary-glow));
+}
+
+.loading-text {
+  color: #ffffff; // Usually white looks best on dark overlays
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: 0;
+  letter-spacing: 0.5px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes spin { 
+  to { transform: rotate(360deg); } 
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}

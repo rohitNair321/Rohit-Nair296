@@ -3,6 +3,7 @@ import { Component, Injector } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { defaultConfig, LayoutConfig } from 'src/app/core/config/layout.config';
 import { CommonApp } from 'src/app/core/services/common';
+import { AlertComponent } from 'src/app/shared/components/ui/alert-dialog/alert.component';
 
 @Component({
   selector: 'app-auth-layout',

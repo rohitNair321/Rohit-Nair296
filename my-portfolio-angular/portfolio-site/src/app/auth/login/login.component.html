@@ -44,11 +44,11 @@
         <a class="forgot-link" [routerLink]="['/forgot-password']">Forgot password?</a>
       </div>
 
-      <button type="submit" class="btn-primary-auth" [disabled]="loading">
-        <span *ngIf="!loading">Login</span>
-        <div *ngIf="loading" class="spinner-container">
-          <span class="auth-spinner"></span>
-          <span>Authenticating...</span>
+      <button type="submit" class="btn-primary-auth" [disabled]="isloading">
+        <!-- <span *ngIf="!loading">Login</span> -->
+        <div class="spinner-container">
+          <!-- <span *ngIf="isloading" class="auth-spinner"></span> -->
+          <span>{{'Login'}}</span>
         </div>
       </button>
 
@@ -57,12 +57,12 @@
       </div>
 
       <div class="social-grid">
-        <button type="button" class="btn-social" (click)="onLoginWithGoogle()" [disabled]="loading">
-          <img src="assets/icons/google.svg" alt="" *ngIf="!loading">
+        <button type="button" class="btn-social" (click)="onLoginWithGoogle()" [disabled]="isloading">
+          <img src="assets/icons/google.svg" alt="" *ngIf="!isloading">
           <span>Google</span>
         </button>
-        <button type="button" class="btn-social" (click)="onLoginWithFacebook()" [disabled]="loading">
-          <img src="assets/icons/facebook.svg" alt="" *ngIf="!loading">
+        <button type="button" class="btn-social" (click)="onLoginWithFacebook()" [disabled]="isloading">
+          <img src="assets/icons/facebook.svg" alt="" *ngIf="!isloading">
           <span>Facebook</span>
         </button>
       </div>
