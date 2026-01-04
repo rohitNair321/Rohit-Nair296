@@ -22,7 +22,7 @@ import { CommonApp } from 'src/app/core/services/common';
 })
 export class FooterComponent extends CommonApp {
 
-  profileInfo: any;
+  profileInfo = this.appService.profile();
   menuItems = [
     { label: 'Home', href: '#home', icon: 'home' },
     { label: 'About', href: '#about', icon: 'person' },

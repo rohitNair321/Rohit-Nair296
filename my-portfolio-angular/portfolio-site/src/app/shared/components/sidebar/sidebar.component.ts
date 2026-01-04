@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { BadgeModule } from 'primeng/badge';
 import { defaultConfig, LayoutConfig } from 'src/app/core/config/layout.config';
 import { CommonApp } from 'src/app/core/services/common';
 
@@ -17,6 +18,7 @@ import { CommonApp } from 'src/app/core/services/common';
     CardModule,
     RadioButtonModule,
     ButtonModule,
+    BadgeModule,
   ],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
@@ -39,6 +41,11 @@ export class SidebarComponent extends CommonApp implements OnInit {
     const profile = this.profileSignal();
     const themes = this.normalizeThemesResponse(profile?.themes || []);
     return themes;
+  });
+  notifications = computed(() => {
+    return (
+      this.appService.notifications()
+    );
   });
 
   menuItems = [

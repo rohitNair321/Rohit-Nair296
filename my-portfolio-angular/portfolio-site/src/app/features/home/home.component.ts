@@ -10,10 +10,9 @@ import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { take } from 'rxjs';
-import { AppService } from 'src/app/core/services/app.service';
 import { CommonApp } from 'src/app/core/services/common';
-import { ProjectDetailDialogComponent } from 'src/app/shared/components/dialogs/project-detail-dialog.component';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
+import { environment } from 'src/environments/environments';
 
 interface Hero {
   name: string;
@@ -60,13 +59,11 @@ export class HomeComponent extends CommonApp implements OnInit {
   homeData: any;
 
   contactForm: FormGroup;
-  sending = false;
-  sent = false;
   projectList: any[] = [];
   experienceYears = 5;
   totalProjects = 20;
-  // Dialog State
-  showProjectDialog = false;
+  showProjectDialog: boolean = false;
+  send: boolean = false;
   selectedProject: any = null;
 
   showContactDialog = false;
@@ -75,8 +72,6 @@ export class HomeComponent extends CommonApp implements OnInit {
 
   constructor(
     public override injector: Injector,
-    private el: ElementRef,
-    private renderer: Renderer2,
     private fb: FormBuilder
   ) {
     super(injector);
@@ -95,24 +90,27 @@ export class HomeComponent extends CommonApp implements OnInit {
       this.applyThemeFromProfile(this.profileData());
     } else {
       this.getMyProfile();
+      if (environment.authFirst) {
+        this.getNotifications();
+      }
     }
   }
 
   onSubmitContact() {
-    if (this.contactForm.invalid) {
-      this.contactForm.markAllAsTouched();
-      return;
-    }
-    this.sending = true;
-    this.sent = false;
-
-    // Simulate sending email (replace with real API call)
-    setTimeout(() => {
-      this.sending = false;
-      this.sent = true;
-      this.contactForm.reset();
-      setTimeout(() => this.sent = false, 3000);
-    }, 2000);
+    this.loading.show('Sending your message...');
+    const formData = this.contactForm.value;
+    this.appService.sendContactMessage(formData).pipe(take(1)).subscribe({
+      next: (response) => {
+        this.loading.hide();
+        this.contactForm.reset();
+        this.alertService.showAlert(`Message sent successfully! ${this.profileData()?.full_name} will be notified about it. `, 'success');
+      },
+      error: (err) => {
+        this.loading.hide();
+        console.error('Submission failed', err);
+        this.alertService.showAlert('Failed to send message. Please try again later.', 'error');
+      }
+    });
   }
 
   get firstName() { return this.contactForm.get('firstName'); }
@@ -132,6 +130,20 @@ export class HomeComponent extends CommonApp implements OnInit {
       error: (e) => {
         console.error(e.error.message);
         this.loading.hide();
+      }
+    });
+  }
+
+  getNotifications(): void {
+    this.appService.getNotifications().pipe(take(1)).subscribe({
+      next: (notifications) => {
+        if(notifications.unreadCount > 0) {
+          this.alertService.showAlert(`You have ${notifications.unreadCount} notifications`, 'info');
+        }
+      },
+      error: (err) => {
+        this.alertService.showAlert(`Failed to fetch notifications. Please try again later.`, 'error');
+        console.error('Failed to fetch notifications', err);
       }
     });
   }

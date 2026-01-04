@@ -3,10 +3,10 @@
   <section id="home" class="hero-section animate-section">
     <div class="container hero-grid">
       <div class="hero-text">
-        <span class="eyebrow">Professional Developer</span>
-        <h1>Hi, I am <br><span class="highlight">{{ homeData?.full_name }}</span></h1>
+        <span class="eyebrow">{{'Professional Developer'}}</span>
+        <h1>{{'Hi, I am '}}<br><span class="highlight">{{ homeData?.full_name }}</span></h1>
         <div class="hero-cta">
-          <button class="btn-primary" (click)="scrollToSection($event, '#projects')">View My Work</button>
+          <button class="btn-primary" (click)="scrollToSection($event, '#projects')">{{'View My Work'}}</button>
         </div>
       </div>
       <div class="hero-visual">
@@ -20,23 +20,23 @@
   <section id="about" class="about-section animate-section">
     <div class="container about-grid">
       <div class="about-content">
-        <h2 class="section-title">About Me</h2>
+        <h2 class="section-title">{{'About Me'}}</h2>
         <p class="description-text" [innerHTML]="homeData?.description"></p>
         <div class="about-actions">
           <a class="btn-primary" [href]="homeData?.resume_url" download>
-            <i class="material-icons">download</i> Download Resume
+            <i class="material-icons">download</i> {{'Download Resume'}}
           </a>
-          <a class="btn-outline" routerLink="/about">Full Story</a>
+          <a class="btn-outline" routerLink="/about">{{'Full Story'}}</a>
         </div>
       </div>
       <div class="stats-box">
         <div class="stat-item">
           <span class="stat-num">{{experienceYears}}+</span>
-          <span class="stat-label">Years Experience</span>
+          <span class="stat-label">{{'Years Experience'}}</span>
         </div>
         <div class="stat-item">
           <span class="stat-num">{{homeData?.experiences[1]?.projects?.length || totalProjects}}</span>
-          <span class="stat-label">Successful Projects</span>
+          <span class="stat-label">{{'Successful Projects'}}</span>
         </div>
       </div>
     </div>
@@ -45,8 +45,8 @@
   <section id="projects" class="projects-section animate-section">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title">Featured Projects</h2>
-        <a routerLink="/projects" class="text-link">View All Projects</a>
+        <h2 class="section-title">{{'Featured Projects'}}</h2>
+        <a routerLink="/projects" class="text-link">{{'View All Projects'}}</a>
       </div>
 
       <div class="project-grid-modern">
@@ -65,7 +65,7 @@
               <span *ngFor="let tech of project?.technologies | slice:0:3" class="mini-tag">#{{tech}}</span>
             </div>
             <button class="btn-readmore" (click)="openProject(project)">
-              Read More <i class="material-icons">east</i>
+              {{'Read More'}} <i class="material-icons">east</i>
             </button>
           </div>
         </div>
@@ -76,14 +76,14 @@
   <section id="contact" class="contact-section animate-section">
     <div class="container contact-box">
       <div class="contact-details">
-        <h2 class="section-title">Let's build something <span class="highlight">remarkable</span>.</h2>
-        <p>Currently accepting new freelance projects and full-time opportunities.</p>
+        <h2 class="section-title">{{"Let's build something"}} <span class="highlight">{{'remarkable'}}</span>.</h2>
+        <p>{{'Currently accepting new freelance projects and full-time opportunities.'}}</p>
 
         <div class="info-list">
           <div class="info-item">
             <i class="material-icons">location_on</i>
             <div>
-              <h4>Location</h4>
+              <h4>{{'Location'}}</h4>
               <p>{{ homeData?.location || 'Remote / Worldwide' }}</p>
             </div>
           </div>
@@ -91,7 +91,7 @@
           <div class="info-item">
             <i class="material-icons">email</i>
             <div>
-              <h4>Email</h4>
+              <h4>{{'Email'}}</h4>
               <a [href]="'mailto:' + homeData?.email">{{ homeData?.email }}</a>
             </div>
           </div>
@@ -99,7 +99,7 @@
           <div class="info-item">
             <i class="material-icons">phone</i>
             <div>
-              <h4>Phone</h4>
+              <h4>{{'Phone'}}</h4>
               <a [href]="'tel:' + homeData?.primary_phone">{{ homeData?.primary_phone }}</a>
             </div>
           </div>
@@ -110,28 +110,27 @@
         <form [formGroup]="contactForm" (ngSubmit)="onSubmitContact()" class="modern-form">
           <div class="form-row">
             <div class="contact-input-group">
-              <label>First Name</label>
+              <label>{{'First Name'}}</label>
               <input formControlName="firstName" type="text" placeholder="Rohit">
             </div>
             <div class="contact-input-group">
-              <label>Last Name</label>
+              <label>{{'Last Name'}}</label>
               <input formControlName="lastName" type="text" placeholder="Nair">
             </div>
           </div>
 
           <div class="contact-input-group">
-            <label>Email Address</label>
+            <label><span>{{'Email Address'}}</span></label>
             <input formControlName="email" type="email" placeholder="john@example.com">
           </div>
 
           <div class="contact-input-group">
-            <label>Message</label>
+            <label>{{'Message'}}</label>
             <textarea formControlName="message" rows="4" placeholder="Your Message"></textarea>
           </div>
 
-          <button type="submit" class="btn-submit" [disabled]="sending">
-            <span *ngIf="!sending">Send Message</span>
-            <span *ngIf="sending">Sending...</span>
+          <button type="submit" class="btn-submit">
+            <span>{{'Send Message'}}</span>
           </button>
         </form>
       </div>

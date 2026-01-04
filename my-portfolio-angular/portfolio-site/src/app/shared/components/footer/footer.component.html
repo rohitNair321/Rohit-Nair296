@@ -11,11 +11,10 @@
     <div class="footer-col brand-col">
       <div class="footer-logo">
         <span class="logo-dot"></span>
-        <strong>Rohit<span>Portfolio</span></strong>
+        <strong>{{'Rohit'}}<span>{{'Portfolio'}}</span></strong>
       </div>
       <p class="footer-bio">
-        Passionate Professional Developer focused on crafting clean, high-performance, and user-centric digital
-        experiences.
+       {{'Passionate Professional Developer focused on crafting clean, high-performance, and user-centric digital experiences.'}}
       </p>
       <div class="social-links">
         <a href="#" class="social-icon" aria-label="LinkedIn"><i class="material-icons">linkedin</i></a>
@@ -49,7 +48,7 @@
     <div class="footer-col">
       <h4>Say Hello</h4>
       <a href="mailto:hello@rohit.com" class="footer-email">{{profileInfo?.email}}</a>
-      <p class="footer-location">Available for Remote Work Worldwide</p>
+      <p class="footer-location">{{'Available for Remote Work Worldwide'}}</p>
       <button class="back-to-top" aria-label="Back to top" (click)="scrollToSection($event, '#home')">
         <i class="material-icons">arrow_upward</i>
       </button>
@@ -58,10 +57,10 @@
 
   <div class="footer-bottom">
     <div class="container bottom-flex">
-      <p>© 2025 RohitPortfolio. Built with <span class="heart">&hearts;</span> and Angular.</p>
+      <p>{{'© 2025 RohitPortfolio. Built with '}}<span class="heart">&hearts;</span>{{' and Angular.'}}</p>
       <div class="legal-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
+        <a href="#">{{'Privacy Policy'}}</a>
+        <a href="#">{{'Terms of Service'}}</a>
       </div>
     </div>
   </div>

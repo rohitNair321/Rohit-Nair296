@@ -30,6 +30,10 @@
           (click)="scrollToSection($event, item.href)">
           {{ item.label }}
         </a>
+        <a class="menu-link" routerLink="notifications" *ngIf="config.appConfiguration.showNotifications">
+          <span class="material-icons menu-icon" pBadge severity="info"
+            value="{{notifications()?.unreadCount}}">{{'notifications'}}</span>
+        </a>
         <a class="resume-download-btn" href="assets/Rohit.Nair.pdf" download>
           <span class="material-icons">download</span>
           Resume
@@ -64,6 +68,10 @@
         <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link"
           (click)="scrollToSection($event, item.href)">
           {{ item.label }}
+        </a>
+        <a class="menu-link" *ngIf="config.appConfiguration.showNotifications" title="Notifications">
+          <span class="material-icons menu-icon" pBadge severity="info"
+            value="{{notifications()?.unreadCount}}">{{'notifications'}}</span>
         </a>
         <a class="resume-download-btn" href="assets/Rohit.Nair.pdf" download>
           <span class="material-icons">download</span>

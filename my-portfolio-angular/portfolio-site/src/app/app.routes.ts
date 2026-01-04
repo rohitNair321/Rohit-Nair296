@@ -69,6 +69,12 @@ const AUTH_ROUTES: Routes = [
         canActivate: [tokenGuard],
       },
       {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./features/notification/notification.component').then(m => m.NotificationComponent),
+        canActivate: [tokenGuard],
+      },
+      {
         path: 'resume',
         loadComponent: () =>
           import('./features/view-resume/view-resume.component')

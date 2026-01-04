@@ -632,26 +632,6 @@ export class SettingsComponent extends CommonApp implements OnInit {
     const resumeFile = this.profileForm.get('resume')?.value as File | null;
     if (resumeFile) fd.append('resume', resumeFile, resumeFile.name);
 
-    // const existingThemes = this.profileSignal()?.themes || {};
-
-    // if (this.customThemeForm) {
-    //   const t = this.customThemeForm.value;
-    //   // Generate a slug-based ID: "Warm Earth" -> "theme-warm-earth"
-    //   const themeId = 'theme-' + t.theme_name.toLowerCase().replace(/\s+/g, '-');
-
-    //   const updatedThemes = {
-    //     ...existingThemes,
-    //     [themeId]: {
-    //       name: t.theme_name,
-    //       tokens: t.tokens,
-    //       dark_tokens: t.dark_tokens
-    //     }
-    //   };
-
-    //   // Append the entire themes collection as a stringified JSON for the Postgres JSONB column
-    //   fd.append('themes', JSON.stringify(updatedThemes));
-    // }
-
     return fd;
   }
 

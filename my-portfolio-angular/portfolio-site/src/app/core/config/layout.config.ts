@@ -6,6 +6,7 @@ export interface LayoutConfig {
     showSidebarToggle?: boolean;
     showAgentChat?: boolean;
     showUserProfileView?: boolean;
+    showNotifications?: boolean;
     collapsed?: boolean;
     isMobile: boolean;
     isFixed?: boolean;
@@ -33,6 +34,7 @@ export const defaultConfig: LayoutConfig = {
     showSidebarToggle: false,
     showAgentChat: false,
     showUserProfileView: false,
+    showNotifications: false,
     collapsed: false,
     isMobile: true,
     isFixed: true,

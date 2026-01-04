@@ -18,7 +18,11 @@
       <span class="material-icons menu-icon">{{ item.icon }}</span>
       <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
     </a>
-    <a class="resume-download-btn" href="assets/Rohit.Nair.pdf" download>
+    <button class="menu-link" *ngIf="config.appConfiguration.showNotifications">
+      <span class="material-icons menu-icon" pBadge severity="info" value="{{notifications()?.unreadCount}}">{{'notifications'}}</span>
+      <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Notifications</span>
+    </button>
+    <a class="resume-download-btn" [href]="profileSignal()?.resume_url" download>
       <span class="material-icons menu-icon">download</span>
       <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Resume</span>
     </a>
