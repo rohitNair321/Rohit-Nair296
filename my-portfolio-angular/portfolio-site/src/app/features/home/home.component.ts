@@ -90,7 +90,7 @@ export class HomeComponent extends CommonApp implements OnInit {
       this.applyThemeFromProfile(this.profileData());
     } else {
       this.getMyProfile();
-      if (environment.authFirst) {
+      if (this.appService.role() !== 'GUEST') {
         this.getNotifications();
       }
     }

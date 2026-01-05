@@ -31,7 +31,7 @@ export class ViewResumeComponent extends CommonApp{
   }
 
   getData(){
-    this.services.getCombinedData().subscribe(data => {
+    this.authService.getCombinedData().subscribe(data => {
       this.aboutMeData = data.aboutMe;
     });
   }

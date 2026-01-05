@@ -15,14 +15,18 @@ import { CommonApp } from 'src/app/core/services/common';
 })
 export class LoginComponent extends CommonApp {
   private readonly fb = inject(FormBuilder);
-  private readonly authService = inject(AuthService);
+  // private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
-  isloading:boolean = false;
+  isloading: boolean = false;
   error: string | null = null;
 
   constructor(public override injector: Injector) {
     super(injector);
+  }
+
+  ngOnInit() {
+  
   }
 
   form: FormGroup = this.fb.group({
@@ -51,12 +55,12 @@ export class LoginComponent extends CommonApp {
     this.authService.login(this.form.value).subscribe({
       next: () => {
         this.loading.hide();
-        // Redirect after login. For now send to home or dashboard.
-        this.router.navigateByUrl('/app');
+        this.appService.setRole('ADMIN');
+        this.router.navigate(['/app/home']);
       },
       error: (err) => {
         this.loading.hide();
-        this.error = err?.message ?? 'Unable to login. Please try again.';
+        this.error = 'Invalid Admin Credentials';
       },
     });
   }
@@ -85,6 +89,21 @@ export class LoginComponent extends CommonApp {
       error: (err) => {
         this.isloading = false;
         this.error = err?.message ?? 'Facebook login failed.';
+      },
+    });
+  }
+
+  // login.component.ts
+  onContinueAsGuest(): void {
+    this.loading.show('Configuring guest access...');
+    this.appService.getToken().subscribe({
+      next: () => {
+        this.loading.hide();
+        this.appService.setRole('GUEST');
+        this.router.navigate(['/app/home']);
+      },
+      error: (err) => {
+        console.error('Error fetching guest token:', err);
       },
     });
   }

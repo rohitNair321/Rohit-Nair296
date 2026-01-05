@@ -4,11 +4,12 @@ import * as e from "cors";
 import { map, Observable, tap } from "rxjs";
 import { environment } from "src/environments/environments";
 
-
+export type UserRole = 'ADMIN' | 'GUEST' | null;
 @Injectable({ providedIn: 'root' })
 export class AppService {
 
     private readonly http = inject(HttpClient);
+    role = signal<UserRole>(localStorage.getItem('user_role') as UserRole || null);
     private readonly apiProfileUrl = environment.baseUrl + '/api/profile';
     private readonly apiContactUrl = environment.baseUrl + '/api/contact';
 
@@ -18,7 +19,7 @@ export class AppService {
     private _notifications = signal<Notification | null>(null);
     readonly notifications: Signal<Notification | null> = this._notifications;
 
-    token = signal<string | null>(null);
+    token = signal<string | null>(localStorage.getItem('auth_token'));
 
     private authHeaders(): HttpHeaders {
         const token = this.token() || localStorage.getItem('auth_token');
@@ -86,6 +87,19 @@ export class AppService {
             map(notification => notification || null),
             tap(notification => this._notifications.set(notification))
         );
+    }
+
+    setRole(newRole: UserRole) {
+        this.role.set(newRole);
+        if (newRole) localStorage.setItem('user_role', newRole);
+        else localStorage.removeItem('user_role');
+    }
+
+    // A simple check to see if we should allow entry to the app
+    isAuthorized(): boolean {
+        const hasToken = !!localStorage.getItem('auth_token');
+        const isGuest = this.role() === 'GUEST';
+        return hasToken || isGuest;
     }
 }
 

@@ -4,10 +4,10 @@
   align-items: center;
   justify-content: center;
   /* Deep Slate Background */
-  background-color: #0f172a; 
+  background-color: #0f172a;
   /* Subtle Indigo Glows */
   background-image: radial-gradient(circle at top right, rgba(99, 102, 241, 0.15), transparent 40%),
-                    radial-gradient(circle at bottom left, rgba(99, 102, 241, 0.15), transparent 40%);
+    radial-gradient(circle at bottom left, rgba(99, 102, 241, 0.15), transparent 40%);
   padding: 2rem;
   font-family: 'Inter', sans-serif;
 }
@@ -16,7 +16,7 @@
   width: 100%;
   max-width: 450px;
   /* Slightly lighter slate for the card */
-  background: #1e293b; 
+  background: #1e293b;
   border: 1px solid #334155;
   border-radius: 24px;
   padding: 3rem;
@@ -32,18 +32,29 @@
     font-size: 2.5rem;
     font-weight: 800;
     margin-bottom: 1rem;
-    .rn-r { color: #818cf8; } /* Bright Indigo */
-    .rn-n { color: #fbbf24; } /* Amber Gold */
+
+    .rn-r {
+      color: #818cf8;
+    }
+
+    /* Bright Indigo */
+    .rn-n {
+      color: #fbbf24;
+    }
+
+    /* Amber Gold */
   }
 
   h1 {
-    color: #f8fafc; /* Near White */
+    color: #f8fafc;
+    /* Near White */
     font-size: 1.75rem;
     margin-bottom: 0.5rem;
   }
 
   p {
-    color: #94a3b8; /* Muted Slate */
+    color: #94a3b8;
+    /* Muted Slate */
     font-size: 0.95rem;
   }
 }
@@ -75,7 +86,8 @@
     input {
       width: 100%;
       padding: 12px 12px 12px 40px;
-      background: #0f172a; /* Darker input background */
+      background: #0f172a;
+      /* Darker input background */
       border: 1px solid #334155;
       border-radius: 12px;
       color: #f8fafc;
@@ -87,7 +99,8 @@
 
       &:focus {
         outline: none;
-        border-color: #6366f1; /* Indigo border on focus */
+        border-color: #6366f1;
+        /* Indigo border on focus */
         box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
       }
     }
@@ -98,7 +111,8 @@
 .btn-primary-auth {
   width: 100%;
   padding: 14px;
-  background: #6366f1; /* Indigo Primary */
+  background: #6366f1;
+  /* Indigo Primary */
   color: #ffffff;
   border: none;
   border-radius: 12px;
@@ -146,7 +160,10 @@
     border-color: #64748b;
   }
 
-  img { width: 18px; height: 18px; }
+  img {
+    width: 18px;
+    height: 18px;
+  }
 }
 
 .divider {
@@ -168,7 +185,8 @@
   span {
     position: relative;
     z-index: 2;
-    background: #1e293b; /* Matches card background */
+    background: #1e293b;
+    /* Matches card background */
     padding: 0 15px;
     color: #64748b;
     font-size: 0.85rem;
@@ -179,14 +197,24 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   font-size: 0.85rem;
+
+  .remember-me {
+    display: flex;
+    gap: 5px;
+    color: #94a3b8;
+    margin-bottom: unset;
+  }
 
   .forgot-link {
     color: #818cf8;
     text-decoration: none;
     font-weight: 600;
-    &:hover { text-decoration: underline; }
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -199,7 +227,10 @@
     color: #818cf8;
     font-weight: 700;
     text-decoration: none;
-    &:hover { text-decoration: underline; }
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
@@ -215,5 +246,30 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.btn-guest-link {
+  background: transparent;
+  border: 1px dashed #475569;
+  color: #94a3b8;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #6366f1;
+    color: #f8fafc;
+    background: rgba(99, 102, 241, 0.05);
+  }
+
+  i {
+    font-size: 18px;
+  }
 }

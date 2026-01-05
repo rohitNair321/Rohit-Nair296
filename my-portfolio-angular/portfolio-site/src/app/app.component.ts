@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ChristmasAnimationComponent } from './core/theme/ThemeAnimationsComponent/christmas-animation/christmas-animation.component';
 import { AlertComponent } from './shared/components/ui/alert-dialog/alert.component';
 import { SpinnerComponent } from './shared/components/ui/spinner-overlay/spinner.component';
 

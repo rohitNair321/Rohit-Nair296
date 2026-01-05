@@ -9,16 +9,9 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from '@angular/cdk/dialog';
 import { authInterceptor } from './core/interceptors/app.interceptor';
-import { environment } from 'src/environments/environments';
-import { AppService } from './core/services/app.service';
 
-export function initApp(appService: AppService) {
-  return () => {
-    if (!environment.authFirst) {
-      return appService.getToken();
-    }
-    return Promise.resolve();
-  };
+export function initApp() {
+  return () => Promise.resolve();
 }
 
 export const appConfig: ApplicationConfig = {
@@ -39,7 +32,6 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: initApp,
-      deps: [AppService],
       multi: true
     },
   ],

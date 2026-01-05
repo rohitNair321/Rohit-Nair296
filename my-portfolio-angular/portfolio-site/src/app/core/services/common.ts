@@ -11,7 +11,7 @@ import { AlertService } from "./alert.service";
 export class CommonApp {
 
   public loading;
-  public services;
+  public authService;
   public aiServices;
   public appService;
   public portfolioServices;
@@ -21,7 +21,7 @@ export class CommonApp {
 
   constructor(public injector: Injector) {
     this.loading = this.injector.get(LoadingService);
-    this.services = this.injector.get(AuthService);
+    this.authService = this.injector.get(AuthService);
     this.appService = this.injector.get(AppService);
     this.aiServices = this.injector.get(OpenAIService);
     this.alertService = this.injector.get(AlertService);

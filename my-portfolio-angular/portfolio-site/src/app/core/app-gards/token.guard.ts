@@ -1,46 +1,42 @@
-import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
-import { environment } from 'src/environments/environments';
-import { AppService } from '../services/app.service';
-import { AuthService } from 'src/app/auth/services/auth.service';
+import { CanActivateFn, Router } from "@angular/router";
+import { AppService } from "../services/app.service";
+import { AuthService } from "src/app/auth/services/auth.service";
+import { inject } from "@angular/core";
+import { environment } from "src/environments/environments";
 
+// token.guard.ts
 export const tokenGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const appService = inject(AppService);
-  const authService = inject(AuthService);
-
-  const authFirst = environment.authFirst;
-  const hasToken = authFirst?!!authService.token() || localStorage.getItem("auth_token"):!!appService.token() || localStorage.getItem("auth_token");
   const url = state.url;
 
-  // 🔹 PUBLIC-FIRST MODE
-  // Token is fetched at bootstrap via APP_INITIALIZER
-  if (!authFirst) {
-    if (!hasToken) {
-      // App not ready yet → block navigation
+  // const isAuthorized = appService.isAuthorized();
+  const currentRole = appService.role(); // 'ADMIN' or 'GUEST' or null
+  const isAuthorized = !!currentRole;
+
+  // 1. If trying to access Login/Register while already authorized
+  if (url.includes('/login') || url.includes('/register')) {
+    if (currentRole === 'ADMIN') {
+      router.navigate(['/app/home']);
       return false;
     }
     return true;
   }
 
-  // 🔹 AUTH-FIRST MODE
-  if (authFirst) {
-    // Trying to access auth pages
-    if (url.startsWith('/login') || url.startsWith('/register') || url.startsWith('/auth')) {
-      if (hasToken) {
-        router.navigate(['/app']);
-        return false;
-      }
-      return true;
-    }
+  // 2. Protect App Pages
+  if (!isAuthorized) {
+    router.navigate(['/login']);
+    return false;
+  }
 
-    // Trying to access app pages
-    if (!hasToken) {
-      router.navigate(['/login']);
-      return false;
-    }
+  // 3. Role-Based Check for specific pages
+  const restrictedRoles = route.data['roles'] as Array<string>;
 
-    return true;
+  // If the page has restricted roles and the user's role isn't included
+  if (restrictedRoles && !restrictedRoles.includes(currentRole!)) {
+    // Redirect Guests away from Admin pages back to Home
+    router.navigate(['/app/home']);
+    return false;
   }
 
   return true;

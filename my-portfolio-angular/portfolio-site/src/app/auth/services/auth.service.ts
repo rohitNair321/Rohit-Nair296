@@ -2,6 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { catchError, debounceTime, forkJoin, map, mergeMap, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environments';
+import { UserRole } from 'src/app/core/services/app.service';
 export interface RegisterRequest {
   name: string;
   email: string;
@@ -18,6 +19,7 @@ export interface LoginRequest {
 export class AuthService {
 
   private readonly http = inject(HttpClient);
+  role = signal<UserRole>(localStorage.getItem('user_role') as UserRole || null);
   private readonly baseUrl = ''; //api/auth
   private readonly apiBaseUrl = environment.baseUrl+'/api/auth';
   user = signal<any | null>(null);
@@ -40,7 +42,6 @@ export class AuthService {
         this.token.set(res.token);
         this.user.set(res.user);
         localStorage.setItem('auth_token', res.token);
-        localStorage.setItem('auth_user', JSON.stringify(res.user));
         return res;
       })
     );
@@ -69,6 +70,8 @@ export class AuthService {
   logout(): void {
     this.token.set(null);
     this.user.set(null);
+    this.role.set(null);
+    localStorage.clear();
   }
 
 }

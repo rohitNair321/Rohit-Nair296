@@ -6,32 +6,32 @@
         <span class="rn-r">R</span><span class="rn-n">N</span>
       </div>
       <div class="auth-header">
-        <h1>Welcome Back</h1>
-        <p>Login to manage your professional portfolio</p>
+        <h1>{{'Welcome'}}</h1>
+        <p>{{'Login to manage your professional portfolio or click Continue as Guest to explore the site'}}</p>
       </div>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="auth-form">
       <div class="form-field" [class.invalid]="email?.invalid && email?.touched">
-        <label for="email">Email Address</label>
+        <label for="email">{{'Email Address'}}</label>
         <div class="input-wrapper">
           <i class="material-icons">mail_outline</i>
           <input id="email" type="email" formControlName="email" placeholder="name@example.com" />
         </div>
         <div class="field-error" *ngIf="email?.errors && email?.touched">
-          <span *ngIf="email?.errors?.['required']">Email is required</span>
-          <span *ngIf="email?.errors?.['email']">Please enter a valid email</span>
+          <span *ngIf="email?.errors?.['required']">{{'Email is required'}}</span>
+          <span *ngIf="email?.errors?.['email']">{{'Please enter a valid email'}}</span>
         </div>
       </div>
 
       <div class="form-field" [class.invalid]="password?.invalid && password?.touched">
-        <label for="password">Password</label>
+        <label for="password">{{'Password'}}</label>
         <div class="input-wrapper">
           <i class="material-icons">lock_open</i>
           <input id="password" type="password" formControlName="password" placeholder="••••••••" />
         </div>
         <div class="field-error" *ngIf="password?.errors && password?.touched">
-          <span *ngIf="password?.errors?.['required']">Password is required</span>
+          <span *ngIf="password?.errors?.['required']">{{'Password is required'}}</span>
         </div>
       </div>
 
@@ -39,15 +39,13 @@
         <label class="remember-me">
           <input type="checkbox" formControlName="rememberMe" />
           <span class="custom-checkbox"></span>
-          <span>Remember me</span>
+          <span>{{'Remember me'}}</span>
         </label>
         <a class="forgot-link" [routerLink]="['/forgot-password']">Forgot password?</a>
       </div>
 
       <button type="submit" class="btn-primary-auth" [disabled]="isloading">
-        <!-- <span *ngIf="!loading">Login</span> -->
         <div class="spinner-container">
-          <!-- <span *ngIf="isloading" class="auth-spinner"></span> -->
           <span>{{'Login'}}</span>
         </div>
       </button>
@@ -66,10 +64,16 @@
           <span>Facebook</span>
         </button>
       </div>
+      <div class="guest-container" style="margin-top: 1.5rem; text-align: center;">
+        <button type="button" class="btn-guest-link" (click)="onContinueAsGuest()">
+          <i class="material-icons">visibility</i>
+          <span>Continue as Guest</span>
+        </button>
+      </div>
 
-      <p class="auth-footer-text">
+      <!-- <p class="auth-footer-text" *ngIf="">
         New here? <a [routerLink]="['/register']">Create an account</a>
-      </p>
+      </p> -->
     </form>
   </div>
 </div>

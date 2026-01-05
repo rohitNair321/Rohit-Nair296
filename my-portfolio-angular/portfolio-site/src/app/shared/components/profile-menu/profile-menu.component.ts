@@ -5,7 +5,7 @@ import {
   computed,
   Injector,
 } from '@angular/core';
-import { Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -26,7 +26,7 @@ import { MenuItem } from 'primeng/api';
     CardModule,
     RadioButtonModule,
     ButtonModule,
-    MenuModule 
+    MenuModule
   ],
   templateUrl: './profile-menu.component.html',
   styleUrls: ['./profile-menu.component.scss'],
@@ -35,7 +35,7 @@ import { MenuItem } from 'primeng/api';
 export class ProfileMenuComponent extends CommonApp {
   private router = inject(Router);
 
-  private readonly authService = inject(AuthService);
+  // private readonly authService = inject(AuthService);
 
 
   profileData = computed(() => {
@@ -89,10 +89,11 @@ export class ProfileMenuComponent extends CommonApp {
   }
 
   logout() {
-    this.authService.logout();
+    this.appService.role.set(null);
+    this.appService.token.set(null);
+    localStorage.removeItem('user_role');
     localStorage.removeItem('auth_token');
-    localStorage.removeItem('auth_user');
-    this.router.navigateByUrl('/');
+    this.router.navigate(['/login']);
   }
 
 }

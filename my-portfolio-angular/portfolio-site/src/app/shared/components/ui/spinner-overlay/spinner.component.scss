@@ -5,8 +5,8 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  /* Using your surface color with transparency for the backdrop */
-  background: rgba(0, 0, 0, 0.6); 
+  /* Fallback to semi-transparent slate-900 if surface is missing */
+  background: var(--mask-bg, rgba(15, 23, 42, 0.8)); 
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -20,26 +20,28 @@
   gap: 1.5rem;
 }
 
-/* Updated to use theme tokens */
 .spinner {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  /* Track uses the border or surface-alt token */
-  border: 5px solid var(--border); 
-  /* Moving part uses the primary brand color */
-  border-top-color: var(--primary);
+  /* Track: Fallback to Slate-700 (#334155) */
+  border: 5px solid var(--border, #334155); 
+  /* Moving part: Fallback to Indigo-500 (#6366f1) */
+  border-top-color: var(--primary, #6366f1);
   animation: spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  filter: drop-shadow(0 0 8px var(--primary-glow));
+  /* Glow: Fallback to a subtle indigo drop shadow */
+  filter: drop-shadow(0 0 8px var(--primary-glow, rgba(99, 102, 241, 0.5)));
 }
 
 .loading-text {
-  color: #ffffff; // Usually white looks best on dark overlays
+  /* Fallback to Slate-50 (#f8fafc) */
+  color: var(--text-primary, #f8fafc); 
   font-weight: 600;
   font-size: 1.1rem;
   margin: 0;
   letter-spacing: 0.5px;
   animation: pulse 2s infinite;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 @keyframes spin { 
