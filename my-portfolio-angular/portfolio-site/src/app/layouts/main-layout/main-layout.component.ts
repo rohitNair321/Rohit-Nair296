@@ -34,7 +34,7 @@ export class MainLayoutComponent extends CommonApp {
     this.config.appConfiguration.sidebarPosition = 'right';
     this.config.appConfiguration.collapsed = true;
     this.config.appConfiguration.showSidebarToggle = true;
-    this.config.appConfiguration.showAgentChat = true;
+    this.config.appConfiguration.showAgentChat = false;
     this.config.appConfiguration.showUserProfileView = this.appService.role() === 'ADMIN';
     this.config.appConfiguration.showNotifications = this.appService.role() === 'ADMIN';
   }
