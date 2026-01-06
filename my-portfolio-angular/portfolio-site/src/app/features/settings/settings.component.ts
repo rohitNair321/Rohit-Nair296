@@ -60,6 +60,7 @@ export class SettingsComponent extends CommonApp implements OnInit {
       this.patchFromProfile(this.appService.profile());
     } else {
       this.getMyProfile();
+      this.getNotifications();
     }
   }
 
@@ -73,6 +74,20 @@ export class SettingsComponent extends CommonApp implements OnInit {
       error: (e) => {
         console.error(e.error.message);
         this.loading.hide();
+      }
+    });
+  }
+
+  getNotifications(): void {
+    this.appService.getNotifications().pipe(take(1)).subscribe({
+      next: (notifications) => {
+        if (notifications.unreadCount > 0) {
+          this.alertService.showAlert(`You have ${notifications.unreadCount} notifications`, 'info');
+        }
+      },
+      error: (err) => {
+        this.alertService.showAlert(`Failed to fetch notifications. Please try again later.`, 'error');
+        console.error('Failed to fetch notifications', err);
       }
     });
   }

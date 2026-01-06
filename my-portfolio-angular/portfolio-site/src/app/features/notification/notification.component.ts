@@ -29,7 +29,7 @@ export class NotificationComponent extends CommonApp implements OnInit {
 
   ngOnInit() {
     if (!this.notifications()) {
-      this.router.navigate(['app']);
+      this.router.navigate(['/app/home']);
     }
   }
 
