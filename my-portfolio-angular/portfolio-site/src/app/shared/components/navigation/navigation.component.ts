@@ -83,7 +83,8 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
 
   toggleMenu() {
     if (this.config?.appConfiguration?.type === 'navbar') {
-      this.isMenuOpen = !this.isMenuOpen;
+      this.config.appConfiguration.collapsed = !this.config.appConfiguration.collapsed;
+      this.isMenuOpen = !this.config.appConfiguration.collapsed;
     } else if (this.config?.appConfiguration?.type === 'sidebar') {
       this.config.appConfiguration.collapsed = !this.config.appConfiguration.collapsed;
       this.isSidebarCollapsedChange.emit(this.config.appConfiguration.collapsed);
@@ -96,21 +97,13 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
     }
   }
 
-  // get isDarkTheme(): boolean {
-  //   return this.themeService.isDarkTheme();
-  // }
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 
   toggleTheme() {
     this.themeToggle();
   }
 
-  // Add this method for smooth scrolling
-  // scrollToSection(event: Event, href: string) {
-  //   event.preventDefault();
-  //   const element = document.querySelector(href);
-  //   if (element) {
-  //     element.scrollIntoView({ behavior: 'smooth' });
-  //     if (this.isMobile) this.isMenuOpen = false;
-  //   }
-  // }
 }

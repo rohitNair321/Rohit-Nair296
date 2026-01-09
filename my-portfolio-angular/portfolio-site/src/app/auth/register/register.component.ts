@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { CommonApp } from 'src/app/core/services/common';
 
 @Component({
   standalone: true,
@@ -12,13 +13,15 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./register.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RegisterComponent {
+export class RegisterComponent extends CommonApp {
   private readonly fb = inject(FormBuilder);
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
 
-  loading = false;
+  // loading = false;
   error: string | null = null;
+
+  constructor(public override injector: Injector) {
+    super(injector);
+  }
 
   form: FormGroup = this.fb.group(
     {
@@ -63,19 +66,14 @@ export class RegisterComponent {
       this.form.markAllAsTouched();
       return;
     }
-
     const { name, email, password } = this.form.value;
-
-    this.loading = true;
     this.error = null;
 
     this.authService.register({ name, email, password }).subscribe({
       next: () => {
-        this.loading = false;
         this.router.navigate(['/login'], { queryParams: { registered: true } });
       },
       error: (err) => {
-        this.loading = false;
         this.error = err?.message ?? 'Unable to register. Please try again.';
       },
     });

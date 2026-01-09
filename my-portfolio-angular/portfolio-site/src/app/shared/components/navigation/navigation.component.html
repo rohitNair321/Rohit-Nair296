@@ -16,7 +16,7 @@
         <span class="logo-initials animate-nav-fade-in">
           <span class="rn-r">R</span><span class="rn-n">N</span>
         </span>
-        <span class="logo-name animate-nav-slide-in">
+        <span class="logo-name animate-nav-slide-in"> 
           <span class="logo-rohit">Rohit</span>
           <span class="logo-portfolio">Portfolio</span>
         </span>
@@ -45,6 +45,11 @@
       </button>
       <div class="nav-actions" *ngIf="config.appConfiguration.showUserProfileView && !isMobile">
         <app-profile-menu></app-profile-menu>
+      </div>
+      <div class="nav-actions" *ngIf="config?.appConfiguration?.type === 'navbar' && !isMobile && appService.role() === 'GUEST'">
+        <button class="btn-logout" title="Logout" (click)="logout()">
+          <span class="material-icons delete-icon">{{'exit_to_app'}}</span>
+        </button>
       </div>
     </div>
 
@@ -79,6 +84,10 @@
         </a>
         <button class="theme-toggle" (click)="themeService.toggleDarkMode()">
           <span class="material-icons">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+        </button>
+        <button class="btn-logout" title="Logout" (click)="logout()"
+          *ngIf="isMobile && appService.role() === 'GUEST'">
+          <span class="material-icons delete-icon">{{'exit_to_app'}}</span>
         </button>
       </div>
     </div>

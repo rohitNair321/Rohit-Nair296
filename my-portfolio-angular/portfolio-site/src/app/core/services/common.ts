@@ -7,6 +7,7 @@ import { defaultConfig, LayoutConfig } from "../config/layout.config";
 import { AppService } from "./app.service";
 import { ThemeService } from "../theme/theme.service";
 import { AlertService } from "./alert.service";
+import { Router } from "@angular/router";
 
 export class CommonApp {
 
@@ -17,6 +18,7 @@ export class CommonApp {
   public portfolioServices;
   public themeService;
   public alertService;
+  public router;
   public appConfig: LayoutConfig = defaultConfig;
 
   constructor(public injector: Injector) {
@@ -27,6 +29,7 @@ export class CommonApp {
     this.alertService = this.injector.get(AlertService);
     this.portfolioServices = this.injector.get(SupabaseService);
     this.themeService = this.injector.get(ThemeService);
+    this.router = this.injector.get(Router);
   }
 
   public themeToggle() {

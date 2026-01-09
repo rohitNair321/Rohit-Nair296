@@ -33,10 +33,6 @@ import { MenuItem } from 'primeng/api';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileMenuComponent extends CommonApp {
-  private router = inject(Router);
-
-  // private readonly authService = inject(AuthService);
-
 
   profileData = computed(() => {
     return (

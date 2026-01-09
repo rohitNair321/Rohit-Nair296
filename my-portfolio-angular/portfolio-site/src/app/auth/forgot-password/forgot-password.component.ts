@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { CommonApp } from 'src/app/core/services/common';
 
 @Component({
   standalone: true,
@@ -12,14 +13,14 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./forgot-password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ForgotPasswordComponent {
+export class ForgotPasswordComponent extends CommonApp {
   private readonly fb = inject(FormBuilder);
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
-
-  loading = false;
   successMessage: string | null = null;
   error: string | null = null;
+
+  constructor(public override injector: Injector) {
+    super(injector);
+  }
 
   form: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -36,18 +37,15 @@ export class ForgotPasswordComponent {
     }
 
     const { email } = this.form.value;
-    this.loading = true;
     this.error = null;
     this.successMessage = null;
 
     this.authService.forgotPassword(email).subscribe({
       next: () => {
-        this.loading = false;
         this.successMessage =
           'If this email exists in our records, password reset instructions have been sent.';
       },
       error: (err) => {
-        this.loading = false;
         this.error = err?.message ?? 'Unable to process request. Please try again.';
       },
     });

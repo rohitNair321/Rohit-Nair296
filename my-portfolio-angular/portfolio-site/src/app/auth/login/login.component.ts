@@ -15,8 +15,6 @@ import { CommonApp } from 'src/app/core/services/common';
 })
 export class LoginComponent extends CommonApp {
   private readonly fb = inject(FormBuilder);
-  // private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
 
   isloading: boolean = false;
   error: string | null = null;

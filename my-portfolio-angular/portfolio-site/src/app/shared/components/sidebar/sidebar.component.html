@@ -3,33 +3,46 @@
   [ngClass]="{
       'none': config.appConfiguration.type === 'sidebar' && isMobile && config.appConfiguration.collapsed,
       '': config.appConfiguration.type === 'sidebar' && isMobile && !config.appConfiguration.collapsed,
-
     }" *ngIf="config.appConfiguration.type === 'sidebar'">
   <div class="sidebar-header">
-    <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()"
+    <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()" *ngIf="config?.appConfiguration?.type === 'sidebar'">
+      <span class="material-icons menu-icon">{{ isMenuOpen ? 'close' : 'menu' }}</span>
+    </button>
+    <!-- <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()"
       *ngIf="config.appConfiguration.type === 'sidebar' && !config.appConfiguration.collapsed">
       <span class="material-icons">
         {{ 'close'}}
       </span>
-    </button>
+    </button> -->
   </div>
   <div class="sidebar-menu" [class.collapsed]="config.appConfiguration.collapsed">
-    <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link" (click)="scrollToSection($event, item.href)">
-      <span class="material-icons menu-icon">{{ item.icon }}</span>
-      <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
-    </a>
-    <button class="menu-link" *ngIf="config.appConfiguration.showNotifications">
-      <span class="material-icons menu-icon" pBadge severity="info" value="{{notifications()?.unreadCount}}">{{'notifications'}}</span>
-      <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Notifications</span>
-    </button>
-    <a class="resume-download-btn" [href]="profileSignal()?.resume_url" download>
-      <span class="material-icons menu-icon">download</span>
-      <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Resume</span>
-    </a>
-    <button class="theme-toggle" (click)="themeService.toggleDarkMode()">
-      <span class="material-icons menu-icon">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
-      <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Theme</span>
-    </button>
+    <div>
+      <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link"
+        (click)="scrollToSection($event, item.href)">
+        <span class="material-icons menu-icon">{{ item.icon }}</span>
+        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
+      </a>
+      <button class="menu-link" *ngIf="config.appConfiguration.showNotifications">
+        <span class="material-icons menu-icon" pBadge severity="info"
+          value="{{notifications()?.unreadCount}}">{{'notifications'}}</span>
+        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Notifications</span>
+      </button>
+      <a class="resume-download-btn" [href]="profileSignal()?.resume_url" download>
+        <span class="material-icons menu-icon">download</span>
+        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Resume</span>
+      </a>
+    </div>
+    <div>
+      <button class="theme-toggle" (click)="themeService.toggleDarkMode()">
+        <span class="material-icons menu-icon">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Theme</span>
+      </button>
+      <button class="theme-toggle" title="Logout" (click)="logout()"
+        *ngIf="!config.appConfiguration.showUserProfileView">
+        <span class="material-icons delete-icon">{{'exit_to_app'}}</span>
+        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Logout</span>
+      </button>
+    </div>
   </div>
 </div>
 

@@ -31,6 +31,7 @@ export class SidebarComponent extends CommonApp implements OnInit {
   isMobile = false;
   currentSection = '';
   navigationType: any = '';
+  isMenuOpen = false;
   selectedTheme: string = this.config.theme.name;
   profileSignal = computed(() => {
     return (
@@ -97,6 +98,7 @@ export class SidebarComponent extends CommonApp implements OnInit {
 
   toggleSidebarCollapse() {
     this.config.appConfiguration.collapsed = !this.config.appConfiguration.collapsed;
+    this.isMenuOpen = !this.config.appConfiguration.collapsed;
     console.log('Sidebar collapsed:', this.config.appConfiguration.collapsed);
   }
 
@@ -157,5 +159,10 @@ export class SidebarComponent extends CommonApp implements OnInit {
   selectTheme(theme: any) {
     this.selectedTheme = theme.name;
     this.onThemeChange(theme);
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

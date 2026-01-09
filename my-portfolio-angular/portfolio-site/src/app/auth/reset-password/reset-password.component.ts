@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Injector } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { CommonApp } from 'src/app/core/services/common';
 
 @Component({
   standalone: true,
@@ -12,16 +13,17 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./reset-password.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResetPasswordComponent {
+export class ResetPasswordComponent extends CommonApp {
   private readonly fb = inject(FormBuilder);
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  loading = false;
   successMessage: string | null = null;
   error: string | null = null;
   token: string | null = null;
+
+  constructor(public override injector: Injector) {
+    super(injector);
+  }
 
   form: FormGroup = this.fb.group({
     password: ['', [Validators.required, Validators.minLength(6)]],
@@ -55,19 +57,16 @@ export class ResetPasswordComponent {
       return;
     }
 
-    this.loading = true;
     this.error = null;
     this.successMessage = null;
 
     // Call your API to reset password
     this.authService.resetPassword(this.token, this.password?.value).subscribe({
       next: () => {
-        this.loading = false;
         this.successMessage = 'Your password has been reset successfully. You can now log in.';
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        this.loading = false;
         this.error = err?.message ?? 'Unable to reset password. Please try again.';
       },
     });

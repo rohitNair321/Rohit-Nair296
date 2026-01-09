@@ -23,7 +23,7 @@ export class NotificationComponent extends CommonApp implements OnInit {
     );
   });
 
-  constructor(public override injector: Injector, private router: Router) {
+  constructor(public override injector: Injector) {
     super(injector);
   }
 
