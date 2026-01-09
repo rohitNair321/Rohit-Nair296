@@ -45,7 +45,6 @@ export class AppService {
             );
     }
 
-    // Update profile (multipart FormData) — returns updated profile
     updateProfile(formData: FormData): Observable<Profile> {
         return this.http.put<{ profile: Profile }>(`${this.apiProfileUrl}/saveUpdateMyProfile`, formData, {
             headers: this.authHeaders() // HttpClient will set Content-Type automatically for FormData
@@ -55,18 +54,15 @@ export class AppService {
         );
     }
 
-    // Get signed resume url (server returns { url, expires_in })
     getResumeSignedUrl(): Observable<{ url: string, expires_in: number }> {
         return this.http.get<{ url: string, expires_in: number }>(`${this.apiProfileUrl}/me/resume`, { headers: this.authHeaders() });
     }
 
-    // Convenience: update only local signal without hitting server (optimistic update)
     setLocalProfile(profile: Profile | null) {
         this._profile.set(profile);
     }
 
     sendContactMessage(formData: any): Observable<any> {
-        // return this.http.post(this.apiContactUrl, formData);
         return this.http.post<any>(`${this.apiContactUrl}/send`, formData).pipe(
             map((res) => {
                 return res;
@@ -74,7 +70,6 @@ export class AppService {
         );
     }
 
-    // Add these methods to your AppService class
     getNotifications(): Observable<Notification> {
         return this.http.get<Notification>(`${this.apiContactUrl}/notifications`, { headers: this.authHeaders() }).pipe(
             map(notification => notification || null),
@@ -84,6 +79,13 @@ export class AppService {
 
     markMessageAsRead(id: string): Observable<Notification> {
         return this.http.put<Notification>(`${this.apiContactUrl}/notifications/${id}/read`, { headers: this.authHeaders() }).pipe(
+            map(notification => notification || null),
+            tap(notification => this._notifications.set(notification))
+        );
+    }
+
+    deleteMessage(id: string): Observable<Notification> {
+        return this.http.delete<Notification>(`${this.apiContactUrl}/delete/${id}`, { headers: this.authHeaders() }).pipe(
             map(notification => notification || null),
             tap(notification => this._notifications.set(notification))
         );

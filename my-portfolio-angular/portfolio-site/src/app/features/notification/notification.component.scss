@@ -15,7 +15,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    
+
     &.unread {
       font-weight: bold;
       color: var(--primary-color);
@@ -24,9 +24,36 @@
     .sender-info {
       display: flex;
       flex-direction: column;
+
       .time {
         font-size: 0.8rem;
         color: var(--text-color-secondary);
+      }
+    }
+  }
+
+  .tab-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+
+    .done-icon{
+      color: var(--success);
+    }
+    .delete-icon {
+      color: var(--error);
+    }
+
+    .btn-mark-read, .btn-delete {
+      background: none;
+      border: none;
+      color: var(--error-color);
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 0.2rem 0.5rem;
+
+      &:hover {
+        text-decoration: underline;
       }
     }
   }

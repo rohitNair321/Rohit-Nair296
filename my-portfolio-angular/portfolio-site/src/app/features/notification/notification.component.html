@@ -12,16 +12,19 @@
             <span class="name">{{note.first_name}} {{note.last_name}}</span>
             <span class="time">{{note.created_at | timeAgo}}</span>
           </div>
-          <button *ngIf="!note.is_read" 
-                  pButton 
-                  label="Mark as Read" 
-                  icon="pi pi-check" 
-                  class="p-button-text p-button-sm"
-                  (click)="markAsRead(note.id, $event)">
+        </div>
+        <div class="tab-actions">
+          <button *ngIf="!note.is_read" label="" title="Mark as Read" class="btn-mark-read"
+            (click)="markAsRead(note.id, $event)">
+            <span class="material-icons done-icon">{{'done_all'}}</span>
+          </button>
+          <button class="btn-delete" title="Delete" (click)="deleteMessage(note.id, $event)">
+            <span class="material-icons delete-icon">{{'delete'}}</span>
           </button>
         </div>
+
       </ng-template>
-      
+
       <div class="message-body">
         <p><strong>Email:</strong> {{note.email}}</p>
         <hr>

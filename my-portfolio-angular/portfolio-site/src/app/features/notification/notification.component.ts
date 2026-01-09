@@ -39,4 +39,11 @@ export class NotificationComponent extends CommonApp implements OnInit {
       
     });
   }
+
+  deleteMessage(id: string, event: Event) {
+    event.stopPropagation(); // Prevent accordion from toggling
+    this.appService.deleteMessage(id).subscribe(() => {
+
+    });
+  }
 }
