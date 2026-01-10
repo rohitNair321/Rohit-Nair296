@@ -20,7 +20,9 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "browser": "src/main.ts",
-            "ssr": "src/server.ts",
+            "ssr": {
+              "entry": "src/server.ts"
+            },
             "server": "src/main.server.ts",
             "assets": [
               "src/favicon.ico",
