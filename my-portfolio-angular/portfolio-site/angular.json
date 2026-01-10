@@ -15,7 +15,6 @@
           "options": {
             "outputPath": "dist/portfolio-site/browser",
             "index": "src/index.html",
-            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
