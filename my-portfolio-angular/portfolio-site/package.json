@@ -3,10 +3,10 @@
   "version": "3.0.30",
   "scripts": {
     "ng": "ng",
-    "start": "node dist/portfolio-site/server/main.js",
+    "start": "node dist/portfolio-site/browser/server/server.mjs",
     "build": "ng build",
     "test": "ng test",
-    "serve:ssr:portfolio-site": "node dist/portfolio-site/server/main.js"
+    "serve:ssr:portfolio-site": "node dist/portfolio-site/browser/server/server.mjs"
   },
   "private": true,
   "dependencies": {
