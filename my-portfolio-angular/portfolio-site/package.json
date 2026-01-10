@@ -3,7 +3,7 @@
   "version": "3.0.30",
   "scripts": {
     "ng": "ng",
-    "start-server": "node dist/portfolio-site/server/main.js",
+    "start": "node dist/portfolio-site/server/main.js",
     "build": "ng build",
     "test": "ng test",
     "serve:ssr:portfolio-site": "node dist/portfolio-site/server/main.js"
