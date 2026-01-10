@@ -37,10 +37,10 @@
         <span class="material-icons menu-icon">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
         <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Theme</span>
       </button>
-      <button class="theme-toggle" title="Logout" (click)="logout()"
+      <button class="theme-toggle" title="Exit" (click)="logout()"
         *ngIf="!config.appConfiguration.showUserProfileView">
         <span class="material-icons delete-icon">{{'exit_to_app'}}</span>
-        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Logout</span>
+        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Exit</span>
       </button>
     </div>
   </div>

@@ -9,6 +9,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from '@angular/cdk/dialog';
 import { authInterceptor } from './core/interceptors/app.interceptor';
+import { provideClientHydration } from '@angular/platform-browser';
 
 export function initApp() {
   return () => Promise.resolve();
@@ -33,6 +34,6 @@ export const appConfig: ApplicationConfig = {
       provide: APP_INITIALIZER,
       useFactory: initApp,
       multi: true
-    },
+    }, provideClientHydration(),
   ],
 };

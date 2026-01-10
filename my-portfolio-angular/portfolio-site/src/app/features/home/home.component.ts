@@ -9,7 +9,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { take } from 'rxjs';
+import { Subscription, switchMap, take, timer } from 'rxjs';
 import { CommonApp } from 'src/app/core/services/common';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 import { environment } from 'src/environments/environments';
@@ -57,7 +57,6 @@ interface HomeData { hero: Hero; aboutTeaser?: AboutTeaser; contact?: ContactInf
 export class HomeComponent extends CommonApp implements OnInit {
 
   homeData: any;
-
   contactForm: FormGroup;
   projectList: any[] = [];
   experienceYears = 5;
@@ -65,14 +64,13 @@ export class HomeComponent extends CommonApp implements OnInit {
   showProjectDialog: boolean = false;
   send: boolean = false;
   selectedProject: any = null;
-
   showContactDialog = false;
-  // private dialog = inject(Dialog);
   profileData = this.appService.profile;
+  pullNotification!: Subscription
 
   constructor(
     public override injector: Injector,
-    private fb: FormBuilder
+    private fb: FormBuilder,
   ) {
     super(injector);
     this.contactForm = this.fb.group({
@@ -135,9 +133,11 @@ export class HomeComponent extends CommonApp implements OnInit {
   }
 
   getNotifications(): void {
-    this.appService.getNotifications().pipe(take(1)).subscribe({
+    this.pullNotification = timer(0, 20000).pipe(
+      switchMap(() => this.appService.getNotifications())
+    ).subscribe({
       next: (notifications) => {
-        if(notifications.unreadCount > 0) {
+        if (notifications.unreadCount > 0) {
           this.alertService.showAlert(`You have ${notifications.unreadCount} notifications`, 'info');
         }
       },
@@ -151,6 +151,10 @@ export class HomeComponent extends CommonApp implements OnInit {
   openProject(project: any) {
     this.selectedProject = project;
     this.showProjectDialog = true;
+  }
+
+  ngOnDestroy() {
+    this.pullNotification.unsubscribe();
   }
 
 }
