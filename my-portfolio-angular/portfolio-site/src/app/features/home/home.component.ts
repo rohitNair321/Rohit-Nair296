@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Injector, OnInit, Renderer2, computed, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, Renderer2, computed, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import * as e from 'cors';
@@ -9,7 +9,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { Subscription, switchMap, take, timer } from 'rxjs';
+import { Subject, Subscription, switchMap, take, timer } from 'rxjs';
 import { CommonApp } from 'src/app/core/services/common';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 import { environment } from 'src/environments/environments';
@@ -54,7 +54,7 @@ interface HomeData { hero: Hero; aboutTeaser?: AboutTeaser; contact?: ContactInf
     ])
   ]
 })
-export class HomeComponent extends CommonApp implements OnInit {
+export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
 
   homeData: any;
   contactForm: FormGroup;
@@ -66,7 +66,8 @@ export class HomeComponent extends CommonApp implements OnInit {
   selectedProject: any = null;
   showContactDialog = false;
   profileData = this.appService.profile;
-  pullNotification!: Subscription
+  pullNotification!: Subscription;
+  private destroy$ = new Subject<void>();
 
   constructor(
     public override injector: Injector,
@@ -154,7 +155,8 @@ export class HomeComponent extends CommonApp implements OnInit {
   }
 
   ngOnDestroy() {
-    this.pullNotification.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

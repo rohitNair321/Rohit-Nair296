@@ -8,6 +8,7 @@ import { AppService } from "./app.service";
 import { ThemeService } from "../theme/theme.service";
 import { AlertService } from "./alert.service";
 import { Router } from "@angular/router";
+import { LocalStorageService } from "src/app/shared/services/local-storage.service";
 
 export class CommonApp {
 
@@ -19,6 +20,7 @@ export class CommonApp {
   public themeService;
   public alertService;
   public router;
+  public localStorageService;
   public appConfig: LayoutConfig = defaultConfig;
 
   constructor(public injector: Injector) {
@@ -30,6 +32,7 @@ export class CommonApp {
     this.portfolioServices = this.injector.get(SupabaseService);
     this.themeService = this.injector.get(ThemeService);
     this.router = this.injector.get(Router);
+    this.localStorageService = this.injector.get(LocalStorageService);
   }
 
   public themeToggle() {

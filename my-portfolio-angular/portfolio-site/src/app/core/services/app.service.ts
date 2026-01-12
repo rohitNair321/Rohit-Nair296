@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable, Signal, signal } from "@angular/core";
 import * as e from "cors";
 import { map, Observable, tap } from "rxjs";
+import { LocalStorageService } from "src/app/shared/services/local-storage.service";
 import { environment } from "src/environments/environments";
 
 export type UserRole = 'ADMIN' | 'GUEST' | null;
@@ -9,7 +10,9 @@ export type UserRole = 'ADMIN' | 'GUEST' | null;
 export class AppService {
 
     private readonly http = inject(HttpClient);
-    role = signal<UserRole>(localStorage.getItem('user_role') as UserRole || null);
+    private localStorageService = inject(LocalStorageService);
+
+    role = signal<UserRole>(this.localStorageService.getItem('user_role') as UserRole || null);
     private readonly apiProfileUrl = environment.baseUrl + '/api/profile';
     private readonly apiContactUrl = environment.baseUrl + '/api/contact';
 
@@ -19,10 +22,10 @@ export class AppService {
     private _notifications = signal<Notification | null>(null);
     readonly notifications: Signal<Notification | null> = this._notifications;
 
-    token = signal<string | null>(localStorage.getItem('auth_token'));
+    token = signal<string | null>(this.localStorageService.getItem('auth_token'));
 
     private authHeaders(): HttpHeaders {
-        const token = this.token() || localStorage.getItem('auth_token');
+        const token = this.token() || this.localStorageService.getItem('auth_token');
         return new HttpHeaders({ Authorization: token ? `Bearer ${token}` : '' });
     }
 
@@ -30,7 +33,7 @@ export class AppService {
         return this.http.get<any>(`${this.apiProfileUrl}/token`).pipe(
             map((res) => {
                 this.token.set(res.token);
-                localStorage.setItem('auth_token', res.token);
+                this.localStorageService.setItem('auth_token', res.token);
                 return res.token;
             })
         );
@@ -93,13 +96,13 @@ export class AppService {
 
     setRole(newRole: UserRole) {
         this.role.set(newRole);
-        if (newRole) localStorage.setItem('user_role', newRole);
-        else localStorage.removeItem('user_role');
+        if (newRole) this.localStorageService.setItem('user_role', newRole);
+        else this.localStorageService.removeItem('user_role');
     }
 
     // A simple check to see if we should allow entry to the app
     isAuthorized(): boolean {
-        const hasToken = !!localStorage.getItem('auth_token');
+        const hasToken = !!this.localStorageService.getItem('auth_token');
         const isGuest = this.role() === 'GUEST';
         return hasToken || isGuest;
     }

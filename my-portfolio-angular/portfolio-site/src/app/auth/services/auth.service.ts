@@ -3,6 +3,7 @@ import { catchError, debounceTime, forkJoin, map, mergeMap, Observable, of } fro
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environments';
 import { UserRole } from 'src/app/core/services/app.service';
+import { LocalStorageService } from 'src/app/shared/services/local-storage.service';
 export interface RegisterRequest {
   name: string;
   email: string;
@@ -19,9 +20,11 @@ export interface LoginRequest {
 export class AuthService {
 
   private readonly http = inject(HttpClient);
-  role = signal<UserRole>(localStorage.getItem('user_role') as UserRole || null);
+  private localStorageService = inject(LocalStorageService);
+
+  role = signal<UserRole>(this.localStorageService.getItem('user_role') as UserRole || null);
   private readonly baseUrl = ''; //api/auth
-  private readonly apiBaseUrl = environment.baseUrl+'/api/auth';
+  private readonly apiBaseUrl = environment.baseUrl + '/api/auth';
   user = signal<any | null>(null);
   token = signal<string | null>(null);
 
@@ -41,7 +44,7 @@ export class AuthService {
       map((res) => {
         this.token.set(res.token);
         this.user.set(res.user);
-        localStorage.setItem('auth_token', res.token);
+        this.localStorageService.setItem('auth_token', res.token);
         return res;
       })
     );
@@ -71,7 +74,7 @@ export class AuthService {
     this.token.set(null);
     this.user.set(null);
     this.role.set(null);
-    localStorage.clear();
+    this.localStorageService.clear();
   }
 
 }

@@ -1,12 +1,12 @@
 import { CommonModule, NgFor, NgIf } from '@angular/common';
-import { Component, Injector, OnInit, signal } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit, signal } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { take } from 'rxjs';
+import { Subject, take } from 'rxjs';
 import { ExperienceDTO, Profile, } from 'src/app/core/services/app.service';
 import { CommonApp } from 'src/app/core/services/common';
 
@@ -28,7 +28,7 @@ import { CommonApp } from 'src/app/core/services/common';
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
-export class SettingsComponent extends CommonApp implements OnInit {
+export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
   profileForm!: FormGroup;
   avatarDataUrl: string | null = null;
   resumeFileName: string | null = null;
@@ -47,7 +47,8 @@ export class SettingsComponent extends CommonApp implements OnInit {
   activeTab: 'light' | 'dark' = 'light';
   themesList: any[] = [];
   isEditingTheme = false;
-  editingThemeId: string | null = null;
+  editingThemeId: string | null = null;;
+  private destroy$ = new Subject<void>();
 
 
   constructor(public override injector: Injector, private fb: FormBuilder) {
@@ -754,11 +755,9 @@ export class SettingsComponent extends CommonApp implements OnInit {
     console.log('Unexpected date format:', date);
     return null;
   }
-}
 
-function pdfFileValidator(control: AbstractControl) {
-  const file = control.value as File | null;
-  if (!file) return null;
-  const ok = file.type === 'application/pdf' || (file.name && file.name.toLowerCase().endsWith('.pdf'));
-  return ok ? null : { fileType: true };
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

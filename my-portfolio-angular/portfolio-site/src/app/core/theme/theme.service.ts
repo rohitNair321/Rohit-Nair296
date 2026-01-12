@@ -1,5 +1,6 @@
 import { Injectable, signal, effect, computed, inject } from "@angular/core";
 import { AppService } from "../services/app.service";
+import { LocalStorageService } from "src/app/shared/services/local-storage.service";
 
 export interface ThemeDefinition {
   id: string;
@@ -13,10 +14,11 @@ export class ThemeService {
   private readonly THEME_KEY = 'selected-theme-id';
   private readonly DARK_KEY = 'is-dark-mode';
   appService = inject(AppService);
+  localStorageService = inject(LocalStorageService);
   profileSignal = this.appService.profile;
   // Signals for reactive UI
-  currentThemeId = signal<string>(localStorage.getItem(this.THEME_KEY) || 'basic');
-  isDark = signal<boolean>(localStorage.getItem(this.DARK_KEY) === 'true');
+  currentThemeId = signal<string>(this.localStorageService.getItem(this.THEME_KEY) || 'basic');
+  isDark = signal<boolean>(this.localStorageService.getItem(this.DARK_KEY) === 'true');
 
   // Registry to hold theme data
   private themeRegistry = new Map<string, ThemeDefinition>();
@@ -64,13 +66,13 @@ export class ThemeService {
   }
 
   setTheme(themeId: string) {
-    localStorage.setItem(this.THEME_KEY, themeId);
+    this.localStorageService.setItem(this.THEME_KEY, themeId);
     this.currentThemeId.set(themeId);
   }
 
   toggleDarkMode() {
     const newValue = !this.isDark();
-    localStorage.setItem(this.DARK_KEY, String(newValue));
+    this.localStorageService.setItem(this.DARK_KEY, String(newValue));
     this.isDark.set(newValue);
   }
 
