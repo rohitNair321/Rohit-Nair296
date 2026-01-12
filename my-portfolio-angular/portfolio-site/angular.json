@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/portfolio-site/browser/server/server.mjs",
+            "outputPath": "dist/portfolio-site",
             "index": "src/index.html",
             "polyfills": [
               "zone.js"
@@ -21,7 +21,7 @@
             "tsConfig": "tsconfig.app.json",
             "browser": "src/main.ts",
             "ssr": {
-              "entry": "src/server.ts"
+              "entry": "server.ts"
             },
             "server": "src/main.server.ts",
             "assets": [
