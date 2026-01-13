@@ -37,15 +37,44 @@
               <input type="text" formControlName="logo_initials" placeholder="RN" maxlength="3">
             </div>
             <div class="input-group">
-              <label>Resume Link</label>
-              <div class="file-input-wrapper">
-                <input id="resumeFile" formControlName="resume" type="file" accept="application/pdf"
-                  (change)="onResumeChange($event)" />
-                <label for="resumeFile" class="file-custom-btn">
-                  <i class="material-icons">upload_file</i> {{ resumeFileName || 'Upload New Resume' }}
-                </label>
+              <label>Resume (PDF)</label>
+
+              <div class="resume-box" *ngIf="resumeUrl; else uploadBlock">
+                <div class="resume-info">
+                  <i class="material-icons pdf-icon">picture_as_pdf</i>
+
+                  <div class="resume-meta">
+                    <span class="resume-name">{{ resumeFileName || 'Please upload your resume' }}</span>
+                    <span class="resume-sub">PDF Document</span>
+                  </div>
+                </div>
+
+                <div class="resume-actions">
+                  <button type="button" class="resume-btn view" (click)="viewResume()">
+                    <i class="material-icons">visibility</i>
+                  </button>
+
+                  <button type="button" class="resume-btn download" (click)="downloadResume(resumeUrl)">
+                    <i class="material-icons">download</i>
+                  </button>
+
+                  <button type="button" class="resume-btn delete" (click)="removeResume()">
+                    <i class="material-icons">delete_outline</i>
+                  </button>
+                </div>
               </div>
+
+              <ng-template #uploadBlock>
+                <div class="file-input-wrapper">
+                  <input id="resumeFile" type="file" accept="application/pdf" (change)="onResumeChange($event)"
+                    hidden />
+                  <label for="resumeFile" class="file-custom-btn">
+                    <i class="material-icons">upload_file</i> Upload Resume (PDF)
+                  </label>
+                </div>
+              </ng-template>
             </div>
+
           </div>
         </div>
       </section>
@@ -89,7 +118,7 @@
             <div class="exp-info">
               <span class="exp-date">
                 {{ exp.value.startDate | date:'MMM yyyy' }} -
-                {{ exp.value.currentRole ? 'Present' : (exp.value.endDate | date:'MMM yyyy') }}
+                {{ exp.value.present ? 'Present' : (exp.value.endDate | date:'MMM yyyy') }}
               </span>
               <h4>{{ exp.value.company }}</h4>
               <p class="role">{{ exp.value.title }}</p>

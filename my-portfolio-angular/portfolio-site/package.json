@@ -3,10 +3,11 @@
   "version": "3.0.30",
   "scripts": {
     "ng": "ng",
-    "start": "node dist/portfolio-site/server/server.mjs",
+    "dev": "ng serve",
+    "dev:ssr": "ng run portfolio-site:serve-ssr",
     "build": "ng build --configuration=production",
-    "test": "ng test",
-    "serve:ssr:portfolio-site": "node dist/portfolio-site/server/server.mjs"
+    "build:ssr": "ng build && ng run portfolio-site:server:production",
+    "start": "node dist/portfolio-site/server/server.mjs"
   },
   "private": true,
   "dependencies": {

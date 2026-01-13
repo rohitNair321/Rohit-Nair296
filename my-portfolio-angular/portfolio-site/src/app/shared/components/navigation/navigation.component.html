@@ -16,7 +16,7 @@
         <span class="logo-initials animate-nav-fade-in">
           <span class="rn-r">R</span><span class="rn-n">N</span>
         </span>
-        <span class="logo-name animate-nav-slide-in"> 
+        <span class="logo-name animate-nav-slide-in">
           <span class="logo-rohit">Rohit</span>
           <span class="logo-portfolio">Portfolio</span>
         </span>
@@ -26,27 +26,28 @@
     <!-- Desktop Menu (right-aligned) -->
     <div class="desktop-menu animate-nav-fade-in">
       <div class="menu-items" *ngIf="!isMobile && config?.appConfiguration?.type === 'navbar'">
-        <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link"
+        <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link" title="{{ item.label }}"
           (click)="scrollToSection($event, item.href)">
           {{ item.label }}
         </a>
         <a class="menu-link" routerLink="notifications" *ngIf="config.appConfiguration.showNotifications">
-          <span class="material-icons menu-icon" pBadge severity="info"
+          <span class="material-icons menu-icon" pBadge severity="info" title="Notifications"
             value="{{notifications()?.unreadCount}}">{{'notifications'}}</span>
         </a>
-        <a class="resume-download-btn" href="assets/Rohit.Nair.pdf" download>
+        <a class="resume-download-btn" title="Download Resume" (click)="downloadResume(profileData()?.resume_url)">
           <span class="material-icons">download</span>
           Resume
         </a>
       </div>
       <button class="theme-toggle" (click)="themeService.toggleDarkMode()"
         *ngIf="!isMobile && config?.appConfiguration?.type === 'navbar'">
-        <span class="material-icons">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+        <span class="material-icons" title="Theme">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
       </button>
       <div class="nav-actions" *ngIf="config.appConfiguration.showUserProfileView && !isMobile">
         <app-profile-menu></app-profile-menu>
       </div>
-      <div class="nav-actions" *ngIf="config?.appConfiguration?.type === 'navbar' && !isMobile && appService.role() === 'GUEST'">
+      <div class="nav-actions"
+        *ngIf="config?.appConfiguration?.type === 'navbar' && !isMobile && appService.role() === 'GUEST'">
         <button class="btn-logout" title="Exit" (click)="logout()">
           <span class="material-icons delete-icon">{{'exit_to_app'}}</span>
         </button>
@@ -74,19 +75,19 @@
           (click)="scrollToSection($event, item.href)">
           {{ item.label }}
         </a>
-        <a class="menu-link" *ngIf="config.appConfiguration.showNotifications" title="Notifications">
+        <a class="menu-link" routerLink="notifications" *ngIf="config.appConfiguration.showNotifications"
+          title="Notifications">
           <span class="material-icons menu-icon" pBadge severity="info"
             value="{{notifications()?.unreadCount}}">{{'notifications'}}</span>
         </a>
-        <a class="resume-download-btn" href="assets/Rohit.Nair.pdf" download>
+        <a class="resume-download-btn" (click)="downloadResume(profileData()?.resume_url)" title="Download Resume">
           <span class="material-icons">download</span>
           Resume
         </a>
         <button class="theme-toggle" (click)="themeService.toggleDarkMode()">
           <span class="material-icons">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
         </button>
-        <button class="btn-logout" title="Logout" (click)="logout()"
-          *ngIf="isMobile && appService.role() === 'GUEST'">
+        <button class="btn-logout" title="Logout" (click)="logout()" *ngIf="isMobile && appService.role() === 'GUEST'">
           <span class="material-icons delete-icon">{{'exit_to_app'}}</span>
         </button>
       </div>

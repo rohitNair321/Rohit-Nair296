@@ -163,6 +163,5 @@ export class SidebarComponent extends CommonApp implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
   }
 }

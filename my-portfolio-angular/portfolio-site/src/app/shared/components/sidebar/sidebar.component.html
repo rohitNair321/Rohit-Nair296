@@ -19,27 +19,27 @@
     <div>
       <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link"
         (click)="scrollToSection($event, item.href)">
-        <span class="material-icons menu-icon">{{ item.icon }}</span>
+        <span class="material-icons menu-icon" title="{{ item.label }}">{{ item.icon }}</span>
         <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
       </a>
-      <button class="menu-link" *ngIf="config.appConfiguration.showNotifications">
-        <span class="material-icons menu-icon" pBadge severity="info"
+      <a class="menu-link" *ngIf="config.appConfiguration.showNotifications" routerLink="notifications">
+        <span class="material-icons menu-icon" pBadge severity="info" title="Notifications"
           value="{{notifications()?.unreadCount}}">{{'notifications'}}</span>
         <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Notifications</span>
-      </button>
-      <a class="resume-download-btn" [href]="profileSignal()?.resume_url" download>
-        <span class="material-icons menu-icon">download</span>
+      </a>
+      <a class="resume-download-btn" (click)="downloadResume(profileSignal()?.resume_url)">
+        <span class="material-icons menu-icon" title="Download Resume">download</span>
         <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Resume</span>
       </a>
     </div>
     <div>
       <button class="theme-toggle" (click)="themeService.toggleDarkMode()">
-        <span class="material-icons menu-icon">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+        <span class="material-icons menu-icon" title="Theme">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
         <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Theme</span>
       </button>
       <button class="theme-toggle" title="Exit" (click)="logout()"
         *ngIf="!config.appConfiguration.showUserProfileView">
-        <span class="material-icons delete-icon">{{'exit_to_app'}}</span>
+        <span class="material-icons delete-icon" title="Exit">{{'exit_to_app'}}</span>
         <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Exit</span>
       </button>
     </div>

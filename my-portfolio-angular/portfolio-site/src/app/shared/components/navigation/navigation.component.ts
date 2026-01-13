@@ -48,7 +48,7 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
     { label: 'Projects', href: '#projects', icon: 'work' },
     { label: 'Contact', href: '#contact', icon: 'mail' },
   ];
-
+  profileData = this.appService.profile;
   notifications = computed(() => {
     return (
       this.appService.notifications()
@@ -99,7 +99,6 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
 
   logout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
   }
 
   toggleTheme() {

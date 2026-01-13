@@ -134,7 +134,7 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
   }
 
   getNotifications(): void {
-    this.pullNotification = timer(0, 20000).pipe(
+    this.pullNotification = timer(0, 300000).pipe(
       switchMap(() => this.appService.getNotifications())
     ).subscribe({
       next: (notifications) => {

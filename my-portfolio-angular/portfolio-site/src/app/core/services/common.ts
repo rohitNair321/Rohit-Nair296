@@ -100,4 +100,17 @@ export class CommonApp {
       this.themeService.setTheme(currentTheme.id);
     }
   }
+
+  downloadResume(resumeUrl: any) {
+    fetch(resumeUrl)
+      .then(res => res.blob())
+      .then(blob => {
+        const a = document.createElement('a');
+        const objectUrl = URL.createObjectURL(blob);
+        a.href = objectUrl;
+        a.download = 'Rohit_Resume.pdf';
+        a.click();
+        URL.revokeObjectURL(objectUrl);
+      });
+  }
 }

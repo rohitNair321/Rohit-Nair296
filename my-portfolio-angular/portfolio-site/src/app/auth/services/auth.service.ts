@@ -75,6 +75,7 @@ export class AuthService {
     this.user.set(null);
     this.role.set(null);
     this.localStorageService.clear();
+    location.href = '/login';
   }
 
 }

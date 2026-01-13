@@ -23,7 +23,7 @@
         <h2 class="section-title">{{'About Me'}}</h2>
         <p class="description-text" [innerHTML]="homeData?.description"></p>
         <div class="about-actions">
-          <a class="btn-primary" [href]="homeData?.resume_url" download>
+          <a class="btn-primary" (click)="downloadResume(profileData()?.resume_url)">
             <i class="material-icons">download</i> {{'Download Resume'}}
           </a>
           <a class="btn-outline" routerLink="/about">{{'Full Story'}}</a>

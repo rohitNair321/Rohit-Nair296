@@ -799,3 +799,75 @@
 .mt-2 {
   margin-top: 12px;
 }
+
+/* --- RESUME MANAGER --- */
+.resume-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.resume-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pdf-icon {
+  color: #ef4444;
+  font-size: 28px;
+}
+
+.resume-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.resume-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.resume-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.resume-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.resume-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.resume-btn.view:hover {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.resume-btn.download:hover {
+  background: #ecfeff;
+  color: #06b6d4;
+}
+
+.resume-btn.delete:hover {
+  background: #fef2f2;
+  color: #ef4444;
+}

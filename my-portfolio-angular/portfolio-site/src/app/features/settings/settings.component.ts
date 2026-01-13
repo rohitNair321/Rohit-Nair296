@@ -32,6 +32,7 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
   profileForm!: FormGroup;
   avatarDataUrl: string | null = null;
   resumeFileName: string | null = null;
+  resumeUrl: string | null = null;
   profileSignal = this.appService.profile;
   selectedAvatar?: File;
   selectedResume?: File;
@@ -47,7 +48,8 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
   activeTab: 'light' | 'dark' = 'light';
   themesList: any[] = [];
   isEditingTheme = false;
-  editingThemeId: string | null = null;;
+  editingThemeId: string | null = null;
+  selectedResumeFile: File | null = null;
   private destroy$ = new Subject<void>();
 
 
@@ -539,12 +541,16 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
     // resume file name: the server stores resume_url as path (e.g. resumes/<id>/uuid.pdf)
     if (p.resume_url) {
       const parts = p.resume_url.split('/');
-      this.resumeFileName = parts[parts.length - 1] ?? null;
+      this.resumeUrl = p.resume_url;
+      this.resumeFileName = 'Rohit_Resume.pdf';
+      this.profileForm.patchValue({
+        resume: p.resume_url
+      });
     } else {
-      this.resumeFileName = null;
+      this.resumeUrl = null;
+      this.resumeFileName = null;;
     }
 
-    console.log('Profile patched into form:', this.themesList);
   }
 
   onAvatarChange(ev: Event) {
@@ -571,48 +577,11 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
     this.profileForm.patchValue({ resume: f });
   }
 
-
-
-
-  private normalizeThemesObject(raw: any): Record<string, any> {
-    if (!raw) return {};
-
-    // If already correct
-    if (typeof raw === 'object' && !Array.isArray(raw)) {
-      return raw;
+  viewResume() {
+    if (this.resumeUrl) {
+      window.open(this.resumeUrl, '_blank');
     }
-
-    // If stringified JSON
-    if (typeof raw === 'string') {
-      try {
-        return JSON.parse(raw);
-      } catch {
-        return {};
-      }
-    }
-
-    // If legacy array format (failsafe)
-    if (Array.isArray(raw)) {
-      const result: Record<string, any> = {};
-      raw.forEach(item => {
-        if (typeof item === 'string') {
-          try {
-            item = JSON.parse(item);
-          } catch {
-            return;
-          }
-        }
-        if (typeof item === 'object') {
-          Object.assign(result, item);
-        }
-      });
-      return result;
-    }
-
-    return {};
   }
-
-
 
   // Build FormData: convert arrays to JSON strings because server expects JSON strings for some fields
   private buildFormData(): FormData {
@@ -671,24 +640,6 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
     });
   }
 
-  // Download resume (uses service to get signed url)
-  downloadResume() {
-    this.appService.getResumeSignedUrl().pipe(take(1)).subscribe({
-      next: (res) => {
-        if (res?.url) {
-          // open in new tab
-          window.open(res.url, '_blank');
-        } else {
-          alert('No resume available.');
-        }
-      },
-      error: (err) => {
-        console.error(err);
-        alert('Unable to get resume URL.');
-      }
-    });
-  }
-
   // Called when user selects a date in p-calendar
   onDateSelect(date: Date, exp: FormGroup, controlName: 'startDate' | 'endDate') {
     exp.get(controlName)?.setValue(date);
@@ -705,6 +656,7 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
   }
 
   removeResume() {
+    this.resumeUrl = null;
     this.resumeFileName = null;
     this.profileForm.patchValue({ resume: null });
   }
