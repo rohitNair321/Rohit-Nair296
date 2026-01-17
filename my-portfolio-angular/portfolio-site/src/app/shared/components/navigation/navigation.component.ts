@@ -97,7 +97,9 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
     }
   }
 
-  logout() {
+  logout() {    
+    this.themeService.isDark.set(false);
+    this.themeService.currentThemeId.set('');
     this.authService.logout();
   }
 

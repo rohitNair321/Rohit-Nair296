@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environments';
 import { UserRole } from 'src/app/core/services/app.service';
 import { LocalStorageService } from 'src/app/shared/services/local-storage.service';
+import { Router } from '@angular/router';
 export interface RegisterRequest {
   name: string;
   email: string;
@@ -21,6 +22,7 @@ export class AuthService {
 
   private readonly http = inject(HttpClient);
   private localStorageService = inject(LocalStorageService);
+  private router = inject(Router);
 
   role = signal<UserRole>(null);
   private readonly baseUrl = ''; //api/auth
@@ -75,7 +77,7 @@ export class AuthService {
     this.user.set(null);
     this.role.set(null);
     this.localStorageService.clear();
-    location.href = '/login';
+    this.router.navigate(['/login'])
   }
 
 }
