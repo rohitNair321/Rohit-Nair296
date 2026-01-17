@@ -11,11 +11,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const alert = inject(AlertService);
   const loading = inject(LoadingService);
-  
   const token = auth.token();
-
-  // 1. Show Spinner for every request
-  // loading.show('Processing request...');
 
   const cloned = token
     ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })

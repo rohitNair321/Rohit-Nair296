@@ -22,7 +22,7 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private localStorageService = inject(LocalStorageService);
 
-  role = signal<UserRole>(this.localStorageService.getItem('user_role') as UserRole || null);
+  role = signal<UserRole>(null);
   private readonly baseUrl = ''; //api/auth
   private readonly apiBaseUrl = environment.baseUrl + '/api/auth';
   user = signal<any | null>(null);

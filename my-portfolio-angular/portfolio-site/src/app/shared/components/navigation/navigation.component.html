@@ -47,7 +47,7 @@
         <app-profile-menu></app-profile-menu>
       </div>
       <div class="nav-actions"
-        *ngIf="config?.appConfiguration?.type === 'navbar' && !isMobile && appService.role() === 'GUEST'">
+        *ngIf="config?.appConfiguration?.type === 'navbar' && !isMobile && appService.role() !== 'ADMIN'">
         <button class="btn-logout" title="Exit" (click)="logout()">
           <span class="material-icons delete-icon">{{'exit_to_app'}}</span>
         </button>
@@ -87,7 +87,7 @@
         <button class="theme-toggle" (click)="themeService.toggleDarkMode()">
           <span class="material-icons">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
         </button>
-        <button class="btn-logout" title="Logout" (click)="logout()" *ngIf="isMobile && appService.role() === 'GUEST'">
+        <button class="btn-logout" title="Logout" (click)="logout()" *ngIf="isMobile && appService.role() !== 'ADMIN'">
           <span class="material-icons delete-icon">{{'exit_to_app'}}</span>
         </button>
       </div>

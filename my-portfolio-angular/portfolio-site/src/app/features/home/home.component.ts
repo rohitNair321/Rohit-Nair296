@@ -89,7 +89,7 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
       this.applyThemeFromProfile(this.profileData());
     } else {
       this.getMyProfile();
-      if (this.appService.role() !== 'GUEST') {
+      if (this.appService.role() === 'ADMIN') {
         this.getNotifications();
       }
     }

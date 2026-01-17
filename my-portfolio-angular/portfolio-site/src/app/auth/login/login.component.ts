@@ -24,7 +24,7 @@ export class LoginComponent extends CommonApp {
   }
 
   ngOnInit() {
-  
+
   }
 
   form: FormGroup = this.fb.group({
@@ -91,18 +91,16 @@ export class LoginComponent extends CommonApp {
     });
   }
 
-  // login.component.ts
   onContinueAsGuest(): void {
-    this.loading.show('Configuring guest access...');
-    this.appService.getToken().subscribe({
-      next: () => {
-        this.loading.hide();
-        this.appService.setRole('GUEST');
-        this.router.navigate(['/app/home']);
-      },
-      error: (err) => {
-        console.error('Error fetching guest token:', err);
-      },
-    });
+    // 1. Set the role signal to GUEST in memory
+    this.appService.role.set('GUEST');
+
+    // 2. Clear tokens from both signal and storage to ensure no Admin overlap
+    this.appService.token.set(null);
+    this.localStorageService.removeItem('auth_token');
+    // Do NOT store 'GUEST' in localStorage as per your security requirement
+
+    // 3. Navigate
+    this.router.navigate(['/app/home']);
   }
 }

@@ -8,7 +8,7 @@ export const routes: Routes = [
   {
     path: '',
     component: AuthLayoutComponent,
-    canActivate: [tokenGuard],
+    // canActivate: [tokenGuard],
     children: [
       {
         path: 'login',
@@ -52,24 +52,28 @@ export const routes: Routes = [
       {
         path: 'overview',
         loadComponent: () =>
-          import('./features/overview/overview.component').then(m => m.OverviewComponent),
+          import('./features/overview/overview.component').then(m => m.OverviewComponent)
       },
       {
         path: 'profile',
         loadComponent: () =>
           import('./features/profile-shell/profile-shell.component')
             .then(m => m.ProfileShellComponent),
+        // canActivate: [tokenGuard],
+        data: { roles: ['ADMIN'] }
       },
       {
         path: 'settings',
         loadComponent: () =>
           import('./features/settings/settings.component').then(m => m.SettingsComponent),
+        // canActivate: [tokenGuard],
         data: { roles: ['ADMIN'] }
       },
       {
         path: 'notifications',
         loadComponent: () =>
           import('./features/notification/notification.component').then(m => m.NotificationComponent),
+        canActivate: [tokenGuard],
         data: { roles: ['ADMIN'] }
       },
       {
@@ -96,5 +100,5 @@ export const routes: Routes = [
       },
     ],
   },
-  { path: '**', component: PageNotFoundComponent},
+  { path: '**', component: PageNotFoundComponent },
 ];

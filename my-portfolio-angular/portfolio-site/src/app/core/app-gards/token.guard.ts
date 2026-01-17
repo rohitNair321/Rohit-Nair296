@@ -1,43 +1,37 @@
+import { inject } from "@angular/core";
 import { CanActivateFn, Router } from "@angular/router";
 import { AppService } from "../services/app.service";
 import { AuthService } from "src/app/auth/services/auth.service";
-import { inject } from "@angular/core";
-import { environment } from "src/environments/environments";
+import { LocalStorageService } from "src/app/shared/services/local-storage.service";
 
-// token.guard.ts
 export const tokenGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const appService = inject(AppService);
-  const url = state.url;
+  const authService = inject(AuthService);
+  const localStorageService = inject(LocalStorageService);
 
-  // const isAuthorized = appService.isAuthorized();
-  const currentRole = appService.role(); // 'ADMIN' or 'GUEST' or null
-  const isAuthorized = !!currentRole;
+  const token = authService.token() || localStorageService.getItem('auth_token');
+  appService.setRole(token? appService.role() || 'ADMIN':appService.role() || 'GUEST')
+  const role = token? appService.role() || 'ADMIN':appService.role() || 'GUEST'; // This is your Signal
 
-  // 1. If trying to access Login/Register while already authorized
-  if (url.includes('/login') || url.includes('/register')) {
-    if (currentRole === 'ADMIN') {
-      router.navigate(['/app/home']);
-      return false;
-    }
-    return true;
-  }
-
-  // 2. Protect App Pages
-  if (!isAuthorized) {
+  // If the user is an ADMIN, they MUST have a token
+  if (role === 'ADMIN') {
+    if (token) return true;
     router.navigate(['/login']);
     return false;
   }
 
-  // 3. Role-Based Check for specific pages
-  const restrictedRoles = route.data['roles'] as Array<string>;
-
-  // If the page has restricted roles and the user's role isn't included
-  if (restrictedRoles && !restrictedRoles.includes(currentRole!)) {
-    // Redirect Guests away from Admin pages back to Home
-    router.navigate(['/app/home']);
-    return false;
+  // If the user is a GUEST, allow access to non-admin routes
+  if (role === 'GUEST') {
+    const isAdminRoute = route.data?.['roles']?.includes('ADMIN');
+    if (isAdminRoute) {
+      router.navigate(['/app/home']); // Guests trying to hit Admin pages go to Home
+      return false;
+    }
+    return true; // Guests allowed on public routes
   }
 
-  return true;
+  // If no role is set (Initial load/Refresh), redirect to login
+  router.navigate(['/login']);
+  return false;
 };

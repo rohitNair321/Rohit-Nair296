@@ -12,7 +12,7 @@ export class AppService {
     private readonly http = inject(HttpClient);
     private localStorageService = inject(LocalStorageService);
 
-    role = signal<UserRole>(this.localStorageService.getItem('user_role') as UserRole || null);
+    role = signal<UserRole>(null);
     private readonly apiProfileUrl = environment.baseUrl + '/api/profile';
     private readonly apiContactUrl = environment.baseUrl + '/api/contact';
 
@@ -29,19 +29,28 @@ export class AppService {
         return new HttpHeaders({ Authorization: token ? `Bearer ${token}` : '' });
     }
 
-    getToken(): Observable<string> {
-        return this.http.get<any>(`${this.apiProfileUrl}/token`).pipe(
-            map((res) => {
-                this.token.set(res.token);
-                this.localStorageService.setItem('auth_token', res.token);
-                return res.token;
-            })
-        );
+    // getToken(): Observable<string> {
+    //     return this.http.get<any>(`${this.apiProfileUrl}/token`).pipe(
+    //         map((res) => {
+    //             this.token.set(res.token);
+    //             this.localStorageService.setItem('auth_token', res.token);
+    //             return res.token;
+    //         })
+    //     );
+    // }
+
+    hasValidToken(): boolean {
+        const token = localStorage.getItem('auth_token');
+        if (!token) return false;
+
+        // optional: decode & check exp
+        return true;
     }
+
 
     // Fetch profile from server and update signal
     getProfile(): Observable<Profile | null> {
-        return this.http.get<{ profile: Profile | null }>(`${this.apiProfileUrl}/getMyProfile`, { headers: this.authHeaders() })
+        return this.http.get<{ profile: Profile | null }>(`${this.apiProfileUrl}/getMyProfile`)
             .pipe(
                 map(r => r.profile || null),
                 tap(p => this._profile.set(p))
@@ -96,8 +105,6 @@ export class AppService {
 
     setRole(newRole: UserRole) {
         this.role.set(newRole);
-        if (newRole) this.localStorageService.setItem('user_role', newRole);
-        else this.localStorageService.removeItem('user_role');
     }
 
     // A simple check to see if we should allow entry to the app

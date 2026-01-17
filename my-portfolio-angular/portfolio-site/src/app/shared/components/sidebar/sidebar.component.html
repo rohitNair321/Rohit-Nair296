@@ -38,7 +38,7 @@
         <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Theme</span>
       </button>
       <button class="theme-toggle" title="Exit" (click)="logout()"
-        *ngIf="!config.appConfiguration.showUserProfileView">
+        *ngIf="!config.appConfiguration.showUserProfileView && appService.role() !== 'ADMIN'">
         <span class="material-icons delete-icon" title="Exit">{{'exit_to_app'}}</span>
         <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Exit</span>
       </button>
