@@ -12,14 +12,16 @@ export class AppService {
     private readonly http = inject(HttpClient);
     private localStorageService = inject(LocalStorageService);
 
+    // Single source of truth
+    appState = signal<AppState>(initialState);
     role = signal<UserRole>(null);
     private readonly apiProfileUrl = environment.baseUrl + '/api/profile';
     private readonly apiContactUrl = environment.baseUrl + '/api/contact';
 
-    private _profile = signal<Profile | null>(null);
+    _profile = signal<Profile | null>(null);
     readonly profile: Signal<Profile | null> = this._profile;
 
-    private _notifications = signal<Notification | null>(null);
+    _notifications = signal<Notification | null>(null);
     readonly notifications: Signal<Notification | null> = this._notifications;
 
     token = signal<string | null>(this.localStorageService.getItem('auth_token'));
@@ -29,21 +31,9 @@ export class AppService {
         return new HttpHeaders({ Authorization: token ? `Bearer ${token}` : '' });
     }
 
-    // getToken(): Observable<string> {
-    //     return this.http.get<any>(`${this.apiProfileUrl}/token`).pipe(
-    //         map((res) => {
-    //             this.token.set(res.token);
-    //             this.localStorageService.setItem('auth_token', res.token);
-    //             return res.token;
-    //         })
-    //     );
-    // }
-
     hasValidToken(): boolean {
         const token = localStorage.getItem('auth_token');
         if (!token) return false;
-
-        // optional: decode & check exp
         return true;
     }
 
@@ -113,7 +103,26 @@ export class AppService {
         const isGuest = this.role() === 'GUEST';
         return hasToken || isGuest;
     }
+
+    intialAppState(){
+        this.appState.set(initialState);
+        this.localStorageService.clear();
+    }
 }
+
+interface AppState {
+    role: UserRole;
+    token: string | null;
+    _profile: Profile | null;
+    _notification: Notification | null;
+}
+
+const initialState: AppState = {
+    role: null,
+    token: null,
+    _profile: null,
+    _notification: null
+};
 
 export interface Notification {
     notificationList: NotificationDTO[];

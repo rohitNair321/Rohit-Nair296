@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { catchError, debounceTime, forkJoin, map, mergeMap, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environments';
-import { UserRole } from 'src/app/core/services/app.service';
+import { AppService, UserRole } from 'src/app/core/services/app.service';
 import { LocalStorageService } from 'src/app/shared/services/local-storage.service';
 import { Router } from '@angular/router';
 export interface RegisterRequest {
@@ -23,6 +23,7 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private localStorageService = inject(LocalStorageService);
   private router = inject(Router);
+  private appServices = inject(AppService);
 
   role = signal<UserRole>(null);
   private readonly baseUrl = ''; //api/auth
@@ -76,6 +77,8 @@ export class AuthService {
     this.token.set(null);
     this.user.set(null);
     this.role.set(null);
+    this.appServices._profile.set(null);
+    this.appServices._notifications.set(null);
     this.localStorageService.clear();
     this.router.navigate(['/login'])
   }

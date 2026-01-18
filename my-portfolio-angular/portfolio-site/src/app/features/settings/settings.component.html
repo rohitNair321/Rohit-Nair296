@@ -261,6 +261,23 @@
             <div class="input-group">
               <input type="text" formControlName="title" placeholder="Project Name (e.g. E-commerce Dashboard)">
             </div>
+<div class="status-section">
+  <label class="section-title">Project Status</label>
+  
+  <div class="radio-options-wrapper">
+    <label class="custom-radio-label">
+      <input type="radio" value="in-progress" formControlName="projectProgress">
+      <span class="radio-check"></span>
+      <span class="label-text">In Progress</span>
+    </label>
+
+    <label class="custom-radio-label">
+      <input type="radio" value="completed" formControlName="projectProgress">
+      <span class="radio-check"></span>
+      <span class="label-text">Completed</span>
+    </label>
+  </div>
+</div>
             <div class="input-group">
               <textarea formControlName="description" rows="2"
                 placeholder="What was your specific contribution?"></textarea>

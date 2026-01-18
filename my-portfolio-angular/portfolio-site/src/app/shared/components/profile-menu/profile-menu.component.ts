@@ -85,10 +85,8 @@ export class ProfileMenuComponent extends CommonApp {
   }
 
   logout() {
-    this.appService.role.set(null);
-    this.appService.token.set(null);
     this.localStorageService.removeItem('auth_token');
-    location.href = '/login';
+    this.authService.logout();
   }
 
 }

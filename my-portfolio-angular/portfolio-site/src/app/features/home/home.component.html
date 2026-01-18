@@ -26,7 +26,8 @@
           <a class="btn-primary" (click)="downloadResume(profileData()?.resume_url)">
             <i class="material-icons">download</i> {{'Download Resume'}}
           </a>
-          <a class="btn-outline" routerLink="/about">{{'Full Story'}}</a>
+          <a class="btn-outline"  (click)="aboutMe()">{{'Full Story'}}</a>
+          <!-- routerLink="/about" -->
         </div>
       </div>
       <div class="stats-box">
@@ -50,20 +51,23 @@
       </div>
 
       <div class="project-grid-modern">
-        <div class="modern-card" *ngFor="let project of homeData?.experiences[1]?.projects">
-          <div class="card-visual">
-            <div class="card-overlay">
-              <button class="btn-circle" (click)="openProject(project)">
-                <i class="material-icons">visibility</i>
-              </button>
-            </div>
-            <img  alt="">
-          </div>
+        <div class="modern-card" *ngFor="let project of homeData?.experiences[0]?.projects">
           <div class="card-info">
-            <h3>{{ project?.title }}</h3>
+            <div class="title-wrapper">
+              <h3>{{ project?.title }}</h3>
+
+              <div class="project-status-indicator"
+                [ngClass]="project?.projectProgress === 'in-progress' ? 'status-blinking' : 'status-complete'">
+                <span class="status-dot"></span>
+                <span class="status-text">{{ project?.projectProgress === 'in-progress' ? 'In progress' : 'Completed'
+                  }}</span>
+              </div>
+            </div>
+
             <div class="tag-row">
               <span *ngFor="let tech of project?.technologies | slice:0:3" class="mini-tag">#{{tech}}</span>
             </div>
+
             <button class="btn-readmore" (click)="openProject(project)">
               {{'Read More'}} <i class="material-icons">east</i>
             </button>

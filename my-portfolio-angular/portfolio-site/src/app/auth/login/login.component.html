@@ -46,11 +46,11 @@
 
       <button type="submit" class="btn-primary-auth" [disabled]="isloading">
         <div class="spinner-container">
-          <span>{{'Login'}}</span>
+          <span>{{'Admin Login'}}</span>
         </div>
       </button>
 
-      <div class="divider">
+      <!-- <div class="divider">
         <span>or login with</span>
       </div>
 
@@ -63,7 +63,7 @@
           <img src="assets/icons/facebook.svg" alt="" *ngIf="!isloading">
           <span>Facebook</span>
         </button>
-      </div>
+      </div> -->
       <div class="guest-container" style="margin-top: 1.5rem; text-align: center;">
         <button type="button" class="btn-guest-link" (click)="onContinueAsGuest()">
           <i class="material-icons">visibility</i>

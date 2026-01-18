@@ -50,23 +50,15 @@ export const routes: Routes = [
           import('./features/home/home.component').then(m => m.HomeComponent),
       },
       {
-        path: 'overview',
+        path: 'about',
         loadComponent: () =>
-          import('./features/overview/overview.component').then(m => m.OverviewComponent)
-      },
-      {
-        path: 'profile',
-        loadComponent: () =>
-          import('./features/profile-shell/profile-shell.component')
-            .then(m => m.ProfileShellComponent),
-        // canActivate: [tokenGuard],
-        data: { roles: ['ADMIN'] }
+          import('./features/about-me/about-me.component').then(m => m.AboutMeComponent),
       },
       {
         path: 'settings',
         loadComponent: () =>
           import('./features/settings/settings.component').then(m => m.SettingsComponent),
-        // canActivate: [tokenGuard],
+        canActivate: [tokenGuard],
         data: { roles: ['ADMIN'] }
       },
       {
@@ -75,17 +67,6 @@ export const routes: Routes = [
           import('./features/notification/notification.component').then(m => m.NotificationComponent),
         canActivate: [tokenGuard],
         data: { roles: ['ADMIN'] }
-      },
-      {
-        path: 'resume',
-        loadComponent: () =>
-          import('./features/view-resume/view-resume.component')
-            .then(m => m.ViewResumeComponent),
-      },
-      {
-        path: 'about',
-        loadComponent: () =>
-          import('./features/about-me/about-me.component').then(m => m.AboutMeComponent),
       },
       {
         path: 'help',

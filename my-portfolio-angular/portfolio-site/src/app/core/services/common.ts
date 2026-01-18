@@ -113,4 +113,17 @@ export class CommonApp {
         URL.revokeObjectURL(objectUrl);
       });
   }
+
+  // Add this utility to your CommonApp class or a helper file
+  decodeHtml(html: string): string {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    // We call it twice because your string has multiple layers of &amp;
+    let decoded = txt.value;
+    while (decoded.includes('&')) {
+      txt.innerHTML = decoded;
+      decoded = txt.value;
+    }
+    return decoded;
+  }
 }

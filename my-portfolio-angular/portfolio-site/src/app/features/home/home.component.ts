@@ -154,6 +154,10 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
     this.showProjectDialog = true;
   }
 
+  aboutMe(){
+    this.alertService.showAlert(`This page is under development, will be in functional soon!!`, 'info');
+  }
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();

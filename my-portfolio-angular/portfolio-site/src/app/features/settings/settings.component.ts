@@ -1,11 +1,12 @@
 import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Component, Injector, OnDestroy, OnInit, signal } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { Subject, take } from 'rxjs';
 import { ExperienceDTO, Profile, } from 'src/app/core/services/app.service';
 import { CommonApp } from 'src/app/core/services/common';
@@ -23,7 +24,8 @@ import { CommonApp } from 'src/app/core/services/common';
     CalendarModule,
     DialogModule,
     NgFor,
-    NgIf
+    NgIf,
+    RadioButtonModule
   ],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
@@ -335,6 +337,7 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
     return this.fb.group({
       title: [data?.title || '', Validators.required],
       description: [data?.description || ''],
+      projectProgress: [data?.projectProgress || ''],
       url: [data?.url || ''],
       technologies: this.fb.array(data?.technologies || [])
     });
@@ -386,7 +389,7 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
 
   // Add project to dialog
   addProject() {
-    this.projectsArray.push(this.createProject());
+    this.projectsArray.insert(0, this.createProject());
   }
 
   // Remove project from dialog
@@ -505,8 +508,8 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
       secondaryPhone: p.secondary_phone ?? '',
       location: p.location ?? '',
       website: p.website ?? '',
-      linkedin: p.linkedin ?? '',
-      github: p.github ?? '',
+      linkedin: this.decodeHtml(p.linkedin ?? ''),
+      github: this.decodeHtml(p.github ?? ''),
       openToWork: !!p.open_to_work
     });
 
@@ -614,8 +617,11 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
     const avatarFile = this.profileForm.get('avatar')?.value as File | null;
     if (avatarFile) fd.append('avatar', avatarFile, avatarFile.name);
 
-    const resumeFile = this.profileForm.get('resume')?.value as File | null;
-    if (resumeFile) fd.append('resume', resumeFile, resumeFile.name);
+    const resumeValue = this.profileForm.get('resume')?.value;
+    if (resumeValue instanceof File) {
+      // Only append if it's a new binary file
+      fd.append('resume', resumeValue, resumeValue.name);
+    }
 
     return fd;
   }
