@@ -29,7 +29,7 @@ export class MainLayoutComponent extends CommonApp {
   constructor(public override injector: Injector) {
     super(injector);
     this.config.theme.name = 'theme-6';
-    this.config.appConfiguration.type = 'navbar';
+    this.config.appConfiguration.type = 'sidebar';
     this.config.appConfiguration.theme = 'light';
     this.config.appConfiguration.sidebarPosition = 'right';
     this.config.appConfiguration.collapsed = true;

@@ -1,4 +1,11 @@
 /* --- MODERN FOOTER ROOT --- */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
 .modern-footer {
   background-color: var(--surface);
   color: var(--text-primary);
@@ -193,4 +200,79 @@
   .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
   .bottom-flex { flex-direction: column; gap: 1rem; text-align: center; }
   .legal-links a { margin: 0 0.75rem; }
+}
+
+/* =========================================================
+   FOOTER RESPONSIVE DESIGN
+========================================================= */
+
+/* Tablets & Small Laptops (Max 1024px) */
+@media (max-width: 1024px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr; /* 2 columns for tablets */
+    gap: 2.5rem;
+    padding-bottom: 3rem;
+  }
+
+  .brand-col {
+    grid-column: span 2; /* Let the brand take full width on tablets */
+    text-align: center;
+  }
+
+  .footer-social {
+    justify-content: center;
+  }
+}
+
+/* Mobile Devices (Max 768px) */
+@media (max-width: 768px) {
+  .modern-footer {
+    padding-top: 60px; /* Reduce top padding as wave is smaller */
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr; /* Stack everything in 1 column */
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .brand-col {
+    grid-column: span 1;
+  }
+
+  .footer-col h4 {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+  }
+
+  .footer-links li {
+    justify-content: center; /* Center links for mobile */
+  }
+
+  .footer-col:last-child {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the "Say Hello" section */
+  }
+
+  .bottom-flex {
+    flex-direction: column; /* Stack copyright and built-with info */
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .back-to-top {
+    margin-top: 1.5rem;
+  }
+}
+
+/* Extra Small Devices (Max 480px) */
+@media (max-width: 480px) {
+  .footer-logo {
+    font-size: 1.2rem;
+  }
+
+  .footer-email {
+    font-size: 1.1rem;
+  }
 }

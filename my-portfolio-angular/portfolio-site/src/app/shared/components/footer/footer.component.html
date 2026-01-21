@@ -28,7 +28,7 @@
       <ul class="footer-links">
         <li *ngFor="let item of menuItems">
           <a [href]="item.href" class="menu-link"
-            (click)="scrollToSection($event, item.href)">
+            (click)="scrollToSection($event, item.href!)">
             {{ item.label }}
           </a>
         </li>

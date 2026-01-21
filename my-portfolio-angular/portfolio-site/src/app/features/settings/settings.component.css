@@ -1,3 +1,36 @@
+/* 1. Reset box-sizing for the entire page to keep padding INSIDE the width */
+.settings-page, 
+.settings-page *, 
+.settings-page *::before, 
+.settings-page *::after {
+  box-sizing: border-box !important;
+}
+
+/* 2. Fix the main container alignment */
+.settings-page {
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  overflow-x: hidden; /* Prevents any element from pushing the screen right */
+}
+
+/* 3. Force the grid and rows to stack vertically on mobile (under 768px) */
+@media (max-width: 768px) {
+  .settings-grid, 
+  .input-row, 
+  .logo-config-grid {
+    grid-template-columns: 1fr !important; /* Forces single column alignment */
+    width: 100% !important;
+  }
+  
+  .settings-main,
+  .settings-card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+
 /* --- LAYOUT --- */
 .settings-page {
   max-width: 1200px;
@@ -953,4 +986,183 @@
 .label-text {
   font-size: 15px;
   color: #444;
+}
+
+/* =========================================================
+   RESPONSIVE STYLES
+========================================================= */
+
+/* Tablets & Small Laptops (Max 1024px) */
+@media (max-width: 1024px) {
+  .settings-grid {
+    grid-template-columns: 1fr; /* Stack sidebar below main content */
+  }
+
+  .settings-sidebar {
+    position: static; /* Remove sticky behavior on tablets for better scrolling */
+    order: -1; /* Optional: Move sidebar/preview to the top */
+  }
+
+  .settings-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .header-actions {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+  }
+
+  .header-actions button {
+    flex: 1; /* Make buttons equal width */
+    justify-content: center;
+  }
+}
+
+/* Mobile Devices (Max 768px) */
+@media (max-width: 768px) {
+  .settings-page {
+    margin: 20px auto;
+  }
+
+  .input-row, 
+  .social-links-grid {
+    grid-template-columns: 1fr; /* Force single column for all inputs */
+  }
+
+  .logo-config-grid {
+    grid-template-columns: 1fr; /* Stack logo upload and info */
+    text-align: center;
+  }
+
+  .avatar-upload {
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .exp-item {
+    grid-template-columns: 1fr; /* Stack experience items */
+    position: relative;
+  }
+
+  .btn-icon.delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  /* Improve spacing for smaller screens */
+  .settings-card {
+    padding: 16px;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+  }
+
+  /* Make Color Picker rows stackable */
+  .input-row.mt-2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .cp-wrap {
+    flex: 1 1 120px; /* Allow color pickers to wrap naturally */
+  }
+}
+
+/* Extra Small Devices (Max 480px) */
+@media (max-width: 480px) {
+  .header-info h1 {
+    font-size: 1.5rem;
+  }
+  
+  .modal-content {
+    width: 95%;
+    padding: 1rem;
+  }
+}
+
+/* =========================================================
+   MOBILE STICKY FOOTER & RESPONSIVE FIXES
+========================================================= */
+
+@media (max-width: 768px) {
+  /* 1. Turn the Header into a Sticky Footer */
+  .settings-header {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--surface);
+    margin-bottom: 0;
+    padding: 1rem 20px;
+    border-top: 1px solid var(--border);
+    z-index: 1000;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: row; /* Keep buttons side-by-side */
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Hide the header description on mobile to save space */
+  .header-info {
+    display: none;
+  }
+
+  .header-actions {
+    display: flex;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .header-actions button {
+    flex: 1;
+    padding: 12px;
+    font-size: 0.9rem;
+    justify-content: center;
+  }
+
+  /* 2. Add padding to the main container so content isn't hidden by footer */
+  .settings-page {
+    padding-bottom: 100px; /* Space for the sticky footer */
+    margin-top: 20px;
+  }
+
+  /* 3. Stack the Grid */
+  .settings-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* 4. Fix Input Rows */
+  .input-row {
+    grid-template-columns: 1fr; /* Stack First/Last Name etc. */
+    gap: 12px;
+  }
+
+  /* 5. Logo/Avatar Center Alignment */
+  .logo-config-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .avatar-upload {
+    margin: 0 auto;
+  }
+}
+
+/* Tablet Adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .settings-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .settings-sidebar {
+    order: -1; /* Put the Preview at the top on tablets */
+  }
 }

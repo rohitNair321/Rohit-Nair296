@@ -7,6 +7,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { BadgeModule } from 'primeng/badge';
 import { defaultConfig, LayoutConfig } from 'src/app/core/config/layout.config';
 import { CommonApp } from 'src/app/core/services/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -19,6 +20,7 @@ import { CommonApp } from 'src/app/core/services/common';
     RadioButtonModule,
     ButtonModule,
     BadgeModule,
+    RouterModule,
   ],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
@@ -49,12 +51,12 @@ export class SidebarComponent extends CommonApp implements OnInit {
     );
   });
 
-  menuItems = [
-    { label: 'Home', href: '#home', icon: 'home' },
-    { label: 'About', href: '#about', icon: 'person' },
-    { label: 'Projects', href: '#projects', icon: 'work' },
-    { label: 'Contact', href: '#contact', icon: 'mail' },
-  ];
+  // menuItems = [
+  //   { label: 'Home', href: '#home', icon: 'home' },
+  //   { label: 'About', href: '#about', icon: 'person' },
+  //   { label: 'Projects', href: '#projects', icon: 'work' },
+  //   { label: 'Contact', href: '#contact', icon: 'mail' },
+  // ];
 
   constructor(public override injector: Injector) {
     super(injector);
@@ -63,7 +65,7 @@ export class SidebarComponent extends CommonApp implements OnInit {
 
   ngOnInit() {
     this.checkMobile();
-    this.updateCurrentSection();
+    // this.updateCurrentSection();
     window.addEventListener('resize', this.checkMobile.bind(this));
     this.navigationType = this.config?.appConfiguration?.type === 'sidebar' ? 'sidebar' : 'navbar';
     // this.availableThemes = this.normalizeThemesResponse(this.profileSignal()?.themes);
@@ -72,7 +74,7 @@ export class SidebarComponent extends CommonApp implements OnInit {
   @HostListener('window:scroll')
   onScroll() {
     if (this.isMobile) {
-      this.updateCurrentSection();
+      // this.updateCurrentSection();
     }
   }
 
@@ -125,25 +127,25 @@ export class SidebarComponent extends CommonApp implements OnInit {
     this.isMobileOpen = false;
   }
 
-  private updateCurrentSection() {
-    // Get all sections
-    const sections = this.menuItems.map(item => ({
-      id: item.href.replace('#', ''),
-      label: item.label
-    }));
+  // private updateCurrentSection() {
+  //   // Get all sections
+  //   const sections = this.menuItems.map(item => ({
+  //     id: item.href.replace('#', ''),
+  //     label: item.label
+  //   }));
 
-    // Find the current section based on scroll position
-    for (const section of sections) {
-      const element = document.getElementById(section.id);
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        if (rect.top <= 100 && rect.bottom >= 100) {
-          this.currentSection = section.label;
-          break;
-        }
-      }
-    }
-  }
+  //   // Find the current section based on scroll position
+  //   for (const section of sections) {
+  //     const element = document.getElementById(section.id);
+  //     if (element) {
+  //       const rect = element.getBoundingClientRect();
+  //       if (rect.top <= 100 && rect.bottom >= 100) {
+  //         this.currentSection = section.label;
+  //         break;
+  //       }
+  //     }
+  //   }
+  // }
 
   toggleSettingSideBar() {
     this.isRightSideSettingOpen = !this.isRightSideSettingOpen;

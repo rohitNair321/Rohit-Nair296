@@ -417,3 +417,93 @@
     color: var(--primary);
   }
 }
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.menu-item {
+  width: 100%;
+  
+  .menu-link {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.65rem 0.9rem;
+    border-radius: 0.75rem;
+    color: var(--text-primary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: color-mix(in oklab, var(--primary) 10%, transparent);
+    }
+
+    &.active-item {
+      background: var(--primary);
+      color: var(--background);
+      .menu-icon { color: var(--background); }
+    }
+  }
+
+  .chevron {
+    margin-left: auto;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+  }
+}
+
+/* Submenu Styling */
+.submenu-list {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1.5rem; /* Indent sub-items */
+  margin: 0.25rem 0 0.5rem 0.8rem;
+  border-left: 1px solid var(--border); /* Visual guide line */
+  gap: 0.2rem;
+}
+
+.submenu-link {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.5rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.88rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: var(--primary);
+    background: color-mix(in oklab, var(--primary) 5%, transparent);
+  }
+
+  &.active-sub {
+    color: var(--primary);
+    font-weight: 600;
+    background: color-mix(in oklab, var(--primary) 8%, transparent);
+  }
+}
+
+.submenu-icon {
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+/* Collapsed Sidebar Logic */
+.sidebar-container.collapsed {
+  .submenu-list, .chevron, .menu-label {
+    display: none !important;
+  }
+  
+  .menu-link {
+    justify-content: center;
+    padding: 0.8rem;
+  }
+}

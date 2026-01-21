@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, Injector } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -16,6 +17,7 @@ import { CommonApp } from 'src/app/core/services/common';
     CardModule,
     RadioButtonModule,
     ButtonModule,
+    RouterModule
   ],
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.css']
@@ -23,12 +25,12 @@ import { CommonApp } from 'src/app/core/services/common';
 export class FooterComponent extends CommonApp {
 
   profileInfo = this.appService.profile();
-  menuItems = [
-    { label: 'Home', href: '#home', icon: 'home' },
-    { label: 'About', href: '#about', icon: 'person' },
-    { label: 'Projects', href: '#projects', icon: 'work' },
-    { label: 'Contact', href: '#contact', icon: 'mail' },
-  ];
+  // menuItems = [
+  //   { label: 'Home', href: '#home', icon: 'home' },
+  //   { label: 'About', href: '#about', icon: 'person' },
+  //   { label: 'Projects', href: '#projects', icon: 'work' },
+  //   { label: 'Contact', href: '#contact', icon: 'mail' },
+  // ];
   constructor(public override injector: Injector,) {
     super(injector);
   }

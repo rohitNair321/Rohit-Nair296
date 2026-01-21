@@ -9,6 +9,8 @@ import { BadgeModule } from 'primeng/badge';
 import { ProfileMenuComponent } from '../profile-menu/profile-menu.component';
 import { CommonApp } from 'src/app/core/services/common';
 import { MenuModule } from "primeng/menu";
+import { RouterModule } from '@angular/router';
+import { MenuItem } from 'src/app/core/config/menuItem.config';
 
 @Component({
   selector: 'app-navigation',
@@ -23,6 +25,7 @@ import { MenuModule } from "primeng/menu";
     ProfileMenuComponent,
     MenuModule,
     BadgeModule,
+    RouterModule
   ],
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
@@ -33,6 +36,8 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
   isMenuOpen = false;
   darkTheme = false;
   @Output() isSidebarCollapsedChange = new EventEmitter<boolean>();
+  isMobileOpen: boolean = false;
+  currentSection!: string;
 
   @HostBinding('class.sidebar-left') get sidebarLeft() {
     return this.config?.appConfiguration?.type === 'sidebar' && this.config?.appConfiguration?.sidebarPosition === 'left';
@@ -42,12 +47,12 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
     return this.config?.appConfiguration?.type === 'sidebar' && this.config?.appConfiguration?.sidebarPosition === 'right';
   }
 
-  menuItems = [
-    { label: 'Home', href: '#home', icon: 'home' },
-    { label: 'About', href: '#about', icon: 'person' },
-    { label: 'Projects', href: '#projects', icon: 'work' },
-    { label: 'Contact', href: '#contact', icon: 'mail' },
-  ];
+  // menuItems = [
+  //   { label: 'Home', href: '#home', icon: 'home' },
+  //   { label: 'About', href: '#about', icon: 'person' },
+  //   { label: 'Projects', href: '#projects', icon: 'work' },
+  //   { label: 'Contact', href: '#contact', icon: 'mail' },
+  // ];
   profileData = this.appService.profile;
   notifications = computed(() => {
     return (
@@ -106,5 +111,26 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
   toggleTheme() {
     this.themeToggle();
   }
+
+  onMobileItemClick(event: Event, item: MenuItem) {
+  // If the item has a sub-menu, we just toggle it and don't close the main menu
+  if (item.subMenu && item.subMenu.length > 0) {
+    item.expanded = !item.expanded;
+    return;
+  }
+
+  // Handle Section Scrolling (href)
+  if (item.href) {
+    event.preventDefault();
+    this.scrollToSection(event, item.href);
+  }
+
+  // Update UI State
+  this.currentSection = item.label;
+  this.isMenuOpen = false; // Closes the mobile dropdown/overlay
+  
+  // If using Sidebar Mobile view
+  this.isMobileOpen = false;
+}
 
 }

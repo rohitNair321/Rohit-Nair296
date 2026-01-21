@@ -5,7 +5,8 @@
       '': config.appConfiguration.type === 'sidebar' && isMobile && !config.appConfiguration.collapsed,
     }" *ngIf="config.appConfiguration.type === 'sidebar'">
   <div class="sidebar-header">
-    <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()" *ngIf="config?.appConfiguration?.type === 'sidebar'">
+    <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()"
+      *ngIf="config?.appConfiguration?.type === 'sidebar'">
       <span class="material-icons menu-icon">{{ isMenuOpen ? 'close' : 'menu' }}</span>
     </button>
     <!-- <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()"
@@ -16,15 +17,51 @@
     </button> -->
   </div>
   <div class="sidebar-menu" [class.collapsed]="config.appConfiguration.collapsed">
-    <div>
-      <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link"
-        (click)="scrollToSection($event, item.href)">
-        <span class="material-icons menu-icon" title="{{ item.label }}">{{ item.icon }}</span>
-        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
-      </a>
+    <div class="menu-list">
+      <ng-container *ngFor="let item of menuItems">
+        <div class="menu-item" [class.has-sub]="item.subMenu?.length" [class.expanded]="item.expanded">
+
+          <ng-container *ngIf="item.subMenu?.length; else singleLink">
+            <button class="menu-link" (click)="item.expanded = !item.expanded">
+              <span class="material-icons menu-icon">{{ item.icon }}</span>
+              <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
+              <span class="material-icons chevron" *ngIf="!config.appConfiguration.collapsed">
+                {{ item.expanded ? 'expand_less' : 'expand_more' }}
+              </span>
+            </button>
+          </ng-container>
+
+          <ng-template #singleLink>
+            <a *ngIf="item.routerLink" routerLink="{{item.routerLink}}" class="menu-link"
+              routerLinkActive="active-item">
+              <span class="material-icons menu-icon">{{ item.icon }}</span>
+              <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
+            </a>
+            <a *ngIf="item.href" [href]="item.href" class="menu-link" (click)="scrollToSection($event, item.href)">
+              <span class="material-icons menu-icon">{{ item.icon }}</span>
+              <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
+            </a>
+          </ng-template>
+
+          <div class="submenu-list" *ngIf="item.subMenu?.length && item.expanded && !config.appConfiguration.collapsed">
+            <ng-container *ngFor="let sub of item.subMenu">
+              <a *ngIf="sub.routerLink" [routerLink]="sub.routerLink" class="submenu-link"
+                routerLinkActive="active-sub">
+                <span class="material-icons submenu-icon">{{ sub.icon }}</span>
+                <span class="submenu-label">{{ sub.label }}</span>
+              </a>
+              <a *ngIf="sub.href" [href]="sub.href" class="submenu-link" (click)="scrollToSection($event, sub.href)">
+                <span class="material-icons submenu-icon">{{ sub.icon }}</span>
+                <span class="submenu-label">{{ sub.label }}</span>
+              </a>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+
       <a class="menu-link" *ngIf="config.appConfiguration.showNotifications" routerLink="notifications">
-        <span class="material-icons menu-icon" pBadge severity="info" title="Notifications"
-          value="{{notifications()?.unreadCount}}">{{'notifications'}}</span>
+        <span class="material-icons menu-icon" pBadge severity="info"
+          [value]="notifications()?.unreadCount ?? 0">notifications</span>
         <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Notifications</span>
       </a>
       <a class="resume-download-btn" (click)="downloadResume(profileSignal()?.resume_url)">
@@ -32,15 +69,11 @@
         <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Resume</span>
       </a>
     </div>
-    <div>
+
+    <div class="sidebar-footer">
       <button class="theme-toggle" (click)="themeService.toggleDarkMode()">
-        <span class="material-icons menu-icon" title="Theme">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+        <span class="material-icons menu-icon">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
         <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Theme</span>
-      </button>
-      <button class="theme-toggle" title="Exit" (click)="logout()"
-        *ngIf="!config.appConfiguration.showUserProfileView && appService.role() !== 'ADMIN'">
-        <span class="material-icons delete-icon" title="Exit">{{'exit_to_app'}}</span>
-        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Exit</span>
       </button>
     </div>
   </div>

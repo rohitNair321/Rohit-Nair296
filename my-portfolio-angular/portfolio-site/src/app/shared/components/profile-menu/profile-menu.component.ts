@@ -50,7 +50,7 @@ export class ProfileMenuComponent extends CommonApp {
     avatarUrl: '', // fallback to initials if not present
   };
 
-  menuItems: MenuItem[] = [
+  profileMenuItems: MenuItem[] = [
     {
       label: this.user.name,
       disabled: true,

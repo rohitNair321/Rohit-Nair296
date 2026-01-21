@@ -9,6 +9,7 @@ import { ThemeService } from "../theme/theme.service";
 import { AlertService } from "./alert.service";
 import { Router } from "@angular/router";
 import { LocalStorageService } from "src/app/shared/services/local-storage.service";
+import { MenuItem } from "../config/menuItem.config";
 
 export class CommonApp {
 
@@ -22,6 +23,21 @@ export class CommonApp {
   public router;
   public localStorageService;
   public appConfig: LayoutConfig = defaultConfig;
+  public menuItems: MenuItem[] = [
+    new MenuItem({ label: 'Home', href: '#home', icon: 'home' }),
+    new MenuItem({ label: 'About Me', href: '#about', icon: 'person' }),
+    new MenuItem({ label: 'Projects', href: '#projects', icon: 'work' }),
+    // new MenuItem({
+    //   label: 'Admin',
+    //   icon: 'dashboard_customize',
+    //   expanded: false,
+    //   subMenu: [
+    //     new MenuItem({ label: 'Dashboard', routerLink: '/admin/dashboard', icon: 'dashboard' }),
+    //     new MenuItem({ label: 'Settings', routerLink: '/admin/settings', icon: 'settings' })
+    //   ]
+    // }),
+    new MenuItem({ label: 'Contact', href: '#contact', icon: 'mail' }),
+  ];
 
   constructor(public injector: Injector) {
     this.loading = this.injector.get(LoadingService);
@@ -46,8 +62,6 @@ export class CommonApp {
    */
   scrollToSection(event: Event, target: string): void {
     event.preventDefault();
-
-    // Find the element by the ID provided (stripping the '#' if present)
     const element = document.querySelector(target);
 
     if (element) {
@@ -57,7 +71,6 @@ export class CommonApp {
         inline: 'nearest'
       });
     } else {
-      // Fallback: If #home doesn't exist, scroll to the absolute top of the page
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
