@@ -9,12 +9,6 @@
       *ngIf="config?.appConfiguration?.type === 'sidebar'">
       <span class="material-icons menu-icon">{{ isMenuOpen ? 'close' : 'menu' }}</span>
     </button>
-    <!-- <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()"
-      *ngIf="config.appConfiguration.type === 'sidebar' && !config.appConfiguration.collapsed">
-      <span class="material-icons">
-        {{ 'close'}}
-      </span>
-    </button> -->
   </div>
   <div class="sidebar-menu" [class.collapsed]="config.appConfiguration.collapsed">
     <div class="menu-list">
@@ -59,21 +53,26 @@
         </div>
       </ng-container>
 
-      <a class="menu-link" *ngIf="config.appConfiguration.showNotifications" routerLink="notifications">
+      <a class="menu-link" *ngIf="config.appConfiguration.showNotifications" (click)="navigateToNotifications()">
         <span class="material-icons menu-icon" pBadge severity="info"
-          [value]="notifications()?.unreadCount ?? 0">notifications</span>
-        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Notifications</span>
+          [value]="notifications()?.unreadCount ?? 0">{{'notifications'}}</span>
+        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{'Notifications'}}</span>
       </a>
       <a class="resume-download-btn" (click)="downloadResume(profileSignal()?.resume_url)">
-        <span class="material-icons menu-icon" title="Download Resume">download</span>
-        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Resume</span>
+        <span class="material-icons menu-icon" title="Download Resume">{{'download'}}</span>
+        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{'Resume'}}</span>
       </a>
     </div>
 
     <div class="sidebar-footer">
       <button class="theme-toggle" (click)="themeService.toggleDarkMode()">
         <span class="material-icons menu-icon">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
-        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Theme</span>
+        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{'Theme'}}</span>
+      </button>
+      <button class="theme-toggle" title="Exit" (click)="logout()"
+        *ngIf="appService.role() !== 'ADMIN'">
+        <span class="material-icons delete-icon">{{'exit_to_app'}}</span>
+        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ 'Exit' }}</span>
       </button>
     </div>
   </div>

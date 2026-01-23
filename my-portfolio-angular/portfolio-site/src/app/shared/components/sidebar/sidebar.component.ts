@@ -45,18 +45,12 @@ export class SidebarComponent extends CommonApp implements OnInit {
     const themes = this.normalizeThemesResponse(profile?.themes || []);
     return themes;
   });
+
   notifications = computed(() => {
     return (
       this.appService.notifications()
     );
   });
-
-  // menuItems = [
-  //   { label: 'Home', href: '#home', icon: 'home' },
-  //   { label: 'About', href: '#about', icon: 'person' },
-  //   { label: 'Projects', href: '#projects', icon: 'work' },
-  //   { label: 'Contact', href: '#contact', icon: 'mail' },
-  // ];
 
   constructor(public override injector: Injector) {
     super(injector);
@@ -65,17 +59,8 @@ export class SidebarComponent extends CommonApp implements OnInit {
 
   ngOnInit() {
     this.checkMobile();
-    // this.updateCurrentSection();
     window.addEventListener('resize', this.checkMobile.bind(this));
     this.navigationType = this.config?.appConfiguration?.type === 'sidebar' ? 'sidebar' : 'navbar';
-    // this.availableThemes = this.normalizeThemesResponse(this.profileSignal()?.themes);
-  }
-
-  @HostListener('window:scroll')
-  onScroll() {
-    if (this.isMobile) {
-      // this.updateCurrentSection();
-    }
   }
 
   ngOnDestroy() {
@@ -85,9 +70,6 @@ export class SidebarComponent extends CommonApp implements OnInit {
   onThemeChange(event: any) {
     this.config.theme.name = event.name;
     this.themeService.setTheme(event.id);
-    // this.availableThemes.forEach(theme => {
-    //   theme.selected = theme.name === event.name ? true : false;
-    // });
   }
 
   checkMobile() {
@@ -103,10 +85,6 @@ export class SidebarComponent extends CommonApp implements OnInit {
     this.isMenuOpen = !this.config.appConfiguration.collapsed;
     console.log('Sidebar collapsed:', this.config.appConfiguration.collapsed);
   }
-
-  // get isDarkTheme(): boolean {
-  //   return this.themeService.isDarkTheme();
-  // }
 
   toggleTheme() {
     this.themeToggle();
@@ -127,35 +105,18 @@ export class SidebarComponent extends CommonApp implements OnInit {
     this.isMobileOpen = false;
   }
 
-  // private updateCurrentSection() {
-  //   // Get all sections
-  //   const sections = this.menuItems.map(item => ({
-  //     id: item.href.replace('#', ''),
-  //     label: item.label
-  //   }));
-
-  //   // Find the current section based on scroll position
-  //   for (const section of sections) {
-  //     const element = document.getElementById(section.id);
-  //     if (element) {
-  //       const rect = element.getBoundingClientRect();
-  //       if (rect.top <= 100 && rect.bottom >= 100) {
-  //         this.currentSection = section.label;
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
-
   toggleSettingSideBar() {
     this.isRightSideSettingOpen = !this.isRightSideSettingOpen;
   }
 
   onNavigationTypeChange(navigationType: any) {
-    // Update your config or emit an event to switch navigation type
     navigationType
     this.config.appConfiguration.type = this.navigationType;
     this.isRightSideSettingOpen = false;
+  }
+
+  navigateToNotifications(){
+    this.router.navigate(['app/notifications']);
   }
 
   selectTheme(theme: any) {
