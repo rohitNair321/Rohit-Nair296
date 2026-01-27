@@ -41,24 +41,24 @@
           </div>
 
           <ng-container *ngIf="!item.subMenu?.length">
-            <a *ngIf="item.routerLink" [routerLink]="item.routerLink" class="menu-link" routerLinkActive="active">{{
+            <a *ngIf="item.key !== 'notifications' && item.key !== 'resume' && item.routerLink && item.isHide"
+              [routerLink]="item.routerLink" class="menu-link" routerLinkActive="active">{{
               item.label }}</a>
+            <a *ngIf="item.key && item.routerLink && item.isHide" [routerLink]="item.routerLink" class="menu-link"
+              routerLinkActive="active">
+              <span class="material-icons menu-icon" pBadge severity="info" *ngIf="item.key === 'notifications'"
+                [value]="notifications()?.unreadCount ?? 0">{{item.icon}}</span>
+            </a>
+            <a *ngIf="item.action" class="menu-link" routerLinkActive="active" (click)="onMenuItemClick(item)"
+              [title]="item.tooltip">
+              <span class="material-icons menu-icon">{{item.icon}}</span>
+            </a>
             <a *ngIf="item.href" [href]="item.href" class="menu-link" (click)="scrollToSection($event, item.href)">{{
               item.label }}</a>
           </ng-container>
         </ng-container>
       </div>
       <div class="nav-actions" *ngIf="!isMobile && config?.appConfiguration?.type === 'navbar'">
-        <a class="menu-link icon-btn" routerLink="notifications"
-          *ngIf="config.appConfiguration.showUserProfileView && !isMobile" title="Notifications">
-          <span class="material-icons menu-icon" pBadge severity="info"
-            [value]="notifications()?.unreadCount ?? 0">notifications</span>
-        </a>
-
-        <a class="resume-download-btn" title="Download Resume" (click)="downloadResume(profileData()?.resume_url)">
-          <span class="material-icons">download</span>
-          <span class="btn-text">Resume</span>
-        </a>
 
         <button class="theme-toggle" (click)="themeService.toggleDarkMode()"
           *ngIf="!isMobile && config?.appConfiguration?.type === 'navbar'">
@@ -74,12 +74,6 @@
       <div class="nav-actions" *ngIf="config.appConfiguration.showUserProfileView && !isMobile">
         <app-profile-menu></app-profile-menu>
       </div>
-      <!-- <div class="nav-actions"
-        *ngIf="config?.appConfiguration?.type === 'navbar' && !isMobile && appService.role() !== 'ADMIN'">
-        <button class="btn-logout" title="Exit" (click)="logout()">
-          <span class="material-icons delete-icon">{{'exit_to_app'}}</span>
-        </button>
-      </div> -->
     </div>
 
     <!-- Mobile Menu Toggle (burger) -->
@@ -103,15 +97,33 @@
         <div class="menu-list">
           <ng-container *ngFor="let item of menuItems">
             <div class="mobile-nav-group" [class.is-expanded]="item.expanded">
-              <a class="menu-link"
+              <a class="menu-link" *ngIf="item.key && !item.action && item.isHide" [routerLink]="item.routerLink"
                 (click)="item.subMenu?.length ? (item.expanded = !item.expanded) : onMobileItemClick($event, item)">
                 <div class="link-content">
-                  <span class="material-icons">{{ item.icon }}</span>
+                  <span class="material-icons menu-icon" pBadge severity="info" *ngIf="item.key === 'notifications'"
+                    [value]="notifications()?.unreadCount ?? 0">{{'notifications'}}</span>
+                  <span class="material-icons" *ngIf="item.key !== 'notifications'">{{ !item.icon? 'disabled_visible' : item.icon }}</span>
                   <span class="label">{{ item.label }}</span>
                 </div>
                 <span class="material-icons chevron" *ngIf="item.subMenu?.length">
                   {{ item.expanded ? 'expand_less' : 'expand_more' }}
                 </span>
+              </a>
+              <a class="menu-link" *ngIf="item.key && !item.action && item.href" [href]="item.href"
+                (click)="item.subMenu?.length ? (item.expanded = !item.expanded) : onMobileItemClick($event, item)">
+                <div class="link-content">
+                  <span class="material-icons">{{ !item.icon? 'disabled_visible' : item.icon }}</span>
+                  <span class="label">{{ item.label }}</span>
+                </div>
+                <span class="material-icons chevron" *ngIf="item.subMenu?.length">
+                  {{ item.expanded ? 'expand_less' : 'expand_more' }}
+                </span>
+              </a>
+              <a class="menu-link" *ngIf="item.action" (click)="onMenuItemClick(item)">
+                <div class="link-content">
+                  <span class="material-icons">{{ item.icon }}</span>
+                  <span class="label">{{ item.label }}</span>
+                </div>
               </a>
 
               <div class="mobile-submenu" *ngIf="item.subMenu?.length && item.expanded">
@@ -129,17 +141,6 @@
         </div>
 
         <div class="mobile-actions">
-          <a class="action-item" routerLink="notifications" *ngIf="config.appConfiguration.showNotifications"
-            (click)="isMenuOpen = false">
-            <span class="material-icons" pBadge severity="info"
-              [value]="notifications()?.unreadCount ?? 0">notifications</span>
-            Notifications
-          </a>
-
-          <a class="mobile-resume-btn" (click)="downloadResume(profileData()?.resume_url); isMenuOpen = false">
-            <span class="material-icons">download</span>
-            Download Resume
-          </a>
 
           <button class="mobile-theme-toggle" (click)="themeService.toggleDarkMode()">
             <span class="material-icons">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>

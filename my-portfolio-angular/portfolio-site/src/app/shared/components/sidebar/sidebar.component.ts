@@ -8,6 +8,7 @@ import { BadgeModule } from 'primeng/badge';
 import { defaultConfig, LayoutConfig } from 'src/app/core/config/layout.config';
 import { CommonApp } from 'src/app/core/services/common';
 import { RouterModule } from '@angular/router';
+import { MenuItem } from 'src/app/core/config/menuItem.config';
 
 @Component({
   selector: 'app-sidebar',
@@ -35,13 +36,13 @@ export class SidebarComponent extends CommonApp implements OnInit {
   navigationType: any = '';
   isMenuOpen = false;
   selectedTheme: string = this.config.theme.name;
-  profileSignal = computed(() => {
+  profileData = computed(() => {
     return (
       this.appService.profile()
     );
   });
   availableThemes = computed(() => {
-    const profile = this.profileSignal();
+    const profile = this.profileData();
     const themes = this.normalizeThemesResponse(profile?.themes || []);
     return themes;
   });
@@ -115,13 +116,19 @@ export class SidebarComponent extends CommonApp implements OnInit {
     this.isRightSideSettingOpen = false;
   }
 
-  navigateToNotifications(){
+  navigateToNotifications() {
     this.router.navigate(['app/notifications']);
   }
 
   selectTheme(theme: any) {
     this.selectedTheme = theme.name;
     this.onThemeChange(theme);
+  }
+
+  onMenuItemClick(item: MenuItem) {
+    if (item.actions) {
+      item.actions(this.profileData()?.resume_url);
+    }
   }
 
   logout() {

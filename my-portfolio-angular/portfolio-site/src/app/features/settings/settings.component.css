@@ -19,8 +19,8 @@
   .settings-grid, 
   .input-row, 
   .logo-config-grid {
-    grid-template-columns: 1fr !important; /* Forces single column alignment */
-    width: 100% !important;
+    flex-direction: column; /* Forces single column alignment */
+    width: 100%;
   }
   
   .settings-main,
@@ -65,9 +65,9 @@
 }
 
 .settings-grid {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 24px;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
 }
 
 .settings-card {
@@ -300,7 +300,8 @@
 /* --- RESPONSIVE --- */
 @media (max-width: 900px) {
   .settings-grid {
-    grid-template-columns: 1fr;
+    flex-direction: row;
+    gap: 16px;
   }
 
   .settings-sidebar {
@@ -995,7 +996,8 @@
 /* Tablets & Small Laptops (Max 1024px) */
 @media (max-width: 1024px) {
   .settings-grid {
-    grid-template-columns: 1fr; /* Stack sidebar below main content */
+    flex-direction: row; /* Stack sidebar below main content */
+    gap: 16px;
   }
 
   .settings-sidebar {
@@ -1135,7 +1137,7 @@
 
   /* 3. Stack the Grid */
   .settings-grid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 16px;
   }
 
@@ -1159,7 +1161,8 @@
 /* Tablet Adjustments */
 @media (min-width: 769px) and (max-width: 1024px) {
   .settings-grid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    gap: 16px;
   }
   
   .settings-sidebar {

@@ -53,7 +53,11 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
   //   { label: 'Projects', href: '#projects', icon: 'work' },
   //   { label: 'Contact', href: '#contact', icon: 'mail' },
   // ];
-  profileData = this.appService.profile;
+  profileData = computed(() => {
+    return (
+      this.appService.profile()
+    );
+  });
   notifications = computed(() => {
     return (
       this.appService.notifications()
@@ -102,7 +106,7 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
     }
   }
 
-  logout() {    
+  logout() {
     this.themeService.isDark.set(false);
     this.themeService.currentThemeId.set('');
     this.authService.logout();
@@ -113,24 +117,30 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
   }
 
   onMobileItemClick(event: Event, item: MenuItem) {
-  // If the item has a sub-menu, we just toggle it and don't close the main menu
-  if (item.subMenu && item.subMenu.length > 0) {
-    item.expanded = !item.expanded;
-    return;
+    // If the item has a sub-menu, we just toggle it and don't close the main menu
+    if (item.subMenu && item.subMenu.length > 0) {
+      item.expanded = !item.expanded;
+      return;
+    }
+
+    // Handle Section Scrolling (href)
+    if (item.href) {
+      event.preventDefault();
+      this.scrollToSection(event, item.href);
+    }
+
+    // Update UI State
+    this.currentSection = item.label;
+    this.isMenuOpen = false; // Closes the mobile dropdown/overlay
+
+    // If using Sidebar Mobile view
+    this.isMobileOpen = false;
   }
 
-  // Handle Section Scrolling (href)
-  if (item.href) {
-    event.preventDefault();
-    this.scrollToSection(event, item.href);
+  onMenuItemClick(item: MenuItem) {
+    if (item.actions) {
+      item.actions(this.profileData()?.resume_url);
+    }
   }
-
-  // Update UI State
-  this.currentSection = item.label;
-  this.isMenuOpen = false; // Closes the mobile dropdown/overlay
-  
-  // If using Sidebar Mobile view
-  this.isMobileOpen = false;
-}
 
 }

@@ -80,7 +80,7 @@ main.container {
 
   /* Fix for alignment on devices like 425px wide */
   main.container {
-    padding: 0 16px !important; /* Prevents text hitting screen edges */
+    /* padding: 0 16px !important; Prevents text hitting screen edges */
     max-width: 100% !important;
     overflow-x: hidden; /* Prevents accidental horizontal scroll */
   }

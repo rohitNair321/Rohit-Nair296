@@ -14,26 +14,36 @@
     <div class="menu-list">
       <ng-container *ngFor="let item of menuItems">
         <div class="menu-item" [class.has-sub]="item.subMenu?.length" [class.expanded]="item.expanded">
-
+          <!-- with sub menu -->
           <ng-container *ngIf="item.subMenu?.length; else singleLink">
             <button class="menu-link" (click)="item.expanded = !item.expanded">
               <span class="material-icons menu-icon">{{ item.icon }}</span>
-              <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
+              <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">
+                {{ item.label }}
+              </span>
               <span class="material-icons chevron" *ngIf="!config.appConfiguration.collapsed">
                 {{ item.expanded ? 'expand_less' : 'expand_more' }}
               </span>
             </button>
           </ng-container>
-
+          <!-- with out sub menu -->
           <ng-template #singleLink>
-            <a *ngIf="item.routerLink" routerLink="{{item.routerLink}}" class="menu-link"
+            <a *ngIf="item.key && !item.action && item.isHide" routerLink="{{item?.routerLink}}" class="menu-link"
               routerLinkActive="active-item">
+              <span class="material-icons menu-icon" pBadge severity="info" *ngIf="item.key === 'notifications'"
+                [value]="notifications()?.unreadCount ?? 0">{{'notifications'}}</span>
+              <span class="material-icons menu-icon" *ngIf="item.key !== 'notifications'">{{ !item.icon? 'disabled_visible' :
+                item.icon }}</span>
+              <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
+            </a>
+            <a *ngIf="item.key && !item.action && item.href" [href]="item.href" class="menu-link" routerLinkActive="active-item"
+              (click)="scrollToSection($event, item.href)">
               <span class="material-icons menu-icon">{{ item.icon }}</span>
               <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
             </a>
-            <a *ngIf="item.href" [href]="item.href" class="menu-link" (click)="scrollToSection($event, item.href)">
-              <span class="material-icons menu-icon">{{ item.icon }}</span>
-              <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
+            <a *ngIf="item.action" class="menu-link" routerLinkActive="active-item" (click)="onMenuItemClick(item)" [title]="item.tooltip">
+              <span class="material-icons menu-icon" title="Download Resume">{{'download'}}</span>
+              <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{'Resume'}}</span>
             </a>
           </ng-template>
 
@@ -53,15 +63,6 @@
         </div>
       </ng-container>
 
-      <a class="menu-link" *ngIf="config.appConfiguration.showNotifications" (click)="navigateToNotifications()">
-        <span class="material-icons menu-icon" pBadge severity="info"
-          [value]="notifications()?.unreadCount ?? 0">{{'notifications'}}</span>
-        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{'Notifications'}}</span>
-      </a>
-      <a class="resume-download-btn" (click)="downloadResume(profileSignal()?.resume_url)">
-        <span class="material-icons menu-icon" title="Download Resume">{{'download'}}</span>
-        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{'Resume'}}</span>
-      </a>
     </div>
 
     <div class="sidebar-footer">
@@ -69,8 +70,7 @@
         <span class="material-icons menu-icon">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
         <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{'Theme'}}</span>
       </button>
-      <button class="theme-toggle" title="Exit" (click)="logout()"
-        *ngIf="appService.role() !== 'ADMIN'">
+      <button class="theme-toggle" title="Exit" (click)="logout()" *ngIf="appService.role() !== 'ADMIN'">
         <span class="material-icons delete-icon">{{'exit_to_app'}}</span>
         <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ 'Exit' }}</span>
       </button>
