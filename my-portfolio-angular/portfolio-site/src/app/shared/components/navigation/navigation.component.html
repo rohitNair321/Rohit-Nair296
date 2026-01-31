@@ -9,9 +9,9 @@
         'sidebar-navbar-expanded': (config?.appConfiguration?.type === 'sidebar' && !config?.appConfiguration?.collapsed && !isMobile),
         'navbar-stretch': config?.appConfiguration?.type === 'sidebar' && isMobile || config?.appConfiguration?.type === 'navbar'
       }">
-      <button class="menu-toggle" (click)="toggleMenu()" *ngIf="config?.appConfiguration?.type === 'sidebar'">
+      <!-- <button class="menu-toggle" (click)="toggleMenu()" *ngIf="config?.appConfiguration?.type === 'sidebar'">
         <span class="material-icons">{{ isMenuOpen ? 'close' : 'menu' }}</span>
-      </button>
+      </button> -->
       <a routerLink="/app/home" class="logo-container">
         <span class="logo-initials animate-nav-fade-in">
           <span class="rn-r">R</span><span class="rn-n">N</span>

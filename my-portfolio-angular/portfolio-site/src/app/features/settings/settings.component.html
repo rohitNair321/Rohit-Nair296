@@ -5,8 +5,9 @@
       <p>Configure your digital identity, portfolio data, and brand logo.</p>
     </div>
     <div class="header-actions">
-      <button type="button" class="btn-outline" (click)="resetDefaults()">Discard</button>
-      <button type="button" class="btn-primary" (click)="saveSettings()">
+      <button type="button" class="btn-outline" [disabled]="!profileForm.dirty" (click)="resetDefaults()">Discard</button>
+      <button type="button" class="btn-primary" (click)="saveSettings()"
+        [disabled]="!isFormChanged()">
         <i class="material-icons">save</i> Save Changes
       </button>
     </div>
@@ -14,7 +15,6 @@
 
   <div class="settings-grid">
     <div class="settings-main">
-
       <section class="settings-card">
         <h3 class="card-title"><i class="material-icons">architecture</i> Branding & Logo</h3>
         <div class="logo-config-grid">
@@ -81,22 +81,26 @@
 
       <section class="settings-card">
         <h3 class="card-title"><i class="material-icons">person_outline</i> Personal Details</h3>
-        <div class="form-row">
+        <div class="form-row personal-info">
           <div class="input-group">
             <label>Full Name</label>
             <input type="text" formControlName="name">
+            <div class="input-error" *ngIf="isFieldInvalid('name')">{{ getErrorText('name') }}</div>
           </div>
           <div class="input-group">
             <label>Location</label>
             <input type="text" formControlName="location">
+            <div class="input-error" *ngIf="isFieldInvalid('location')">{{ getErrorText('location') }}</div>
           </div>
           <div class="input-group">
             <label>LinkedIn</label>
             <input type="text" formControlName="linkedin">
+            <div class="input-error" *ngIf="isFieldInvalid('linkedin')">{{ getErrorText('linkedin') }}</div>
           </div>
           <div class="input-group">
             <label>GitHub</label>
             <input type="text" formControlName="github">
+            <div class="input-error" *ngIf="isFieldInvalid('github')">{{ getErrorText('github') }}</div>
           </div>
         </div>
         <div class="input-group">
@@ -109,7 +113,7 @@
         <div class="card-header">
           <h3 class="card-title"><i class="material-icons">work_outline</i> Experience & Projects</h3>
           <button type="button" class="btn-add" (click)="openExperienceDialog()">
-            <i class="material-icons">add</i> Add Experience
+            <i class="material-icons">add</i> Add
           </button>
         </div>
 
@@ -142,7 +146,7 @@
       </section>
     </div>
 
-    <aside class="settings-sidebar">
+    <div class="settings-sidebar">
       <div class="settings-card preview-card">
         <h3 class="card-title">Live Preview</h3>
         <div class="preview-mini-nav">
@@ -201,13 +205,13 @@
           Apply Theme
         </button>
       </section>
-    </aside>
+    </div>
   </div>
 </section>
 
 <p-dialog [(visible)]="showExperienceDialog" [modal]="true"
   [header]="selectedExperienceIndex !== null ? 'Edit Professional Experience' : 'Add New Experience'"
-  [style]="{width: '80vw', maxWidth: '900px'}" class="modern-dialog">
+  [style]="{width: '95vw', maxWidth: '900px'}" class="modern-dialog">
 
   <div [formGroup]="experienceDialogForm" class="dialog-content-wrapper">
 
@@ -217,14 +221,20 @@
         <div class="input-group">
           <label>Company Name</label>
           <input type="text" formControlName="company" placeholder="e.g. Google">
+          <div class="input-error" *ngIf="isFieldInvalid('company', experienceDialogForm)">{{ getErrorText('company',
+            experienceDialogForm) }}</div>
         </div>
         <div class="input-group">
           <label>Role / Title</label>
           <input type="text" formControlName="role" placeholder="e.g. Senior Frontend Developer">
+          <div class="input-error" *ngIf="isFieldInvalid('role', experienceDialogForm)">{{ getErrorText('role',
+            experienceDialogForm) }}</div>
         </div>
         <div class="input-group">
           <label>Description</label>
           <textarea formControlName="description" rows="2" placeholder="Overall contribution"></textarea>
+          <div class="input-error" *ngIf="isFieldInvalid('description', experienceDialogForm)">{{
+            getErrorText('description', experienceDialogForm) }}</div>
         </div>
       </div>
       <div class="form-row checkbox-row">
@@ -235,8 +245,6 @@
         </label>
       </div>
     </div>
-
-    <hr class="section-divider">
 
     <div class="form-section">
       <div class="section-header-flex">
@@ -260,24 +268,25 @@
           <div class="sub-card-body">
             <div class="input-group">
               <input type="text" formControlName="title" placeholder="Project Name (e.g. E-commerce Dashboard)">
+              <div class="input-error" *ngIf="isFieldInvalid('title', proj)">Required</div>
             </div>
-<div class="status-section">
-  <label class="section-title">Project Status</label>
-  
-  <div class="radio-options-wrapper">
-    <label class="custom-radio-label">
-      <input type="radio" value="in-progress" formControlName="projectProgress">
-      <span class="radio-check"></span>
-      <span class="label-text">In Progress</span>
-    </label>
+            <div class="status-section">
+              <label class="section-title">Project Status</label>
 
-    <label class="custom-radio-label">
-      <input type="radio" value="completed" formControlName="projectProgress">
-      <span class="radio-check"></span>
-      <span class="label-text">Completed</span>
-    </label>
-  </div>
-</div>
+              <div class="radio-options-wrapper">
+                <label class="custom-radio-label">
+                  <input type="radio" value="in-progress" formControlName="projectProgress">
+                  <span class="radio-check"></span>
+                  <span class="label-text">In Progress</span>
+                </label>
+
+                <label class="custom-radio-label">
+                  <input type="radio" value="completed" formControlName="projectProgress">
+                  <span class="radio-check"></span>
+                  <span class="label-text">Completed</span>
+                </label>
+              </div>
+            </div>
             <div class="input-group">
               <textarea formControlName="description" rows="2"
                 placeholder="What was your specific contribution?"></textarea>
@@ -302,15 +311,15 @@
 
   <ng-template pTemplate="footer">
     <div class="dialog-footer">
-      <button class="btn-discard" (click)="showExperienceDialog = false">Discard Changes</button>
+      <button class="btn-discard" (click)="showExperienceDialog = false">Discard</button>
       <button class="btn-save" (click)="saveExperience()">
-        <i class="material-icons">check</i> Confirm & Save
+        <i class="material-icons">check</i> Confirm
       </button>
     </div>
   </ng-template>
 </p-dialog>
 
-<p-dialog [(visible)]="showThemeBuilder" [modal]="true" [style]="{width: '80vw', maxWidth: '900px'}"
+<p-dialog [(visible)]="showThemeBuilder" [modal]="true" [style]="{width: '95vw', maxWidth: '900px'}"
   class="modern-dialog">
   <div class="theme-builder-modal card animate-slide-up">
 
@@ -418,11 +427,13 @@
 
     </form>
 
-    <div class="modal-footer">
+    <div class="modal-footer theme-footer">
       <button class="btn-outline" (click)="showThemeBuilder = false">Cancel</button>
       <button class="btn-primary" [disabled]="customThemeForm.invalid" (click)="saveCustomTheme()">
-        <i class="material-icons">save</i> Save Theme to Database
+        <i class="material-icons">save</i> Save
       </button>
     </div>
   </div>
 </p-dialog>
+
+<p-confirmDialog></p-confirmDialog>

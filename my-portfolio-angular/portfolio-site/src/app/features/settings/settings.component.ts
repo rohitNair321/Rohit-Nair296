@@ -1,5 +1,5 @@
 import { CommonModule, NgFor, NgIf } from '@angular/common';
-import { Component, Injector, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -7,9 +7,12 @@ import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { Subject, take } from 'rxjs';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { Observable, Subject, take, takeUntil } from 'rxjs';
+import { CanComponentDeactivate } from 'src/app/core/app-gards/can-deactivate.guard';
 import { ExperienceDTO, Profile, } from 'src/app/core/services/app.service';
 import { CommonApp } from 'src/app/core/services/common';
+import { ConfirmationService } from 'primeng/api';
 
 
 @Component({
@@ -25,12 +28,14 @@ import { CommonApp } from 'src/app/core/services/common';
     DialogModule,
     NgFor,
     NgIf,
-    RadioButtonModule
+    RadioButtonModule,
+    ConfirmDialogModule
   ],
+  providers: [ConfirmationService],
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
-export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
+export class SettingsComponent extends CommonApp implements OnInit, OnDestroy, CanComponentDeactivate {
   profileForm!: FormGroup;
   avatarDataUrl: string | null = null;
   resumeFileName: string | null = null;
@@ -38,7 +43,6 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
   profileSignal = this.appService.profile;
   selectedAvatar?: File;
   selectedResume?: File;
-  // Add these properties to the class
   experienceDialogVisible = false;
   selectedExperienceIndex: number | null = null;
   isAddingNewExperience = false;
@@ -55,7 +59,7 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
 
-  constructor(public override injector: Injector, private fb: FormBuilder) {
+  constructor(public override injector: Injector, private fb: FormBuilder, private confirmationService: ConfirmationService) {
     super(injector);
   }
 
@@ -67,6 +71,39 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
       this.getMyProfile();
       this.getNotifications();
     }
+  }
+
+  canDeactivate(): Observable<boolean> | boolean {
+    if (!this.profileForm.dirty) {
+      return true;
+    }
+
+    const confirmationSubject = new Subject<boolean>();
+
+    this.confirmationService.confirm({
+      header: 'Unsaved Changes',
+      message: 'You have pending changes. Would you like to save them before leaving, or discard them?',
+      acceptLabel: 'Save & Leave',
+      rejectLabel: 'Discard & Leave',
+      acceptButtonStyleClass: "p-button-danger p-button-text",
+      rejectButtonStyleClass: "p-button-text p-button-text",
+      acceptIcon:"none",
+      rejectIcon:"none",
+
+      accept: () => {
+        this.saveSettings(); // Call your existing save logic
+        confirmationSubject.next(true); // Allow navigation after save attempt
+        confirmationSubject.complete();
+      },
+
+      reject: () => {
+        this.resetDefaults(); // Reset state so guard doesn't trigger again
+        confirmationSubject.next(true); // Allow navigation
+        confirmationSubject.complete();
+      }
+    });
+
+    return confirmationSubject.asObservable();
   }
 
   getMyProfile(): void {
@@ -118,6 +155,13 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
       themes: this.fb.array([])
     });
     this.initDialogForm();
+
+    // Ensure direct input changes are recognized as form dirty
+    this.profileForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      if (this.profileForm && !this.profileForm.dirty) {
+        this.profileForm.markAsDirty();
+      }
+    });
   }
   // In ngOnInit, initialize the dialog form
   private initDialogForm() {
@@ -131,12 +175,16 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
       projects: this.fb.array([])
     });
     this.initThemeForm();
+
+    // Mark main profile form dirty when dialog (experience) values change
+    this.experienceDialogForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      if (this.profileForm) this.profileForm.markAsDirty();
+    });
   }
 
   initThemeForm() {
     this.customThemeForm = this.fb.group({
       theme_name: ['', Validators.required],
-
       tokens: this.fb.group({
         primary: ['', Validators.required],
         accent: ['', Validators.required],
@@ -169,7 +217,53 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
         border: ['', Validators.required],
       })
     });
+
+    // mark main profile form dirty when theme builder changes
+    this.customThemeForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      if (this.profileForm) this.profileForm.markAsDirty();
+    });
   }
+
+  //#region helper function
+  // small helper for template: whether main form has detected changes
+  // isFormDirty(): boolean {
+  //   if (!this.profileForm) return false;
+
+  //   // Quick checks for top-level dirty flags (main form / popups)
+  //   if (this.profileForm.dirty) return true;
+  //   if (this.experienceDialogForm?.dirty) return true;
+  //   if (this.customThemeForm?.dirty) return true;
+
+  //   // Recursive check: any nested control touched/dirty => consider form changed.
+  //   const anyTouchedOrDirty = (ctrl: AbstractControl | null): boolean => {
+  //     if (!ctrl) return false;
+  //     if (ctrl.touched || ctrl.dirty) return true;
+  //     if (ctrl instanceof FormGroup) {
+  //       return Object.keys(ctrl.controls).some(k => anyTouchedOrDirty(ctrl.controls[k]));
+  //     }
+  //     if (ctrl instanceof FormArray) {
+  //       return ctrl.controls.some(c => anyTouchedOrDirty(c));
+  //     }
+  //     return false;
+  //   };
+
+  //   return anyTouchedOrDirty(this.profileForm);
+  // }
+  isFormChanged(): boolean {
+    return this.profileForm.dirty;
+  }
+  // small helper to produce simple error messages for template
+  getErrorText(fieldName: string, group: FormGroup = this.profileForm): string {
+    const field = group?.get(fieldName);
+    if (!field || !field.errors) return '';
+    if (field.errors['required']) return 'This field is required';
+    if (field.errors['maxlength']) return `Maximum length exceeded`;
+    if (field.errors['email']) return 'Invalid email address';
+    if (field.errors['pattern']) return 'Invalid format';
+    if (field.errors['fileType']) return 'Only PDF allowed';
+    return 'Invalid value';
+  }
+  //#endregion  
 
   openThemeBuilder() {
     this.initThemeForm();
@@ -452,9 +546,11 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
       const expGroup = this.createExperience(experienceData);
       this.experiences.setControl(this.selectedExperienceIndex, expGroup);
     } else {
-      // Add new experience
       this.experiences.push(this.createExperience(experienceData));
     }
+    // ensure main form reflects the change
+    if (this.profileForm) this.profileForm.markAsDirty();
+
     const profileData = this.buildFormData();
     console.log('Built profile data with experiences:', profileData);
     this.closeDialog();
@@ -549,11 +645,14 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
       this.profileForm.patchValue({
         resume: p.resume_url
       });
+      this.profileForm.get('resume')?.setErrors(null);
     } else {
       this.resumeUrl = null;
       this.resumeFileName = null;;
     }
 
+    this.profileForm.markAsPristine();
+    this.profileForm.markAsUntouched();
   }
 
   onAvatarChange(ev: Event) {
@@ -578,12 +677,20 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
     }
     this.resumeFileName = f.name;
     this.profileForm.patchValue({ resume: f });
+    // clear any previous fileType error when a valid file is set
+    this.profileForm.get('resume')?.setErrors(null);
   }
 
   viewResume() {
     if (this.resumeUrl) {
       window.open(this.resumeUrl, '_blank');
     }
+  }
+
+  // Helper for Template Validation
+  isFieldInvalid(fieldName: string, group: FormGroup = this.profileForm): boolean {
+    const field = group.get(fieldName);
+    return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
   // Build FormData: convert arrays to JSON strings because server expects JSON strings for some fields
@@ -627,10 +734,11 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
   }
 
   saveSettings() {
-    this.profileForm.markAllAsTouched();
-    this.loading.show('Saving profile details...');
-    const profileData = this.buildFormData();
-    this.saveProfile(profileData);
+    if (this.profileForm.dirty) {
+      this.loading.show('Saving profile details...');
+      const profileData = this.buildFormData();
+      this.saveProfile(profileData);
+    }
   }
 
   saveProfile(profileData: FormData) {
@@ -638,9 +746,11 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
       next: (updatedProfile) => {
         this.patchFromProfile(updatedProfile);
         this.loading.hide();
+        this.alertService.showAlert('Settings updated successfully!', 'success');
       },
       error: (err) => {
         this.loading.hide();
+        this.alertService.showAlert('Failed to update settings.', 'error')
         console.error('Save error', err);
       }
     });
@@ -665,15 +775,12 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
     this.resumeUrl = null;
     this.resumeFileName = null;
     this.profileForm.patchValue({ resume: null });
+    // ensure no lingering resume errors block saving
+    this.profileForm.get('resume')?.setErrors(null);
   }
 
   resetDefaults() {
-    this.profileForm.reset();
-    while (this.skills.length) this.skills.removeAt(0);
-    while (this.experiences.length) this.experiences.removeAt(0);
-    this.avatarDataUrl = null;
-    this.resumeFileName = null;
-    // Optionally reset server-side as well
+    this.patchFromProfile(this.appService.profile());
   }
 
   // Helper: convert 'YYYY-MM' string to Date (first day of month)
@@ -709,8 +816,6 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy {
       return `${y}-${m}`;
     }
 
-    // If PrimeNG returns an object (check the actual structure by logging)
-    console.log('Unexpected date format:', date);
     return null;
   }
 

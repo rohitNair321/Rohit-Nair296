@@ -3,6 +3,7 @@ import { MainLayoutComponent } from './layouts/main-layout/main-layout.component
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
 import { tokenGuard } from './core/app-gards/token.guard';
 import { PageNotFoundComponent } from './layouts/page-not-found/page-not-found.component';
+import { canDeactivateGuard } from './core/app-gards/can-deactivate.guard';
 
 export const routes: Routes = [
   {
@@ -59,6 +60,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/settings/settings.component').then(m => m.SettingsComponent),
         canActivate: [tokenGuard],
+        canDeactivate: [canDeactivateGuard],
         data: { roles: ['ADMIN'] }
       },
       {
