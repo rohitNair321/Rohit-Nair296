@@ -27,15 +27,16 @@ import { MenuItem } from 'src/app/core/config/menuItem.config';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent extends CommonApp implements OnInit {
-  @Input() config: LayoutConfig = defaultConfig;
+  // @Input() appConfig: ;
   isSidebarCollapsed = false;
   isRightSideSettingOpen = false;
   isMobileOpen = false;
   isMobile = false;
   currentSection = '';
   navigationType: any = '';
+  brandLocation: any = this.appConfig?.appConfiguration?.logoLocationHeader;
   isMenuOpen = false;
-  selectedTheme: string = this.config.theme.name;
+  selectedTheme: string = this.appConfig.theme.name;
   profileData = computed(() => {
     return (
       this.appService.profile()
@@ -61,7 +62,7 @@ export class SidebarComponent extends CommonApp implements OnInit {
   ngOnInit() {
     this.checkMobile();
     window.addEventListener('resize', this.checkMobile.bind(this));
-    this.navigationType = this.config?.appConfiguration?.type === 'sidebar' ? 'sidebar' : 'navbar';
+    this.navigationType = this.appConfig?.appConfiguration?.type === 'sidebar' ? 'sidebar' : 'navbar';
   }
 
   ngOnDestroy() {
@@ -69,7 +70,7 @@ export class SidebarComponent extends CommonApp implements OnInit {
   }
 
   onThemeChange(event: any) {
-    this.config.theme.name = event.name;
+    this.appConfig.theme.name = event.name;
     this.themeService.setTheme(event.id);
   }
 
@@ -78,13 +79,13 @@ export class SidebarComponent extends CommonApp implements OnInit {
     if (!this.isMobile) {
       this.isMobileOpen = false;
     }
-    this.config.appConfiguration.isMobile = this.isMobile;
+    this.appConfig.appConfiguration.isMobile = this.isMobile;
   }
 
   toggleSidebarCollapse() {
-    this.config.appConfiguration.collapsed = !this.config.appConfiguration.collapsed;
-    this.isMenuOpen = !this.config.appConfiguration.collapsed;
-    console.log('Sidebar collapsed:', this.config.appConfiguration.collapsed);
+    this.appConfig.appConfiguration.collapsed = !this.appConfig.appConfiguration.collapsed;
+    this.isMenuOpen = !this.appConfig.appConfiguration.collapsed;
+    console.log('Sidebar collapsed:', this.appConfig.appConfiguration.collapsed);
   }
 
   toggleTheme() {
@@ -110,10 +111,18 @@ export class SidebarComponent extends CommonApp implements OnInit {
     this.isRightSideSettingOpen = !this.isRightSideSettingOpen;
   }
 
-  onNavigationTypeChange(navigationType: any) {
-    navigationType
-    this.config.appConfiguration.type = this.navigationType;
-    this.isRightSideSettingOpen = false;
+  onNavigationTypeChange() {
+    this.appConfig.appConfiguration.type = this.navigationType;
+    if (this.isMobile) {
+      this.isRightSideSettingOpen = false;
+    }
+  }
+
+  onChangeBrandLocation(brandLocation: boolean) {
+    this.appConfig.appConfiguration.logoLocationHeader = brandLocation;
+    if (this.isMobile) {
+      this.isRightSideSettingOpen = false;
+    }
   }
 
   navigateToNotifications() {

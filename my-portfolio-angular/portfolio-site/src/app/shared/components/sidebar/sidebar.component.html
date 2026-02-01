@@ -1,16 +1,25 @@
 <!-- Menu side bar -->
-<div class="sidebar-container" [class.collapsed]="config.appConfiguration.collapsed" [class.open]="isMobileOpen"
+<div class="sidebar-container" [class.collapsed]="appConfig.appConfiguration.collapsed" [class.open]="isMobileOpen"
   [ngClass]="{
-      'none': config.appConfiguration.type === 'sidebar' && isMobile && config.appConfiguration.collapsed,
-      '': config.appConfiguration.type === 'sidebar' && isMobile && !config.appConfiguration.collapsed,
-    }" *ngIf="config.appConfiguration.type === 'sidebar'">
+      'none': appConfig.appConfiguration.type === 'sidebar' && isMobile && appConfig.appConfiguration.collapsed,
+      '': appConfig.appConfiguration.type === 'sidebar' && isMobile && !appConfig.appConfiguration.collapsed,
+    }" *ngIf="appConfig.appConfiguration.type === 'sidebar'">
   <div class="sidebar-header">
+    <a routerLink="/app/home" class="logo-container" *ngIf="!appConfig?.appConfiguration?.logoLocationHeader">
+      <span class="logo-initials animate-nav-fade-in">
+        <span class="rn-r">R</span><span class="rn-n">N</span>
+      </span>
+      <span class="logo-name animate-nav-slide-in" *ngIf="!appConfig.appConfiguration.collapsed">
+        <span class="logo-rohit">Rohit</span>
+        <span class="logo-portfolio">Portfolio</span>
+      </span>
+    </a>
     <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()"
-      *ngIf="config?.appConfiguration?.type === 'sidebar'">
-      <span class="material-icons menu-icon">{{ isMenuOpen ? 'close' : 'menu' }}</span>
+      *ngIf="appConfig?.appConfiguration?.type === 'sidebar' && !appConfig.appConfiguration.collapsed">
+      <span class="material-icons menu-icon">{{ !appConfig.appConfiguration.collapsed ? 'close' : 'menu' }}</span>
     </button>
   </div>
-  <div class="sidebar-menu" [class.collapsed]="config.appConfiguration.collapsed">
+  <div class="sidebar-menu" [class.collapsed]="appConfig.appConfiguration.collapsed">
     <div class="menu-list">
       <ng-container *ngFor="let item of menuItems">
         <div class="menu-item" [class.has-sub]="item.subMenu?.length" [class.expanded]="item.expanded">
@@ -18,10 +27,10 @@
           <ng-container *ngIf="item.subMenu?.length; else singleLink">
             <button class="menu-link" (click)="item.expanded = !item.expanded">
               <span class="material-icons menu-icon">{{ item.icon }}</span>
-              <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">
+              <span class="menu-label" *ngIf="!appConfig.appConfiguration.collapsed">
                 {{ item.label }}
               </span>
-              <span class="material-icons chevron" *ngIf="!config.appConfiguration.collapsed">
+              <span class="material-icons chevron" *ngIf="!appConfig.appConfiguration.collapsed">
                 {{ item.expanded ? 'expand_less' : 'expand_more' }}
               </span>
             </button>
@@ -32,22 +41,24 @@
               routerLinkActive="active-item">
               <span class="material-icons menu-icon" pBadge severity="info" *ngIf="item.key === 'notifications'"
                 [value]="notifications()?.unreadCount ?? 0">{{'notifications'}}</span>
-              <span class="material-icons menu-icon" *ngIf="item.key !== 'notifications'">{{ !item.icon? 'disabled_visible' :
+              <span class="material-icons menu-icon" *ngIf="item.key !== 'notifications'">{{ !item.icon?
+                'disabled_visible' :
                 item.icon }}</span>
-              <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
+              <span class="menu-label" *ngIf="!appConfig.appConfiguration.collapsed">{{ item.label }}</span>
             </a>
-            <a *ngIf="item.key && !item.action && item.href" [href]="item.href" class="menu-link" routerLinkActive="active-item"
-              (click)="scrollToSection($event, item.href)">
+            <a *ngIf="item.key && !item.action && item.href" [href]="item.href" class="menu-link"
+              routerLinkActive="active-item" (click)="scrollToSection($event, item.href)">
               <span class="material-icons menu-icon">{{ item.icon }}</span>
-              <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
+              <span class="menu-label" *ngIf="!appConfig.appConfiguration.collapsed">{{ item.label }}</span>
             </a>
-            <a *ngIf="item.action" class="menu-link" routerLinkActive="active-item" (click)="onMenuItemClick(item)" [title]="item.tooltip">
+            <a *ngIf="item.action" class="menu-link" routerLinkActive="active-item" (click)="onMenuItemClick(item)"
+              [title]="item.tooltip">
               <span class="material-icons menu-icon" title="Download Resume">{{'download'}}</span>
-              <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{'Resume'}}</span>
+              <span class="menu-label" *ngIf="!appConfig.appConfiguration.collapsed">{{'Resume'}}</span>
             </a>
           </ng-template>
 
-          <div class="submenu-list" *ngIf="item.subMenu?.length && item.expanded && !config.appConfiguration.collapsed">
+          <div class="submenu-list" *ngIf="item.subMenu?.length && item.expanded && !appConfig.appConfiguration.collapsed">
             <ng-container *ngFor="let sub of item.subMenu">
               <a *ngIf="sub.routerLink" [routerLink]="sub.routerLink" class="submenu-link"
                 routerLinkActive="active-sub">
@@ -68,11 +79,11 @@
     <div class="sidebar-footer">
       <button class="theme-toggle" (click)="themeService.toggleDarkMode()">
         <span class="material-icons menu-icon">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
-        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{'Theme'}}</span>
+        <span class="menu-label" *ngIf="!appConfig.appConfiguration.collapsed">{{'Theme'}}</span>
       </button>
       <button class="theme-toggle" title="Exit" (click)="logout()" *ngIf="appService.role() !== 'ADMIN'">
         <span class="material-icons delete-icon">{{'exit_to_app'}}</span>
-        <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ 'Exit' }}</span>
+        <span class="menu-label" *ngIf="!appConfig.appConfiguration.collapsed">{{ 'Exit' }}</span>
       </button>
     </div>
   </div>
@@ -80,7 +91,7 @@
 
 <!-- feature side bar, if require custom design can be made if required -->
 <!-- Floating settings trigger -->
-<div class="settings-trigger" *ngIf="config.appConfiguration.showSidebarToggle && !isRightSideSettingOpen">
+<div class="settings-trigger" *ngIf="appConfig.appConfiguration.showSidebarToggle && !isRightSideSettingOpen">
   <button class="settings-trigger-btn" (click)="toggleSettingSideBar()" aria-label="Open settings">
     <span class="material-icons">settings</span>
   </button>
@@ -96,6 +107,7 @@
   </header>
 
   <section class="settings-section">
+    <h4 class="section-title">Navigation Menu</h4>
     <p class="settings-description">
       Choose how you want to navigate through the application.
     </p>
@@ -103,16 +115,38 @@
     <div class="radio-group">
       <label class="radio-option">
         <p-radioButton name="navigationType" value="sidebar" [(ngModel)]="navigationType"
-          (click)="onNavigationTypeChange('sidebar')">
+          (click)="onNavigationTypeChange()">
         </p-radioButton>
         <span>Sidebar Navigation</span>
       </label>
 
       <label class="radio-option">
         <p-radioButton name="navigationType" value="navbar" [(ngModel)]="navigationType"
-          (click)="onNavigationTypeChange('navbar')">
+          (click)="onNavigationTypeChange()">
         </p-radioButton>
         <span>Top Navigation</span>
+      </label>
+    </div>
+  </section>
+
+  <section class="settings-section">
+    <h4 class="section-title">Portal Brand</h4>
+    <p class="settings-description">
+      Change the portal branding location. Make sure there should be a sync between the <strong>Navigation Menu</strong> and <strong>Portal Brand</strong>
+    </p>
+    <div class="radio-group">
+      <label class="radio-option">
+        <p-radioButton name="brandLocation" [value]="true" [(ngModel)]="brandLocation"
+          (click)="onChangeBrandLocation(true)">
+        </p-radioButton>
+        <span>Header</span>
+      </label>
+
+      <label class="radio-option">
+        <p-radioButton name="brandLocation" [value]="false" [(ngModel)]="brandLocation"
+          (click)="onChangeBrandLocation(false)">
+        </p-radioButton>
+        <span>Sidebar</span>
       </label>
     </div>
   </section>

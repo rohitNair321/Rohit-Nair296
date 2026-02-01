@@ -23,24 +23,25 @@ import { environment } from 'src/environments/environments';
   styleUrls: ['./main-layout.component.css']
 })
 export class MainLayoutComponent extends CommonApp {
-  config: LayoutConfig = defaultConfig;
+  // config: LayoutConfig = defaultConfig;
   isSidebarCollapsed = true;
 
   constructor(public override injector: Injector) {
     super(injector);
-    this.config.theme.name = 'theme-6';
-    this.config.appConfiguration.type = 'sidebar';
-    this.config.appConfiguration.theme = 'light';
-    this.config.appConfiguration.sidebarPosition = 'right';
-    this.config.appConfiguration.collapsed = true;
-    this.config.appConfiguration.showSidebarToggle = true;
-    this.config.appConfiguration.showAgentChat = false;
-    this.config.appConfiguration.showUserProfileView = this.appService.role() === 'ADMIN';
-    this.config.appConfiguration.showNotifications = this.appService.role() === 'ADMIN';
+    this.appConfig.theme.name = 'theme-6';
+    this.appConfig.appConfiguration.type = 'sidebar';
+    this.appConfig.appConfiguration.theme = 'light';
+    this.appConfig.appConfiguration.sidebarPosition = 'right';
+    this.appConfig.appConfiguration.logoLocationHeader = false;
+    this.appConfig.appConfiguration.collapsed = true;
+    this.appConfig.appConfiguration.showSidebarToggle = true;
+    this.appConfig.appConfiguration.showAgentChat = false;
+    this.appConfig.appConfiguration.showUserProfileView = this.appService.role() === 'ADMIN';
+    this.appConfig.appConfiguration.showNotifications = this.appService.role() === 'ADMIN';
   }
 
   ngOnInit() {
-    const layoutThemeName = this.config?.theme?.name; // e.g. 'theme-5'
+    const layoutThemeName = this.appConfig?.theme?.name; // e.g. 'theme-5'
 
     const resolvedTheme =
       THEME_NAME_MAP[layoutThemeName] || 'tron';
@@ -50,6 +51,6 @@ export class MainLayoutComponent extends CommonApp {
 
   initSidebarMenu(sidebarEvent: any) {
     this.isSidebarCollapsed = sidebarEvent;
-    this.config.appConfiguration.collapsed = sidebarEvent;
+    this.appConfig.appConfiguration.collapsed = sidebarEvent;
   }
 }

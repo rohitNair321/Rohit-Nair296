@@ -224,7 +224,7 @@
 }
 
 .rn-r {
-  color: var(--global-logo-letter-r-color);
+  color: var(--primary);
   /* That sienna brown for R */
   font-size: 2.3rem;
   /* Same size */
@@ -240,7 +240,7 @@
 }
 
 .rn-n {
-  color: var(--global-logo-letter-n-color);
+  color: var(--accent);
   /* Saddle brown for N */
   font-size: 2.1rem;
   /* Same size */
@@ -397,7 +397,7 @@
   text-decoration: none; /* Removes the underline */
   color: inherit;       /* Keeps your current text colors */
   cursor: pointer;
-  gap: 12px;            /* Adjust spacing between initials and name */
+  gap: 5px;            /* Adjust spacing between initials and name */
   transition: opacity 0.3s ease;
 }
 

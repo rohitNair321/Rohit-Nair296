@@ -7,6 +7,7 @@ export interface LayoutConfig {
     showAgentChat?: boolean;
     showUserProfileView?: boolean;
     showNotifications?: boolean;
+    logoLocationHeader?: boolean;
     collapsed?: boolean;
     isMobile: boolean;
     isFixed?: boolean;
@@ -31,6 +32,7 @@ export const defaultConfig: LayoutConfig = {
     type: 'navbar', // or 'sidebar'
     theme: 'light',
     sidebarPosition: 'right',
+    logoLocationHeader: true, // true: header, false: sidebar
     showSidebarToggle: false,
     showAgentChat: false,
     showUserProfileView: false,

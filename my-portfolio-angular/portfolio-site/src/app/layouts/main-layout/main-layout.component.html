@@ -1,15 +1,15 @@
 <div class="wrapper">
-  <app-navigation [config]="config" (isSidebarCollapsedChange)="initSidebarMenu($event)"></app-navigation>
-  <app-sidebar [config]="config"></app-sidebar>
-  <div class="main-content" [class.sidebar-collapsed]="config.appConfiguration.type === 'sidebar' && config.appConfiguration.collapsed" [class.sidebar-expanded]="config.appConfiguration.type === 'sidebar' && !config.appConfiguration.collapsed"
-  [class.m-4]="config.appConfiguration.type === 'navbar'">
+  <app-navigation [config]="appConfig" (isSidebarCollapsedChange)="initSidebarMenu($event)"></app-navigation>
+  <app-sidebar ></app-sidebar>
+  <div class="main-content" [class.sidebar-collapsed]="appConfig.appConfiguration.type === 'sidebar' && appConfig.appConfiguration.collapsed" [class.sidebar-expanded]="appConfig.appConfiguration.type === 'sidebar' && !appConfig.appConfiguration.collapsed"
+  [class.m-4]="appConfig.appConfiguration.type === 'navbar'">
     <main class="container">
       <router-outlet></router-outlet>
     </main>
     <app-footer></app-footer>
   </div>
 </div>
-<app-chat-bot *ngIf="config.appConfiguration.showAgentChat" [position]="'bottom-right'" [title]="'AiNg Assistant'" [placeholder]="'Ask about my projects...'">
+<app-chat-bot *ngIf="appConfig.appConfiguration.showAgentChat" [position]="'bottom-right'" [title]="'AiNg Assistant'" [placeholder]="'Ask about my projects...'">
 </app-chat-bot>
 
 
