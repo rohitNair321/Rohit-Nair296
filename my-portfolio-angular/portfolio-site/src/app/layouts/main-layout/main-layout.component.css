@@ -6,7 +6,7 @@
   flex-direction: column;
   min-height: 100vh;
   /* Reduced from 6rem to handle mobile headers better */
-  padding-top: 64px; 
+  padding-top: 70px; 
 }
 
 .main-content {
@@ -65,7 +65,7 @@ main.container {
 ========================================================= */
 @media (max-width: 900px) {
   .wrapper {
-    padding-top: 60px; /* Tighter fit for mobile */
+    padding-top: 80px; /* Tighter fit for mobile */
   }
 
   /* Force reset all margins for main content on mobile */
