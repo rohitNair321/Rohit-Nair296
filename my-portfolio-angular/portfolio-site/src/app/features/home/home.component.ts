@@ -150,7 +150,7 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
   }
 
   goToProjects(){
-    this.alertService.showAlert(`This page is under development, will be in functional soon!!`, 'info');
+    this.alertService.showAlert(`This project page is under development, will be in functional soon!!`, 'info');
   }
 
   openProject(project: any) {
@@ -159,7 +159,8 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
   }
 
   aboutMe(){
-    this.router.navigate(['app/about']);
+    // this.router.navigate(['app/about']);
+    this.alertService.showAlert(`This about me page is under development, will be in functional soon!!`, 'info');
   }
 
   ngOnDestroy() {
