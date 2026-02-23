@@ -5,9 +5,9 @@
       <p>Configure your digital identity, portfolio data, and brand logo.</p>
     </div>
     <div class="header-actions">
-      <button type="button" class="btn-outline" [disabled]="!profileForm.dirty" (click)="resetDefaults()">Discard</button>
-      <button type="button" class="btn-primary" (click)="saveSettings()"
-        [disabled]="!isFormChanged()">
+      <button type="button" class="btn-outline" [disabled]="!profileForm.dirty"
+        (click)="resetDefaults()">Discard</button>
+      <button type="button" class="btn-primary" (click)="saveSettings()" [disabled]="!isFormChanged()">
         <i class="material-icons">save</i> Save Changes
       </button>
     </div>
@@ -75,6 +75,10 @@
               </ng-template>
             </div>
 
+            <div class="toggle-container">
+              <label>Available for Work</label>
+              <p-toggleButton formControlName="openToWork" onLabel="Yes" offLabel="No"></p-toggleButton>
+            </div>
           </div>
         </div>
       </section>

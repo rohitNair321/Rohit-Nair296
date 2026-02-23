@@ -1,67 +1,181 @@
-<footer class="modern-footer animate-footer-fade-in-up">
-  <div class="footer-wave">
-    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-      <path
-        d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-        class="shape-fill"></path>
-    </svg>
+<footer class="brutalist-footer">
+  
+  <!-- Footer Main Content -->
+  <div class="footer-main">
+    <div class="container">
+      
+      <!-- Top Section -->
+      <div class="footer-top">
+        <div class="footer-brand-section">
+          <div class="brand-header">
+            <div class="brand-marker">■</div>
+            <div class="brand-title">ROHIT_PORTFOLIO</div>
+          </div>
+          <p class="brand-description">
+            Passionate Professional Developer focused on crafting clean, high-performance, 
+            and user-centric digital experiences.
+          </p>
+          
+          <!-- Social Links -->
+          <div class="social-grid">
+            <a class="social-link" aria-label="LinkedIn" (click)="openLink($event, profileData()?.linkedin)">
+              <span class="link-icon">
+                <i class="material-icons">linkedin</i>
+              </span>
+              <span class="link-label">LINKEDIN</span>
+            </a>
+            <a class="social-link" aria-label="GitHub" (click)="openLink($event, profileData()?.github)">
+              <span class="link-icon">
+                <i class="material-icons">code</i>
+              </span>
+              <span class="link-label">GITHUB</span>
+            </a>
+            <!-- <a href="#" class="social-link" aria-label="Twitter">
+              <span class="link-icon">
+                <i class="material-icons">flutter_dash</i>
+              </span>
+              <span class="link-label">TWITTER</span>
+            </a> -->
+          </div>
+        </div>
+
+        <!-- Status Box -->
+        <div class="status-box">
+          <div class="status-header">
+            <span class="status-dot" *ngIf="profileData()?.open_to_work"></span>
+            <span class="status-text">{{profileData()?.open_to_work ? 'CURRENTLY_AVAILABLE' : 'NOT_AVAILABLE' }}</span>
+          </div>
+          <div class="status-info">
+            <div class="info-item">
+              <span class="info-label">LOCATION:</span>
+              <span class="info-value">REMOTE / WORLDWIDE</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">EMAIL:</span>
+              <a href="mailto:{{profileData()?.email}}" class="info-link">{{profileData()?.email}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grid Section -->
+      <div class="footer-grid">
+        
+        <!-- Navigation Column -->
+        <div class="footer-column">
+          <div class="column-header">
+            <span class="header-number">01</span>
+            <h4 class="column-title">NAVIGATION</h4>
+          </div>
+          <div class="column-divider"></div>
+          <ul class="footer-list">
+            <li *ngFor="let item of menuItems">
+              <a [href]="item.href" class="footer-link" *ngIf="!item.isHide"
+                (click)="scrollToSection($event, item.href!)">
+                <span class="link-arrow">→</span>
+                <span class="link-text">{{ item.label }}</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Services Column -->
+        <div class="footer-column">
+          <div class="column-header">
+            <span class="header-number">02</span>
+            <h4 class="column-title">SERVICES</h4>
+          </div>
+          <div class="column-divider"></div>
+          <ul class="footer-list">
+            <li>
+              <span class="list-item">
+                <span class="item-bullet">▣</span>
+                <span>WEB_DEVELOPMENT</span>
+              </span>
+            </li>
+            <li>
+              <span class="list-item">
+                <span class="item-bullet">▣</span>
+                <span>UI/UX_DESIGN</span>
+              </span>
+            </li>
+            <li>
+              <span class="list-item">
+                <span class="item-bullet">▣</span>
+                <span>API_INTEGRATION</span>
+              </span>
+            </li>
+            <li>
+              <span class="list-item">
+                <span class="item-bullet">▣</span>
+                <span>CONSULTATION</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Quick Links Column -->
+        <div class="footer-column">
+          <div class="column-header">
+            <span class="header-number">03</span>
+            <h4 class="column-title">RESOURCES</h4>
+          </div>
+          <div class="column-divider"></div>
+          <ul class="footer-list">
+            <li>
+              <a href="#" class="footer-link">
+                <span class="link-arrow">→</span>
+                <span class="link-text">PRIVACY_POLICY</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="footer-link">
+                <span class="link-arrow">→</span>
+                <span class="link-text">TERMS_OF_SERVICE</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" class="footer-link">
+                <span class="link-arrow">→</span>
+                <span class="link-text">DOCUMENTATION</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
   </div>
 
-  <div class="container footer-grid">
-    <div class="footer-col brand-col">
-      <div class="footer-logo">
-        <span class="logo-dot"></span>
-        <strong>{{'Rohit'}}<span>{{'Portfolio'}}</span></strong>
-      </div>
-      <p class="footer-bio">
-       {{'Passionate Professional Developer focused on crafting clean, high-performance, and user-centric digital experiences.'}}
-      </p>
-      <div class="social-links">
-        <a href="#" class="social-icon" aria-label="LinkedIn"><i class="material-icons">linkedin</i></a>
-        <a href="#" class="social-icon" aria-label="GitHub"><i class="material-icons">code</i></a>
-        <a href="#" class="social-icon" aria-label="Twitter"><i class="material-icons">flutter_dash</i></a>
-      </div>
-    </div>
-
-    <div class="footer-col">
-      <h4>Navigation</h4>
-      <ul class="footer-links">
-        <li *ngFor="let item of menuItems">
-          <a [href]="item.href" class="menu-link"
-            (click)="scrollToSection($event, item.href!)">
-            {{ item.label }}
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    <div class="footer-col">
-      <h4>Services</h4>
-      <ul class="footer-links">
-        <li><span>Web Development</span></li>
-        <li><span>UI/UX Design</span></li>
-        <li><span>API Integration</span></li>
-        <li><span>Consultation</span></li>
-      </ul>
-    </div>
-
-    <div class="footer-col">
-      <h4>Say Hello</h4>
-      <a href="mailto:hello@rohit.com" class="footer-email">{{profileInfo?.email}}</a>
-      <p class="footer-location">{{'Available for Remote Work Worldwide'}}</p>
-      <button class="back-to-top" aria-label="Back to top" (click)="scrollToSection($event, '#home')">
-        <i class="material-icons">arrow_upward</i>
-      </button>
-    </div>
-  </div>
-
+  <!-- Footer Bottom Bar -->
   <div class="footer-bottom">
-    <div class="container bottom-flex">
-      <p>{{'© 2025 RohitPortfolio. Built with '}}<span class="heart">&hearts;</span>{{' and Angular.'}}</p>
-      <div class="legal-links">
-        <a href="#">{{'Privacy Policy'}}</a>
-        <a href="#">{{'Terms of Service'}}</a>
+    <div class="container">
+      <div class="bottom-grid">
+        
+        <div class="bottom-left">
+          <div class="copyright-text">
+            © 2025 ROHIT_PORTFOLIO
+          </div>
+          <div class="built-with">
+            <span>BUILT_WITH</span>
+            <span class="tech-stack">ANGULAR</span>
+            <span class="separator">+</span>
+            <span class="tech-stack">TYPESCRIPT</span>
+          </div>
+        </div>
+
+        <div class="bottom-right">
+          <button class="back-to-top-btn" 
+                  aria-label="Back to top" 
+                  (click)="scrollToSection($event, '#home')">
+            <span class="btn-text">BACK_TO_TOP</span>
+            <span class="btn-icon">↑</span>
+          </button>
+        </div>
+
       </div>
     </div>
   </div>
+
 </footer>

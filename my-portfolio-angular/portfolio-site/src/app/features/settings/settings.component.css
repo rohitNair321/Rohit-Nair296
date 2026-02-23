@@ -1141,6 +1141,11 @@
   }
 }
 
+.toggle-container {
+  display: flex;
+  flex-direction: column;
+}
+
 /* =========================================================
    MOBILE STICKY FOOTER & RESPONSIVE FIXES
 ========================================================= */

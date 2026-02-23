@@ -24,27 +24,7 @@ export class CommonApp {
   public localStorageService;
   public appConfig: LayoutConfig = defaultConfig;
   public menuItems: MenuItem[] = [
-    new MenuItem({ label: 'Home', key: 'home', href: '#home', icon: 'home' }),
-    new MenuItem({ label: 'About Me', key: 'aboutMe', href: '#about', icon: 'person' }),
-    new MenuItem({ label: 'Projects', key: 'projects', href: '#projects', icon: 'work' }),
-    new MenuItem({ label: 'Contact', key: 'contact', href: '#contact', icon: 'mail' }),
-    new MenuItem({ label: 'Notifications', routerLink: 'notifications', icon: 'notifications', key: 'notifications', isHide: this.appConfig.appConfiguration.showNotifications }),
-    new MenuItem({
-      label: 'Resume', icon: 'download', action: true, key: 'resume', tooltip: 'Download Resume', actions: (event) => {
-        this.downloadResume(event);
-      }
-    }),
 
-    // new MenuItem({
-    //   label: 'Admin',
-    //   key: 'admin',
-    //   icon: 'dashboard_customize',
-    //   expanded: false,
-    //   subMenu: [
-    //     new MenuItem({ label: 'Dashboard', key: 'dashboard', routerLink: '/admin/dashboard', icon: 'dashboard' }),
-    //     new MenuItem({ label: 'Settings', key: 'settings', routerLink: '/admin/settings', icon: 'settings' })
-    //   ]
-    // }),
   ];
 
   constructor(public injector: Injector) {
@@ -57,6 +37,30 @@ export class CommonApp {
     this.themeService = this.injector.get(ThemeService);
     this.router = this.injector.get(Router);
     this.localStorageService = this.injector.get(LocalStorageService);
+
+    this.menuItems = [
+      new MenuItem({ label: 'Home', key: 'home', href: '#home', icon: 'home' }),
+      new MenuItem({ label: 'About Me', key: 'aboutMe', href: '#about', icon: 'person' }),
+      new MenuItem({ label: 'Projects', key: 'projects', href: '#projects', icon: 'work' }),
+      new MenuItem({ label: 'Contact', key: 'contact', href: '#contact', icon: 'mail' }),
+      new MenuItem({ label: 'Notifications', routerLink: 'notifications', icon: 'notifications', key: 'notifications', isHide: this.appConfig.appConfiguration.showNotifications,  role: 'admin' }),
+      new MenuItem({
+        label: 'Resume', icon: 'download', action: true, key: 'resume', tooltip: 'Download Resume', actions: (event) => {
+          this.downloadResume(event);
+        }
+      }),
+
+      // new MenuItem({
+      //   label: 'Admin',
+      //   key: 'admin',
+      //   icon: 'dashboard_customize',
+      //   expanded: false,
+      //   subMenu: [
+      //     new MenuItem({ label: 'Dashboard', key: 'dashboard', routerLink: '/admin/dashboard', icon: 'dashboard' }),
+      //     new MenuItem({ label: 'Settings', key: 'settings', routerLink: '/admin/settings', icon: 'settings' })
+      //   ]
+      // }),
+    ];
   }
 
   public themeToggle() {
@@ -145,6 +149,16 @@ export class CommonApp {
       decoded = txt.value;
     }
     return decoded;
+  }
+
+  openLink(event?: MouseEvent, link?: string) {
+    if (!link) {
+      event?.preventDefault();
+      event?.stopPropagation();
+    }
+    const url = this.decodeHtml(link || '');
+    if (!url) return;
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   isMenuHandler() {

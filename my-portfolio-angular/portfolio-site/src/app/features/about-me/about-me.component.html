@@ -1,72 +1,352 @@
-<div class="newsletter-wrapper">
-  
-  <aside class="left-col">
-    <div class="issue-info">
-      <span class="issue-no">ISSUE NO. 28</span>
-      <span class="issue-date">FEB 2026</span>
+<div class="collage-container">
+
+  <!-- HEADER BADGE -->
+  <header class="collage-header">
+    <div class="header-wrapper">
+      <div class="badge-cluster">
+        <div class="badge badge-rotate-1">{{'PORTFOLIO'}}</div>
+        <div class="badge badge-rotate-2">{{'2026'}}</div>
+        <div class="badge badge-primary">{{'ISSUE #28'}}</div>
+      </div>
     </div>
-    <nav class="inner-nav">
-      <a href="#story" class="active">01. THE_STORY</a>
-      <a href="#stack">02. THE_STACK</a>
-      <a href="#roots">03. THE_ROOTS</a>
-    </nav>
-  </aside>
+  </header>
 
-  <main class="center-col">
-    <header class="article-header">
-      <h1 class="headline">Building at Scale: A Narrative on Digital Architecture</h1>
-      <p class="byline">BY <span class="author-name">ROHIT</span> — SYSTEMS ENGINEER</p>
-    </header>
+  <!-- HERO SECTION -->
+  <section class="hero-collage">
+    <div class="hero-wrapper">
 
-    <div class="featured-image">
-      <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?fit=crop&w=1200&q=80" alt="Minimal Workspace">
-      <div class="caption">ARCHIVE_01: Focus on clean foundations.</div>
-    </div>
-
-    <article class="reading-content">
-      <p class="lead-paragraph">
-        Every great system begins with a single question: How can we make this 
-        resilient enough to outlast the current trend? In my career as a Full 
-        Stack Architect, I’ve learned that code is temporary, but structure is permanent.
-      </p>
-
-      <h2 id="story">The Architectural Philosophy</h2>
-      <p>
-        This layout is built for <strong>deep focus</strong>. By removing 
-        distractions and utilizing a serif font for the body, we mimic the 
-        rhythm of a physical book. It allows my story—and yours—to breathe 
-        in a digital space that is often too loud.
-      </p>
-
-      <div class="pull-quote">
-        "Software engineering is not about typing; it's about thinking."
+      <!-- Main Title Card -->
+      <div class="title-card card-tilt-left">
+        <div class="card-tape tape-top-left"></div>
+        <div class="card-content">
+          <div class="card-label">{{"Hello, I'm"}}</div>
+          <h1 class="display-name">{{'Rohit'}}</h1>
+          <div class="card-subtitle">{{'Systems Engineer & Full Stack Architect'}}</div>
+        </div>
+        <div class="card-corner"></div>
       </div>
 
-      <h2 id="stack">The Technical Ecosystem</h2>
-      <p>
-        I specialize in the <strong>Angular</strong> ecosystem. Using 
-        <strong>TypeScript</strong> and <strong>Node.js</strong>, I create 
-        pathways for data that are both logical and performant. 
-      </p>
+      <!-- Story Title Sticky -->
+      <div class="story-sticky sticky-rotate">
+        <div class="sticky-header">
+          <div class="sticky-pin"></div>
+        </div>
+        <div class="sticky-content">
+          <h2 class="sticky-title">{{'Building at Scale'}}</h2>
+          <p class="sticky-text">{{'A narrative on digital architecture & systems thinking'}}</p>
+        </div>
+      </div>
 
-      <h2 id="roots">Foundation & Education</h2>
-      <p>
-        I hold a <strong>Master of Software Engineering</strong> (Class of 2021). 
-        This academic rigor taught me that the best systems are the ones 
-        that solve complex problems with invisible simplicity.
-      </p>
-    </article>
+      <!-- Profile Photo Polaroid -->
+      <div class="polaroid-card card-tilt-right">
+        <div class="polaroid-image">
+          <img [src]="profileData()?.avatar_url" alt="{{'Rohit'}}">
+        </div>
+        <div class="polaroid-caption">
+          <span class="caption-icon">✦</span>
+          <span>{{'Ready to build something amazing'}}</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main class="collage-content">
+
+    <!-- Featured Image Card -->
+    <div class="image-card card-float">
+      <div class="card-tape tape-top-right"></div>
+        <div class="image-wrapper">
+        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?fit=crop&w=1200&q=80" alt="{{'Workspace'}}">
+        <div class="image-label">
+          <span class="label-icon">📷</span>
+          <span>{{'Clean foundations'}}</span>
+        </div>
+      </div>
+      <div class="card-shadow"></div>
+    </div>
+
+    <!-- Opening Story Card -->
+    <div class="story-card card-white">
+      <div class="card-tape tape-multi"></div>
+      <div class="card-content">
+        <div class="content-header">
+          <span class="header-icon">✏️</span>
+          <span class="header-text">{{'The Beginning'}}</span>
+        </div>
+        <p class="story-paragraph">
+          {{"Every great system begins with a single question: How can we make this resilient enough to outlast the current trend? In my career as a Full Stack Architect, I've learned that "}}<mark class="highlight-yellow">{{'code is temporary, but structure is permanent'}}</mark>{{'.'}}
+        </p>
+        <p class="story-paragraph">{{"This fundamental truth shapes every decision, every line of code, every architectural choice I make. It's about thinking beyond the immediate solution to create systems that stand the test of time."}}</p>
+      </div>
+    </div>
+
+    <!-- Philosophy Section -->
+    <div class="section-grid">
+
+      <!-- Philosophy Card -->
+      <div class="content-card card-mint card-tilt-slight">
+        <div class="card-header-decor">
+          <span class="decor-icon">🎨</span>
+          <h3 class="card-heading">{{'The Philosophy'}}</h3>
+        </div>
+        <div class="card-body">
+          <p>
+            {{"This layout is built for "}}<strong>{{'deep focus'}}</strong>{{". By creating playful yet intentional designs, we make information engaging without sacrificing clarity. It's the same approach I bring to code: functional, but never boring."}}
+          </p>
+        </div>
+        <div class="card-corner-fold"></div>
+      </div>
+
+      <!-- Quote Sticky -->
+      <div class="quote-sticky sticky-yellow">
+        <div class="sticky-pin-top"></div>
+        <div class="quote-mark">"</div>
+        <p class="quote-text">{{"Software engineering is not about typing; it's about thinking"}}</p>
+        <div class="quote-author">{{'— Core Principle'}}</div>
+      </div>
+
+    </div>
+
+    <!-- Secondary Image -->
+    <div class="image-card-small card-tilt-left">
+      <div class="card-tape tape-corner"></div>
+      <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?fit=crop&w=800&q=80" alt="{{'Code'}}">
+      <div class="image-caption-small">
+        <span class="caption-emoji">💻</span>
+        <span>{{'Precision in code'}}</span>
+      </div>
+    </div>
+
+    <!-- Tech Stack Cards -->
+    <div class="tech-section">
+      <div class="section-title-card">
+        <div class="title-decoration">
+          <span class="deco-line"></span>
+          <span class="deco-text">{{'My Toolkit'}}</span>
+          <span class="deco-line"></span>
+        </div>
+      </div>
+
+      <div class="tech-grid">
+        <div class="tech-badge badge-angular">
+          <div class="badge-icon">🅰️</div>
+          <div class="badge-name">{{'Angular'}}</div>
+          <div class="badge-level">
+            <span class="level-dot filled"></span>
+            <span class="level-dot filled"></span>
+            <span class="level-dot filled"></span>
+            <span class="level-dot filled"></span>
+            <span class="level-dot"></span>
+          </div>
+        </div>
+
+        <div class="tech-badge badge-typescript">
+          <div class="badge-icon">TS</div>
+          <div class="badge-name">{{'TypeScript'}}</div>
+          <div class="badge-level">
+            <span class="level-dot filled"></span>
+            <span class="level-dot filled"></span>
+            <span class="level-dot filled"></span>
+            <span class="level-dot"></span>
+            <span class="level-dot"></span>
+          </div>
+        </div>
+
+        <div class="tech-badge badge-node">
+          <div class="badge-icon">⬢</div>
+          <div class="badge-name">{{'Node.js'}}</div>
+          <div class="badge-level">
+            <span class="level-dot filled"></span>
+            <span class="level-dot filled"></span>
+            <span class="level-dot filled"></span>
+            <span class="level-dot"></span>
+            <span class="level-dot"></span>
+          </div>
+        </div>
+
+        <div class="tech-badge badge-rxjs">
+          <div class="badge-icon">Rx</div>
+          <div class="badge-name">{{'RxJS'}}</div>
+          <div class="badge-level">
+            <span class="level-dot filled"></span>
+            <span class="level-dot filled"></span>
+            <span class="level-dot filled"></span>
+            <span class="level-dot"></span>
+            <span class="level-dot"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Education Timeline -->
+    <div class="timeline-collage">
+      <div class="timeline-header">
+        <span class="header-emoji">🎓</span>
+        <span class="header-title">{{'My Journey'}}</span>
+      </div>
+
+      <div class="timeline-cards">
+        <div class="timeline-card card-2021">
+          <div class="year-badge">{{'2021'}}</div>
+          <div class="timeline-content">
+            <h4 class="timeline-title">{{'Master of Software Engineering'}}</h4>
+            <p class="timeline-desc">{{'Advanced study in systems architecture, distributed computing, and software design patterns'}}</p>
+          </div>
+          <div class="card-pin pin-blue"></div>
+        </div>
+
+        <div class="timeline-card card-2019">
+          <div class="year-badge">{{'2019'}}</div>
+          <div class="timeline-content">
+            <h4 class="timeline-title">{{'Professional Development'}}</h4>
+            <p class="timeline-desc">{{'Full stack specialization with modern JavaScript frameworks'}}</p>
+          </div>
+          <div class="card-pin pin-green"></div>
+        </div>
+
+        <div class="timeline-card card-2017">
+          <div class="year-badge">{{'2017'}}</div>
+          <div class="timeline-content">
+            <h4 class="timeline-title">{{'Career Beginning'}}</h4>
+            <p class="timeline-desc">{{'Started journey in software development with passion for user-centered design'}}</p>
+          </div>
+          <div class="card-pin pin-orange"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-section">
+      <div class="stat-card stat-rotate-left">
+        <div class="stat-number">{{'5+'}}</div>
+        <div class="stat-label">{{'Years Experience'}}</div>
+        <div class="stat-decoration">⭐</div>
+      </div>
+
+      <div class="stat-card stat-rotate-right">
+        <div class="stat-number">{{'50+'}}</div>
+        <div class="stat-label">{{'Projects Delivered'}}</div>
+        <div class="stat-decoration">🚀</div>
+      </div>
+
+      <div class="stat-card stat-straight">
+        <div class="stat-number">{{'100%'}} </div>
+        <div class="stat-label">{{'Commitment'}}</div>
+        <div class="stat-decoration">💯</div>
+      </div>
+    </div>
+
+    <!-- Closing Card -->
+    <div class="closing-card card-cream">
+      <div class="card-tape tape-double"></div>
+      <div class="closing-content">
+        <div class="closing-icon">✨</div>
+        <p class="closing-text">{{"This is my story, but it's also an invitation. Every system I build is in service of creating better experiences. That's what drives me forward."}}</p>
+      </div>
+    </div>
+
   </main>
 
-  <aside class="right-col">
-    <div class="author-card">
-      <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?fit=crop&w=300&q=80" alt="Rohit">
-      <div class="card-details">
-        <h4>ROHIT_V1</h4>
-        <p>Available for system design consulting & development.</p>
-        <button class="cta-btn">GET_IN_TOUCH</button>
-      </div>
-    </div>
-  </aside>
+  <!-- CTA SECTION -->
+  <section class="cta-collage">
+    <div class="cta-wrapper">
 
+      <div class="cta-main-card">
+        <div class="card-tape tape-cta"></div>
+        <div class="cta-content">
+          <div class="cta-badge">{{"Let's Collaborate!"}}</div>
+          <h3 class="cta-title">{{'Ready to Build Something Amazing?'}}</h3>
+          <p class="cta-description">{{"Currently accepting new freelance projects and full-time opportunities. If you have a challenge that needs solving, let's talk!"}}</p>
+          <div class="cta-buttons">
+            <button class="btn-primary" (click)="openContactDialog()">
+              <span class="btn-icon">💬</span>
+              <span class="btn-text">{{'Get in Touch'}}</span>
+            </button>
+            <!-- <button class="btn-secondary">
+              <span class="btn-icon">👀</span>
+              <span class="btn-text">{{'View Portfolio'}}</span>
+            </button> -->
+          </div>
+        </div>
+        <div class="card-corner-decoration">
+          <span class="corner-sticker">✨</span>
+        </div>
+      </div>
+
+      <!-- Contact Info Cards -->
+      <div class="contact-cards">
+        <div class="contact-card card-email">
+          <div class="contact-icon">📧</div>
+          <div class="contact-text">{{profileData()?.email}}</div>
+        </div>
+        <div class="contact-card card-location">
+          <div class="contact-icon">📍</div>
+          <div class="contact-text">{{profileData()?.location || 'Remote / Worldwide'}}</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="collage-footer">
+    <div class="footer-content">
+      <div class="footer-badge">{{'Made with ❤️ by ' + profileData()?.full_name}}</div>
+      <div class="footer-text">{{'Portfolio 2026 • Issue #28'}}</div>
+    </div>
+  </footer>
+
+  <!-- CONTACT DIALOG - BRUTALIST STYLE -->
+  <p-dialog [(visible)]="showContactDialog" [modal]="true" [style]="{width: '70vw', maxWidth: '1000px'}"
+    [draggable]="false" [resizable]="false" header="{{'CONTACT_FORM'}}" >
+    <!-- <div class="contact-dialog-overlay"> -->
+      <div class="contact-dialog">
+        <!-- Dialog Header -->
+        <div class="dialog-header">
+          <div class="header-title">{{'CONTACT_FORM'}}</div>
+          <button class="dialog-close" (click)="closeContactDialog()">
+            <i class="material-icons">close</i>
+          </button>
+        </div>
+
+        <!-- Dialog Body -->
+        <div class="dialog-body">
+          <div class="dialog-intro">
+            <div class="intro-label">{{'GET_IN_TOUCH'}}</div>
+            <p class="intro-text">{{"Fill out the form below and I'll get back to you as soon as possible."}}</p>
+          </div>
+
+          <form class="contact-form-brutalist">
+            <div class="form-row-grid">
+              <div class="form-field-brutalist">
+                <label class="field-label">{{'FIRST_NAME'}}</label>
+                <input type="text" class="field-input" placeholder="{{'Rohit'}}" required>
+              </div>
+              <div class="form-field-brutalist">
+                <label class="field-label">{{'LAST_NAME'}}</label>
+                <input type="text" class="field-input" placeholder="{{'Nair'}}" required>
+              </div>
+            </div>
+
+            <div class="form-field-brutalist">
+              <label class="field-label">{{'EMAIL_ADDRESS'}}</label>
+              <input type="email" class="field-input" placeholder="{{'john@example.com'}}" required>
+            </div>
+
+            <div class="form-field-brutalist">
+              <label class="field-label">{{'MESSAGE'}}</label>
+              <textarea class="field-textarea" rows="5" placeholder="{{'Your message here...'}}" required></textarea>
+            </div>
+
+            <button type="submit" class="form-submit-brutalist">
+              <span class="submit-text">{{'SEND_MESSAGE'}}</span>
+              <span class="submit-icon">→</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    <!-- </div> -->
+  </p-dialog>
 </div>

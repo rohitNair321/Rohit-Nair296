@@ -159,8 +159,8 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
   }
 
   aboutMe(){
-    // this.router.navigate(['app/about']);
-    this.alertService.showAlert(`This about me page is under development, will be in functional soon!!`, 'info');
+    this.router.navigate(['app/about']);
+    // this.alertService.showAlert(`This about me page is under development, will be in functional soon!!`, 'info');
   }
 
   ngOnDestroy() {

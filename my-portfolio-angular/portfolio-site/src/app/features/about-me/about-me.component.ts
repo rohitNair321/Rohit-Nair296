@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, Injector, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, HostListener, Injector, OnDestroy, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { DialogModule } from 'primeng/dialog';
 import { Subject } from 'rxjs';
 import { CommonApp } from 'src/app/core/services/common';
 
@@ -14,6 +15,7 @@ import { CommonApp } from 'src/app/core/services/common';
     ReactiveFormsModule,
     CardModule,
     ButtonModule,
+    DialogModule,
   ],
   templateUrl: './about-me.component.html',
   styleUrls: ['./about-me.component.css'],
@@ -21,12 +23,37 @@ import { CommonApp } from 'src/app/core/services/common';
 export class AboutMeComponent extends CommonApp implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
-config = ABOUT_ME_CONFIG;
+  showContactDialog: boolean = false;
+  profileData = this.appService.profile;
   constructor(public override injector: Injector) {
     super(injector);
   }
 
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    const winScroll = document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+
+    const progressFill = document.querySelector('.progress-fill') as HTMLElement;
+    const progressPercentage = document.querySelector('.progress-percentage') as HTMLElement;
+
+    if (progressFill && progressPercentage) {
+      progressFill.style.width = scrolled + '%';
+      progressPercentage.textContent = Math.round(scrolled) + '%';
+    }
+  }
+
   ngOnInit() {
+  }
+
+  // In your component
+  openContactDialog() {
+    this.showContactDialog = true;
+  }
+
+  closeContactDialog() {
+    this.showContactDialog = false;
   }
 
   ngOnDestroy() {
@@ -35,64 +62,3 @@ config = ABOUT_ME_CONFIG;
   }
 }
 
-
-export const ABOUT_ME_CONFIG = {
-  profile: {
-    name: 'Rohit',
-    role: 'Web Developer · Angular Specialist',
-    summary:
-      'I build scalable, maintainable web interfaces with a focus on clean architecture and long-term growth.',
-    photo: 'assets/profile.jpg'
-  },
-
-  sections: [
-    {
-      type: 'text',
-      title: 'Experience',
-      content:
-        'Working as a Web Developer specializing in Angular, building reusable components, scalable UI systems, and collaborating with backend teams.'
-    },
-    {
-      type: 'list',
-      title: 'Education',
-      items: [
-        'Postgraduate studies in a technical discipline',
-        'Undergraduate degree with strong analytical foundation'
-      ]
-    },
-    {
-      type: 'tags',
-      title: 'Skills',
-      items: [
-        'Angular 15+',
-        'TypeScript',
-        'RxJS',
-        'HTML',
-        'CSS / SCSS',
-        'REST APIs',
-        'Git'
-      ]
-    },
-    {
-      type: 'list',
-      title: 'Work Habits',
-      items: [
-        'Readable code over clever solutions',
-        'Consistency beats intensity',
-        'Refactor before complexity grows',
-        'Think long-term'
-      ]
-    },
-    {
-      type: 'list',
-      title: 'Currently Learning',
-      highlight: true,
-      items: [
-        'Advanced Angular performance',
-        'Node.js & NestJS',
-        'AI integrations in web applications',
-        'System design & scalability'
-      ]
-    }
-  ]
-};

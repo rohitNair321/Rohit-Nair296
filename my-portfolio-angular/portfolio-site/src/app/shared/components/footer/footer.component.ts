@@ -25,12 +25,6 @@ import { CommonApp } from 'src/app/core/services/common';
 export class FooterComponent extends CommonApp {
 
   profileInfo = this.appService.profile();
-  // menuItems = [
-  //   { label: 'Home', href: '#home', icon: 'home' },
-  //   { label: 'About', href: '#about', icon: 'person' },
-  //   { label: 'Projects', href: '#projects', icon: 'work' },
-  //   { label: 'Contact', href: '#contact', icon: 'mail' },
-  // ];
   constructor(public override injector: Injector,) {
     super(injector);
   }
@@ -45,5 +39,6 @@ export class FooterComponent extends CommonApp {
   ngOnInit() {
     this.profileInfo = this.profileData();
   }
+
 
 }

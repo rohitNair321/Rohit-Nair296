@@ -13,6 +13,7 @@ import { CanComponentDeactivate } from 'src/app/core/app-gards/can-deactivate.gu
 import { ExperienceDTO, Profile, } from 'src/app/core/services/app.service';
 import { CommonApp } from 'src/app/core/services/common';
 import { ConfirmationService } from 'primeng/api';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 
 @Component({
@@ -29,7 +30,8 @@ import { ConfirmationService } from 'primeng/api';
     NgFor,
     NgIf,
     RadioButtonModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    ToggleButtonModule
   ],
   providers: [ConfirmationService],
   templateUrl: './settings.component.html',

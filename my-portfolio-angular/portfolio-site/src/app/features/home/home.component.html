@@ -6,8 +6,8 @@
       <div class="hero-layout">
         <div class="hero-left">
           <div class="status-bar">
-            <span class="status-indicator"></span>
-            <span class="status-text">{{'AVAILABLE FOR PROJECTS'}}</span>
+            <span class="status-indicator" *ngIf="profileData()?.open_to_work"></span>
+            <span class="status-text">{{ profileData()?.open_to_work ? 'AVAILABLE FOR PROJECTS' : 'NOT AVAILABLE FOR PROJECTS' }}</span>
           </div>
           
           <div class="hero-content">
@@ -163,7 +163,7 @@
               </div>
             </div>
 
-            <div class="detail-block">
+            <!-- <div class="detail-block">
               <div class="detail-icon">
                 <i class="material-icons">phone</i>
               </div>
@@ -171,7 +171,7 @@
                 <div class="detail-title">{{'PHONE'}}</div>
                 <a [href]="'tel:' + homeData?.primary_phone" class="detail-text detail-link">{{ homeData?.primary_phone }}</a>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
 
