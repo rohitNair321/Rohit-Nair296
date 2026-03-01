@@ -5,6 +5,7 @@ import { AlertComponent } from './shared/components/ui/alert-dialog/alert.compon
 import { SpinnerComponent } from './shared/components/ui/spinner-overlay/spinner.component';
 import { AnalyticsService } from './core/services/analytics.service';
 import { filter } from 'rxjs';
+import { environment } from 'src/environments/environments';
 
 @Component({
   selector: 'app-root',
@@ -16,13 +17,13 @@ import { filter } from 'rxjs';
 export class AppComponent {
 
   constructor(private router: Router, private analytics: AnalyticsService) {
-    this.router.events
-    .pipe(filter(event => event instanceof NavigationEnd))
-    .subscribe((event: any) => {
-      this.analytics.trackEvent('page_view', {
-        page_path: event.urlAfterRedirects
+    if (environment.production) {
+      this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
+        this.analytics.trackEvent('page_view', {
+          page_path: event.urlAfterRedirects
+        });
       });
-    });
+    }
   }
 
   ngOnInit() {

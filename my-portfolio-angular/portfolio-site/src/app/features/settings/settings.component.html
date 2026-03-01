@@ -1,310 +1,492 @@
-<section class="settings-page" [formGroup]="profileForm" *ngIf="profileForm">
-  <header class="settings-header">
-    <div class="header-info">
-      <h1>Profile Settings</h1>
-      <p>Configure your digital identity, portfolio data, and brand logo.</p>
+<section class="admin-settings-container" [formGroup]="profileForm" *ngIf="profileForm">
+  
+  <!-- Header Bar -->
+  <header class="admin-header">
+    <div class="header-left">
+      <h1 class="page-title">Settings</h1>
+      <p class="page-subtitle">Manage your profile, experience, and application preferences</p>
     </div>
     <div class="header-actions">
-      <button type="button" class="btn-outline" [disabled]="!profileForm.dirty"
-        (click)="resetDefaults()">Discard</button>
+      <button type="button" class="btn-secondary" [disabled]="!profileForm.dirty" (click)="resetDefaults()">
+        <i class="material-icons">refresh</i>
+        <span>Discard</span>
+      </button>
       <button type="button" class="btn-primary" (click)="saveSettings()" [disabled]="!isFormChanged()">
-        <i class="material-icons">save</i> Save Changes
+        <i class="material-icons">save</i>
+        <span>Save Changes</span>
       </button>
     </div>
   </header>
 
-  <div class="settings-grid">
-    <div class="settings-main">
-      <section class="settings-card">
-        <h3 class="card-title"><i class="material-icons">architecture</i> Branding & Logo</h3>
-        <div class="logo-config-grid">
-          <div class="avatar-upload">
-            <label class="upload-label">
-              <input type="file" (change)="onAvatarChange($event)" hidden>
-              <div class="preview-circle" [class.has-img]="avatarDataUrl">
-                <img *ngIf="avatarDataUrl" [src]="avatarDataUrl">
-                <span *ngIf="!avatarDataUrl" class="initials">{{ (profileForm.get('full_name')?.value || 'U').charAt(0)
-                  }}</span>
-                <div class="overlay"><i class="material-icons">photo_camera</i></div>
-              </div>
-            </label>
-            <p class="help-text">Profile Picture</p>
-          </div>
+  <!-- Tab Navigation -->
+  <nav class="tab-navigation">
+    <button 
+      type="button" 
+      class="tab-btn" 
+      [class.active]="activeSettingTab === 'profile'"
+      (click)="activeSettingTab = 'profile'">
+      <i class="material-icons">person</i>
+      <span>Profile</span>
+    </button>
+    
+    <!-- Add more tabs here in future -->
+    <!-- Example: -->
+    <button type="button" class="tab-btn" [class.active]="activeSettingTab === 'monitoring'" (click)="activeSettingTab = 'monitoring'">
+      <i class="material-icons">monitor_heart</i>
+      <span>Monitoring</span>
+    </button>
+  </nav>
 
-          <div class="logo-logic-form">
-            <div class="input-group">
-              <label>Logo Initials (e.g., RN)</label>
-              <input type="text" formControlName="logo_initials" placeholder="RN" maxlength="3">
+  <!-- Tab Content: Profile -->
+  <div class="tab-content" *ngIf="activeSettingTab === 'profile'">
+    <div class="content-grid">
+      
+      <!-- Main Content Area -->
+      <div class="main-content">
+        
+        <!-- Branding & Logo Section -->
+        <section class="admin-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="material-icons">architecture</i>
+              <span>Branding & Logo</span>
             </div>
-            <div class="input-group">
-              <label>Resume (PDF)</label>
-
-              <div class="resume-box" *ngIf="resumeUrl; else uploadBlock">
-                <div class="resume-info">
-                  <i class="material-icons pdf-icon">picture_as_pdf</i>
-
-                  <div class="resume-meta">
-                    <span class="resume-name">{{ resumeFileName || 'Please upload your resume' }}</span>
-                    <span class="resume-sub">PDF Document</span>
+          </div>
+          <div class="card-body">
+            <div class="branding-grid">
+              <!-- Avatar Upload -->
+              <div class="avatar-section">
+                <label class="avatar-label">
+                  <input type="file" (change)="onAvatarChange($event)" hidden>
+                  <div class="avatar-preview" [class.has-image]="avatarDataUrl">
+                    <img *ngIf="avatarDataUrl" [src]="avatarDataUrl" alt="Avatar">
+                    <span *ngIf="!avatarDataUrl" class="avatar-initials">
+                      {{ (profileForm.get('full_name')?.value || 'U').charAt(0) }}
+                    </span>
+                    <div class="avatar-overlay">
+                      <i class="material-icons">photo_camera</i>
+                    </div>
                   </div>
+                </label>
+                <p class="field-description">Profile Picture</p>
+              </div>
+
+              <!-- Logo & Resume Fields -->
+              <div class="fields-section">
+                <div class="form-field">
+                  <label class="field-label">Logo Initials</label>
+                  <input type="text" formControlName="logo_initials" placeholder="RN" maxlength="3" class="form-input">
+                  <p class="field-description">2-3 characters for logo (e.g., RN)</p>
                 </div>
 
-                <div class="resume-actions">
-                  <button type="button" class="resume-btn view" (click)="viewResume()">
-                    <i class="material-icons">visibility</i>
-                  </button>
+                <div class="form-field">
+                  <label class="field-label">Resume (PDF)</label>
+                  
+                  <div class="resume-container" *ngIf="resumeUrl; else uploadResume">
+                    <div class="resume-info">
+                      <i class="material-icons file-icon">picture_as_pdf</i>
+                      <div class="resume-details">
+                        <span class="resume-filename">{{ resumeFileName || 'resume.pdf' }}</span>
+                        <span class="resume-type">PDF Document</span>
+                      </div>
+                    </div>
+                    <div class="resume-buttons">
+                      <button type="button" class="icon-btn" (click)="viewResume()" title="View">
+                        <i class="material-icons">visibility</i>
+                      </button>
+                      <button type="button" class="icon-btn" (click)="downloadResume(resumeUrl)" title="Download">
+                        <i class="material-icons">download</i>
+                      </button>
+                      <button type="button" class="icon-btn danger" (click)="removeResume()" title="Delete">
+                        <i class="material-icons">delete_outline</i>
+                      </button>
+                    </div>
+                  </div>
 
-                  <button type="button" class="resume-btn download" (click)="downloadResume(resumeUrl)">
-                    <i class="material-icons">download</i>
-                  </button>
+                  <ng-template #uploadResume>
+                    <div class="upload-area">
+                      <input id="resumeUpload" type="file" accept="application/pdf" (change)="onResumeChange($event)" hidden>
+                      <label for="resumeUpload" class="upload-btn">
+                        <i class="material-icons">upload_file</i>
+                        <span>Upload Resume</span>
+                      </label>
+                    </div>
+                  </ng-template>
+                </div>
 
-                  <button type="button" class="resume-btn delete" (click)="removeResume()">
+                <div class="form-field toggle-field">
+                  <label class="field-label">Available for Work</label>
+                  <p-toggleButton formControlName="openToWork" onLabel="Yes" offLabel="No"></p-toggleButton>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Personal Details Section -->
+        <section class="admin-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="material-icons">person_outline</i>
+              <span>Personal Details</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="form-field">
+                <label class="field-label">Full Name</label>
+                <input type="text" formControlName="name" class="form-input">
+                <div class="field-error" *ngIf="isFieldInvalid('name')">{{ getErrorText('name') }}</div>
+              </div>
+              <div class="form-field">
+                <label class="field-label">Location</label>
+                <input type="text" formControlName="location" class="form-input">
+                <div class="field-error" *ngIf="isFieldInvalid('location')">{{ getErrorText('location') }}</div>
+              </div>
+              <div class="form-field">
+                <label class="field-label">LinkedIn</label>
+                <input type="text" formControlName="linkedin" class="form-input">
+                <div class="field-error" *ngIf="isFieldInvalid('linkedin')">{{ getErrorText('linkedin') }}</div>
+              </div>
+              <div class="form-field">
+                <label class="field-label">GitHub</label>
+                <input type="text" formControlName="github" class="form-input">
+                <div class="field-error" *ngIf="isFieldInvalid('github')">{{ getErrorText('github') }}</div>
+              </div>
+            </div>
+            <div class="form-field">
+              <label class="field-label">Professional Bio</label>
+              <textarea formControlName="description" rows="4" class="form-textarea"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- Experience & Projects Section -->
+        <section class="admin-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="material-icons">work_outline</i>
+              <span>Experience & Projects</span>
+            </div>
+            <button type="button" class="btn-add" (click)="openExperienceDialog()">
+              <i class="material-icons">add</i>
+              <span>Add Experience</span>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="experience-list">
+              <div *ngFor="let exp of experiences.controls; let i = index" class="experience-item">
+                <div class="exp-header">
+                  <div class="exp-timeline">
+                    <span class="exp-date">
+                      {{ exp.value.startDate | date:'MMM yyyy' }} - 
+                      {{ exp.value.present ? 'Present' : (exp.value.endDate | date:'MMM yyyy') }}
+                    </span>
+                  </div>
+                  <div class="exp-actions">
+                    <button type="button" class="icon-btn" (click)="openExperienceDialog(exp.value, i)">
+                      <i class="material-icons">edit</i>
+                    </button>
+                    <button type="button" class="icon-btn danger" (click)="removeExperience(i)">
+                      <i class="material-icons">delete</i>
+                    </button>
+                  </div>
+                </div>
+                <div class="exp-body">
+                  <h4 class="exp-company">{{ exp.value.company }}</h4>
+                  <p class="exp-role">{{ exp.value.title }}</p>
+                  <div class="exp-projects">
+                    <i class="material-icons">folder</i>
+                    <span>{{ exp.value.projects?.length || 0 }} Projects</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div *ngIf="experiences.controls.length === 0" class="empty-state">
+                <i class="material-icons">work_off</i>
+                <p>No experience added yet</p>
+                <button type="button" class="btn-secondary" (click)="openExperienceDialog()">
+                  <i class="material-icons">add</i>
+                  <span>Add Your First Experience</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar-content">
+        
+        <!-- Live Preview Card -->
+        <section class="admin-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="material-icons">preview</i>
+              <span>Live Preview</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="preview-navbar">
+              <div class="preview-logo">
+                <span class="logo-initials">
+                  <span>{{ profileForm.get('logo_initials')?.value?.charAt(0) || 'R' }}</span>
+                  <span>{{ profileForm.get('logo_initials')?.value?.charAt(1) || 'N' }}</span>
+                </span>
+                <span class="logo-name">{{ profileForm.get('full_name')?.value || 'Your Name' }}</span>
+              </div>
+            </div>
+            <p class="preview-description">Navigation bar preview</p>
+          </div>
+        </section>
+
+        <!-- Password Update Card -->
+        <section class="admin-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="material-icons">lock</i>
+              <span>Admin Password</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()" class="password-form">
+              
+              <div class="form-field">
+                <label class="field-label">Email Address</label>
+                <input type="email" formControlName="email" class="form-input" [readonly]="true" [disabled]="true">
+                <p class="field-description">Your admin email (cannot be changed)</p>
+              </div>
+
+              <div class="form-field">
+                <label class="field-label">Current Password</label>
+                <div class="password-input">
+                  <input 
+                    [type]="showCurrentPassword ? 'text' : 'password'" 
+                    formControlName="currentPassword" 
+                    class="form-input"
+                    [class.error]="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched">
+                  <button 
+                    type="button" 
+                    class="password-toggle"
+                    (click)="togglePasswordVisibility('current')">
+                    <i class="material-icons">{{ showCurrentPassword ? 'visibility_off' : 'visibility' }}</i>
+                  </button>
+                </div>
+                <div class="field-error" *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched">
+                  {{ passwordForm.get('currentPassword')?.hasError('required') ? 'Required' : 'Min 6 characters' }}
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label class="field-label">New Password</label>
+                <div class="password-input">
+                  <input 
+                    [type]="showNewPassword ? 'text' : 'password'" 
+                    formControlName="newPassword" 
+                    class="form-input"
+                    [class.error]="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">
+                  <button 
+                    type="button" 
+                    class="password-toggle"
+                    (click)="togglePasswordVisibility('new')">
+                    <i class="material-icons">{{ showNewPassword ? 'visibility_off' : 'visibility' }}</i>
+                  </button>
+                </div>
+                <div class="field-error" *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">
+                  {{ passwordForm.get('newPassword')?.hasError('required') ? 'Required' : 'Min 6 characters' }}
+                </div>
+              </div>
+
+              <button 
+                type="submit" 
+                class="btn-primary full-width"
+                [disabled]="passwordForm.invalid || isChangingPassword">
+                <i class="material-icons">{{ isChangingPassword ? 'hourglass_empty' : 'security' }}</i>
+                <span>{{ isChangingPassword ? 'Updating...' : 'Update Password' }}</span>
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <!-- Theme Card -->
+        <section class="admin-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="material-icons">palette</i>
+              <span>Themes</span>
+            </div>
+            <button type="button" class="btn-icon-only" (click)="openThemeBuilder()">
+              <i class="material-icons">add_circle_outline</i>
+            </button>
+          </div>
+          <div class="card-body">
+            <div class="theme-list">
+              <div 
+                *ngFor="let theme of themesList" 
+                class="theme-option"
+                [class.selected]="themeService.currentThemeId() === theme.id"
+                (click)="selectAndSaveTheme(theme)">
+                <i class="material-icons check-icon" *ngIf="themeService.currentThemeId() === theme.id">check_circle</i>
+                <div class="theme-colors">
+                  <span class="color-dot" [style.background]="theme.tokens.primary"></span>
+                  <span class="color-dot" [style.background]="theme.tokens.accent"></span>
+                  <span class="color-dot" [style.background]="theme.tokens.surface"></span>
+                </div>
+                <span class="theme-label">{{ theme.name }}</span>
+                <div class="theme-buttons">
+                  <button type="button" class="icon-btn-small" (click)="editTheme(theme); $event.stopPropagation()">
+                    <i class="material-icons">edit</i>
+                  </button>
+                  <button type="button" class="icon-btn-small danger" (click)="deleteTheme(theme.id, $event)">
                     <i class="material-icons">delete_outline</i>
                   </button>
                 </div>
               </div>
-
-              <ng-template #uploadBlock>
-                <div class="file-input-wrapper">
-                  <input id="resumeFile" type="file" accept="application/pdf" (change)="onResumeChange($event)"
-                    hidden />
-                  <label for="resumeFile" class="file-custom-btn">
-                    <i class="material-icons">upload_file</i> Upload Resume (PDF)
-                  </label>
-                </div>
-              </ng-template>
             </div>
-
-            <div class="toggle-container">
-              <label>Available for Work</label>
-              <p-toggleButton formControlName="openToWork" onLabel="Yes" offLabel="No"></p-toggleButton>
-            </div>
+            <button type="button" class="btn-secondary full-width" (click)="saveThemePreference()">
+              Apply Theme
+            </button>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section class="settings-card">
-        <h3 class="card-title"><i class="material-icons">person_outline</i> Personal Details</h3>
-        <div class="form-row personal-info">
-          <div class="input-group">
-            <label>Full Name</label>
-            <input type="text" formControlName="name">
-            <div class="input-error" *ngIf="isFieldInvalid('name')">{{ getErrorText('name') }}</div>
-          </div>
-          <div class="input-group">
-            <label>Location</label>
-            <input type="text" formControlName="location">
-            <div class="input-error" *ngIf="isFieldInvalid('location')">{{ getErrorText('location') }}</div>
-          </div>
-          <div class="input-group">
-            <label>LinkedIn</label>
-            <input type="text" formControlName="linkedin">
-            <div class="input-error" *ngIf="isFieldInvalid('linkedin')">{{ getErrorText('linkedin') }}</div>
-          </div>
-          <div class="input-group">
-            <label>GitHub</label>
-            <input type="text" formControlName="github">
-            <div class="input-error" *ngIf="isFieldInvalid('github')">{{ getErrorText('github') }}</div>
-          </div>
-        </div>
-        <div class="input-group">
-          <label>Professional Bio</label>
-          <textarea formControlName="description" rows="4"></textarea>
-        </div>
-      </section>
-
-      <section class="settings-card">
-        <div class="card-header">
-          <h3 class="card-title"><i class="material-icons">work_outline</i> Experience & Projects</h3>
-          <button type="button" class="btn-add" (click)="openExperienceDialog()">
-            <i class="material-icons">add</i> Add
-          </button>
-        </div>
-
-        <div class="experience-list">
-          <div *ngFor="let exp of experiences.controls; let i = index" class="exp-item-card">
-            <div class="exp-info">
-              <span class="exp-date">
-                {{ exp.value.startDate | date:'MMM yyyy' }} -
-                {{ exp.value.present ? 'Present' : (exp.value.endDate | date:'MMM yyyy') }}
-              </span>
-              <h4>{{ exp.value.company }}</h4>
-              <p class="role">{{ exp.value.title }}</p>
-
-              <div class="project-count">
-                <i class="material-icons">assignment</i>
-                {{ exp.value.projects?.length || 0 }} Projects
-              </div>
-            </div>
-
-            <div class="exp-actions">
-              <button class="btn-icon" (click)="openExperienceDialog(exp.value, i)">
-                <i class="material-icons">edit</i>
-              </button>
-              <button class="btn-icon delete" (click)="removeExperience(i)">
-                <i class="material-icons">delete</i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      </aside>
     </div>
+  </div>
 
-    <div class="settings-sidebar">
-      <div class="settings-card preview-card">
-        <h3 class="card-title">Live Preview</h3>
-        <div class="preview-mini-nav">
-          <div class="logo-preview">
-            <span class="p-initials">
-              <span class="r">{{ profileForm.get('logo_initials')?.value?.charAt(0) }}</span>
-              <span class="n">{{ profileForm.get('logo_initials')?.value?.charAt(1) }}</span>
-            </span>
-            <span class="p-name">{{ profileForm.get('full_name')?.value }}</span>
-          </div>
-        </div>
-        <div class="preview-content">
-          <p class="muted">This is how your branding appears in the top navigation bar.</p>
-        </div>
+  <div class="tab-content" *ngIf="activeSettingTab === 'monitoring'">
+    <div class="content-grid">
+      <div class="main-content">
+        <p style="color: var(--primary);">{{'Browser analytic and monitoring settings coming soon...'}}</p>
       </div>
-
-      <section class="settings-card theme-card">
-        <div class="card-header-flex">
-          <h3 class="card-title"><i class="material-icons">palette</i> Themes</h3>
-          <button type="button" class="btn-add-sub" (click)="openThemeBuilder()">
-            <i class="material-icons">add_circle_outline</i> New Theme
-          </button>
-        </div>
-
-        <div class="theme-grid">
-          <div *ngFor="let theme of themesList" class="theme-card"
-            [class.active]="themeService.currentThemeId() === theme.id" (click)="selectAndSaveTheme(theme)">
-
-            <div class="theme-preview" [style.background]="theme.tokens.background">
-              <div class="color-dots">
-                <span [style.background]="theme.tokens.primary"></span>
-                <span [style.background]="theme.tokens.accent"></span>
-              </div>
-
-              <div class="active-badge" *ngIf="themeService.currentThemeId() === theme.id">
-                <i class="material-icons">check_circle</i>
-              </div>
-            </div>
-
-            <div class="theme-footer">
-              <span class="theme-name">{{ theme.name }}</span>
-
-              <div class="theme-actions">
-                <button class="action-btn edit" title="Edit Theme" (click)="editTheme(theme); $event.stopPropagation()">
-                  <i class="material-icons">edit</i>
-                </button>
-                <button class="action-btn delete" title="Delete Theme" (click)="deleteTheme(theme.id, $event)">
-                  <i class="material-icons">delete_outline</i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <button type="button" class="btn-primary w-100" (click)="saveThemePreference()" style="margin-top: 1rem;">
-          Apply Theme
-        </button>
-      </section>
     </div>
   </div>
 </section>
 
-<p-dialog [(visible)]="showExperienceDialog" [modal]="true"
-  [header]="selectedExperienceIndex !== null ? 'Edit Professional Experience' : 'Add New Experience'"
-  [style]="{width: '95vw', maxWidth: '900px'}" class="modern-dialog">
-
-  <div [formGroup]="experienceDialogForm" class="dialog-content-wrapper">
-
+<!-- Experience Dialog -->
+<p-dialog 
+  [(visible)]="showExperienceDialog" 
+  [modal]="true"
+  [header]="selectedExperienceIndex !== null ? 'Edit Experience' : 'Add Experience'"
+  [style]="{width: '95vw', maxWidth: '900px'}"
+  styleClass="admin-dialog">
+  
+  <div [formGroup]="experienceDialogForm" class="dialog-form">
+    
+    <!-- Company Details -->
     <div class="form-section">
-      <h4 class="section-subtitle">Company Details</h4>
-      <div class="input-grid">
-        <div class="input-group">
-          <label>Company Name</label>
-          <input type="text" formControlName="company" placeholder="e.g. Google">
-          <div class="input-error" *ngIf="isFieldInvalid('company', experienceDialogForm)">{{ getErrorText('company',
-            experienceDialogForm) }}</div>
+      <h4 class="section-title">Company Details</h4>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="field-label">Company Name</label>
+          <input type="text" formControlName="company" placeholder="Google" class="form-input">
+          <div class="field-error" *ngIf="isFieldInvalid('company', experienceDialogForm)">
+            {{ getErrorText('company', experienceDialogForm) }}
+          </div>
         </div>
-        <div class="input-group">
-          <label>Role / Title</label>
-          <input type="text" formControlName="role" placeholder="e.g. Senior Frontend Developer">
-          <div class="input-error" *ngIf="isFieldInvalid('role', experienceDialogForm)">{{ getErrorText('role',
-            experienceDialogForm) }}</div>
+        <div class="form-field">
+          <label class="field-label">Role / Title</label>
+          <input type="text" formControlName="role" placeholder="Senior Developer" class="form-input">
+          <div class="field-error" *ngIf="isFieldInvalid('role', experienceDialogForm)">
+            {{ getErrorText('role', experienceDialogForm) }}
+          </div>
         </div>
-        <div class="input-group">
-          <label>Description</label>
-          <textarea formControlName="description" rows="2" placeholder="Overall contribution"></textarea>
-          <div class="input-error" *ngIf="isFieldInvalid('description', experienceDialogForm)">{{
-            getErrorText('description', experienceDialogForm) }}</div>
+        <div class="form-field full-width">
+          <label class="field-label">Description</label>
+          <textarea formControlName="description" rows="2" placeholder="Your contribution" class="form-textarea"></textarea>
+          <div class="field-error" *ngIf="isFieldInvalid('description', experienceDialogForm)">
+            {{ getErrorText('description', experienceDialogForm) }}
+          </div>
         </div>
-      </div>
-      <div class="form-row checkbox-row">
-        <label class="checkbox-container">
-          <input type="checkbox" formControlName="present">
-          <span class="checkmark"></span>
-          I am currently working here
-        </label>
       </div>
     </div>
 
+    <!-- Date Range -->
     <div class="form-section">
-      <div class="section-header-flex">
-        <h4 class="section-subtitle">Key Projects & Contributions</h4>
-        <button type="button" class="btn-add-sub" (click)="addProject()">
-          <i class="material-icons">add_circle_outline</i> Add Project
+      <h4 class="section-title">Date Range</h4>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="field-label">Start Date</label>
+          <p-calendar formControlName="startDate" dateFormat="mm/yy" [view]="'month'" class="form-calendar"></p-calendar>
+          <div class="field-error" *ngIf="isFieldInvalid('startDate', experienceDialogForm)">Required</div>
+        </div>
+        <div class="form-field">
+          <label class="field-label">End Date</label>
+          <p-calendar 
+            formControlName="endDate" 
+            dateFormat="mm/yy" 
+            [view]="'month'" 
+            [disabled]="experienceDialogForm.get('present')?.value"
+            class="form-calendar"></p-calendar>
+        </div>
+        <div class="form-field checkbox-field">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="present">
+            <span>Currently working here</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Projects -->
+    <div class="form-section">
+      <div class="section-header">
+        <h4 class="section-title">Projects</h4>
+        <button type="button" class="btn-add-small" (click)="addProject()">
+          <i class="material-icons">add</i>
+          <span>Add Project</span>
         </button>
       </div>
 
-      <div formArrayName="projects" class="nested-projects-list">
-        <div *ngFor="let proj of projectsArray.controls; let pIndex = index" [formGroupName]="pIndex"
-          class="project-sub-card">
-
-          <div class="sub-card-header">
+      <div formArrayName="projects" class="projects-container">
+        <div *ngFor="let proj of projectsArray.controls; let pIndex = index" [formGroupName]="pIndex" class="project-card">
+          
+          <div class="project-header">
             <span class="project-number">Project #{{ pIndex + 1 }}</span>
-            <button type="button" class="btn-delete-sub" (click)="removeProject(pIndex)">
-              <i class="material-icons">delete_sweep</i>
+            <button type="button" class="icon-btn danger" (click)="removeProject(pIndex)">
+              <i class="material-icons">delete</i>
             </button>
           </div>
 
-          <div class="sub-card-body">
-            <div class="input-group">
-              <input type="text" formControlName="title" placeholder="Project Name (e.g. E-commerce Dashboard)">
-              <div class="input-error" *ngIf="isFieldInvalid('title', proj)">Required</div>
+          <div class="project-body">
+            <div class="form-field">
+              <label class="field-label">Project Title</label>
+              <input type="text" formControlName="title" placeholder="E-commerce Dashboard" class="form-input">
+              <div class="field-error" *ngIf="isFieldInvalid('title', proj)">Required</div>
             </div>
-            <div class="status-section">
-              <label class="section-title">Project Status</label>
 
-              <div class="radio-options-wrapper">
-                <label class="custom-radio-label">
+            <div class="form-field">
+              <label class="field-label">Project Status</label>
+              <div class="radio-group">
+                <label class="radio-label">
                   <input type="radio" value="in-progress" formControlName="projectProgress">
-                  <span class="radio-check"></span>
-                  <span class="label-text">In Progress</span>
+                  <span>In Progress</span>
                 </label>
-
-                <label class="custom-radio-label">
+                <label class="radio-label">
                   <input type="radio" value="completed" formControlName="projectProgress">
-                  <span class="radio-check"></span>
-                  <span class="label-text">Completed</span>
+                  <span>Completed</span>
                 </label>
               </div>
             </div>
-            <div class="input-group">
-              <textarea formControlName="description" rows="2"
-                placeholder="What was your specific contribution?"></textarea>
+
+            <div class="form-field">
+              <label class="field-label">Description</label>
+              <textarea formControlName="description" rows="2" placeholder="Your contribution" class="form-textarea"></textarea>
             </div>
 
-            <div class="tech-tags-container">
-              <label>Technologies</label>
-              <div class="tags-wrapper">
-                <span *ngFor="let tech of getTechs(pIndex); let ti = index" class="tech-chip">
+            <div class="form-field">
+              <label class="field-label">Technologies</label>
+              <div class="tags-container">
+                <span *ngFor="let tech of getTechs(pIndex); let ti = index" class="tech-tag">
                   {{ tech }}
                   <i class="material-icons" (click)="removeTech(pIndex, ti)">close</i>
                 </span>
-                <input #techInput class="tag-inline-input" type="text" placeholder="Add technology"
-                  (keydown.enter)="$event.preventDefault(); addTechnology(pIndex, techInput.value); techInput.value=''" />
+                <input 
+                  #techInput 
+                  type="text" 
+                  placeholder="Add technology" 
+                  class="tag-input"
+                  (keydown.enter)="$event.preventDefault(); addTechnology(pIndex, techInput.value); techInput.value=''">
               </div>
             </div>
           </div>
@@ -315,129 +497,208 @@
 
   <ng-template pTemplate="footer">
     <div class="dialog-footer">
-      <button class="btn-discard" (click)="showExperienceDialog = false">Discard</button>
-      <button class="btn-save" (click)="saveExperience()">
-        <i class="material-icons">check</i> Confirm
+      <button type="button" class="btn-secondary" (click)="showExperienceDialog = false">Cancel</button>
+      <button type="button" class="btn-primary" (click)="saveExperience()">
+        <i class="material-icons">check</i>
+        <span>Save</span>
       </button>
     </div>
   </ng-template>
 </p-dialog>
 
-<p-dialog [(visible)]="showThemeBuilder" [modal]="true" [style]="{width: '95vw', maxWidth: '900px'}"
-  class="modern-dialog">
-  <div class="theme-builder-modal card animate-slide-up">
-
-    <div class="modal-header">
-      <div class="header-title">
-        <i class="material-icons">palette</i>
-        <h3>Create New Theme</h3>
-      </div>
+<!-- Theme Builder Dialog -->
+<p-dialog 
+  [(visible)]="showThemeBuilder" 
+  [modal]="true"
+  header="Theme Builder"
+  [style]="{width: '95vw', maxWidth: '800px'}"
+  styleClass="admin-dialog">
+  
+  <form [formGroup]="customThemeForm" class="dialog-form">
+    
+    <div class="form-field">
+      <label class="field-label">Theme Name</label>
+      <input type="text" formControlName="theme_name" placeholder="Midnight Blue" class="form-input">
     </div>
 
-    <form [formGroup]="customThemeForm" class="theme-form-container">
-      <div class="form-field name-field">
-        <label>Theme Name</label>
-        <input type="text" formControlName="theme_name" placeholder="e.g., Midnight Neon or Cyberpunk">
-      </div>
-
-      <div class="theme-tabs">
-        <button type="button" [class.active]="activeTab === 'light'" (click)="activeTab = 'light'">
-          <i class="material-icons">light_mode</i> Light Mode
-        </button>
-        <button type="button" [class.active]="activeTab === 'dark'" (click)="activeTab = 'dark'">
-          <i class="material-icons">dark_mode</i> Dark Mode
-        </button>
-      </div>
-
-      <div class="tab-content" *ngIf="activeTab === 'light'" formGroupName="tokens">
-        <div class="token-grid">
-          <div class="token-section">
-            <h4>Brand & Status</h4>
-            <div class="input-row">
-              <div class="cp-wrap"><label>Primary</label><input type="color" formControlName="primary"></div>
-              <div class="cp-wrap"><label>Accent</label><input type="color" formControlName="accent"></div>
-              <div class="cp-wrap"><label>Success</label><input type="color" formControlName="success"></div>
-              <div class="cp-wrap"><label>Warning</label><input type="color" formControlName="warning"></div>
-              <div class="cp-wrap"><label>Error</label><input type="color" formControlName="error"></div>
-            </div>
-          </div>
-
-          <div class="token-section">
-            <h4>Surfaces & Text</h4>
-            <div class="input-row">
-              <div class="cp-wrap"><label>Background</label><input type="color" formControlName="background">
-              </div>
-              <div class="cp-wrap"><label>Surface</label><input type="color" formControlName="surface"></div>
-              <div class="cp-wrap"><label>Surface Alt</label><input type="color" formControlName="surface_alt"></div>
-              <div class="cp-wrap"><label>Border</label><input type="color" formControlName="border"></div>
-            </div>
-            <div class="input-row mt-2">
-              <div class="cp-wrap"><label>Text Prim.</label><input type="color" formControlName="text_primary">
-              </div>
-              <div class="cp-wrap"><label>Text Sec.</label><input type="color" formControlName="text_secondary">
-              </div>
-              <div class="cp-wrap"><label>Text Muted</label><input type="color" formControlName="text_muted">
-              </div>
-            </div>
-          </div>
-
-          <div class="token-section">
-            <h4>Effects</h4>
-            <div class="form-field">
-              <label>Primary Glow (RGBA)</label>
-              <input type="text" formControlName="primary_glow" placeholder="rgba(74,107,125,0.4)">
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tab-content" *ngIf="activeTab === 'dark'" formGroupName="dark_tokens">
-        <div class="token-grid">
-          <div class="token-section">
-            <h4>Dark Mode Overrides</h4>
-            <p class="muted small">Adjust background and text for the dark version of your theme.</p>
-            <div class="input-row">
-              <div class="cp-wrap"><label>Primary</label><input type="color" formControlName="primary"></div>
-              <div class="cp-wrap"><label>Accent</label><input type="color" formControlName="accent"></div>
-              <div class="cp-wrap"><label>Success</label><input type="color" formControlName="success"></div>
-              <div class="cp-wrap"><label>Warning</label><input type="color" formControlName="warning"></div>
-              <div class="cp-wrap"><label>Error</label><input type="color" formControlName="error"></div>
-            </div>
-            <div class="input-row">
-              <div class="cp-wrap"><label>Background</label><input type="color" formControlName="background">
-              </div>
-              <div class="cp-wrap"><label>Surface</label><input type="color" formControlName="surface"></div>
-              <div class="cp-wrap"><label>Surface Alt</label><input type="color" formControlName="surface_alt"></div>
-              <div class="cp-wrap"><label>Border</label><input type="color" formControlName="border"></div>
-            </div>
-            <div class="input-row mt-2">
-              <div class="cp-wrap"><label>Text Prim.</label><input type="color" formControlName="text_primary">
-              </div>
-              <div class="cp-wrap"><label>Text Sec.</label><input type="color" formControlName="text_secondary">
-              </div>
-              <div class="cp-wrap"><label>Text Muted</label><input type="color" formControlName="text_muted">
-              </div>
-            </div>
-          </div>
-          <div class="token-section">
-            <h4>Effects</h4>
-            <div class="form-field">
-              <label>Primary Glow (RGBA)</label>
-              <input type="text" formControlName="primary_glow" placeholder="rgba(74,107,125,0.4)">
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </form>
-
-    <div class="modal-footer theme-footer">
-      <button class="btn-outline" (click)="showThemeBuilder = false">Cancel</button>
-      <button class="btn-primary" [disabled]="customThemeForm.invalid" (click)="saveCustomTheme()">
-        <i class="material-icons">save</i> Save
+    <!-- Mode Tabs -->
+    <div class="mode-tabs">
+      <button 
+        type="button" 
+        class="mode-tab" 
+        [class.active]="activeTab === 'light'" 
+        (click)="activeTab = 'light'">
+        <i class="material-icons">light_mode</i>
+        <span>Light Mode</span>
+      </button>
+      <button 
+        type="button" 
+        class="mode-tab" 
+        [class.active]="activeTab === 'dark'" 
+        (click)="activeTab = 'dark'">
+        <i class="material-icons">dark_mode</i>
+        <span>Dark Mode</span>
       </button>
     </div>
-  </div>
+
+    <!-- Light Mode Colors -->
+    <div *ngIf="activeTab === 'light'" formGroupName="tokens" class="colors-section">
+      <div class="color-group">
+        <h4 class="group-title">Brand Colors</h4>
+        <div class="color-grid">
+          <div class="color-field">
+            <label>Primary</label>
+            <input type="color" formControlName="primary">
+          </div>
+          <div class="color-field">
+            <label>Accent</label>
+            <input type="color" formControlName="accent">
+          </div>
+          <div class="color-field">
+            <label>Success</label>
+            <input type="color" formControlName="success">
+          </div>
+          <div class="color-field">
+            <label>Warning</label>
+            <input type="color" formControlName="warning">
+          </div>
+          <div class="color-field">
+            <label>Error</label>
+            <input type="color" formControlName="error">
+          </div>
+        </div>
+      </div>
+
+      <div class="color-group">
+        <h4 class="group-title">Surface Colors</h4>
+        <div class="color-grid">
+          <div class="color-field">
+            <label>Background</label>
+            <input type="color" formControlName="background">
+          </div>
+          <div class="color-field">
+            <label>Surface</label>
+            <input type="color" formControlName="surface">
+          </div>
+          <div class="color-field">
+            <label>Surface Alt</label>
+            <input type="color" formControlName="surface_alt">
+          </div>
+          <div class="color-field">
+            <label>Border</label>
+            <input type="color" formControlName="border">
+          </div>
+        </div>
+      </div>
+
+      <div class="color-group">
+        <h4 class="group-title">Text Colors</h4>
+        <div class="color-grid">
+          <div class="color-field">
+            <label>Text Primary</label>
+            <input type="color" formControlName="text_primary">
+          </div>
+          <div class="color-field">
+            <label>Text Secondary</label>
+            <input type="color" formControlName="text_secondary">
+          </div>
+          <div class="color-field">
+            <label>Text Muted</label>
+            <input type="color" formControlName="text_muted">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="field-label">Primary Glow (RGBA)</label>
+        <input type="text" formControlName="primary_glow" placeholder="rgba(74,107,125,0.4)" class="form-input">
+      </div>
+    </div>
+
+    <!-- Dark Mode Colors -->
+    <div *ngIf="activeTab === 'dark'" formGroupName="dark_tokens" class="colors-section">
+      <div class="color-group">
+        <h4 class="group-title">Brand Colors</h4>
+        <div class="color-grid">
+          <div class="color-field">
+            <label>Primary</label>
+            <input type="color" formControlName="primary">
+          </div>
+          <div class="color-field">
+            <label>Accent</label>
+            <input type="color" formControlName="accent">
+          </div>
+          <div class="color-field">
+            <label>Success</label>
+            <input type="color" formControlName="success">
+          </div>
+          <div class="color-field">
+            <label>Warning</label>
+            <input type="color" formControlName="warning">
+          </div>
+          <div class="color-field">
+            <label>Error</label>
+            <input type="color" formControlName="error">
+          </div>
+        </div>
+      </div>
+
+      <div class="color-group">
+        <h4 class="group-title">Surface Colors</h4>
+        <div class="color-grid">
+          <div class="color-field">
+            <label>Background</label>
+            <input type="color" formControlName="background">
+          </div>
+          <div class="color-field">
+            <label>Surface</label>
+            <input type="color" formControlName="surface">
+          </div>
+          <div class="color-field">
+            <label>Surface Alt</label>
+            <input type="color" formControlName="surface_alt">
+          </div>
+          <div class="color-field">
+            <label>Border</label>
+            <input type="color" formControlName="border">
+          </div>
+        </div>
+      </div>
+
+      <div class="color-group">
+        <h4 class="group-title">Text Colors</h4>
+        <div class="color-grid">
+          <div class="color-field">
+            <label>Text Primary</label>
+            <input type="color" formControlName="text_primary">
+          </div>
+          <div class="color-field">
+            <label>Text Secondary</label>
+            <input type="color" formControlName="text_secondary">
+          </div>
+          <div class="color-field">
+            <label>Text Muted</label>
+            <input type="color" formControlName="text_muted">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="field-label">Primary Glow (RGBA)</label>
+        <input type="text" formControlName="primary_glow" placeholder="rgba(74,107,125,0.4)" class="form-input">
+      </div>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer">
+      <button type="button" class="btn-secondary" (click)="showThemeBuilder = false">Cancel</button>
+      <button type="button" class="btn-primary" [disabled]="customThemeForm.invalid" (click)="saveCustomTheme()">
+        <i class="material-icons">save</i>
+        <span>Save Theme</span>
+      </button>
+    </div>
+  </ng-template>
 </p-dialog>
 
 <p-confirmDialog></p-confirmDialog>

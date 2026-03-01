@@ -587,10 +587,21 @@
   box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.badge-angular { background: #fecaca; }
-.badge-typescript { background: #bfdbfe; }
-.badge-node { background: #d1fae5; }
-.badge-rxjs { background: #e9d5ff; }
+.badge-angular {
+  background: #fecaca;
+}
+
+.badge-typescript {
+  background: #bfdbfe;
+}
+
+.badge-node {
+  background: #d1fae5;
+}
+
+.badge-rxjs {
+  background: #e9d5ff;
+}
 
 .badge-icon {
   font-size: 2.5rem;
@@ -670,9 +681,17 @@
   box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.15);
 }
 
-.card-2021 { background: #dbeafe; }
-.card-2019 { background: #d1fae5; }
-.card-2017 { background: #fed7aa; }
+.card-2021 {
+  background: #dbeafe;
+}
+
+.card-2019 {
+  background: #d1fae5;
+}
+
+.card-2017 {
+  background: #fed7aa;
+}
 
 .year-badge {
   display: inline-block;
@@ -709,9 +728,17 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-.pin-blue { background: #3b82f6; }
-.pin-green { background: #10b981; }
-.pin-orange { background: #f59e0b; }
+.pin-blue {
+  background: #3b82f6;
+}
+
+.pin-green {
+  background: #10b981;
+}
+
+.pin-orange {
+  background: #f59e0b;
+}
 
 /* Stats Section */
 .stats-section {
@@ -915,8 +942,13 @@
 }
 
 @keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Contact Cards */
@@ -944,8 +976,13 @@
   box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.card-email { background: #dbeafe; }
-.card-location { background: #fecaca; }
+.card-email {
+  background: #dbeafe;
+}
+
+.card-location {
+  background: #fecaca;
+}
 
 .contact-icon {
   font-size: 1.75rem;
@@ -1331,6 +1368,7 @@
 }
 
 @media (max-width: 480px) {
+
   .title-card,
   .story-card,
   .closing-card,
@@ -1347,5 +1385,24 @@
   .stats-section,
   .tech-grid {
     gap: 1.5rem;
+  }
+}
+
+/* Default for Desktop */
+:host ::ng-deep .responsive-dialog {
+  width: 70vw;
+}
+
+/* Tablet / Small Laptop */
+@media (max-width: 992px) {
+  :host ::ng-deep .responsive-dialog {
+    width: 90vw;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  :host ::ng-deep .responsive-dialog {
+    width: 95vw;
   }
 }

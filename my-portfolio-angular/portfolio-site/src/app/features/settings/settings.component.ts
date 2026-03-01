@@ -59,7 +59,13 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy, C
   editingThemeId: string | null = null;
   selectedResumeFile: File | null = null;
   private destroy$ = new Subject<void>();
-
+  passwordForm!: FormGroup;
+  isChangingPassword: boolean = false;
+  showCurrentPassword = false;
+  showNewPassword = false;
+  lastPasswordUpdate: Date | null = null; // Set this from your profile data
+  activeSettingTab: 'profile' | 'monitoring' = 'profile';
+  adminEmail: string = '';
 
   constructor(public override injector: Injector, private fb: FormBuilder, private confirmationService: ConfirmationService) {
     super(injector);
@@ -89,8 +95,8 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy, C
       rejectLabel: 'Discard & Leave',
       acceptButtonStyleClass: "p-button-danger p-button-text",
       rejectButtonStyleClass: "p-button-text p-button-text",
-      acceptIcon:"none",
-      rejectIcon:"none",
+      acceptIcon: "none",
+      rejectIcon: "none",
 
       accept: () => {
         this.saveSettings(); // Call your existing save logic
@@ -156,6 +162,7 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy, C
       experiences: this.fb.array([]),
       themes: this.fb.array([])
     });
+    this.initAdminForm();
     this.initDialogForm();
 
     // Ensure direct input changes are recognized as form dirty
@@ -164,6 +171,62 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy, C
         this.profileForm.markAsDirty();
       }
     });
+  }
+
+  private initAdminForm() {
+    this.passwordForm = this.fb.group({
+      email: ['', [Validators.email]],
+      currentPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
+
+  // Toggle password visibility
+togglePasswordVisibility(field: 'current' | 'new'): void {
+  if (field === 'current') {
+    this.showCurrentPassword = !this.showCurrentPassword;
+  } else {
+    this.showNewPassword = !this.showNewPassword;
+  }
+}
+
+  // Get password strength (0-4)
+  getPasswordStrength(): number {
+    const password = this.passwordForm.get('newPassword')?.value || '';
+    if (!password) return 0;
+
+    let strength = 0;
+
+    // Length check
+    if (password.length >= 6) strength++;
+    if (password.length >= 10) strength++;
+
+    // Character variety checks
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+    // Cap at 4
+    return Math.min(strength, 4);
+  }
+
+  // Get password strength text
+  getPasswordStrengthText(): string {
+    const strength = this.getPasswordStrength();
+    const texts = ['VERY_WEAK', 'WEAK', 'FAIR', 'STRONG', 'VERY_STRONG'];
+    return texts[strength] || 'VERY_WEAK';
+  }
+
+  // Check if password has uppercase
+  hasUpperCase(): boolean {
+    const password = this.passwordForm.get('newPassword')?.value || '';
+    return /[A-Z]/.test(password);
+  }
+
+  // Check if password has number
+  hasNumber(): boolean {
+    const password = this.passwordForm.get('newPassword')?.value || '';
+    return /[0-9]/.test(password);
   }
   // In ngOnInit, initialize the dialog form
   private initDialogForm() {
@@ -610,8 +673,11 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy, C
       github: this.decodeHtml(p.github ?? ''),
       openToWork: !!p.open_to_work
     });
-
+    this.passwordForm.patchValue({
+      email: p.email ?? ''
+    });
     // skills
+
     while (this.skills.length) this.skills.removeAt(0);
     (p.skills || []).forEach(s => this.skills.push(new FormControl(s)));
 
@@ -754,6 +820,46 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy, C
         this.loading.hide();
         this.alertService.showAlert('Failed to update settings.', 'error')
         console.error('Save error', err);
+      }
+    });
+  }
+
+  // Update password (your existing method - modify as needed)
+  updatePassword(): void {
+    if (this.passwordForm.invalid) {
+      this.passwordForm.markAllAsTouched();
+      return;
+    }
+
+    this.isChangingPassword = true;
+    const passwordData = this.passwordForm.getRawValue();
+
+    // Your API call here
+    this.authService.updatePassword(passwordData).pipe(takeUntil(this.destroy$)).subscribe({
+      next: (response) => {
+        this.isChangingPassword = false;
+        this.lastPasswordUpdate = new Date();
+
+        // Show success message
+        // this.toasterService.showSuccess('Password updated successfully');
+
+        // Reset only password fields, keep email
+        this.passwordForm.patchValue({
+          currentPassword: '',
+          newPassword: ''
+        });
+        this.passwordForm.markAsPristine();
+        this.passwordForm.markAsUntouched();
+
+        // Reset visibility toggles
+        this.showCurrentPassword = false;
+        this.showNewPassword = false;
+      },
+      error: (error) => {
+        this.isChangingPassword = false;
+        // this.toasterService.showError(
+        //   error?.error?.message || 'Failed to update password'
+        // );
       }
     });
   }

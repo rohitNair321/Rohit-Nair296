@@ -942,6 +942,25 @@
   border-radius: 0 !important;
 }
 
+/* Default for Desktop */
+:host ::ng-deep .responsive-dialog {
+    width: 70vw;
+}
+
+/* Tablet / Small Laptop */
+@media (max-width: 992px) {
+    :host ::ng-deep .responsive-dialog {
+        width: 90vw;
+    }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+    :host ::ng-deep .responsive-dialog {
+        width: 95vw;
+    }
+}
+
 /* Dialog Content */
 .dialog-content-brutalist {
   padding: 2.5rem;
@@ -1158,7 +1177,7 @@
 
 .btn-close:hover {
   transform: translate(3px, -3px);
-  box-shadow: -3px 3px 0 var(--border);
+  /* box-shadow: -3px 3px 0 var(--border); */
   background: var(--primary);
   color: white;
   border-color: var(--primary);
@@ -1279,7 +1298,7 @@
   }
   
   .dialog-btn {
-    width: 100%;
+    width: auto;
     justify-content: center;
     padding: 0.875rem 1.5rem;
     border-width: 2px;

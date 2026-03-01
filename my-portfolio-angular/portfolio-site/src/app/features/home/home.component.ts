@@ -8,11 +8,11 @@ import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
+import { RippleModule } from 'primeng/ripple';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { Subject, Subscription, switchMap, take, timer } from 'rxjs';
 import { CommonApp } from 'src/app/core/services/common';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
-import { environment } from 'src/environments/environments';
 
 interface Hero {
   name: string;
@@ -34,6 +34,7 @@ interface HomeData { hero: Hero; aboutTeaser?: AboutTeaser; contact?: ContactInf
     ReactiveFormsModule,
     CardModule,
     ButtonModule,
+    RippleModule,
     InputTextModule,
     InputTextareaModule,
     DialogModule,

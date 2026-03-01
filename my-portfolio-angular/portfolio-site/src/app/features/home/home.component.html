@@ -214,10 +214,9 @@
   <!-- PROJECT DIALOG - Brutalist Style -->
   <p-dialog [(visible)]="showProjectDialog" [modal]="true" 
     [header]="selectedProject?.title?.toUpperCase()" 
-    [style]="{width: '70vw', maxWidth: '1000px'}" 
     [draggable]="false" 
     [resizable]="false"
-    [styleClass]="'brutalist-dialog'">
+    styleClass="brutalist-dialog responsive-dialog">
     <div *ngIf="selectedProject" class="dialog-content-brutalist">
       <!-- Dialog Header Info -->
       <div class="dialog-meta">
@@ -263,9 +262,9 @@
 
       <!-- Action Buttons -->
       <div class="dialog-actions">
-        <button class="dialog-btn btn-close" (click)="showProjectDialog = false">
-          <span>{{'CLOSE'}}</span>
+        <button pButton pRipple icon="pi pi-times" severity="secondary" class="p-button-warning" (click)="showProjectDialog = false">
           <i class="material-icons">close</i>
+          <span>{{'CLOSE'}}</span>
         </button>
       </div>
     </div>

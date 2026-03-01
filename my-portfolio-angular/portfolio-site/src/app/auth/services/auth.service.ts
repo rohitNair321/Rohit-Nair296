@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { catchError, debounceTime, forkJoin, map, mergeMap, Observable, of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environments';
 import { AppService, UserRole } from 'src/app/core/services/app.service';
 import { LocalStorageService } from 'src/app/shared/services/local-storage.service';
@@ -31,6 +31,10 @@ export class AuthService {
   user = signal<any | null>(null);
   token = signal<string | null>(null);
 
+  private authHeaders(): HttpHeaders {
+    const token = this.token() || this.localStorageService.getItem('auth_token');
+    return new HttpHeaders({ Authorization: token ? `Bearer ${token}` : '' });
+  }
   // Fetch profile data from Json.
   getCombinedData(): Observable<any> {
     return this.http.get<any>('assets/data/profile.json').pipe(
@@ -69,8 +73,12 @@ export class AuthService {
     return this.http.post(`${this.apiBaseUrl}/forgot-password`, { email });
   }
 
-  resetPassword(token: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiBaseUrl}/reset-password`, { token, password });
+  resetPassword(token?: string, password?: string): Observable<any> {
+    return this.http.post(`${this.apiBaseUrl}/reset-password`, { token: this.localStorageService.getItem('auth_token'), password });
+  }
+
+  updatePassword(passwordData: FormData): Observable<any> {
+    return this.http.put(`${this.apiBaseUrl}/update-password`, passwordData, { headers: this.authHeaders() });
   }
 
   logout(): void {

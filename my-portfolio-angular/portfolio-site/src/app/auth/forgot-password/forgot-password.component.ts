@@ -17,6 +17,7 @@ export class ForgotPasswordComponent extends CommonApp {
   private readonly fb = inject(FormBuilder);
   successMessage: string | null = null;
   error: string | null = null;
+  sending = false;
 
   constructor(public override injector: Injector) {
     super(injector);
@@ -31,7 +32,7 @@ export class ForgotPasswordComponent extends CommonApp {
   }
 
   onSubmit(): void {
-    if (this.form.invalid || this.loading) {
+    if (this.form.invalid || this.sending) {
       this.form.markAllAsTouched();
       return;
     }
