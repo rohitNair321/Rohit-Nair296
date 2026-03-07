@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { SharedModule } from '../../../shared.module';
 
 import { NavigationComponent } from './navigation.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('NavigationComponent', () => {
   let component: NavigationComponent;
@@ -11,13 +12,11 @@ describe('NavigationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-        declarations: [ NavigationComponent ],
-        imports: [
-          RouterTestingModule,
-          HttpClientTestingModule,
-          SharedModule
-        ],
-    })
+    declarations: [NavigationComponent],
+    imports: [RouterTestingModule,
+        SharedModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(NavigationComponent);

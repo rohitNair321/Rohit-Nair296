@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { SharedModule } from '../../shared.module';
 
 import { SidebarComponent } from './sidebar.component';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
@@ -10,9 +11,10 @@ describe('SidebarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SidebarComponent ],
-      imports: [HttpClientTestingModule, SharedModule]
-    })
+    declarations: [SidebarComponent],
+    imports: [SharedModule],
+    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(SidebarComponent);
