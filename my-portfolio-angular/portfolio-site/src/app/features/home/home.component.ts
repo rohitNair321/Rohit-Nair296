@@ -41,7 +41,7 @@ interface HomeData { hero: Hero; aboutTeaser?: AboutTeaser; contact?: ContactInf
     TagModule
   ],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
+  styleUrls: ['./home.component.scss'],
   animations: [
     trigger('pageAnimations', [
       transition(':enter', [

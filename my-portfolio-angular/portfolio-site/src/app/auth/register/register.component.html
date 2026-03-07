@@ -20,9 +20,11 @@
             <i class="material-icons">person_outline</i>
             <input id="name" type="text" formControlName="name" placeholder="Rohit Nair" />
           </div>
-          <div class="field-error" *ngIf="name?.errors && name?.touched">
-            <small *ngIf="name?.errors?.['required']">Name is required</small>
-          </div>
+          @if (name?.errors && name?.touched) {
+            <div class="field-error">
+              @if (name?.errors?.['required']) { <small>Name is required</small> }
+            </div>
+          }
         </div>
       </div>
 
@@ -32,10 +34,12 @@
           <i class="material-icons">mail_outline</i>
           <input id="email" type="email" formControlName="email" placeholder="name@example.com" />
         </div>
-        <div class="field-error" *ngIf="email?.errors && email?.touched">
-          <small *ngIf="email?.errors?.['required']">Email is required</small>
-          <small *ngIf="email?.errors?.['email']">Invalid email format</small>
-        </div>
+        @if (email?.errors && email?.touched) {
+          <div class="field-error">
+            @if (email?.errors?.['required']) { <small>Email is required</small> }
+            @if (email?.errors?.['email']) { <small>Invalid email format</small> }
+          </div>
+        }
       </div>
 
       <div class="form-grid">
@@ -55,9 +59,12 @@
           </div>
         </div>
       </div>
-      <div class="field-error password-mismatch" *ngIf="confirmPassword?.touched && form.hasError('passwordMismatch')">
-        <small>Passwords do not match</small>
-      </div>
+
+      @if (confirmPassword?.touched && form.hasError('passwordMismatch')) {
+        <div class="field-error password-mismatch">
+          <small>Passwords do not match</small>
+        </div>
+      }
 
       <div class="form-meta terms-container" [class.invalid]="acceptTerms?.invalid && acceptTerms?.touched">
         <label class="remember-me">
@@ -69,12 +76,21 @@
         </label>
       </div>
 
-      <button type="submit" class="btn-primary-auth" [disabled]="loading || form.invalid">
-        <div *ngIf="!loading">Create Account</div>
-        <div *ngIf="loading" class="spinner-container">
-          <span class="auth-spinner"></span>
-          <span>Creating...</span>
+      @if (error()) {
+        <div class="field-error" style="text-align: center; margin-bottom: 1rem;">
+          {{ error() }}
         </div>
+      }
+
+      <button type="submit" class="btn-primary-auth" [disabled]="isLoading() || form.invalid">
+        @if (!isLoading()) {
+          <div>Create Account</div>
+        } @else {
+          <div class="spinner-container">
+            <span class="auth-spinner"></span>
+            <span>Creating...</span>
+          </div>
+        }
       </button>
 
       <div class="divider">

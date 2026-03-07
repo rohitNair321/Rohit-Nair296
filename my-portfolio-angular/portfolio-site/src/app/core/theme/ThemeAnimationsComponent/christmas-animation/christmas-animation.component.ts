@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ThemeService } from '../../theme.service';
-import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-christmas-animation',
   standalone: true,
-  imports: [NgFor, NgIf],
+  imports: [], // No longer need CommonModule, NgIf, or NgFor
   templateUrl: './christmas-animation.component.html',
   styleUrl: './christmas-animation.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -13,18 +12,15 @@ import { NgFor, NgIf } from '@angular/common';
 export class ChristmasAnimationComponent {
   private themeService = inject(ThemeService);
 
-  // currentTheme = computed(() => this.themeService.currentTheme());
+  // v18 Signals for performance
+  isChristmas = computed(() => this.themeService.isChristmasTheme());
+  showAnimations = signal(true);
+
+  // Data for loops
   sparkles = Array.from({ length: 50 });
   winds = Array.from({ length: 6 });
+  bulbs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 
-  constructor() {
-    // console.log('Current theme:', this.themeService.currentTheme());
-
-  }
-
-  isChristmas = computed(() => this.themeService.isChristmasTheme());
-  // Toggle for user preference
-  showAnimations = signal(true);
   toggleAnimations() {
     this.showAnimations.update(v => !v);
   }

@@ -42,7 +42,9 @@
         <!-- Status Box -->
         <div class="status-box">
           <div class="status-header">
-            <span class="status-dot" *ngIf="profileData()?.open_to_work"></span>
+            @if (profileData()?.open_to_work) {
+            <span class="status-dot"></span>
+            }
             <span class="status-text">{{profileData()?.open_to_work ? 'CURRENTLY_AVAILABLE' : 'NOT_AVAILABLE' }}</span>
           </div>
           <div class="status-info">
@@ -69,13 +71,17 @@
           </div>
           <div class="column-divider"></div>
           <ul class="footer-list">
-            <li *ngFor="let item of menuItems">
-              <a [href]="item.href" class="footer-link" *ngIf="!item.isHide"
+            @for (item of menuItems; track item) {
+            <li>
+              @if (!item.isHide) {
+              <a [href]="item.href" class="footer-link"
                 (click)="scrollToSection($event, item.href!)">
                 <span class="link-arrow">→</span>
                 <span class="link-text">{{ item.label }}</span>
               </a>
+            }
             </li>
+          }
           </ul>
         </div>
 

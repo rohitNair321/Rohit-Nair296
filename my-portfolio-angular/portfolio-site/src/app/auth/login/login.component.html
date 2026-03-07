@@ -6,64 +6,54 @@
         <span class="rn-r">R</span><span class="rn-n">N</span>
       </div>
       <div class="auth-header">
-        <h1>{{'Welcome'}}</h1>
-        <p>{{'Login to manage your professional portfolio or click Continue as Guest to explore the site'}}</p>
+        <h1>Welcome</h1>
+        <p>Login to manage your professional portfolio or click Continue as Guest to explore the site</p>
       </div>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="auth-form">
+      
       <div class="form-field" [class.invalid]="email?.invalid && email?.touched">
-        <label for="email">{{'Email Address'}}</label>
+        <label for="email">Email Address</label>
         <div class="input-wrapper">
           <i class="material-icons">mail_outline</i>
           <input id="email" type="email" formControlName="email" placeholder="name@example.com" />
         </div>
-        <div class="field-error" *ngIf="email?.errors && email?.touched">
-          <span *ngIf="email?.errors?.['required']">{{'Email is required'}}</span>
-          <span *ngIf="email?.errors?.['email']">{{'Please enter a valid email'}}</span>
-        </div>
+        
+        @if (email?.errors && email?.touched) {
+          <div class="field-error">
+            @if (email?.errors?.['required']) {
+              <span>Email is required</span>
+            }
+            @if (email?.errors?.['email']) {
+              <span>Please enter a valid email</span>
+            }
+          </div>
+        }
       </div>
 
       <div class="form-field" [class.invalid]="password?.invalid && password?.touched">
-        <label for="password">{{'Password'}}</label>
+        <label for="password">Password</label>
         <div class="input-wrapper">
           <i class="material-icons">lock_open</i>
           <input id="password" type="password" formControlName="password" placeholder="••••••••" />
         </div>
-        <div class="field-error" *ngIf="password?.errors && password?.touched">
-          <span *ngIf="password?.errors?.['required']">{{'Password is required'}}</span>
-        </div>
+
+        @if (password?.errors && password?.touched) {
+          <div class="field-error">
+            @if (password?.errors?.['required']) {
+              <span>Password is required</span>
+            }
+          </div>
+        }
       </div>
 
-      <!-- <div class="form-meta">
-        <label class="remember-me">
-          <input type="checkbox" formControlName="rememberMe" />
-          <span class="custom-checkbox"></span>
-          <span>{{'Remember me'}}</span>
-        </label>
-        <a class="forgot-link" [routerLink]="['/forgot-password']">Forgot password?</a>
-      </div> -->
-
-      <button type="submit" class="btn-primary-auth" [disabled]="isloading">
+      <button type="submit" class="btn-primary-auth" [disabled]="isloading()">
         <div class="spinner-container">
-          <span>{{'Admin Login'}}</span>
+          <span>Admin Login</span>
         </div>
       </button>
 
-      <!-- <div class="divider">
-        <span>or login with</span>
-      </div>
-
-      <div class="social-grid">
-        <button type="button" class="btn-social" (click)="onLoginWithGoogle()" [disabled]="isloading">
-          <img src="assets/icons/google.svg" alt="" *ngIf="!isloading">
-          <span>Google</span>
-        </button>
-        <button type="button" class="btn-social" (click)="onLoginWithFacebook()" [disabled]="isloading">
-          <img src="assets/icons/facebook.svg" alt="" *ngIf="!isloading">
-          <span>Facebook</span>
-        </button>
-      </div> -->
       <div class="guest-container" style="margin-top: 1.5rem; text-align: center;">
         <button type="button" class="btn-guest-link" (click)="onContinueAsGuest()">
           <i class="material-icons">visibility</i>
@@ -71,9 +61,6 @@
         </button>
       </div>
 
-      <!-- <p class="auth-footer-text" *ngIf="">
-        New here? <a [routerLink]="['/register']">Create an account</a>
-      </p> -->
     </form>
   </div>
 </div>

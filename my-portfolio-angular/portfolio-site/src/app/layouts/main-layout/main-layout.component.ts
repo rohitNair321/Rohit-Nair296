@@ -16,11 +16,11 @@ import { environment } from 'src/environments/environments';
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ChatBotComponent, NavigationComponent, SidebarComponent, FooterComponent, ChristmasAnimationComponent,
+  imports: [RouterOutlet, ChatBotComponent, NavigationComponent, SidebarComponent, FooterComponent, ChristmasAnimationComponent,
     NewYearAnimationComponent
   ],
   templateUrl: './main-layout.component.html',
-  styleUrls: ['./main-layout.component.css']
+  styleUrls: ['./main-layout.component.scss']
 })
 export class MainLayoutComponent extends CommonApp {
   // config: LayoutConfig = defaultConfig;

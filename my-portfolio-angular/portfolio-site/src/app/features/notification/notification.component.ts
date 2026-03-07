@@ -11,7 +11,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule, AccordionModule, ButtonModule, BadgeModule, TimeAgoPipe],
+  imports: [ AccordionModule, ButtonModule, BadgeModule, TimeAgoPipe],
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.scss']
 })

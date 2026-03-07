@@ -20,7 +20,7 @@ import { CommonApp } from 'src/app/core/services/common';
     RouterModule
   ],
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.css']
+  styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent extends CommonApp {
 

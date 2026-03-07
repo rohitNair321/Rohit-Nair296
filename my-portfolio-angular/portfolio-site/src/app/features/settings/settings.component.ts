@@ -27,8 +27,6 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
     ButtonModule,
     CalendarModule,
     DialogModule,
-    NgFor,
-    NgIf,
     RadioButtonModule,
     ConfirmDialogModule,
     ToggleButtonModule

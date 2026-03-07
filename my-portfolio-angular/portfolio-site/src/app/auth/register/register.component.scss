@@ -1,8 +1,16 @@
-/* Import shared login styles */
+/* Import shared login/auth styles which already use tokens */
 @import '../login/login.component.scss';
 
+:host {
+  // Local token mapping with fallbacks to the new light/bright scheme
+  --error-color: var(--error, #FF5252);
+  --text-secondary-color: var(--text_secondary, #5c6b7a);
+  --primary-color: var(--primary, #FF5252);
+  --accent-color: var(--accent, #4CAF50);
+}
+
 .register-card {
-  max-width: 500px; // Slightly wider to accommodate the grid
+  max-width: 500px; 
 }
 
 .form-grid {
@@ -22,23 +30,26 @@
   
   .terms-text {
     font-size: 0.85rem;
-    color: var(--text-secondary);
+    color: var(--text-secondary-color);
   }
 
   &.invalid {
     animation: shake 0.4s ease-in-out;
-    .terms-text { color: var(--error); }
+    .terms-text { 
+      color: var(--error-color); 
+      font-weight: 500;
+    }
   }
 }
 
 .password-mismatch {
   margin-top: -1rem;
   margin-bottom: 1rem;
-  color: var(--error);
+  color: var(--error-color);
   font-weight: 600;
 }
 
-/* Ensure the spinner looks consistent */
+/* Updated spinner for v18 aesthetics */
 .auth-spinner {
   width: 18px;
   height: 18px;
@@ -46,10 +57,6 @@
   border-top-color: #fff;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
 }
 
 @keyframes shake {

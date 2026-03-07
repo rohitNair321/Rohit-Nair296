@@ -8,9 +8,9 @@ import { AlertComponent } from 'src/app/shared/components/ui/alert-dialog/alert.
 @Component({
   selector: 'app-auth-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [RouterOutlet],
   templateUrl: './auth-layout.component.html',
-  styleUrls: ['./auth-layout.component.css']
+  styleUrls: ['./auth-layout.component.scss']
 })
 export class AuthLayoutComponent extends CommonApp {
 

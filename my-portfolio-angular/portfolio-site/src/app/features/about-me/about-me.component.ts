@@ -1,30 +1,30 @@
-import { CommonModule } from '@angular/common';
-import { Component, HostListener, Injector, OnDestroy, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Injector, OnDestroy, OnInit, signal, effect } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
-import { Subject } from 'rxjs';
 import { CommonApp } from 'src/app/core/services/common';
 
 @Component({
   selector: 'app-about-me',
   standalone: true,
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     CardModule,
     ButtonModule,
     DialogModule,
-  ],
+  ], // Removed CommonModule: @if, @for, and @hidden are built-in
   templateUrl: './about-me.component.html',
-  styleUrls: ['./about-me.component.css'],
+  styleUrls: ['./about-me.component.scss'], // Renamed to .scss
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AboutMeComponent extends CommonApp implements OnInit, OnDestroy {
+export class AboutMeComponent extends CommonApp implements OnInit {
 
-  private destroy$ = new Subject<void>();
-  showContactDialog: boolean = false;
-  profileData = this.appService.profile;
+  // v18 Signals for UI state
+  showContactDialog = signal<boolean>(false);
+  scrollPercentage = signal<number>(0);
+  profileData = this.appService.profile; // Assuming this is already a signal from AppService
+
   constructor(public override injector: Injector) {
     super(injector);
   }
@@ -34,31 +34,18 @@ export class AboutMeComponent extends CommonApp implements OnInit, OnDestroy {
     const winScroll = document.documentElement.scrollTop;
     const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
     const scrolled = (winScroll / height) * 100;
-
-    const progressFill = document.querySelector('.progress-fill') as HTMLElement;
-    const progressPercentage = document.querySelector('.progress-percentage') as HTMLElement;
-
-    if (progressFill && progressPercentage) {
-      progressFill.style.width = scrolled + '%';
-      progressPercentage.textContent = Math.round(scrolled) + '%';
-    }
+    
+    // Update signal instead of direct DOM manipulation
+    this.scrollPercentage.set(Math.round(scrolled));
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  // In your component
   openContactDialog() {
-    this.showContactDialog = true;
+    this.showContactDialog.set(true);
   }
 
   closeContactDialog() {
-    this.showContactDialog = false;
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.showContactDialog.set(false);
   }
 }
-

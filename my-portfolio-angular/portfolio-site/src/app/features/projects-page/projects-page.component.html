@@ -5,11 +5,15 @@
   </div>
 
   <div class="row g-3">
-    <div class="col-12 col-sm-6 col-lg-4" *ngFor="let project of projectList">
+    @for (project of projectList; track $index) {
+    <div class="col-12 col-sm-6 col-lg-4">
       <div class="card portfolio-card">
-        <div class="card-img-top portfolio-card-cover" *ngIf="project?.image"
-          [style.background-image]="'url(' + project.image + ')'"></div>
-        <div class="card-img-top portfolio-card-cover placeholder" *ngIf="!project?.image"></div>
+        @if (project?.image) {
+        <div class="card-img-top portfolio-card-cover" [style.background-image]="'url(' + project.image + ')'"></div>
+        }
+        @if (!project?.image) {
+        <div class="card-img-top portfolio-card-cover placeholder"></div>
+        }
 
         <div class="card-header d-flex align-items-center justify-content-between">
           <span class="portfolio-card-title">{{ project?.title }}</span>
@@ -20,34 +24,38 @@
             {{ project?.description?.length > 160 ? (project?.description) + '...' : project?.description }}
           </p>
           <div class="tech-list">
-            <span class="tech-badge" *ngFor="let tech of project?.technologies" [ngClass]="techClass(tech)">{{ tech
-              }}</span>
+            @for (tech of project?.technologies; track $index) {
+            <span class="tech-badge" [ngClass]="techClass(tech)">{{tech}}</span>
+            }
           </div>
         </div>
 
         <div class="card-footer portfolio-card-actions">
           <!-- <a class="view-project-detail"
-             [routerLink]="[{ outlets: { modal: ['project', project.id] } }]"
-             [state]="{ project: project }">
-            <span class="material-icons">open_in_new</span>
-            Read More
-          </a> -->
-          <button type="button" class="view-project-detail" (click)="openProject(project)">
+              [routerLink]="[{ outlets: { modal: ['project', project.id] } }]"
+              [state]="{ project: project }">
+              <span class="material-icons">open_in_new</span>
+              Read More
+            </a> -->
+          <button type="button" class="view-project-detail">
             <span class="material-icons">open_in_new</span>
             Read More
           </button>
 
-          <a class="live-demo-btn ms-3" *ngIf="project?.liveDemo" [href]="project?.liveDemo" target="_blank"
-            rel="noopener">
+          @if (project?.liveDemo) {
+          <a class="live-demo-btn ms-3" [href]="project?.liveDemo" target="_blank" rel="noopener">
             <span class="material-icons">open_in_new</span>
             Live Demo
           </a>
-          <a class="source-link ms-3" *ngIf="project?.sourceCode" [href]="project?.sourceCode" target="_blank"
-            rel="noopener">
+          }
+          @if (project?.sourceCode) {
+          <a class="source-link ms-3" [href]="project?.sourceCode" target="_blank" rel="noopener">
             Source
           </a>
+          }
         </div>
       </div>
     </div>
+    }
   </div>
 </section>

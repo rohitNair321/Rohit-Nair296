@@ -1,5 +1,6 @@
-<section class="admin-settings-container" [formGroup]="profileForm" *ngIf="profileForm">
-  
+@if (profileForm) {
+<section class="admin-settings-container" [formGroup]="profileForm">
+
   <!-- Header Bar -->
   <header class="admin-header">
     <div class="header-left">
@@ -20,30 +21,29 @@
 
   <!-- Tab Navigation -->
   <nav class="tab-navigation">
-    <button 
-      type="button" 
-      class="tab-btn" 
-      [class.active]="activeSettingTab === 'profile'"
+    <button type="button" class="tab-btn" [class.active]="activeSettingTab === 'profile'"
       (click)="activeSettingTab = 'profile'">
       <i class="material-icons">person</i>
       <span>Profile</span>
     </button>
-    
+
     <!-- Add more tabs here in future -->
     <!-- Example: -->
-    <button type="button" class="tab-btn" [class.active]="activeSettingTab === 'monitoring'" (click)="activeSettingTab = 'monitoring'">
+    <button type="button" class="tab-btn" [class.active]="activeSettingTab === 'monitoring'"
+      (click)="activeSettingTab = 'monitoring'">
       <i class="material-icons">monitor_heart</i>
       <span>Monitoring</span>
     </button>
   </nav>
 
   <!-- Tab Content: Profile -->
-  <div class="tab-content" *ngIf="activeSettingTab === 'profile'">
+  @if (activeSettingTab === 'profile') {
+  <div class="tab-content">
     <div class="content-grid">
-      
+
       <!-- Main Content Area -->
       <div class="main-content">
-        
+
         <!-- Branding & Logo Section -->
         <section class="admin-card">
           <div class="card-header">
@@ -59,10 +59,13 @@
                 <label class="avatar-label">
                   <input type="file" (change)="onAvatarChange($event)" hidden>
                   <div class="avatar-preview" [class.has-image]="avatarDataUrl">
-                    <img *ngIf="avatarDataUrl" [src]="avatarDataUrl" alt="Avatar">
-                    <span *ngIf="!avatarDataUrl" class="avatar-initials">
+                    @if (avatarDataUrl) {
+                    <img [src]="avatarDataUrl" alt="Avatar">
+                    } @else {
+                    <span class="avatar-initials">
                       {{ (profileForm.get('full_name')?.value || 'U').charAt(0) }}
                     </span>
+                    }
                     <div class="avatar-overlay">
                       <i class="material-icons">photo_camera</i>
                     </div>
@@ -81,8 +84,9 @@
 
                 <div class="form-field">
                   <label class="field-label">Resume (PDF)</label>
-                  
-                  <div class="resume-container" *ngIf="resumeUrl; else uploadResume">
+
+                  @if (resumeUrl) {
+                  <div class="resume-container">
                     <div class="resume-info">
                       <i class="material-icons file-icon">picture_as_pdf</i>
                       <div class="resume-details">
@@ -102,16 +106,18 @@
                       </button>
                     </div>
                   </div>
-
-                  <ng-template #uploadResume>
+                  } @else {
+                  <ng-template>
                     <div class="upload-area">
-                      <input id="resumeUpload" type="file" accept="application/pdf" (change)="onResumeChange($event)" hidden>
+                      <input id="resumeUpload" type="file" accept="application/pdf" (change)="onResumeChange($event)"
+                        hidden>
                       <label for="resumeUpload" class="upload-btn">
                         <i class="material-icons">upload_file</i>
                         <span>Upload Resume</span>
                       </label>
                     </div>
                   </ng-template>
+                  }
                 </div>
 
                 <div class="form-field toggle-field">
@@ -136,22 +142,30 @@
               <div class="form-field">
                 <label class="field-label">Full Name</label>
                 <input type="text" formControlName="name" class="form-input">
-                <div class="field-error" *ngIf="isFieldInvalid('name')">{{ getErrorText('name') }}</div>
+                @if (isFieldInvalid('name')) {
+                <div class="field-error">{{ getErrorText('name') }}</div>
+                }
               </div>
               <div class="form-field">
                 <label class="field-label">Location</label>
                 <input type="text" formControlName="location" class="form-input">
-                <div class="field-error" *ngIf="isFieldInvalid('location')">{{ getErrorText('location') }}</div>
+                @if (isFieldInvalid('location')) {
+                <div class="field-error">{{ getErrorText('location') }}</div>
+                }
               </div>
               <div class="form-field">
                 <label class="field-label">LinkedIn</label>
                 <input type="text" formControlName="linkedin" class="form-input">
-                <div class="field-error" *ngIf="isFieldInvalid('linkedin')">{{ getErrorText('linkedin') }}</div>
+                @if (isFieldInvalid('linkedin')) {
+                <div class="field-error">{{ getErrorText('linkedin') }}</div>
+                }
               </div>
               <div class="form-field">
                 <label class="field-label">GitHub</label>
                 <input type="text" formControlName="github" class="form-input">
-                <div class="field-error" *ngIf="isFieldInvalid('github')">{{ getErrorText('github') }}</div>
+                @if (isFieldInvalid('github')) {
+                <div class="field-error">{{ getErrorText('github') }}</div>
+                }
               </div>
             </div>
             <div class="form-field">
@@ -175,11 +189,12 @@
           </div>
           <div class="card-body">
             <div class="experience-list">
-              <div *ngFor="let exp of experiences.controls; let i = index" class="experience-item">
+              @for (exp of experiences.controls; track i; let i = $index) {
+              <div class="experience-item">
                 <div class="exp-header">
                   <div class="exp-timeline">
                     <span class="exp-date">
-                      {{ exp.value.startDate | date:'MMM yyyy' }} - 
+                      {{ exp.value.startDate | date:'MMM yyyy' }} -
                       {{ exp.value.present ? 'Present' : (exp.value.endDate | date:'MMM yyyy') }}
                     </span>
                   </div>
@@ -201,8 +216,10 @@
                   </div>
                 </div>
               </div>
-              
-              <div *ngIf="experiences.controls.length === 0" class="empty-state">
+              }
+
+              @if (experiences.controls.length === 0) {
+              <div class="empty-state">
                 <i class="material-icons">work_off</i>
                 <p>No experience added yet</p>
                 <button type="button" class="btn-secondary" (click)="openExperienceDialog()">
@@ -210,6 +227,7 @@
                   <span>Add Your First Experience</span>
                 </button>
               </div>
+              }
             </div>
           </div>
         </section>
@@ -218,7 +236,7 @@
 
       <!-- Sidebar -->
       <aside class="sidebar-content">
-        
+
         <!-- Live Preview Card -->
         <section class="admin-card">
           <div class="card-header">
@@ -251,7 +269,7 @@
           </div>
           <div class="card-body">
             <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()" class="password-form">
-              
+
               <div class="form-field">
                 <label class="field-label">Email Address</label>
                 <input type="email" formControlName="email" class="form-input" [readonly]="true" [disabled]="true">
@@ -261,46 +279,37 @@
               <div class="form-field">
                 <label class="field-label">Current Password</label>
                 <div class="password-input">
-                  <input 
-                    [type]="showCurrentPassword ? 'text' : 'password'" 
-                    formControlName="currentPassword" 
+                  <input [type]="showCurrentPassword ? 'text' : 'password'" formControlName="currentPassword"
                     class="form-input"
                     [class.error]="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched">
-                  <button 
-                    type="button" 
-                    class="password-toggle"
-                    (click)="togglePasswordVisibility('current')">
+                  <button type="button" class="password-toggle" (click)="togglePasswordVisibility('current')">
                     <i class="material-icons">{{ showCurrentPassword ? 'visibility_off' : 'visibility' }}</i>
                   </button>
                 </div>
-                <div class="field-error" *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched">
-                  {{ passwordForm.get('currentPassword')?.hasError('required') ? 'Required' : 'Min 6 characters' }}
-                </div>
+                @if (passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched) {
+                  <div class="field-error">
+                    {{ passwordForm.get('currentPassword')?.hasError('required') ? 'Required' : 'Min 6 characters' }}
+                  </div>
+                }
               </div>
 
               <div class="form-field">
                 <label class="field-label">New Password</label>
                 <div class="password-input">
-                  <input 
-                    [type]="showNewPassword ? 'text' : 'password'" 
-                    formControlName="newPassword" 
-                    class="form-input"
+                  <input [type]="showNewPassword ? 'text' : 'password'" formControlName="newPassword" class="form-input"
                     [class.error]="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">
-                  <button 
-                    type="button" 
-                    class="password-toggle"
-                    (click)="togglePasswordVisibility('new')">
+                  <button type="button" class="password-toggle" (click)="togglePasswordVisibility('new')">
                     <i class="material-icons">{{ showNewPassword ? 'visibility_off' : 'visibility' }}</i>
                   </button>
                 </div>
-                <div class="field-error" *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched">
-                  {{ passwordForm.get('newPassword')?.hasError('required') ? 'Required' : 'Min 6 characters' }}
-                </div>
+                @if (passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched) {
+                  <div class="field-error">
+                    {{ passwordForm.get('newPassword')?.hasError('required') ? 'Required' : 'Min 6 characters' }}
+                  </div>
+                }
               </div>
 
-              <button 
-                type="submit" 
-                class="btn-primary full-width"
+              <button type="submit" class="btn-primary full-width"
                 [disabled]="passwordForm.invalid || isChangingPassword">
                 <i class="material-icons">{{ isChangingPassword ? 'hourglass_empty' : 'security' }}</i>
                 <span>{{ isChangingPassword ? 'Updating...' : 'Update Password' }}</span>
@@ -322,27 +331,28 @@
           </div>
           <div class="card-body">
             <div class="theme-list">
-              <div 
-                *ngFor="let theme of themesList" 
-                class="theme-option"
-                [class.selected]="themeService.currentThemeId() === theme.id"
-                (click)="selectAndSaveTheme(theme)">
-                <i class="material-icons check-icon" *ngIf="themeService.currentThemeId() === theme.id">check_circle</i>
-                <div class="theme-colors">
-                  <span class="color-dot" [style.background]="theme.tokens.primary"></span>
-                  <span class="color-dot" [style.background]="theme.tokens.accent"></span>
-                  <span class="color-dot" [style.background]="theme.tokens.surface"></span>
+              @for (theme of themesList; track $index) {
+                <div class="theme-option"
+                  [class.selected]="themeService.currentThemeId() === theme.id" (click)="selectAndSaveTheme(theme)">
+                  @if (themeService.currentThemeId() === theme.id) {
+                    <i class="material-icons check-icon">check_circle</i>
+                  }
+                  <div class="theme-colors">
+                    <span class="color-dot" [style.background]="theme.tokens.primary"></span>
+                    <span class="color-dot" [style.background]="theme.tokens.accent"></span>
+                    <span class="color-dot" [style.background]="theme.tokens.surface"></span>
+                  </div>
+                  <span class="theme-label">{{ theme.name }}</span>
+                  <div class="theme-buttons">
+                    <button type="button" class="icon-btn-small" (click)="editTheme(theme); $event.stopPropagation()">
+                      <i class="material-icons">edit</i>
+                    </button>
+                    <button type="button" class="icon-btn-small danger" (click)="deleteTheme(theme.id, $event)">
+                      <i class="material-icons">delete_outline</i>
+                    </button>
+                  </div>
                 </div>
-                <span class="theme-label">{{ theme.name }}</span>
-                <div class="theme-buttons">
-                  <button type="button" class="icon-btn-small" (click)="editTheme(theme); $event.stopPropagation()">
-                    <i class="material-icons">edit</i>
-                  </button>
-                  <button type="button" class="icon-btn-small danger" (click)="deleteTheme(theme.id, $event)">
-                    <i class="material-icons">delete_outline</i>
-                  </button>
-                </div>
-              </div>
+              }
             </div>
             <button type="button" class="btn-secondary full-width" (click)="saveThemePreference()">
               Apply Theme
@@ -353,26 +363,26 @@
       </aside>
     </div>
   </div>
-
-  <div class="tab-content" *ngIf="activeSettingTab === 'monitoring'">
+  }
+  @if (activeSettingTab === 'monitoring') {
+  <div class="tab-content">
     <div class="content-grid">
       <div class="main-content">
         <p style="color: var(--primary);">{{'Browser analytic and monitoring settings coming soon...'}}</p>
       </div>
     </div>
   </div>
+  }
 </section>
+}
 
 <!-- Experience Dialog -->
-<p-dialog 
-  [(visible)]="showExperienceDialog" 
-  [modal]="true"
+<p-dialog [(visible)]="showExperienceDialog" [modal]="true"
   [header]="selectedExperienceIndex !== null ? 'Edit Experience' : 'Add Experience'"
-  [style]="{width: '95vw', maxWidth: '900px'}"
-  styleClass="admin-dialog">
-  
+  [style]="{width: '95vw', maxWidth: '900px'}" styleClass="admin-dialog">
+
   <div [formGroup]="experienceDialogForm" class="dialog-form">
-    
+
     <!-- Company Details -->
     <div class="form-section">
       <h4 class="section-title">Company Details</h4>
@@ -380,23 +390,30 @@
         <div class="form-field">
           <label class="field-label">Company Name</label>
           <input type="text" formControlName="company" placeholder="Google" class="form-input">
-          <div class="field-error" *ngIf="isFieldInvalid('company', experienceDialogForm)">
+          @if (isFieldInvalid('company', experienceDialogForm)) {
+          <div class="field-error">
             {{ getErrorText('company', experienceDialogForm) }}
           </div>
+          }
         </div>
         <div class="form-field">
           <label class="field-label">Role / Title</label>
           <input type="text" formControlName="role" placeholder="Senior Developer" class="form-input">
-          <div class="field-error" *ngIf="isFieldInvalid('role', experienceDialogForm)">
+          @if (isFieldInvalid('role', experienceDialogForm)) {
+          <div class="field-error">
             {{ getErrorText('role', experienceDialogForm) }}
           </div>
+          }
         </div>
         <div class="form-field full-width">
           <label class="field-label">Description</label>
-          <textarea formControlName="description" rows="2" placeholder="Your contribution" class="form-textarea"></textarea>
-          <div class="field-error" *ngIf="isFieldInvalid('description', experienceDialogForm)">
+          <textarea formControlName="description" rows="2" placeholder="Your contribution"
+            class="form-textarea"></textarea>
+          @if (isFieldInvalid('description', experienceDialogForm)) {
+          <div class="field-error">
             {{ getErrorText('description', experienceDialogForm) }}
           </div>
+          }
         </div>
       </div>
     </div>
@@ -407,17 +424,18 @@
       <div class="form-grid">
         <div class="form-field">
           <label class="field-label">Start Date</label>
-          <p-calendar formControlName="startDate" dateFormat="mm/yy" [view]="'month'" class="form-calendar"></p-calendar>
-          <div class="field-error" *ngIf="isFieldInvalid('startDate', experienceDialogForm)">Required</div>
+          <p-calendar formControlName="startDate" dateFormat="mm/yy" [view]="'month'"
+            class="form-calendar"></p-calendar>
+          @if (isFieldInvalid('startDate', experienceDialogForm)) {
+          <div class="field-error">
+            {{ getErrorText('startDate', experienceDialogForm) }}
+          </div>
+          }
         </div>
         <div class="form-field">
           <label class="field-label">End Date</label>
-          <p-calendar 
-            formControlName="endDate" 
-            dateFormat="mm/yy" 
-            [view]="'month'" 
-            [disabled]="experienceDialogForm.get('present')?.value"
-            class="form-calendar"></p-calendar>
+          <p-calendar formControlName="endDate" dateFormat="mm/yy" [view]="'month'"
+            [disabled]="experienceDialogForm.get('present')?.value" class="form-calendar"></p-calendar>
         </div>
         <div class="form-field checkbox-field">
           <label class="checkbox-label">
@@ -439,11 +457,12 @@
       </div>
 
       <div formArrayName="projects" class="projects-container">
-        <div *ngFor="let proj of projectsArray.controls; let pIndex = index" [formGroupName]="pIndex" class="project-card">
-          
+        @for (proj of projectsArray.controls; track i; let i = $index) {
+        <div [formGroupName]="i" class="project-card">
+
           <div class="project-header">
-            <span class="project-number">Project #{{ pIndex + 1 }}</span>
-            <button type="button" class="icon-btn danger" (click)="removeProject(pIndex)">
+            <span class="project-number">Project #{{ i + 1 }}</span>
+            <button type="button" class="icon-btn danger" (click)="removeProject(i)">
               <i class="material-icons">delete</i>
             </button>
           </div>
@@ -452,7 +471,11 @@
             <div class="form-field">
               <label class="field-label">Project Title</label>
               <input type="text" formControlName="title" placeholder="E-commerce Dashboard" class="form-input">
-              <div class="field-error" *ngIf="isFieldInvalid('title', proj)">Required</div>
+              @if (isFieldInvalid('title', proj)) {
+              <div class="field-error">
+                {{ getErrorText('title', proj) }}
+              </div>
+              }
             </div>
 
             <div class="form-field">
@@ -471,26 +494,26 @@
 
             <div class="form-field">
               <label class="field-label">Description</label>
-              <textarea formControlName="description" rows="2" placeholder="Your contribution" class="form-textarea"></textarea>
+              <textarea formControlName="description" rows="2" placeholder="Your contribution"
+                class="form-textarea"></textarea>
             </div>
 
             <div class="form-field">
               <label class="field-label">Technologies</label>
               <div class="tags-container">
-                <span *ngFor="let tech of getTechs(pIndex); let ti = index" class="tech-tag">
+                @for (tech of getTechs(i); track ti; let ti = $index) {
+                <span class="tech-tag">
                   {{ tech }}
-                  <i class="material-icons" (click)="removeTech(pIndex, ti)">close</i>
+                  <i class="material-icons" (click)="removeTech(i, ti)">close</i>
                 </span>
-                <input 
-                  #techInput 
-                  type="text" 
-                  placeholder="Add technology" 
-                  class="tag-input"
-                  (keydown.enter)="$event.preventDefault(); addTechnology(pIndex, techInput.value); techInput.value=''">
+                }
+                <input #techInput type="text" placeholder="Add technology" class="tag-input"
+                  (keydown.enter)="$event.preventDefault(); addTechnology(i, techInput.value); techInput.value=''">
               </div>
             </div>
           </div>
         </div>
+        }
       </div>
     </div>
   </div>
@@ -507,15 +530,11 @@
 </p-dialog>
 
 <!-- Theme Builder Dialog -->
-<p-dialog 
-  [(visible)]="showThemeBuilder" 
-  [modal]="true"
-  header="Theme Builder"
-  [style]="{width: '95vw', maxWidth: '800px'}"
-  styleClass="admin-dialog">
-  
+<p-dialog [(visible)]="showThemeBuilder" [modal]="true" header="Theme Builder"
+  [style]="{width: '95vw', maxWidth: '800px'}" styleClass="admin-dialog">
+
   <form [formGroup]="customThemeForm" class="dialog-form">
-    
+
     <div class="form-field">
       <label class="field-label">Theme Name</label>
       <input type="text" formControlName="theme_name" placeholder="Midnight Blue" class="form-input">
@@ -523,26 +542,19 @@
 
     <!-- Mode Tabs -->
     <div class="mode-tabs">
-      <button 
-        type="button" 
-        class="mode-tab" 
-        [class.active]="activeTab === 'light'" 
-        (click)="activeTab = 'light'">
+      <button type="button" class="mode-tab" [class.active]="activeTab === 'light'" (click)="activeTab = 'light'">
         <i class="material-icons">light_mode</i>
         <span>Light Mode</span>
       </button>
-      <button 
-        type="button" 
-        class="mode-tab" 
-        [class.active]="activeTab === 'dark'" 
-        (click)="activeTab = 'dark'">
+      <button type="button" class="mode-tab" [class.active]="activeTab === 'dark'" (click)="activeTab = 'dark'">
         <i class="material-icons">dark_mode</i>
         <span>Dark Mode</span>
       </button>
     </div>
 
     <!-- Light Mode Colors -->
-    <div *ngIf="activeTab === 'light'" formGroupName="tokens" class="colors-section">
+    @if (activeTab === 'light') {
+    <div formGroupName="tokens" class="colors-section">
       <div class="color-group">
         <h4 class="group-title">Brand Colors</h4>
         <div class="color-grid">
@@ -614,9 +626,11 @@
         <input type="text" formControlName="primary_glow" placeholder="rgba(74,107,125,0.4)" class="form-input">
       </div>
     </div>
+    }
 
     <!-- Dark Mode Colors -->
-    <div *ngIf="activeTab === 'dark'" formGroupName="dark_tokens" class="colors-section">
+    @if (activeTab === 'dark') {
+    <div formGroupName="dark_tokens" class="colors-section">
       <div class="color-group">
         <h4 class="group-title">Brand Colors</h4>
         <div class="color-grid">
@@ -688,6 +702,7 @@
         <input type="text" formControlName="primary_glow" placeholder="rgba(74,107,125,0.4)" class="form-input">
       </div>
     </div>
+    }
   </form>
 
   <ng-template pTemplate="footer">

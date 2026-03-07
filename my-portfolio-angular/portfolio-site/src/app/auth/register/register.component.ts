@@ -1,14 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, Injector } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, Injector, signal } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, AbstractControl } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../services/auth.service';
 import { CommonApp } from 'src/app/core/services/common';
 
 @Component({
   standalone: true,
   selector: 'app-register',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [ReactiveFormsModule, RouterModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,12 +14,8 @@ import { CommonApp } from 'src/app/core/services/common';
 export class RegisterComponent extends CommonApp {
   private readonly fb = inject(FormBuilder);
 
-  // loading = false;
-  error: string | null = null;
-
-  constructor(public override injector: Injector) {
-    super(injector);
-  }
+  isLoading = signal<boolean>(false);
+  error = signal<string | null>(null);
 
   form: FormGroup = this.fb.group(
     {
@@ -34,59 +28,52 @@ export class RegisterComponent extends CommonApp {
     { validators: [RegisterComponent.passwordsMatchValidator] }
   );
 
-  static passwordsMatchValidator(group: FormGroup) {
+  constructor(public override injector: Injector) {
+    super(injector);
+  }
+
+  static passwordsMatchValidator(group: AbstractControl) {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
-
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
-  get name() {
-    return this.form.get('name');
-  }
-
-  get email() {
-    return this.form.get('email');
-  }
-
-  get password() {
-    return this.form.get('password');
-  }
-
-  get confirmPassword() {
-    return this.form.get('confirmPassword');
-  }
-
-  get acceptTerms() {
-    return this.form.get('acceptTerms');
-  }
+  // Getters for cleaner template access
+  get name() { return this.form.get('name'); }
+  get email() { return this.form.get('email'); }
+  get password() { return this.form.get('password'); }
+  get confirmPassword() { return this.form.get('confirmPassword'); }
+  get acceptTerms() { return this.form.get('acceptTerms'); }
 
   onSubmit(): void {
-    if (this.form.invalid || this.loading) {
+    if (this.form.invalid || this.isLoading()) {
       this.form.markAllAsTouched();
       return;
     }
+    
     const { name, email, password } = this.form.value;
-    this.error = null;
+    this.isLoading.set(true);
+    this.error.set(null);
 
     this.authService.register({ name, email, password }).subscribe({
       next: () => {
+        this.isLoading.set(false);
         this.router.navigate(['/login'], { queryParams: { registered: true } });
       },
       error: (err) => {
-        this.error = err?.message ?? 'Unable to register. Please try again.';
+        this.isLoading.set(false);
+        this.error.set(err?.message ?? 'Unable to register. Please try again.');
       },
     });
   }
 
   onLoginWithGoogle(): void {
-    if (this.loading) {
-      return;
-    }
+    if (this.isLoading()) return;
+    // Implementation logic here
   }
+
   onLoginWithFacebook(): void {
-    if (this.loading) {
-      return;
-    }
+    if (this.isLoading()) return;
+    // Implementation logic here
   }
 }

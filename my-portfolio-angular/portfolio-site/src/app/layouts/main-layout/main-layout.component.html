@@ -9,8 +9,10 @@
     <app-footer></app-footer>
   </div>
 </div>
-<app-chat-bot *ngIf="appConfig.appConfiguration.showAgentChat" [position]="'bottom-right'" [title]="'AiNg Assistant'" [placeholder]="'Ask about my projects...'">
-</app-chat-bot>
+@if (appConfig.appConfiguration.showAgentChat) {
+  <app-chat-bot [position]="'bottom-right'" [title]="'AiNg Assistant'" [placeholder]="'Ask about my projects...'">
+  </app-chat-bot>
+}
 
 
 <app-christmas-animation></app-christmas-animation>

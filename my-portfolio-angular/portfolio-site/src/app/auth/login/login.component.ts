@@ -1,14 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, Injector } from '@angular/core';
-import { CommonModule, NgFor, NgIf } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, Injector, signal } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../services/auth.service';
 import { CommonApp } from 'src/app/core/services/common';
 
 @Component({
   standalone: true,
   selector: 'app-login',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, NgIf],
+  imports: [ReactiveFormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,22 +14,18 @@ import { CommonApp } from 'src/app/core/services/common';
 export class LoginComponent extends CommonApp {
   private readonly fb = inject(FormBuilder);
 
-  isloading: boolean = false;
-  error: string | null = null;
-
-  constructor(public override injector: Injector) {
-    super(injector);
-  }
-
-  ngOnInit() {
-
-  }
+  isloading = signal<boolean>(false);
+  error = signal<string | null>(null);
 
   form: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     rememberMe: [true],
   });
+
+  constructor(public override injector: Injector) {
+    super(injector);
+  }
 
   get email() {
     return this.form.get('email');
@@ -42,13 +36,13 @@ export class LoginComponent extends CommonApp {
   }
 
   onSubmit(): void {
-    if (this.form.invalid || this.isloading) {
+    if (this.form.invalid || this.isloading()) {
       this.form.markAllAsTouched();
       return;
     }
 
     this.loading.show('Authenticating...');
-    this.error = null;
+    this.error.set(null);
 
     this.authService.login(this.form.value).subscribe({
       next: () => {
@@ -56,51 +50,45 @@ export class LoginComponent extends CommonApp {
         this.appService.setRole('ADMIN');
         this.router.navigate(['/app/home']);
       },
-      error: (err) => {
+      error: () => {
         this.loading.hide();
-        this.error = 'Invalid Admin Credentials';
+        this.error.set('Invalid Admin Credentials');
       },
     });
   }
 
   onLoginWithGoogle(): void {
-    this.isloading = true;
+    this.isloading.set(true);
     this.authService.loginWithGoogle().subscribe({
       next: () => {
-        this.isloading = false;
+        this.isloading.set(false);
         this.router.navigateByUrl('/');
       },
       error: (err) => {
-        this.isloading = false;
-        this.error = err?.message ?? 'Google login failed.';
+        this.isloading.set(false);
+        this.error.set(err?.message ?? 'Google login failed.');
       },
     });
   }
 
   onLoginWithFacebook(): void {
-    this.isloading = true;
+    this.isloading.set(true);
     this.authService.loginWithFacebook().subscribe({
       next: () => {
-        this.isloading = false;
+        this.isloading.set(false);
         this.router.navigateByUrl('/');
       },
       error: (err) => {
-        this.isloading = false;
-        this.error = err?.message ?? 'Facebook login failed.';
+        this.isloading.set(false);
+        this.error.set(err?.message ?? 'Facebook login failed.');
       },
     });
   }
 
   onContinueAsGuest(): void {
-    // 1. Set the role signal to GUEST in memory
     this.appService.role.set('GUEST');
-
-    // 2. Clear tokens from both signal and storage to ensure no Admin overlap
     this.appService.token.set(null);
     this.localStorageService.removeItem('auth_token');
-    // Do NOT store 'GUEST' in localStorage as per your security requirement
-
-    // 3. Navigate
     this.router.navigate(['/app/home']);
   }
 }
