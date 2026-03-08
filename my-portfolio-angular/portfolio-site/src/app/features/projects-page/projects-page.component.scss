@@ -1,0 +1,138 @@
+.projects-page { color: var(--global-text-color); }
+.projects-page .portfolio-card {
+  background: var(--global-background-color);
+  border: 1.5px solid var(--global-surface-color);
+  border-radius: var(--global-border-radius-lg);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.projects-page .portfolio-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+}
+.projects-page .portfolio-card-cover {
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--global-surface-color);
+}
+.projects-page .portfolio-card-cover.placeholder {
+  /* Use a simple theme-based gradient as a compatible fallback for browsers that don't support color-mix() */
+  background-image: linear-gradient(135deg, var(--global-primary-color), var(--global-secondary-color));
+  /* If you need translucent tints, add RGBA fallback variables in _variables.scss like --global-primary-color-16 */
+}
+.projects-page .card-header {
+  background: var(--global-background-color);
+  color: var(--global-text-primary);
+  border-bottom: 1px solid var(--global-surface-color);
+  font-weight: 600;
+}
+.projects-page .portfolio-card-content p { margin: .25rem 0 .75rem 0; color: var(--global-text-secondary); }
+.projects-page .portfolio-card-actions {
+  background: var(--global-background-color);
+  border-top: 1px solid var(--global-surface-color);
+  display: flex; align-items: center; flex-wrap: wrap; gap: .25rem .5rem;
+}
+.projects-page .view-project-detail,
+.projects-page .live-demo-btn,
+.projects-page .source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--global-text-primary); /* ensure readable text on all themes */
+  background: transparent;
+  padding: .35rem .6rem;
+  border-radius: var(--global-border-radius-sm);
+  border: 1px solid transparent;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+.projects-page .view-project-detail:hover,
+.projects-page .live-demo-btn:hover,
+.projects-page .source-link:hover {
+  color: var(--global-text-primary);
+  /* background: var(--global-surface-color); */
+  border-color: var(--global-border-color);
+}
+
+/* Button element reset: make sure <button class="view-project-detail"> inherits the styles */
+.projects-page button.view-project-detail {
+  background: transparent;
+  color: var(--global-text-primary);
+  border: none;
+  padding: 0;
+}
+
+.tech-badge {
+  display: inline-block;
+  padding: 0.25em 0.9em;
+  border-radius: 1em;
+  font-size: 0.93em;
+  font-weight: 500;
+  background: var(--global-surface-color);
+  color: var(--global-primary-color);
+  border: 1.5px solid var(--global-primary-color);
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Use color variables for badges */
+.tech-badge.Angular,
+.tech-badge.Angular17,
+.tech-badge.Angular-17 {
+  background: var(--badge-angular);
+  color: var(--badge-angular-text);
+  border-color: var(--badge-angular-text);
+}
+.tech-badge.Angular14,
+.tech-badge.Angular-14 {
+  background: var(--badge-angular);
+  color: var(--badge-angular-text);
+  border-color: var(--badge-angular-text);
+}
+.tech-badge.Java {
+  background: var(--badge-java);
+  color: var(--badge-java-text);
+  border-color: var(--badge-java-text);
+}
+.tech-badge.NET-Core {
+  background: var(--badge-dotnet);
+  color: var(--badge-dotnet-text);
+  border-color: var(--badge-dotnet-text);
+}
+.tech-badge.Bootstrap {
+  background: var(--badge-bootstrap);
+  color: var(--badge-bootstrap-text);
+  border-color: var(--badge-bootstrap-text);
+}
+.tech-badge.Primeng {
+  background: var(--badge-primeng);
+  color: var(--badge-primeng-text);
+  border-color: var(--badge-primeng-text);
+}
+.tech-badge.Custom-CSS {
+  background: var(--badge-customcss);
+  color: var(--badge-customcss-text);
+  border-color: var(--badge-customcss-text);
+}
+.tech-badge.NGRX {
+  background: var(--badge-ngrx);
+  color: var(--badge-ngrx-text);
+  border-color: var(--badge-ngrx-text);
+}
+.tech-badge.ABP-Framework {
+  background: var(--badge-abp);
+  color: var(--badge-abp-text);
+  border-color: var(--badge-abp-text);
+}
+.tech-badge.JavaScript {
+  background: var(--badge-js);
+  color: var(--badge-js-text);
+  border-color: var(--badge-js-text);
+}
+.tech-badge.TypeScript {
+  background: var(--badge-ts);
+  color: var(--badge-ts-text);
+  border-color: var(--badge-ts-text);
+}

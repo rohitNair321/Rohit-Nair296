@@ -1,55 +1,68 @@
-import { DOCUMENT } from '@angular/common';
-import { Component, Input, OnInit, HostListener, Injector, Inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit, HostListener, Injector, Inject, computed } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { BadgeModule } from 'primeng/badge';
+import { defaultConfig, LayoutConfig } from 'src/app/core/config/layout.config';
+import { CommonApp } from 'src/app/core/services/common';
+import { RouterModule } from '@angular/router';
+import { MenuItem } from 'src/app/core/config/menuItem.config';
 
 @Component({
   selector: 'app-sidebar',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CardModule,
+    RadioButtonModule,
+    ButtonModule,
+    BadgeModule,
+    RouterModule,
+  ],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent implements OnInit {
-  @Input() config: any;
+export class SidebarComponent extends CommonApp implements OnInit {
+  // @Input() appConfig: ;
   isSidebarCollapsed = false;
   isRightSideSettingOpen = false;
-  isDarkTheme = false;
   isMobileOpen = false;
   isMobile = false;
   currentSection = '';
-  navigationType: string = '';
-  selectedTheme: string = 'theme-1';
-  availableThemes = [
-    { name: 'Theme 1 (Peachy Warm)', label: 'Peachy Warm', class: 'theme-1', color: '#9B7E6B', selected: false },
-    { name: 'Theme 2 (Blue Modern)', label: 'Blue Modern', class: 'theme-2', color: '#7B61FF', selected: false },
-    { name: 'Theme 3 (Indigo Teal)', label: 'Indigo Teal', class: 'theme-3', color: '#3F8A8F', selected: false },
-    { name: 'Theme 4 (Plum Seafoam)', label: 'Plum Seafoam', class: 'theme-4', color: '#4FA49C', selected: false },
-  ];
-  menuItems = [
-    { label: 'Home', href: '#home', icon: 'home' },
-    { label: 'About', href: '#about', icon: 'person' },
-    { label: 'Projects', href: '#projects', icon: 'work' },
-    { label: 'Contact', href: '#contact', icon: 'mail' },
-  ];
+  navigationType: any = '';
+  brandLocation: any = this.appConfig?.appConfiguration?.logoLocationHeader;
+  isMenuOpen = false;
+  selectedTheme: string = this.appConfig.theme.name;
+  profileData = computed(() => {
+    return (
+      this.appService.profile()
+    );
+  });
+  availableThemes = computed(() => {
+    const profile = this.profileData();
+    const themes = this.normalizeThemesResponse(profile?.themes || []);
+    return themes;
+  });
 
-  constructor(@Inject(DOCUMENT) private document: Document) {
+  notifications = computed(() => {
+    return (
+      this.appService.notifications()
+    );
+  });
 
+  constructor(public override injector: Injector) {
+    super(injector);
   }
 
 
   ngOnInit() {
     this.checkMobile();
-    this.updateCurrentSection();
     window.addEventListener('resize', this.checkMobile.bind(this));
-    this.navigationType = this.config?.appConfiguration?.type === 'sidebar'? 'sidebar' : 'navbar';
-    this.applyTheme(this.config?.theme?.name);
-    this.availableThemes.forEach(theme => {
-      theme.selected = theme.class === this.config?.theme?.name;
-    });
-  }
-
-  @HostListener('window:scroll', ['$event'])
-  onScroll() {
-    if (this.isMobile) {
-      this.updateCurrentSection();
-    }
+    this.navigationType = this.appConfig?.appConfiguration?.type === 'sidebar' ? 'sidebar' : 'navbar';
   }
 
   ngOnDestroy() {
@@ -57,25 +70,8 @@ export class SidebarComponent implements OnInit {
   }
 
   onThemeChange(event: any) {
-    this.config.theme.name = event.class;
-    this.applyTheme(this.config.theme.name);
-    this.availableThemes.forEach(theme => {
-      theme.selected = theme.class === event.class?true:false;
-    });
-  }
-
-  applyTheme(themeClass: string) {
-    const body = this.document.body;
-    this.availableThemes.forEach(theme => {
-      body.classList.remove(theme.class);
-    });
-    body.classList.add(themeClass);
-    // Apply new theme class
-    // body.classList.add(themeClass);
-    // this.selectedTheme = themeClass;
-
-    // Apply dark mode if active
-    body.classList.toggle('dark-mode', this.isDarkTheme);
+    this.appConfig.theme.name = event.name;
+    this.themeService.setTheme(event.id);
   }
 
   checkMobile() {
@@ -83,25 +79,17 @@ export class SidebarComponent implements OnInit {
     if (!this.isMobile) {
       this.isMobileOpen = false;
     }
-    this.config.appConfiguration.isMobile = this.isMobile;
+    this.appConfig.appConfiguration.isMobile = this.isMobile;
   }
 
   toggleSidebarCollapse() {
-    this.config.appConfiguration.collapsed = !this.config.appConfiguration.collapsed;
-    console.log('Sidebar collapsed:', this.config.appConfiguration.collapsed);
+    this.appConfig.appConfiguration.collapsed = !this.appConfig.appConfiguration.collapsed;
+    this.isMenuOpen = !this.appConfig.appConfiguration.collapsed;
+    console.log('Sidebar collapsed:', this.appConfig.appConfiguration.collapsed);
   }
 
   toggleTheme() {
-    this.isDarkTheme = !this.isDarkTheme;
-    document.body.classList.toggle('dark-mode', this.isDarkTheme);
-  }
-
-  scrollToSection(event: Event, href: string) {
-    event.preventDefault();
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    this.themeToggle();
   }
 
   toggleMobile() {
@@ -119,34 +107,42 @@ export class SidebarComponent implements OnInit {
     this.isMobileOpen = false;
   }
 
-  private updateCurrentSection() {
-    // Get all sections
-    const sections = this.menuItems.map(item => ({
-      id: item.href.replace('#', ''),
-      label: item.label
-    }));
-
-    // Find the current section based on scroll position
-    for (const section of sections) {
-      const element = document.getElementById(section.id);
-      if (element) {
-        const rect = element.getBoundingClientRect();
-        if (rect.top <= 100 && rect.bottom >= 100) {
-          this.currentSection = section.label;
-          break;
-        }
-      }
-    }
-  }
-
-  toggleSettingSideBar(){
+  toggleSettingSideBar() {
     this.isRightSideSettingOpen = !this.isRightSideSettingOpen;
   }
 
-  onNavigationTypeChange(navigationType: any) {
-    // Update your config or emit an event to switch navigation type
-    navigationType
-    this.config.appConfiguration.type = this.navigationType;
-    this.isRightSideSettingOpen = false;
+  onNavigationTypeChange() {
+    this.appConfig.appConfiguration.type = this.navigationType;
+    if (this.isMobile) {
+      this.isRightSideSettingOpen = false;
+    }
+  }
+
+  onChangeBrandLocation(brandLocation: boolean) {
+    this.appConfig.appConfiguration.logoLocationHeader = brandLocation;
+    if (this.isMobile) {
+      this.isRightSideSettingOpen = false;
+    }
+  }
+
+  navigateToNotifications() {
+    this.router.navigate(['app/notifications']);
+  }
+
+  selectTheme(theme: any) {
+    this.selectedTheme = theme.name;
+    this.onThemeChange(theme);
+  }
+
+  onMenuItemClick(item: MenuItem) {
+    if (item.actions) {
+      item.actions(this.profileData()?.resume_url);
+    }
+  }
+
+  logout() {
+    this.themeService.isDark.set(false);
+    this.themeService.currentThemeId.set('');
+    this.authService.logout();
   }
 }

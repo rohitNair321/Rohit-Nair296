@@ -1,83 +1,211 @@
-<!-- Menu side bar -->
-<div class="sidebar-container" [class.collapsed]="config.appConfiguration.collapsed" [class.open]="isMobileOpen"
-    [ngClass]="{
-      'none': config?.appConfiguration?.type === 'sidebar' && isMobile && config.appConfiguration.collapsed,
-      '': config?.appConfiguration?.type === 'sidebar' && isMobile && !config.appConfiguration.collapsed,
+<div class="sidebar-container" [class.collapsed]="appConfig.appConfiguration.collapsed" [class.open]="isMobileOpen"
+  [ngClass]="{
+      'none': appConfig.appConfiguration.type === 'sidebar' && isMobile && appConfig.appConfiguration.collapsed,
+      '': appConfig.appConfiguration.type === 'sidebar' && isMobile && !appConfig.appConfiguration.collapsed
+    }">
+  
+  @if (appConfig.appConfiguration.type === 'sidebar') {
+    <div class="sidebar-header">
+      @if (!appConfig.appConfiguration.logoLocationHeader) {
+        <a routerLink="/app/home" class="logo-container">
+          <span class="logo-initials animate-nav-fade-in">
+            <span class="rn-r">R</span><span class="rn-n">N</span>
+          </span>
+          @if (!appConfig.appConfiguration.collapsed) {
+            <span class="logo-name animate-nav-slide-in">
+              <span class="logo-rohit">Rohit</span>
+              <span class="logo-portfolio">Portfolio</span>
+            </span>
+          }
+        </a>
+      }
+      
+      @if (appConfig.appConfiguration.type === 'sidebar' && !appConfig.appConfiguration.collapsed) {
+        <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()">
+          <span class="material-icons menu-icon">{{ !appConfig.appConfiguration.collapsed ? 'close' : 'menu' }}</span>
+        </button>
+      }
+    </div>
 
-    }" *ngIf="config.appConfiguration.type === 'sidebar'">
-  <div class="sidebar-header">
-    <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()" *ngIf="config?.appConfiguration?.type === 'sidebar' && !config.appConfiguration.collapsed">
-      <span class="material-icons">
-        {{ 'close'}}
-      </span>
-    </button>
-  </div>
-  <div class="sidebar-menu" [class.collapsed]="config.appConfiguration.collapsed">
-    <a *ngFor="let item of menuItems" [href]="item.href" class="menu-link" (click)="scrollToSection($event, item.href)">
-      <span class="material-icons menu-icon">{{ item.icon }}</span>
-      <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">{{ item.label }}</span>
-    </a>
-    <a class="resume-download-btn" href="assets/Rohit.Nair.pdf" download>
-      <span class="material-icons menu-icon">download</span>
-      <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Resume</span>
-    </a>
-    <button class="theme-toggle" (click)="toggleTheme()">
-      <span class="material-icons menu-icon">{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</span>
-      <span class="menu-label" *ngIf="!config.appConfiguration.collapsed">Theme</span>
-    </button>
-  </div>
+    <div class="sidebar-menu" [class.collapsed]="appConfig.appConfiguration.collapsed">
+      <div class="menu-list">
+        @for (item of menuItems; track item.key || item.label) {
+          <div class="menu-item" [class.has-sub]="item.subMenu?.length" [class.expanded]="item.expanded">
+            @if (item.subMenu?.length) {
+              <button class="menu-link" (click)="item.expanded = !item.expanded">
+                <span class="material-icons menu-icon">{{ item.icon }}</span>
+                @if (!appConfig.appConfiguration.collapsed) {
+                  <span class="menu-label">
+                    {{ item.label }}
+                  </span>
+                }
+                @if (!appConfig.appConfiguration.collapsed) {
+                  <span class="material-icons chevron">
+                    {{ item.expanded ? 'expand_less' : 'expand_more' }}
+                  </span>
+                }
+              </button>
+            } @else {
+              @if (item.key && !item.action && item.isHide) {
+                <a routerLink="{{item?.routerLink}}" class="menu-link" routerLinkActive="active-item">
+                  @if (item.key === 'notifications') {
+                    <span class="material-icons menu-icon" pBadge severity="info" [value]="notifications()?.unreadCount ?? 0">
+                      notifications
+                    </span>
+                  } @else {
+                    <span class="material-icons menu-icon">
+                      {{ !item.icon ? 'disabled_visible' : item.icon }}
+                    </span>
+                  }
+                  @if (!appConfig.appConfiguration.collapsed) {
+                    <span class="menu-label">{{ item.label }}</span>
+                  }
+                </a>
+              }
+
+              @if (item.key && !item.action && item.href) {
+                <a [href]="item.href" class="menu-link" routerLinkActive="active-item" (click)="scrollToSection($event, item.href)">
+                  <span class="material-icons menu-icon">{{ item.icon }}</span>
+                  @if (!appConfig.appConfiguration.collapsed) {
+                    <span class="menu-label">{{ item.label }}</span>
+                  }
+                </a>
+              }
+
+              @if (item.action) {
+                <a class="menu-link" routerLinkActive="active-item" (click)="onMenuItemClick(item)" [title]="item.tooltip">
+                  <span class="material-icons menu-icon" title="Download Resume">download</span>
+                  @if (!appConfig.appConfiguration.collapsed) {
+                    <span class="menu-label">Resume</span>
+                  }
+                </a>
+              }
+            }
+
+            @if (item.subMenu?.length && item.expanded && !appConfig.appConfiguration.collapsed) {
+              <div class="submenu-list">
+                @for (sub of item.subMenu; track sub.label) {
+                  @if (sub.routerLink) {
+                    <a [routerLink]="sub.routerLink" class="submenu-link" routerLinkActive="active-sub">
+                      <span class="material-icons submenu-icon">{{ sub.icon }}</span>
+                      <span class="submenu-label">{{ sub.label }}</span>
+                    </a>
+                  }
+                  @if (sub.href) {
+                    <a [href]="sub.href" class="submenu-link" (click)="scrollToSection($event, sub.href)">
+                      <span class="material-icons submenu-icon">{{ sub.icon }}</span>
+                      <span class="submenu-label">{{ sub.label }}</span>
+                    </a>
+                  }
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="theme-toggle" (click)="themeService.toggleDarkMode()">
+          <span class="material-icons menu-icon">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+          @if (!appConfig.appConfiguration.collapsed) {
+            <span class="menu-label">Theme</span>
+          }
+        </button>
+        @if (appService.role() !== 'ADMIN') {
+          <button class="theme-toggle" title="Exit" (click)="logout()">
+            <span class="material-icons delete-icon">exit_to_app</span>
+            @if (!appConfig.appConfiguration.collapsed) {
+              <span class="menu-label">Exit</span>
+            }
+          </button>
+        }
+      </div>
+    </div>
+  }
 </div>
 
-<!-- feature side bar, if require custom design can be made if required -->
-<div class="right-side-setting" *ngIf="config.appConfiguration.showSidebarToggle">
- <button class="btn btn-tertiary btn-setting" (click)="toggleSettingSideBar()" *ngIf="!isRightSideSettingOpen">
-  <span class="material-icons material-symbols-outlined setting-icon-rotate">settings</span>
- </button>
-</div>
-<div class="right-side-setting-content" *ngIf="isRightSideSettingOpen">
-  <div class="sidebar-header">
-    <button class="sidebar-collapse-btn" (click)="toggleSettingSideBar()" >
-      <span class="material-icons">
-        {{ 'close'}}
-      </span>
+@if (appConfig.appConfiguration.showSidebarToggle && !isRightSideSettingOpen) {
+  <div class="settings-trigger">
+    <button class="settings-trigger-btn" (click)="toggleSettingSideBar()" aria-label="Open settings">
+      <span class="material-icons">settings</span>
     </button>
   </div>
-  <div class="featurs-content">
-    <span>Use the toggle to switch to sidebar to navbar menu</span>
-    <div class="d-flex gap-3">
-      <div class="flex align-items-center">
-        <p-radioButton (click)="onNavigationTypeChange('sidebar')" 
-            name="navigationType" 
-            value="sidebar" 
-            [(ngModel)]="navigationType" 
-            inputId="sidebar" />
-        <label for="sidebar" class="ml-2">
-            Sidebar
+}
+
+@if (isRightSideSettingOpen) {
+  <aside class="settings-panel">
+    <header class="settings-header">
+      <h3 class="settings-title">Preferences</h3>
+      <button class="settings-close-btn" (click)="toggleSettingSideBar()" aria-label="Close settings">
+        <span class="material-icons">close</span>
+      </button>
+    </header>
+
+    <section class="settings-section">
+      <h4 class="section-title">Navigation Menu</h4>
+      <p class="settings-description">
+        Choose how you want to navigate through the application.
+      </p>
+
+      <div class="radio-group">
+        <label class="radio-option">
+          <p-radioButton name="navigationType" value="sidebar" [(ngModel)]="navigationType" (click)="onNavigationTypeChange()">
+          </p-radioButton>
+          <span>Sidebar Navigation</span>
         </label>
-    </div>
-    
-    <div class="flex align-items-center">
-        <p-radioButton (click)="onNavigationTypeChange('navbar')"
-            name="navigationType" 
-            value="navbar" 
-            [(ngModel)]="navigationType" 
-            inputId="navbar" />
-        <label for="navbar" class="ml-2">
-            Navbar
+
+        <label class="radio-option">
+          <p-radioButton name="navigationType" value="navbar" [(ngModel)]="navigationType" (click)="onNavigationTypeChange()">
+          </p-radioButton>
+          <span>Top Navigation</span>
         </label>
-    </div>
-    </div>
-    <span>Select a Theme</span>
-    <!-- <select [(ngModel)]="selectedTheme" (change)="onThemeChange($event)">
-      <option *ngFor="let theme of availableThemes" [value]="theme.class">
-        {{ theme.label }}
-      </option>
-    </select> -->
-    <div class="d-flex flex-wrap gap-3">
-      <p-button *ngFor="let theme of availableThemes"[ngStyle]="{background: theme.color, color: '#fff', 
-        border: theme.selected?'2px solid var(--global-common-border)':'none', width: '50px', borderRadius: '50px', }"
-         class="custom-theme-btn" (click)="onThemeChange(theme)">
-      </p-button>
-    </div>
-  </div>
-</div>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h4 class="section-title">Portal Brand</h4>
+      <p class="settings-description">
+        Change the portal branding location. Make sure there should be a sync between the <strong>Navigation Menu</strong> and <strong>Portal Brand</strong>
+      </p>
+      <div class="radio-group">
+        <label class="radio-option">
+          <p-radioButton name="brandLocation" [value]="true" [(ngModel)]="brandLocation" (click)="onChangeBrandLocation(true)">
+          </p-radioButton>
+          <span>Header</span>
+        </label>
+
+        <label class="radio-option">
+          <p-radioButton name="brandLocation" [value]="false" [(ngModel)]="brandLocation" (click)="onChangeBrandLocation(false)">
+          </p-radioButton>
+          <span>Sidebar</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <h4 class="section-title">Theme</h4>
+      <p class="settings-description">
+        Select a theme that suits your style.
+      </p>
+
+      <div class="theme-grid">
+        @for (theme of availableThemes(); track theme.id) {
+          <div class="theme-card" [class.active]="themeService.currentThemeId() === theme.id" (click)="onThemeChange(theme)">
+            <div class="theme-preview">
+              <div class="color-dot" [style.background]="theme.tokens['primary']"></div>
+              <div class="color-dot" [style.background]="theme.tokens['accent']"></div>
+              <div class="color-dot shadow" [style.background]="theme.tokens['surface']"></div>
+            </div>
+
+            <div class="theme-info">
+              <span class="theme-name">{{ theme.name }}</span>
+              @if (themeService.currentThemeId() === theme.id) {
+                <i class="material-icons check-icon">check_circle</i>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+  </aside>
+}

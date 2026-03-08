@@ -1,4 +1,4 @@
-@import 'src/styles/_variables.scss';
+// @import 'src/styles/_variables.scss';
 .chat-container {
   z-index: 1000;
   bottom: 30px;
@@ -66,7 +66,7 @@
       flex: 1;
       padding: 15px;
       overflow-y: auto;
-      background: var(--global-surface-color);
+      background: var(--background);
 
       .message {
         margin-bottom: 15px;

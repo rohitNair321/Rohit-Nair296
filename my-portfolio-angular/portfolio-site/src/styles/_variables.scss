@@ -3,7 +3,9 @@
   --global-text-color: var(--global-text-primary);
 
   /* Typography */
-  --global-font-family: 'Inter', sans-serif;
+  --global-font-family: var(--font-family-base);
+
+  // --global-font-family: 'Inter', sans-serif;
   --global-heading-font: 'Poppins', sans-serif;
   --global-body-font: 'Inter', sans-serif;
 
@@ -45,7 +47,6 @@
   --badge-ts: #e3f2fd;
   --badge-ts-text: #1976d2;
 }
-
 
 /* Theme 1 */
 .theme-1 {
@@ -284,11 +285,172 @@
   --global-text-color: var(--global-text-primary);
 }
 
-/* Theme 5 (same as Theme 4) */
-// .theme-5 {
-//   @extend .theme-4;
-// }
+/* Theme 6 - TRON: Ares Duality (Hero vs Villain) */
 
-// .theme-5.dark-mode {
-//   @extend .theme-4.dark-mode;
-// }
+/* === LIGHT MODE === HERO THEME (White/Blue) */
+.theme-5 {
+  /* Core - Heroic Bright */
+  --global-background-color: #ffffff;
+  --global-surface-color: #f5f7ff;
+  --global-border-color: #d0d8ff;
+  --global-common-border: #000000;
+
+  /* Primary Colors - Hero Blue (Protagonist) */
+  --global-primary-color: #0066ff;
+  --global-primary-light: rgba(0, 102, 255, 0.1);
+  --global-primary-dark: #004ccc;
+  
+  /* Secondary Colors - Pure White (Hero) */
+  --global-secondary-color: #2a2a2a;
+  --global-secondary-light: rgba(42, 42, 42, 0.1);
+  --global-common-border: #000000;
+
+  /* Accent Colors - Heroic Accents */
+  --global-accent-color: #00aaff;
+  --global-accent-light: rgba(0, 170, 255, 0.1);
+  --global-error-color: #ff0033;
+  --global-warning-color: #ff8800;
+  --global-success-color: #00aa66;
+
+  /* Text Colors - Dark for readability */
+  --global-text-primary: #1a1a2e;
+  --global-text-secondary: #4a4a6e;
+  --global-text-tertiary: #6a6a8e;
+
+  /* UI Colors */
+  --global-neutral-50: rgba(245, 247, 255, 0.5);
+  --global-neutral-100: rgba(230, 235, 255, 0.8);
+
+  /* Logo Colors - Heroic */
+  --global-logo-bg-gradient-start: #f0f4ff;
+  --global-logo-bg-gradient-end: #e6edff;
+  --global-logo-primary: #0066ff;
+  --global-logo-secondary: #2a2a2a;
+  --global-logo-border-color: rgba(0, 102, 255, 0.3);
+  --global-logo-hover-border-color: rgba(0, 102, 255, 0.6);
+  --global-logo-main-shadow-color: rgba(0, 102, 255, 0.15);
+
+  /* Special Effects - Heroic Grid */
+  --tron-grid-size: 40px;
+  --tron-grid-color: rgba(0, 102, 255, 0.05);
+  --tron-glow-intensity: 1;
+  --tron-scanline-color: rgba(0, 102, 255, 0.08);
+  --tron-data-stream-color: rgba(0, 102, 255, 0.7);
+  
+  /* Animation Speeds */
+  --tron-scan-speed: 8s;
+  --tron-pulse-speed: 3s;
+  --tron-glow-speed: 2s;
+  --tron-data-speed: 5s;
+
+  /* Badges - Hero Theme */
+  --badge-angular: rgba(0, 102, 255, 0.1);
+  --badge-angular-text: #0066ff;
+  --badge-java: rgba(42, 42, 42, 0.1);
+  --badge-java-text: #2a2a2a;
+  --badge-dotnet: rgba(0, 170, 255, 0.1);
+  --badge-dotnet-text: #00aaff;
+  --badge-bootstrap: rgba(0, 76, 204, 0.1);
+  --badge-bootstrap-text: #004ccc;
+  --badge-primeng: rgba(0, 170, 102, 0.1);
+  --badge-primeng-text: #00aa66;
+  --badge-customcss: rgba(255, 136, 0, 0.1);
+  --badge-customcss-text: #ff8800;
+  --badge-ngrx: rgba(255, 0, 51, 0.1);
+  --badge-ngrx-text: #ff0033;
+  --badge-abp: rgba(106, 106, 142, 0.1);
+  --badge-abp-text: #6a6a8e;
+  --badge-js: rgba(255, 204, 0, 0.1);
+  --badge-js-text: #ffcc00;
+  --badge-ts: rgba(0, 150, 255, 0.1);
+  --badge-ts-text: #0096ff;
+
+  --global-text-color: var(--global-text-primary);
+}
+
+/* === DARK MODE === VILLAIN THEME (Red/Black) */
+.theme-5.dark-mode {
+  /* Core - Villainous Dark */
+  --global-background-color: #0a0a0a;
+  --global-surface-color: #1a1a1a;
+  --global-border-color: #333333;
+  --global-common-border: #ffffff;
+
+  /* Primary Colors - Villain Red (Ares) */
+  --global-primary-color: #ff0033;
+  --global-primary-light: rgba(255, 0, 51, 0.15);
+  --global-primary-dark: #cc0029;
+  
+  /* Secondary Colors - Corrupted White (Anti-hero) */
+  --global-secondary-color: #ff5555;
+  --global-secondary-light: rgba(255, 85, 85, 0.1);
+  --global-common-border: #ffffff;
+
+  /* Accent Colors - Villainous Accents */
+  --global-accent-color: #ff3366;
+  --global-accent-light: rgba(255, 51, 102, 0.15);
+  --global-error-color: #ff2255;
+  --global-warning-color: #ffaa33;
+  --global-success-color: #00cc88;
+
+  /* Text Colors - Light for contrast */
+  --global-text-primary: #ffffff;
+  --global-text-secondary: #cccccc;
+  --global-text-tertiary: #999999;
+
+  /* UI Colors */
+  --global-neutral-50: rgba(26, 26, 26, 0.5);
+  --global-neutral-100: rgba(40, 40, 40, 0.8);
+
+  /* Logo Colors - Villainous */
+  --global-logo-bg-gradient-start: #1a0a0a;
+  --global-logo-bg-gradient-end: #2a1a1a;
+  --global-logo-primary: #ff0033;
+  --global-logo-secondary: #ff5555;
+  --global-logo-border-color: rgba(255, 0, 51, 0.4);
+  --global-logo-hover-border-color: rgba(255, 0, 51, 0.7);
+  --global-logo-main-shadow-color: rgba(255, 0, 51, 0.3);
+
+  /* Special Effects - Villain Grid */
+  --tron-grid-size: 40px;
+  --tron-grid-color: rgba(255, 0, 51, 0.08);
+  --tron-glow-intensity: 1.5;
+  --tron-scanline-color: rgba(255, 0, 51, 0.15);
+  --tron-data-stream-color: rgba(255, 0, 51, 0.8);
+  
+  /* Animation Speeds - Slightly faster, more aggressive */
+  --tron-scan-speed: 6s;
+  --tron-pulse-speed: 2s;
+  --tron-glow-speed: 1.5s;
+  --tron-data-speed: 4s;
+
+  /* Badges - Villain Theme */
+  --badge-angular: rgba(255, 0, 51, 0.15);
+  --badge-angular-text: #ff0033;
+  --badge-java: rgba(255, 85, 85, 0.15);
+  --badge-java-text: #ff5555;
+  --badge-dotnet: rgba(255, 51, 102, 0.15);
+  --badge-dotnet-text: #ff3366;
+  --badge-bootstrap: rgba(204, 0, 41, 0.15);
+  --badge-bootstrap-text: #cc0029;
+  --badge-primeng: rgba(0, 204, 136, 0.15);
+  --badge-primeng-text: #00cc88;
+  --badge-customcss: rgba(255, 170, 51, 0.15);
+  --badge-customcss-text: #ffaa33;
+  --badge-ngrx: rgba(255, 34, 85, 0.15);
+  --badge-ngrx-text: #ff2255;
+  --badge-abp: rgba(153, 153, 153, 0.15);
+  --badge-abp-text: #999999;
+  --badge-js: rgba(255, 204, 0, 0.15);
+  --badge-js-text: #ffcc00;
+  --badge-ts: rgba(255, 85, 85, 0.15);
+  --badge-ts-text: #ff5555;
+
+  --global-text-color: var(--global-text-primary);
+}
+
+
+
+
+
+

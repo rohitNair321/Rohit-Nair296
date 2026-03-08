@@ -16,6 +16,56 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-  <app-root></app-root>
+  <app-root>
+    <div class="initial-loader">
+      <div class="spinner-wrapper">
+        <div class="custom-spinner"></div>
+        <div class="loading-text">Initializing Application...</div>
+      </div>
+    </div>
+  </app-root>
+  <style>
+    /* Inline styles so they load instantly with the HTML */
+    .initial-loader {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #0f172a; /* Matches your Login Dark Slate */
+      z-index: 9999;
+    }
+
+    .spinner-wrapper {
+      text-align: center;
+    }
+
+    .custom-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-left-color: #6366f1; /* Indigo from your Login design */
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    .loading-text {
+      color: #94a3b8;
+      font-family: sans-serif;
+      font-weight: 500;
+      letter-spacing: 1px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
 </body>
 </html>

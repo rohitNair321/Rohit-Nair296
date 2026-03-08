@@ -1,131 +1,172 @@
-import { AfterViewInit, Component, ElementRef, Injector, OnInit, Renderer2, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AppService } from 'src/app/auth/services/app.service';
+import { CommonModule } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, Renderer2, computed, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import * as e from 'cors';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { DialogModule } from 'primeng/dialog';
+import { TagModule } from 'primeng/tag';
+import { InputTextModule } from 'primeng/inputtext';
+import { RippleModule } from 'primeng/ripple';
+import { TextareaModule  } from 'primeng/textarea';
+import { Subject, Subscription, switchMap, take, timer } from 'rxjs';
 import { CommonApp } from 'src/app/core/services/common';
+import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
+
+interface Hero {
+  name: string;
+  description: string;
+  skills: string[];
+  profileImage?: string;
+  resume?: string; // URL or blob URL
+}
+interface AboutTeaser { title: string; description: string; photo?: string; resume?: string; }
+interface ContactInfo { headingText?: string; subHeadingText?: string; email?: string; phone?: string; address?: string; }
+interface HomeData { hero: Hero; aboutTeaser?: AboutTeaser; contact?: ContactInfo; }
 
 @Component({
   selector: 'app-home',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterLink,
+    ReactiveFormsModule,
+    CardModule,
+    ButtonModule,
+    RippleModule,
+    InputTextModule,
+    TextareaModule,
+    DialogModule,
+    TagModule
+  ],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.scss'],
+  animations: [
+    trigger('pageAnimations', [
+      transition(':enter', [
+        query('.animate-section', [
+          style({ opacity: 0, transform: 'translateY(20px)' }),
+          stagger(150, [
+            animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+          ])
+        ], { optional: true })
+      ])
+    ])
+  ]
 })
-export class HomeComponent extends CommonApp implements OnInit, AfterViewInit{
-  
-  cardWidth = 320; // px, match your CSS .portfolio-card max-width
-  cardGap = 32;    // px, match your CSS .portfolio-slider-inner gap (2rem = 32px)
-  projectsPerView = 3; // or calculate based on screen size
+export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
 
-  currentProjectIndex = 0;
-  hoveredProject: any = null;
   homeData: any;
-
   contactForm: FormGroup;
-  sending = false;
-  sent = false;
+  projectList: any[] = [];
+  experienceYears = 5;
+  totalProjects = 20;
+  showProjectDialog: boolean = false;
+  send: boolean = false;
+  selectedProject: any = null;
+  showContactDialog = false;
+  profileData = this.appService.profile;
+  pullNotification!: Subscription;
+  private destroy$ = new Subject<void>();
 
   constructor(
     public override injector: Injector,
-    private el: ElementRef,
-    private renderer: Renderer2,
     private fb: FormBuilder,
   ) {
     super(injector);
     this.contactForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(50)]],
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      subject: ['', [Validators.required, Validators.maxLength(60)]],
+      subject: ['', [Validators.required]],
       message: ['', [Validators.required, Validators.maxLength(500)]]
     });
   }
 
   ngOnInit() {
-    this.getData();
-  }
-
-  ngAfterViewInit() {
-    this.runAnimations();
-  }
-
-  runAnimations() {
-    const animatedEls = this.el.nativeElement.querySelectorAll(
-      '.animate-fade-in-left, .animate-fade-in-right, .animate-fade-in-up'
-    );
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            this.renderer.addClass(entry.target, 'in-view');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.2 }
-    );
-    animatedEls.forEach((el: Element) => observer.observe(el));
-  }
-
-  scrollToSection(event: Event, sectionId: string) {
-    event.preventDefault();
-    const element = document.querySelector(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
-
-  visibleProjects() {
-    // Use homeData.projects instead of this.projects
-    return this.homeData?.projects
-      ? this.homeData.projects.slice(this.currentProjectIndex, this.currentProjectIndex + this.projectsPerView)
-      : [];
-  }
-
-  slideLeft() {
-    if (this.currentProjectIndex > 0) {
-      this.currentProjectIndex--;
-    }
-  }
-  slideRight() {
-    if (
-      this.homeData?.projects &&
-      this.currentProjectIndex + this.projectsPerView < this.homeData.projects.length
-    ) {
-      this.currentProjectIndex++;
+    if (this.profileData()) {
+      this.homeData = this.profileData();
+      this.applyThemeFromProfile(this.profileData());
+    } else {
+      this.getMyProfile();
+      if (this.appService.role() === 'ADMIN') {
+        this.getNotifications();
+      }
     }
   }
 
   onSubmitContact() {
-    if (this.contactForm.invalid) {
-      this.contactForm.markAllAsTouched();
-      return;
-    }
-    this.sending = true;
-    this.sent = false;
-
-    // Simulate sending email (replace with real API call)
-    setTimeout(() => {
-      this.sending = false;
-      this.sent = true;
-      this.contactForm.reset();
-      setTimeout(() => this.sent = false, 3000);
-    }, 2000);
+    this.loading.show('Sending your message...');
+    const formData = this.contactForm.value;
+    this.appService.sendContactMessage(formData).pipe(take(1)).subscribe({
+      next: (response) => {
+        this.loading.hide();
+        this.contactForm.reset();
+        this.alertService.showAlert(`Message sent successfully! ${this.profileData()?.full_name} will be notified about it. `, 'success');
+      },
+      error: (err) => {
+        this.loading.hide();
+        console.error('Submission failed', err);
+        this.alertService.showAlert('Failed to send message. Please try again later.', 'error');
+      }
+    });
   }
 
-  get name() { return this.contactForm.get('name'); }
+  get firstName() { return this.contactForm.get('firstName'); }
+  get lastName() { return this.contactForm.get('lastName'); }
   get email() { return this.contactForm.get('email'); }
   get subject() { return this.contactForm.get('subject'); }
   get message() { return this.contactForm.get('message'); }
 
-    
-  getData() {
-    this.services.getCombinedData().subscribe({
-      next: data => {
-        this.homeData = data.home; // Wait for DOM update
-        setTimeout(() => this.runAnimations(), 0);
+  getMyProfile(): void {
+    this.loading.show('Loading profile...');
+    this.appService.getProfile().pipe(take(1)).subscribe({
+      next: (profile) => {
+        this.homeData = profile;
+        this.applyThemeFromProfile(this.profileData());
+        this.loading.hide();
       },
+      error: (e) => {
+        console.error(e.error.message);
+        this.loading.hide();
+      }
     });
   }
 
-  techClass(tech: string): string {
-    return tech.replace(/\s+/g, '-').replace(/[^\w-]/g, '');
+  getNotifications(): void {
+    this.pullNotification = timer(0, 300000).pipe(
+      switchMap(() => this.appService.getNotifications())
+    ).subscribe({
+      next: (notifications) => {
+        if (notifications.unreadCount > 0) {
+          this.alertService.showAlert(`You have ${notifications.unreadCount} notifications`, 'info');
+        }
+      },
+      error: (err) => {
+        this.alertService.showAlert(`Failed to fetch notifications. Please try again later.`, 'error');
+        console.error('Failed to fetch notifications', err);
+      }
+    });
+  }
+
+  goToProjects(){
+    this.alertService.showAlert(`This project page is under development, will be in functional soon!!`, 'info');
+  }
+
+  openProject(project: any) {
+    this.selectedProject = project;
+    this.showProjectDialog = true;
+  }
+
+  aboutMe(){
+    this.router.navigate(['app/about']);
+    // this.alertService.showAlert(`This about me page is under development, will be in functional soon!!`, 'info');
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 }

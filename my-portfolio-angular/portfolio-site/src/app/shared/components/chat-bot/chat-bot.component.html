@@ -1,49 +1,64 @@
 <div class="chat-container" >
   <!-- Chat Button -->
-  <div class="welcome-bubble" *ngIf="showWelcomeBubble">
+   @if (showWelcomeBubble) {
+  <div class="welcome-bubble">
     👋 Hi there! I am AiNg, Need help?
   </div>
+}
   <button class="chat-button" (click)="toggleChat()">
     <i class="fas fa-comment"></i>
   </button>
 
   <!-- Chat Window -->
-  <div class="chat-window" *ngIf="isOpen">
+   @if (isOpen) {
+  <div class="chat-window">
     <div class="chat-header">
       <h3>{{title}}</h3>
       <select class="version-selector" [(ngModel)]="selectedVersion" (change)="onVersionChange($event)">
-        <option *ngFor="let version of versionList" [value]="version.model">{{version.name}}</option>
+        @for (version of versionList; track version) {
+        <option [value]="version.model">{{version.name}}</option>
+        }
       </select>
       <button class="close-btn" (click)="toggleChat()">&times;</button>
     </div>
     
     <div #messagesContainer class="chat-messages">
-      <div *ngFor="let msg of messages" [class.user]="msg.sender === 'user'" [class.loading]="msg?.loading"
+      @for (msg of messages; track msg) {
+      <div [class.user]="msg.sender === 'user'" [class.loading]="msg?.loading"
            [class.error]="msg.error" class="message">
         
         <div class="message-content">
           <!-- Loading indicator -->
-          <div *ngIf="msg.loading" class="typing-indicator">
+           @if (msg.loading) {
+          <div class="typing-indicator">
             <span></span>
             <span></span>
             <span></span>
           </div>
+          }
           
           <!-- Error message -->
-          <div *ngIf="msg.error" class="error-message">
+            @if (msg.error) {
+          <div class="error-message">
             <i class="fas fa-exclamation-triangle"></i> {{msg.text}}
           </div>
+          }
           
           <!-- Normal message -->
-          <div *ngIf="!msg.loading && !msg.error">
+           @if (!msg.loading && !msg.error) {
+          <div>
             {{msg.text}}
           </div>
+          }
         </div>
         
-        <div class="message-time"  *ngIf="!msg.loading">
-          {{msg.timestamp | date:'shortTime'}}
-        </div>
+        @if (!msg.loading && !msg.error) {
+          <div class="message-time">
+            {{msg.timestamp | date:'shortTime'}}
+          </div>
+        }
       </div>
+    }
     </div>
     
     <div class="chat-input">
@@ -54,4 +69,5 @@
       </button>
     </div>
   </div>
+  }
 </div>

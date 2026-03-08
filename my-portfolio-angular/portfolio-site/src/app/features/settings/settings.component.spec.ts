@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SharedModule } from '../../shared/shared.module';
 
 import { SettingsComponent } from './settings.component';
 
@@ -11,7 +10,7 @@ describe('SettingsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ SettingsComponent ],
-      imports: [ReactiveFormsModule, SharedModule]
+      imports: [ReactiveFormsModule]
     })
     .compileComponents();
 

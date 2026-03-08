@@ -6,12 +6,14 @@ export interface LayoutConfig {
     showSidebarToggle?: boolean;
     showAgentChat?: boolean;
     showUserProfileView?: boolean;
+    showNotifications?: boolean;
+    logoLocationHeader?: boolean;
     collapsed?: boolean;
     isMobile: boolean;
     isFixed?: boolean;
   };
   theme: {
-    name: 'theme-1' | 'theme-2' | 'theme-3' | 'theme-4' | 'theme-5';
+    name: string;
     primary: string;
     secondary: string;
     background: string;
@@ -30,9 +32,11 @@ export const defaultConfig: LayoutConfig = {
     type: 'navbar', // or 'sidebar'
     theme: 'light',
     sidebarPosition: 'right',
+    logoLocationHeader: true, // true: header, false: sidebar
     showSidebarToggle: false,
     showAgentChat: false,
     showUserProfileView: false,
+    showNotifications: false,
     collapsed: false,
     isMobile: true,
     isFixed: true,

@@ -1,0 +1,116 @@
+/* =========================================================
+   BASE LAYOUT
+========================================================= */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  /* Reduced from 6rem to handle mobile headers better */
+  padding-top: 70px; 
+}
+
+.main-content {
+  /* width: 100%; */
+  flex: 1; /* Pushes footer to bottom */
+  display: flex;
+  flex-direction: column;
+  transition: all var(--global-transition-speed);
+  position: relative;
+}
+
+/* Base Container behavior */
+main.container {
+  flex: 1;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* =========================================================
+   DESKTOP SIDEBAR LOGIC (Above 900px)
+========================================================= */
+@media (min-width: 901px) {
+  /* Left Sidebar Expanded */
+  .navigation.sidebar + .main-content {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+  }
+
+  /* Left Sidebar Collapsed */
+  .navigation.sidebar.sidebar-collapsed + .main-content {
+    margin-left: 80px;
+    width: calc(100% - 80px);
+  }
+
+  /* Right Sidebar Support */
+  .navigation.sidebar.sidebar-right + .main-content {
+    margin-left: 0;
+    margin-right: 220px;
+    width: calc(100% - 220px);
+  }
+
+  .navigation.sidebar.sidebar-right.sidebar-collapsed + .main-content {
+    margin-right: 80px;
+    width: calc(100% - 80px);
+  }
+
+  /* Top Nav Layout */
+  .navigation.navbar + .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE FIXES (425px to 900px)
+========================================================= */
+@media (max-width: 900px) {
+  .wrapper {
+    padding-top: 80px; /* Tighter fit for mobile */
+  }
+
+  /* Force reset all margins for main content on mobile */
+  .navigation.sidebar + .main-content,
+  .navigation.sidebar.sidebar-collapsed + .main-content,
+  .navigation.sidebar.sidebar-right + .main-content,
+  .navigation.navbar + .main-content {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Fix for alignment on devices like 425px wide */
+  main.container {
+    /* padding: 0 16px !important; Prevents text hitting screen edges */
+    max-width: 100% !important;
+    overflow-x: hidden; /* Prevents accidental horizontal scroll */
+  }
+
+  app-footer {
+    width: 100%;
+    margin-top: auto; /* Ensures footer sticks to bottom if content is short */
+  }
+}
+
+/* =========================================================
+   SPECIFIC HEIGHT ADJUSTMENTS (Under 728px height)
+========================================================= */
+@media (max-height: 728px) {
+  .wrapper {
+    /* Ensure content doesn't get buried if footer is large */
+    height: auto; 
+  }
+}
+
+/* =========================================================
+   UTILITY CLASSES
+========================================================= */
+/* Used when navbar mode is active to give content some breathing room */
+.main-content.m-4 {
+  padding: 1rem;
+}
+
+@media (max-width: 425px) {
+    .main-content.m-4 {
+        padding: 0.5rem; /* Reduce padding on tiny screens */
+    }
+}

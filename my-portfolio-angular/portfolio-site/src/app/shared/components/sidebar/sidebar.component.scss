@@ -1,255 +1,615 @@
+/* =========================================================
+   SIDEBAR CONTAINER
+========================================================= */
 .sidebar-container {
-  position: fixed; // Changed to fixed for sticky behavior
-  height: 100%;
-  width: 220px;
-  min-width: 60px;
-  background: var(--global-background-color);
-  box-shadow: 2px 0 12px rgba(0,0,0,0.07);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 270px;
+  background: linear-gradient(
+    180deg,
+    var(--surface),
+    var(--background)
+  );
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  transition: all 0.3s cubic-bezier(.77,0,.18,1);
-  animation: sidebarSlideIn 0.5s cubic-bezier(.77,0,.18,1) 0.1s both;
   z-index: 1000;
-  left: 0;
-  top: 0;
-
-  &.sidebar-left {
-    left: 0;
-  }
-  
-  &.sidebar-right {
-    right: 0;
-  }
-    
-  &.collapsed {
-    width: 95px;
-    min-width: 60px;
-  }
+  transition: width 0.25s ease, transform 0.25s ease;
 }
 
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 1rem;
-  // background: var(--global-surface-color);
+.sidebar-container.collapsed {
+  width: 80px;
 }
 
-.sidebar-collapse-btn {
-  display: flex;
-  background: transparent;
-  border: none;
-  color: var(--global-text-color);
-}
-
-.none{
+.sidebar-container.none {
   display: none;
 }
 
-// Updated logo styling to match navigation
-.logo-initials {
-  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
-  font-weight: 900;
-  font-size: 2.2rem;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--global-logo-bg-gradient-start) 0%, var(--global-logo-bg-gradient-end) 100%);
-  border: 2.5px solid var(--global-logo-border-color);
-  box-shadow: 0 4px 15px 0 var(--global-logo-main-shadow-color),
-              0 1.5px 0 var(--global-app-background-color) inset;
-  letter-spacing: -3px;
-  user-select: none;
-  transition: box-shadow 0.25s ease-out, border-color 0.25s ease-out;
+/* Mobile open state */
+.sidebar-container.open {
+  transform: translateX(0);
+}
+
+/* =========================================================
+   SIDEBAR HEADER
+========================================================= */
+.sidebar-header {
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar-collapse-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--surface-alt);
+  color: var(--text-primary);
+}
+
+/* =========================================================
+   SIDEBAR MENU
+========================================================= */
+.sidebar-menu {
+  flex: 1;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.35rem;
+}
+
+.menu-icon {
+  
+}
+
+.sidebar-menu.collapsed {
+  align-items: center;
+}
+
+/* =========================================================
+   MENU ITEMS
+========================================================= */
+.menu-link,
+.theme-toggle,
+.resume-download-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 0.75rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.menu-link:hover,
+.theme-toggle:hover,
+.resume-download-btn:hover {
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--primary) 12%, transparent),
+    color-mix(in oklab, var(--accent) 12%, transparent)
+  );
+}
+
+/* Active state (optional future use) */
+.menu-link.active {
+  background: linear-gradient(
+    135deg,
+    var(--primary),
+    var(--accent)
+  );
+  color: var(--background);
+}
+
+/* =========================================================
+   ICONS & LABELS
+========================================================= */
+.menu-icon {
+  font-size: 1.4rem;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.menu-label {
+  white-space: nowrap;
+  font-size: 0.95rem;
+}
+
+/* Hide labels when collapsed */
+.sidebar-container.collapsed .menu-label {
+  display: none;
+}
+
+/* Center icons when collapsed */
+.sidebar-container.collapsed .menu-link,
+.sidebar-container.collapsed .theme-toggle,
+.sidebar-container.collapsed .resume-download-btn {
+  justify-content: center;
+}
+
+/* =========================================================
+   THEME TOGGLE
+========================================================= */
+.theme-toggle {
+  margin-top: auto;
+  width: 100%;
+}
+
+/* =========================================================
+   SETTINGS TRIGGER (FLOATING BUTTON)
+========================================================= */
+.settings-trigger {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 1100;
+}
+
+.settings-trigger-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(
+    135deg,
+    var(--primary),
+    var(--accent)
+  );
+  color: var(--background);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================================================
+   SETTINGS PANEL
+========================================================= */
+.settings-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 320px;
+  background: linear-gradient(
+    180deg,
+    var(--surface),
+    var(--background)
+  );
+  border-left: 1px solid var(--border);
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+.settings-header {
+  height: 56px;
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.settings-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+/* =========================================================
+   CONTENT SECTIONS
+========================================================= */
+.settings-section {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.settings-description {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+/* =========================================================
+   RADIO GROUP
+========================================================= */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+/* =========================================================
+   THEME GRID
+========================================================= */
+.theme-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.theme-swatch {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.theme-swatch.active {
+  border-color: var(--text-primary);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 768px) {
+  .settings-panel {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   THEME SELECTOR BUTTONS
+========================================================= */
+.custom-theme-btn {
+  border-radius: 999px !important;
+  width: 44px;
+  height: 44px;
+  border: 2px solid transparent;
+}
+
+.custom-theme-btn:hover {
+  border-color: var(--border);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 900px) {
+
+  /* Sidebar stays visible */
+  .sidebar-container {
+    width: 80px;              /* collapsed by default */
+  }
+
+  /* Expanded state still works */
+  .sidebar-container:not(.collapsed) {
+    width: 260px;
+  }
+
+  /* Hide labels when collapsed */
+  .sidebar-container.collapsed .menu-label {
+    display: none;
+  }
+
+  /* Center icons when collapsed */
+  .sidebar-container.collapsed .menu-link,
+  .sidebar-container.collapsed .theme-toggle,
+  .sidebar-container.collapsed .resume-download-btn {
+    justify-content: center;
+  }
+
+  /* Reduce padding for mobile */
+  .sidebar-menu {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .sidebar-header {
+    padding: 0 0.5rem;
+  }
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.theme-card {
+  background: var(--surface-alt);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 
   &:hover {
-    box-shadow: 0 7px 22px 0 var(--global-logo-main-shadow-color);
-    border-color: var(--global-logo-hover-border-color);
+    transform: translateY(-2px);
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px var(--primary-glow);
   }
+
+  &.active {
+    border-color: var(--primary);
+    background: var(--surface);
+    
+    .theme-name {
+      color: var(--primary);
+      font-weight: 700;
+    }
+  }
+}
+
+.theme-preview {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  background: rgba(0,0,0,0.05);
+  padding: 6px;
+  border-radius: 6px;
+  
+  .color-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+
+    &.shadow {
+        box-shadow: inset 0 0 4px rgba(0,0,0,0.1);
+    }
+  }
+}
+
+.theme-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .theme-name {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .check-icon {
+    font-size: 14px;
+    color: var(--primary);
+  }
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Removes the underline */
+  color: inherit;       /* Keeps your current text colors */
+  cursor: pointer;
+  gap: 5px;            /* Adjust spacing between initials and name */
+  transition: opacity 0.3s ease;
+}
+
+.logo-container:hover {
+  opacity: 0.8;         /* Subtle visual feedback on hover */
+}
+
+.logo-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  // margin-left: 0.7rem;
+  letter-spacing: 1px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.logo-rohit {
+  color: var(--text-primary);
+}
+
+.logo-portfolio {
+  color: var(--text-secondary);
+  margin-left: 0.2rem;
+}
+
+.logo-initials,
+.logo-name {
+  color: var(--primary);
+}
+
+.logo-initials {
+  /* ... all the usual flex stuff to center it ... */
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  /* Good fonts */
+  font-weight: 900;
+  /* Bold AF */
+  font-size: 2.2rem;
+  width: 52px;
+  /* Kept it the same size */
+  height: 52px;
+  /* Ditto */
+  border-radius: 50%;
+  /* Round boi */
+  background: linear-gradient(135deg, var(--global-logo-bg-gradient-start) 0%, var(--global-logo-bg-gradient-end) 100%);
+  /* That peachy gradient */
+  border: 2.5px solid var(--global-logo-border-color);
+  /* Terracotta border */
+  box-shadow: 0 4px 15px 0 var(--global-logo-main-shadow-color),
+    /* Softer shadow, looks good */
+    0 1.5px 0 var(--global-app-background-color) inset;
+  /* That pop-out shadow thingy */
+  /* ... other stuff like margin, position, etc. ... */
+  letter-spacing: -3px;
+  /* Squishes the letters a bit, looks cool */
+  user-select: none;
+  /* So ppl can't accidentally select it */
+  transition: box-shadow 0.25s ease-out, border-color 0.25s ease-out;
+  /* Smooth moves on hover */
+}
+
+.logo-initials:hover {
+  box-shadow: 0 7px 22px 0 var(--global-logo-main-shadow-color);
+  /* More shadow when you hover, neat! */
+  border-color: var(--global-logo-hover-border-color);
+  /* Border changes color too! */
 }
 
 .rn-r {
-  color: var(--global-logo-letter-r-color);
+  color: var(--primary);
+  /* That sienna brown for R */
   font-size: 2.3rem;
+  /* Same size */
+  /* ... font family, margin for overlap ... */
   z-index: 2;
-  text-shadow: 0.5px 0.5px 0px var(--global-logo-letter-text-shadow);
+  /* R on top! */
+  text-shadow:
+    /* Just a tiny shadow to make it pop a bit */
+    0.5px 0.5px 0px var(--global-logo-letter-text-shadow);
+  letter-spacing: 0;
+  /* Normal spacing for the letter itself */
+  position: relative;
 }
 
 .rn-n {
-  color: var(--global-logo-letter-n-color);
+  color: var(--accent);
+  /* Saddle brown for N */
   font-size: 2.1rem;
+  /* Same size */
+  /* ... font family, margin for overlap ... */
   z-index: 1;
-  text-shadow: 0.5px 0.5px 0px var(--global-logo-letter-text-shadow);
+  /* N underneath R */
+  text-shadow:
+    0.5px 0.5px 0px var(--global-logo-letter-text-shadow);
+  /* Same tiny shadow */
+  letter-spacing: 0;
+  /* Normal spacing here too */
+  position: relative;
 }
 
-.sidebar-menu {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  padding: 1rem;
-  flex: 1;
-  overflow-y: auto;
-  transition: all 0.3s cubic-bezier(.77,0,.18,1);
-  animation: sidebarFadeIn 0.7s cubic-bezier(.77,0,.18,1) 0.2s both;
-
-  &.collapsed {
-    padding: 1rem 0.5rem;
+.menu-item {
+  width: 100%;
+  
+  .menu-link {
+    width: 100%;
+    display: flex;
     align-items: center;
-    .menu-label {
-      display: none;
+    gap: 0.9rem;
+    padding: 0.65rem 0.9rem;
+    border-radius: 0.75rem;
+    color: var(--text-primary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: color-mix(in oklab, var(--primary) 10%, transparent);
+    }
+
+    &.active-item {
+      background: var(--primary);
+      color: var(--background);
+      .menu-icon { color: var(--background); }
     }
   }
+
+  .chevron {
+    margin-left: auto;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+  }
 }
 
-.menu-link, .resume-download-btn, .theme-toggle {
+/* Submenu Styling */
+.submenu-list {
+  display: flex;
+  flex-direction: column;
+  padding-left: 1.5rem; /* Indent sub-items */
+  margin: 0.25rem 0 0.5rem 0.8rem;
+  border-left: 1px solid var(--border); /* Visual guide line */
+  gap: 0.2rem;
+}
+
+.submenu-link {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0.8rem;
-  border-radius: var(--global-border-radius-md);
-  color: var(--global-text-color);
+  gap: 0.7rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.5rem;
+  color: var(--text-secondary);
   text-decoration: none;
-  font-size: 1rem;
-  transition: all 0.2s;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--global-primary-color);
-    opacity: 0;
-    transition: opacity 0.2s;
-    z-index: 0;
-  }
+  font-size: 0.88rem;
+  transition: all 0.2s ease;
 
   &:hover {
-    color: var(--global-background-color);
-    transform: translateX(5px);
-    
-    &::before {
-      opacity: 1;
-    }
+    color: var(--primary);
+    background: color-mix(in oklab, var(--primary) 5%, transparent);
   }
 
-  .menu-icon {
-    position: relative;
-    z-index: 1;
-    font-size: 1.5rem;
-  }
-
-  .menu-label {
-    position: relative;
-    z-index: 1;
+  &.active-sub {
+    color: var(--primary);
+    font-weight: 600;
+    background: color-mix(in oklab, var(--primary) 8%, transparent);
   }
 }
 
-// right setting container
-.right-side-setting {
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  z-index: 1000;
-  right: 0;
-  top: 0;
-  height: 100vh;
+.submenu-icon {
+  font-size: 1.1rem;
+  opacity: 0.8;
 }
 
-.btn-setting{
-  max-width: fit-content;
-  display: flex;
-  justify-content: center;
-}
-
-.setting-icon-rotate {
-  animation: rotate-setting 1.2s linear infinite;
-}
-
-
-@keyframes rotate-setting {
-  0% {
-    transform: rotate(0deg);
+/* Collapsed Sidebar Logic */
+.sidebar-container.collapsed {
+  .submenu-list, .chevron, .menu-label {
+    display: none !important;
   }
-  100% {
-    transform: rotate(360deg);
+  
+  .menu-link {
+    justify-content: center;
+    padding: 0.8rem;
   }
-}
-.right-side-setting-content {
-  position: fixed;
-  display: flex;
-  flex-direction: column;
-  // justify-content: center;
-  background: var(--global-background-color);
-  box-shadow: 2px 0 12px rgba(0,0,0,0.07);
-  z-index: 1000;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 260px;
-}
-
-.featurs-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  color: var(--global-text-color);
-}
-
-.featurs-content label {
-  margin-bottom: unset;
-}
-
-.form-check-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.2rem;
-}
-
-.mat-radio-label label{
-  margin-bottom: unset;
-}
-
-@keyframes sidebarSlideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-40px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0) scale(1);
-  }
-}
-
-@keyframes sidebarFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-::ng-deep .custom-theme-btn .p-button {
-  cursor: pointer;
-  background: inherit !important;
-  color: inherit !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: unset !important;
-}
-
-::ng-deep .custom-theme-btn .p-button:hover,
-::ng-deep .custom-theme-btn .p-button:focus {
-  filter: brightness(0.95);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
 }

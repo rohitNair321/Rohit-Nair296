@@ -1,42 +1,48 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  ViewChild,
-  ElementRef,
-  OnDestroy,
   inject,
-  ViewContainerRef,
-  TemplateRef,
+  computed,
+  Injector,
 } from '@angular/core';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
-import { Router, Event as RouterEvent } from '@angular/router';
-import { Subscription } from 'rxjs';
-
-interface MenuItem {
-  icon?: string;
-  label: string;
-  route?: string;
-  action?: () => void;
-}
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { MenuModule } from 'primeng/menu';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { CommonApp } from 'src/app/core/services/common';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-profile-menu',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CardModule,
+    RadioButtonModule,
+    ButtonModule,
+    MenuModule
+  ],
   templateUrl: './profile-menu.component.html',
   styleUrls: ['./profile-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProfileMenuComponent implements OnDestroy {
-  private overlay = inject(Overlay);
-  private router = inject(Router);
+export class ProfileMenuComponent extends CommonApp {
 
-  @ViewChild('avatarBtn', { static: true }) avatarBtn!: ElementRef<HTMLElement>;
-  @ViewChild('menuPortal') menuPortal!: TemplateRef<any>;
+  profileData = computed(() => {
+    return (
+      this.appService.profile()
+    );
+  });
 
-  overlayRef?: OverlayRef;
-  private routeSub?: Subscription;
-
-  constructor(private viewContainerRef: ViewContainerRef) { }
+  constructor(override injector: Injector) {
+    super(injector);
+  }
 
   user = {
     name: 'Rohit Nair',
@@ -44,88 +50,43 @@ export class ProfileMenuComponent implements OnDestroy {
     avatarUrl: '', // fallback to initials if not present
   };
 
-  readonly menu: MenuItem[] = [
-    { icon: 'account_circle', label: 'My Profile', route: 'user-profile' },
-    { icon: 'settings', label: 'Settings', route: 'user-settings' },
-    { icon: 'help', label: 'Help & Support', route: 'help-and-support' },
+  profileMenuItems: MenuItem[] = [
+    {
+      label: this.user.name,
+      disabled: true,
+      styleClass: 'menu-user-header',
+    },
+    {
+      separator: true,
+    },
+    {
+      label: 'Settings',
+      icon: 'pi pi-cog',
+      command: () => this.navigate('/settings'),
+    },
+    {
+      label: 'Profile',
+      icon: 'pi pi-user',
+      command: () => this.navigate('/profile'),
+    },
+    {
+      separator: true,
+    },
+    {
+      label: 'Logout',
+      icon: 'pi pi-sign-out',
+      command: () => this.logout(),
+      styleClass: 'menu-logout',
+    },
   ];
 
-  toggle(): void {
-    if (this.overlayRef?.hasAttached()) {
-      this.close();
-      return;
-    }
-
-    const positionStrategy = this.overlay.position()
-      .flexibleConnectedTo(this.avatarBtn)
-      .withFlexibleDimensions(false)
-      .withPush(false)
-      .withPositions([
-        { originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top', offsetY: 8 },
-        { originX: 'end', originY: 'top', overlayX: 'end', overlayY: 'bottom', offsetY: -8 },
-      ]);
-
-    this.overlayRef = this.overlay.create({
-      positionStrategy,
-      hasBackdrop: true,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
-      panelClass: 'profile-menu-panel',
-      scrollStrategy: this.overlay.scrollStrategies.reposition(),
-    });
-
-    this.overlayRef.backdropClick().subscribe(() => this.close());
-
-    // Close menu on route change
-    this.routeSub = this.router.events.subscribe(() => this.close());
-
-    this.overlayRef.attach(new TemplatePortal(this.menuPortal, this.viewContainerRef));
-
-    // Focus first focusable element for accessibility
-    setTimeout(() => {
-      const firstFocusable = this.overlayRef!.overlayElement.querySelector(
-        '[tabindex],button,a,input,select,textarea,[href]'
-      ) as HTMLElement | null;
-      firstFocusable?.focus();
-    });
+  navigate(route: string) {
+    this.router.navigateByUrl('app' + route);
   }
 
-  navigate(item: MenuItem): void {
-    if (item.route) {
-      this.router.navigateByUrl(item.route);
-    } else if (item.action) {
-      item.action();
-    }
-    this.close();
+  logout() {
+    this.localStorageService.removeItem('auth_token');
+    this.authService.logout();
   }
 
-  logout(): void {
-    // TODO: Integrate with your auth service
-    // this.auth.logout();
-    this.router.navigateByUrl('/auth/login');
-    this.close();
-  }
-
-  close(): void {
-    if (this.overlayRef?.hasAttached()) {
-      this.overlayRef.detach();
-    }
-    if (this.routeSub) {
-      this.routeSub.unsubscribe();
-      this.routeSub = undefined;
-    }
-  }
-
-  onKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape') {
-      event.stopPropagation();
-      this.close();
-      this.avatarBtn.nativeElement.focus();
-    }
-  }
-
-  ngOnDestroy(): void {
-    if (this.routeSub) {
-      this.routeSub.unsubscribe();
-    }
-  }
 }

@@ -1,9 +1,23 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, HostBinding, OnInit, ViewChild, ElementRef, Injector } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { CommonApp } from 'src/app/core/services/common';
 import { AiRequest } from 'src/app/core/services/open-ai.service';
 
 @Component({
   selector: 'app-chat-bot',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CardModule,
+    RadioButtonModule,
+    ButtonModule,
+  ],
   templateUrl: './chat-bot.component.html',
   styleUrls: ['./chat-bot.component.scss']
 })
@@ -12,21 +26,21 @@ export class ChatBotComponent extends CommonApp implements OnInit {
   @Input() primaryColor = '#3f51b5';
   @Input() title = 'How can I help you?';
   @Input() placeholder = 'Type your message...';
-  
+
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
-  
+
   isOpen = false;
   showWelcomeBubble = true;
   messages: {
-    text: string, 
-    sender: 'user' | 'bot', 
+    text: string,
+    sender: 'user' | 'bot',
     timestamp: Date,
     loading?: boolean,  // Add loading state
     error?: boolean     // Add error state
   }[] = [];
   newMessage: string = '';
   isSending = false;
-  
+
   versionList: any[] = [
     {
       name: 'v1.5-beta',
@@ -85,7 +99,7 @@ export class ChatBotComponent extends CommonApp implements OnInit {
     this.selectedVersion = (event.target as HTMLSelectElement).value;
   }
 
- sendMessage() {
+  sendMessage() {
     const message = this.newMessage.trim();
     if (!message || this.isSending) {
       return;
@@ -145,24 +159,24 @@ export class ChatBotComponent extends CommonApp implements OnInit {
   private scrollToBottom(): void {
     setTimeout(() => {
       try {
-        this.messagesContainer.nativeElement.scrollTop = 
+        this.messagesContainer.nativeElement.scrollTop =
           this.messagesContainer.nativeElement.scrollHeight;
-      } catch(err) { }
+      } catch (err) { }
     }, 100);
   }
 
   private setThemeColors(): void {
     document.documentElement.style.setProperty('--primary-color', this.primaryColor);
-    
+
     // Set complementary text color
     const rgb = parseInt(this.primaryColor.substring(1), 16);
     const r = (rgb >> 16) & 0xff;
-    const g = (rgb >>  8) & 0xff;
-    const b = (rgb >>  0) & 0xff;
+    const g = (rgb >> 8) & 0xff;
+    const b = (rgb >> 0) & 0xff;
     const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-    
+
     document.documentElement.style.setProperty(
-      '--text-on-primary', 
+      '--text-on-primary',
       luminance < 120 ? '#ffffff' : '#000000'
     );
   }

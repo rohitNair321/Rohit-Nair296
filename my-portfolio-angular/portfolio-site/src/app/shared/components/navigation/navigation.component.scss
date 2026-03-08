@@ -1,0 +1,605 @@
+.navigation {
+  background: var(--background);
+  color: var(--text-primary);
+  transition: all var(--global-transition-speed);
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid var(--border);
+
+  &.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: none;
+  }
+
+  .logo-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 0.7rem;
+    vertical-align: middle;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .menu-items {
+    display: flex;
+    align-items: center;
+    gap: var(--global-spacing-xl);
+
+    .menu-link {
+      color: var(--text-primary);
+      padding: var(--global-spacing-xs) 0;
+      position: relative;
+      transition: color var(--global-transition-speed);
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--global-primary-color);
+        transition: width var(--global-transition-speed);
+      }
+
+      &:hover::after {
+        width: 100%;
+        color: var(--primary);
+      }
+    }
+  }
+
+  .menu-toggle,
+  .theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    transition: color var(--global-transition-speed);
+
+    &:hover {
+      color: var(--global-primary-color);
+    }
+
+    .material-icons {
+      font-size: 1.5rem;
+    }
+  }
+
+  .theme-toggle .material-icons {
+    font-size: 1.2rem;
+  }
+
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--global-spacing-md);
+  width: 100%;
+  padding: var(--global-spacing-md) var(--global-spacing-xl);
+
+  .logo {
+    display: flex;
+    position: relative;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+    transition: all 0.3s cubic-bezier(.77, 0, .18, 1);
+  }
+
+  .navbar-stretch {
+    left: unset
+  }
+
+  .sidebar-navbar-expanded {
+    left: 235px
+  }
+
+  .sidebar-navbar-collapsed {
+    left: 55px
+  }
+
+  .desktop-menu {
+    margin-left: auto; // Ensures menu is at the far right
+    display: flex;
+    align-items: center;
+    gap: var(--global-spacing-md);
+
+    .menu-items {
+      display: flex;
+      gap: var(--global-spacing-lg);
+      align-items: center;
+    }
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+    gap: var(--global-spacing-md)
+  }
+}
+
+.resume-download-btn {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.4rem;
+  background: var(--background);
+  color: var(--text-primary);
+  padding: 0.4rem 1rem;
+  border-radius: var(--global-border-radius-md);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: background 0.2s, color 0.2s;
+
+  .material-icons {
+    font-size: 1.2em;
+  }
+
+  &:hover {
+    background: var(--primary);
+    color: var(--text-primary);
+  }
+}
+
+.navigation,
+.navigation .menu-link,
+.navigation .resume-download-btn {
+  color: var(--text-primary);
+}
+
+.logo-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  // margin-left: 0.7rem;
+  letter-spacing: 1px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.logo-rohit {
+  color: var(--text-primary);
+}
+
+.logo-portfolio {
+  color: var(--text-secondary);
+  margin-left: 0.2rem;
+}
+
+.logo-initials,
+.logo-name {
+  color: var(--primary);
+}
+
+
+.logo-initials {
+  /* ... all the usual flex stuff to center it ... */
+  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  /* Good fonts */
+  font-weight: 900;
+  /* Bold AF */
+  font-size: 2.2rem;
+  width: 52px;
+  /* Kept it the same size */
+  height: 52px;
+  /* Ditto */
+  border-radius: 50%;
+  /* Round boi */
+  background: linear-gradient(135deg, var(--global-logo-bg-gradient-start) 0%, var(--global-logo-bg-gradient-end) 100%);
+  /* That peachy gradient */
+  border: 2.5px solid var(--global-logo-border-color);
+  /* Terracotta border */
+  box-shadow: 0 4px 15px 0 var(--global-logo-main-shadow-color),
+    /* Softer shadow, looks good */
+    0 1.5px 0 var(--global-app-background-color) inset;
+  /* That pop-out shadow thingy */
+  /* ... other stuff like margin, position, etc. ... */
+  letter-spacing: -3px;
+  /* Squishes the letters a bit, looks cool */
+  user-select: none;
+  /* So ppl can't accidentally select it */
+  transition: box-shadow 0.25s ease-out, border-color 0.25s ease-out;
+  /* Smooth moves on hover */
+}
+
+.logo-initials:hover {
+  box-shadow: 0 7px 22px 0 var(--global-logo-main-shadow-color);
+  /* More shadow when you hover, neat! */
+  border-color: var(--global-logo-hover-border-color);
+  /* Border changes color too! */
+}
+
+.rn-r {
+  color: var(--primary);
+  /* That sienna brown for R */
+  font-size: 2.3rem;
+  /* Same size */
+  /* ... font family, margin for overlap ... */
+  z-index: 2;
+  /* R on top! */
+  text-shadow:
+    /* Just a tiny shadow to make it pop a bit */
+    0.5px 0.5px 0px var(--global-logo-letter-text-shadow);
+  letter-spacing: 0;
+  /* Normal spacing for the letter itself */
+  position: relative;
+}
+
+.rn-n {
+  color: var(--accent);
+  /* Saddle brown for N */
+  font-size: 2.1rem;
+  /* Same size */
+  /* ... font family, margin for overlap ... */
+  z-index: 1;
+  /* N underneath R */
+  text-shadow:
+    0.5px 0.5px 0px var(--global-logo-letter-text-shadow);
+  /* Same tiny shadow */
+  letter-spacing: 0;
+  /* Normal spacing here too */
+  position: relative;
+}
+
+// Navigation Animations
+@keyframes navFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes navSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-nav-fade-in {
+  opacity: 0;
+  animation: navFadeIn 0.7s cubic-bezier(.77, 0, .18, 1) 0.1s forwards;
+}
+
+.animate-nav-slide-in {
+  opacity: 0;
+  animation: navSlideIn 0.7s cubic-bezier(.77, 0, .18, 1) 0.3s forwards;
+}
+
+@media (max-width: 900px) {
+
+  // .desktop-menu {
+  //   display: none !important;
+  // }
+  .mobile-menu {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background: var(--background);
+    width: 100vw;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    z-index: 1001;
+
+    .menu-items {
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.2rem 1.5rem;
+    }
+  }
+
+  .menu-toggle {
+    display: flex !important;
+    z-index: 1002;
+  }
+}
+
+
+/* Ensure both navbar and sidebar remain sticky */
+.navigation.navbar,
+.navigation.sidebar {
+  position: fixed;
+  top: 0;
+}
+
+.nav-actions {
+  margin-left: auto;
+  /* push to right in a flex row */
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* =========================
+   LOGO STYLING (RN BRAND)
+   ========================= */
+
+.logo-initials {
+  font-family: var(--font-family-heading, inherit);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* R — Primary */
+.logo-initials .rn-r {
+  color: var(--primary);
+  text-shadow:
+    0 0 6px color-mix(in oklab, var(--primary) 40%, transparent);
+}
+
+/* N — Accent */
+.logo-initials .rn-n {
+  color: var(--accent);
+  text-shadow:
+    0 0 6px color-mix(in oklab, var(--accent) 40%, transparent);
+}
+
+/* Full name */
+.logo-name {
+  margin-left: 0.4rem;
+  font-weight: 600;
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+/* Rohit */
+.logo-name .logo-rohit {
+  color: var(--text-primary);
+}
+
+/* Portfolio */
+.logo-name .logo-portfolio {
+  color: var(--text-secondary);
+}
+
+/* Subtle hover polish */
+.navigation:hover .logo-initials .rn-r {
+  text-shadow:
+    0 0 10px color-mix(in oklab, var(--primary) 60%, transparent);
+}
+
+.navigation:hover .logo-initials .rn-n {
+  text-shadow:
+    0 0 10px color-mix(in oklab, var(--accent) 60%, transparent);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Removes the underline */
+  color: inherit;       /* Keeps your current text colors */
+  cursor: pointer;
+  gap: 5px;            /* Adjust spacing between initials and name */
+  transition: opacity 0.3s ease;
+}
+
+.logo-container:hover {
+  opacity: 0.8;         /* Subtle visual feedback on hover */
+}
+
+/* Ensure the spans inside don't break layout */
+.logo-initials, .logo-name {
+  display: inline-flex;
+}
+
+.btn-logout {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  transition: color var(--global-transition-speed);
+
+  &:hover {
+    color: var(--global-primary-color);
+  }
+
+  .material-icons.delete-icon {
+    font-size: 1.5rem;
+  }
+}
+
+/* Desktop Dropdown */
+.nav-dropdown {
+  position: relative;
+  display: inline-block;
+
+  .dropdown-trigger {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--surface);
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    z-index: 1001;
+    padding: 8px 0;
+
+    a {
+      color: var(--text-primary);
+      padding: 10px 16px;
+      text-decoration: none;
+      display: block;
+      font-size: 0.9rem;
+
+      &:hover { background: var(--surface-alt); }
+      &.active-sub { color: var(--primary); font-weight: 600; }
+    }
+  }
+
+  &:hover .dropdown-content { display: block; }
+}
+
+/* Mobile Submenu */
+.mobile-nav-group {
+  width: 100%;
+  
+  .menu-link {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+.mobile-submenu {
+  padding-left: 1.5rem;
+  background: rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+
+  a {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+  }
+}
+
+.mobile-menu {
+  position: fixed;
+  top: 64px; /* Height of your header */
+  right: 0;
+  width: 100%;
+  height: calc(100vh - 64px);
+  background: var(--surface);
+  z-index: 999;
+  overflow-y: auto;
+  box-shadow: -4px 0 15px rgba(0,0,0,0.1);
+
+  .mobile-menu-inner {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.mobile-nav-group {
+  border-radius: 12px;
+  background: var(--background);
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  &.is-expanded {
+    background: color-mix(in oklab, var(--primary) 5%, var(--background));
+  }
+
+  .menu-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+
+    .link-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+  }
+}
+
+.mobile-submenu {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1rem 1rem 2.8rem;
+  gap: 0.8rem;
+
+  .sub-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    
+    .material-icons { font-size: 1.1rem; }
+  }
+}
+
+.mobile-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+
+  .action-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.8rem;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .mobile-resume-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--primary);
+    color: var(--background);
+    padding: 1rem;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+  
+  .mobile-theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 0.8rem;
+    border-radius: 12px;
+  }
+}

@@ -1,17 +1,32 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { AlertComponent } from './shared/components/ui/alert-dialog/alert.component';
+import { SpinnerComponent } from './shared/components/ui/spinner-overlay/spinner.component';
+import { AnalyticsService } from './core/services/analytics.service';
+import { filter } from 'rxjs';
+import { environment } from 'src/environments/environments';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, RouterOutlet, SpinnerComponent, AlertComponent],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  constructor(private router: Router) {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    });
+
+  constructor(private router: Router, private analytics: AnalyticsService) {
+    if (environment.production) {
+      this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
+        this.analytics.trackEvent('page_view', {
+          page_path: event.urlAfterRedirects
+        });
+      });
+    }
+  }
+
+  ngOnInit() {
+
   }
 }
