@@ -10,6 +10,8 @@ import { CardModule } from 'primeng/card';
 import { DialogModule } from '@angular/cdk/dialog';
 import { authInterceptor } from './core/interceptors/app.interceptor';
 import { provideClientHydration } from '@angular/platform-browser';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeng/themes/aura';
 
 export function initApp() {
   return () => Promise.resolve();
@@ -17,6 +19,11 @@ export function initApp() {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    providePrimeNG({ 
+            theme: {
+                preset: Aura
+            }
+        }),
     provideRouter(routes, withHashLocation()),
     provideHttpClient(
       withFetch(),

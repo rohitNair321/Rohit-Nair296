@@ -9,7 +9,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { TextareaModule  } from 'primeng/textarea';
 import { Subject, Subscription, switchMap, take, timer } from 'rxjs';
 import { CommonApp } from 'src/app/core/services/common';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
@@ -36,7 +36,7 @@ interface HomeData { hero: Hero; aboutTeaser?: AboutTeaser; contact?: ContactInf
     ButtonModule,
     RippleModule,
     InputTextModule,
-    InputTextareaModule,
+    TextareaModule,
     DialogModule,
     TagModule
   ],
