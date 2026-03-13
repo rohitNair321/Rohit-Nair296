@@ -21,7 +21,6 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     ReactiveFormsModule,
     CardModule,
     ButtonModule,
