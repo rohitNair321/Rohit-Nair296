@@ -11,6 +11,10 @@ import { CommonApp } from 'src/app/core/services/common';
 import { MenuModule } from "primeng/menu";
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'src/app/core/config/menuItem.config';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
+
+/** Pixel breakpoint that matches app-shell and main-layout. */
+const MOBILE_BREAKPOINT = 900;
 
 @Component({
   selector: 'app-navigation',
@@ -25,7 +29,8 @@ import { MenuItem } from 'src/app/core/config/menuItem.config';
     ProfileMenuComponent,
     MenuModule,
     BadgeModule,
-    RouterModule
+    RouterModule,
+    OverlayBadgeModule
   ],
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss']
@@ -39,13 +44,13 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
   isMobileOpen: boolean = false;
   currentSection!: string;
 
-  @HostBinding('class.sidebar-left') get sidebarLeft() {
-    return this.config?.appConfiguration?.type === 'sidebar' && this.config?.appConfiguration?.sidebarPosition === 'left';
-  }
+  // @HostBinding('class.sidebar-left') get sidebarLeft() {
+  //   return this.config?.appConfiguration?.type === 'sidebar' && this.config?.appConfiguration?.sidebarPosition === 'left';
+  // }
 
-  @HostBinding('class.sidebar-right') get sidebarRight() {
-    return this.config?.appConfiguration?.type === 'sidebar' && this.config?.appConfiguration?.sidebarPosition === 'right';
-  }
+  // @HostBinding('class.sidebar-right') get sidebarRight() {
+  //   return this.config?.appConfiguration?.type === 'sidebar' && this.config?.appConfiguration?.sidebarPosition === 'right';
+  // }
 
   // menuItems = [
   //   { label: 'Home', href: '#home', icon: 'home' },
@@ -53,29 +58,17 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
   //   { label: 'Projects', href: '#projects', icon: 'work' },
   //   { label: 'Contact', href: '#contact', icon: 'mail' },
   // ];
-  profileData = computed(() => {
-    return (
-      this.appService.profile()
-    );
-  });
-  notifications = computed(() => {
-    return (
-      this.appService.notifications()
-    );
-  });
-
+  // ── Computed signals ─────────────────────────────────────────
+  profileData = computed(() => this.appService.profile());
+  notifications = computed(() => this.appService.notifications());
+  private readonly _onResize = this._handleResize.bind(this);
   constructor(public override injector: Injector) {
     super(injector);
   }
 
   ngOnInit() {
-    this.checkMobile();
-    window.addEventListener('resize', this.checkMobile.bind(this));
-
-    // Initialize sidebar state
-    if (this.config?.appConfiguration?.type === 'sidebar') {
-      this.config.appConfiguration.collapsed = this.config?.appConfiguration?.collapsed || false;
-    }
+    this._handleResize();                            // set initial state
+    window.addEventListener('resize', this._onResize);
   }
 
   ngOnDestroy() {
@@ -90,13 +83,13 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
     this.config.appConfiguration.isMobile = this.isMobile;
   }
 
-  toggleMenu() {
+  toggleMenu(): void {
     if (this.config?.appConfiguration?.type === 'navbar') {
-      this.config.appConfiguration.collapsed = !this.config.appConfiguration.collapsed;
-      this.isMenuOpen = !this.config.appConfiguration.collapsed;
+      this.isMenuOpen = !this.isMenuOpen;
     } else if (this.config?.appConfiguration?.type === 'sidebar') {
-      this.config.appConfiguration.collapsed = !this.config.appConfiguration.collapsed;
-      this.isSidebarCollapsedChange.emit(this.config.appConfiguration.collapsed);
+      const next = !this.config.appConfiguration.collapsed;
+      this.config.appConfiguration.collapsed = next;
+      this.isSidebarCollapsedChange.emit(next);
     }
   }
 
@@ -116,30 +109,38 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
     this.themeToggle();
   }
 
-  onMobileItemClick(event: Event, item: MenuItem) {
-    // If the item has a sub-menu, we just toggle it and don't close the main menu
-    if (item.subMenu && item.subMenu.length > 0) {
+  onMobileItemClick(event: Event, item: MenuItem): void {
+    // Sub-menu items: toggle expansion, keep dropdown open
+    if (item.subMenu?.length) {
       item.expanded = !item.expanded;
       return;
     }
-
-    // Handle Section Scrolling (href)
+    // Anchor-scroll items
     if (item.href) {
       event.preventDefault();
       this.scrollToSection(event, item.href);
     }
-
-    // Update UI State
-    this.currentSection = item.label;
-    this.isMenuOpen = false; // Closes the mobile dropdown/overlay
-
-    // If using Sidebar Mobile view
-    this.isMobileOpen = false;
+    this.isMenuOpen = false;
   }
+
 
   onMenuItemClick(item: MenuItem) {
     if (item.actions) {
       item.actions(this.profileData()?.resume_url);
+    }
+  }
+
+  private _handleResize(): void {
+    const nowMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+
+    if (this.isMobile === nowMobile) { return; }  // no change — skip
+
+    this.isMobile = nowMobile;
+    this.config.appConfiguration.isMobile = nowMobile;
+
+    // Close mobile dropdown when growing above breakpoint
+    if (!nowMobile) {
+      this.isMenuOpen = false;
     }
   }
 

@@ -1,211 +1,184 @@
-<div class="sidebar-container" [class.collapsed]="appConfig.appConfiguration.collapsed" [class.open]="isMobileOpen"
-  [ngClass]="{
-      'none': appConfig.appConfiguration.type === 'sidebar' && isMobile && appConfig.appConfiguration.collapsed,
-      '': appConfig.appConfiguration.type === 'sidebar' && isMobile && !appConfig.appConfiguration.collapsed
-    }">
-  
-  @if (appConfig.appConfiguration.type === 'sidebar') {
-    <div class="sidebar-header">
-      @if (!appConfig.appConfiguration.logoLocationHeader) {
-        <a routerLink="/app/home" class="logo-container">
-          <span class="logo-initials animate-nav-fade-in">
-            <span class="rn-r">R</span><span class="rn-n">N</span>
-          </span>
+<!--
+  SIDEBAR COMPONENT
+  ═══════════════════════════════════════════════════════════════
+  Two independent panels, both driven by appConfig tokens:
+
+  LEFT PANEL (.sidebar)
+  ┌──────────────────────┐
+  │ [header: logo+close] │  ← hidden when logoLocationHeader=true
+  ├──────────────────────┤
+  │ [menu items]         │  ← collapses to icon-only
+  ├──────────────────────┤
+  │ [footer: theme+exit] │
+  └──────────────────────┘
+
+  RIGHT PANEL (.settings-panel) — off-canvas, toggled by ⚙ trigger
+  ┌──────────────────────┐
+  │ [header: title+✕]   │
+  ├──────────────────────┤
+  │ Navigation type      │  sidebar ↔ navbar radio
+  ├──────────────────────┤
+  │ Brand location       │  header ↔ sidebar radio
+  ├──────────────────────┤
+  │ Theme picker         │  grid of theme cards
+  └──────────────────────┘
+
+  MENU ITEM DECISION TREE (matches navigation.component.html)
+  ─────────────────────────────────────────────────────────────
+  Type D  item.subMenu?.length       → collapsible group
+  Type C  item.action                → button (Resume)
+  Type B  item.routerLink + isHide   → routerLink (admin-gated)
+  Type A  item.href                  → anchor + scrollToSection
+  ═══════════════════════════════════════════════════════════════
+-->
+
+<!-- ══════════════════════════════════════════════════════
+     LEFT SIDEBAR PANEL
+     ══════════════════════════════════════════════════════ -->
+<aside class="sidebar" [class.sidebar--collapsed]="appConfig.appConfiguration.collapsed"
+  [attr.data-mobile]="appConfig.appConfiguration.isMobile">
+
+  <!-- HEADER: logo + collapse button -->
+  <div class="sidebar__header">
+
+    @if (!appConfig.appConfiguration.logoLocationHeader) {
+    <a routerLink="/app/home" class="sidebar__brand">
+      <span class="logo-initials">
+        <span class="rn-r">R</span><span class="rn-n">N</span>
+      </span>
+      @if (!appConfig.appConfiguration.collapsed) {
+      <span class="logo-name ms-2">
+        <span class="logo-rohit">Rohit</span>
+        <span class="logo-portfolio ms-1">Portfolio</span>
+      </span>
+      }
+    </a>
+    }
+
+    <!-- Collapse toggle — icon-only when collapsed, X when expanded -->
+    <button class="sidebar__collapse-btn" [class.ms-auto]="!appConfig.appConfiguration.logoLocationHeader"
+      (click)="toggleSidebarCollapse()"
+      [title]="appConfig.appConfiguration.collapsed ? 'Expand sidebar' : 'Collapse sidebar'">
+      <span class="material-icons">
+        {{ appConfig.appConfiguration.collapsed ? 'menu' : 'menu_open' }}
+      </span>
+    </button>
+
+  </div>
+
+  <!-- MENU -->
+  <nav class="sidebar__menu" aria-label="Sidebar navigation">
+    <ul class="sidebar__menu-list list-unstyled mb-0">
+
+      @for (item of menuItems; track item.key || item.label) {
+      <li class="sidebar__item" [class.sidebar__item--has-sub]="item.subMenu?.length"
+        [class.sidebar__item--expanded]="item.expanded">
+
+        <!-- Type D: subMenu group -->
+        @if (item.subMenu?.length) {
+        <button class="sidebar__link" (click)="item.expanded = !item.expanded">
+          <span class="material-icons sidebar__icon">{{ item.icon }}</span>
           @if (!appConfig.appConfiguration.collapsed) {
-            <span class="logo-name animate-nav-slide-in">
-              <span class="logo-rohit">Rohit</span>
-              <span class="logo-portfolio">Portfolio</span>
-            </span>
+          <span class="sidebar__label">{{ item.label }}</span>
+          <span class="material-icons sidebar__chevron ms-auto">
+            {{ item.expanded ? 'expand_less' : 'expand_more' }}
+          </span>
+          }
+        </button>
+
+        @if (item.expanded && !appConfig.appConfiguration.collapsed) {
+        <ul class="sidebar__submenu list-unstyled mb-0">
+          @for (sub of item.subMenu; track sub.label) {
+          <li>
+            @if (sub.routerLink) {
+            <a [routerLink]="sub.routerLink" class="sidebar__sub-link" routerLinkActive="active-sub">
+              <span class="material-icons sidebar__sub-icon">{{ sub.icon }}</span>
+              <span>{{ sub.label }}</span>
+            </a>
+            }
+            @if (sub.href) {
+            <a [href]="sub.href" class="sidebar__sub-link" (click)="scrollToSection($event, sub.href)">
+              <span class="material-icons sidebar__sub-icon">{{ sub.icon }}</span>
+              <span>{{ sub.label }}</span>
+            </a>
+            }
+          </li>
+          }
+        </ul>
+        }
+
+        <!-- Type C: action items (Resume) -->
+        } @else if (item.action) {
+        <button class="sidebar__link" (click)="onMenuItemClick(item)" [title]="item.tooltip ?? ''">
+          <span class="material-icons sidebar__icon">{{ item.icon }}</span>
+          @if (!appConfig.appConfiguration.collapsed) {
+          <span class="sidebar__label">{{ item.label }}</span>
+          }
+        </button>
+
+        <!-- Type B: routerLink items — gated by isHide -->
+        } @else if (item.routerLink && item.isHide) {
+        <a [routerLink]="item.routerLink" class="sidebar__link" routerLinkActive="active-item">
+          @if (item.key === 'notifications') {
+          <p-overlaybadge [value]="notifications()?.unreadCount ?? 0" badgeSize="small" severity="info">
+            <span class="material-icons sidebar__icon" style="font-size: 2rem">notifications</span>
+          </p-overlaybadge>
+          
+          } @else {
+          <span class="material-icons sidebar__icon">{{ item.icon || 'circle' }}</span>
+          }
+          @if (!appConfig.appConfiguration.collapsed) {
+          <span class="sidebar__label">{{ item.label }}</span>
           }
         </a>
-      }
-      
-      @if (appConfig.appConfiguration.type === 'sidebar' && !appConfig.appConfiguration.collapsed) {
-        <button class="sidebar-collapse-btn" (click)="toggleSidebarCollapse()">
-          <span class="material-icons menu-icon">{{ !appConfig.appConfiguration.collapsed ? 'close' : 'menu' }}</span>
-        </button>
-      }
-    </div>
 
-    <div class="sidebar-menu" [class.collapsed]="appConfig.appConfiguration.collapsed">
-      <div class="menu-list">
-        @for (item of menuItems; track item.key || item.label) {
-          <div class="menu-item" [class.has-sub]="item.subMenu?.length" [class.expanded]="item.expanded">
-            @if (item.subMenu?.length) {
-              <button class="menu-link" (click)="item.expanded = !item.expanded">
-                <span class="material-icons menu-icon">{{ item.icon }}</span>
-                @if (!appConfig.appConfiguration.collapsed) {
-                  <span class="menu-label">
-                    {{ item.label }}
-                  </span>
-                }
-                @if (!appConfig.appConfiguration.collapsed) {
-                  <span class="material-icons chevron">
-                    {{ item.expanded ? 'expand_less' : 'expand_more' }}
-                  </span>
-                }
-              </button>
-            } @else {
-              @if (item.key && !item.action && item.isHide) {
-                <a routerLink="{{item?.routerLink}}" class="menu-link" routerLinkActive="active-item">
-                  @if (item.key === 'notifications') {
-                    <span class="material-icons menu-icon" pBadge severity="info" [value]="notifications()?.unreadCount ?? 0">
-                      notifications
-                    </span>
-                  } @else {
-                    <span class="material-icons menu-icon">
-                      {{ !item.icon ? 'disabled_visible' : item.icon }}
-                    </span>
-                  }
-                  @if (!appConfig.appConfiguration.collapsed) {
-                    <span class="menu-label">{{ item.label }}</span>
-                  }
-                </a>
-              }
-
-              @if (item.key && !item.action && item.href) {
-                <a [href]="item.href" class="menu-link" routerLinkActive="active-item" (click)="scrollToSection($event, item.href)">
-                  <span class="material-icons menu-icon">{{ item.icon }}</span>
-                  @if (!appConfig.appConfiguration.collapsed) {
-                    <span class="menu-label">{{ item.label }}</span>
-                  }
-                </a>
-              }
-
-              @if (item.action) {
-                <a class="menu-link" routerLinkActive="active-item" (click)="onMenuItemClick(item)" [title]="item.tooltip">
-                  <span class="material-icons menu-icon" title="Download Resume">download</span>
-                  @if (!appConfig.appConfiguration.collapsed) {
-                    <span class="menu-label">Resume</span>
-                  }
-                </a>
-              }
-            }
-
-            @if (item.subMenu?.length && item.expanded && !appConfig.appConfiguration.collapsed) {
-              <div class="submenu-list">
-                @for (sub of item.subMenu; track sub.label) {
-                  @if (sub.routerLink) {
-                    <a [routerLink]="sub.routerLink" class="submenu-link" routerLinkActive="active-sub">
-                      <span class="material-icons submenu-icon">{{ sub.icon }}</span>
-                      <span class="submenu-label">{{ sub.label }}</span>
-                    </a>
-                  }
-                  @if (sub.href) {
-                    <a [href]="sub.href" class="submenu-link" (click)="scrollToSection($event, sub.href)">
-                      <span class="material-icons submenu-icon">{{ sub.icon }}</span>
-                      <span class="submenu-label">{{ sub.label }}</span>
-                    </a>
-                  }
-                }
-              </div>
-            }
-          </div>
-        }
-      </div>
-
-      <div class="sidebar-footer">
-        <button class="theme-toggle" (click)="themeService.toggleDarkMode()">
-          <span class="material-icons menu-icon">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+        <!-- Type A: href scroll-links (always visible) -->
+        } @else if (item.href) {
+        <a [href]="item.href" class="sidebar__link" (click)="scrollToSection($event, item.href)">
+          <span class="material-icons sidebar__icon">{{ item.icon }}</span>
           @if (!appConfig.appConfiguration.collapsed) {
-            <span class="menu-label">Theme</span>
+          <span class="sidebar__label">{{ item.label }}</span>
           }
-        </button>
-        @if (appService.role() !== 'ADMIN') {
-          <button class="theme-toggle" title="Exit" (click)="logout()">
-            <span class="material-icons delete-icon">exit_to_app</span>
-            @if (!appConfig.appConfiguration.collapsed) {
-              <span class="menu-label">Exit</span>
-            }
-          </button>
+        </a>
         }
-      </div>
-    </div>
-  }
-</div>
 
-@if (appConfig.appConfiguration.showSidebarToggle && !isRightSideSettingOpen) {
-  <div class="settings-trigger">
-    <button class="settings-trigger-btn" (click)="toggleSettingSideBar()" aria-label="Open settings">
-      <span class="material-icons">settings</span>
+      </li>
+      }
+
+    </ul>
+  </nav>
+
+  <!-- FOOTER: theme toggle + logout -->
+  <div class="sidebar__footer">
+    <button class="sidebar__link sidebar__link--footer w-100" (click)="themeService.toggleDarkMode()">
+      <span class="material-icons sidebar__icon">
+        {{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}
+      </span>
+      @if (!appConfig.appConfiguration.collapsed) {
+      <span class="sidebar__label">
+        {{ themeService.isDark() ? 'Light Mode' : 'Dark Mode' }}
+      </span>
+      }
     </button>
+
+    @if (appService.role() !== 'ADMIN') {
+    <button class="sidebar__link sidebar__link--footer sidebar__link--danger w-100" title="Exit" (click)="logout()">
+      <span class="material-icons sidebar__icon">exit_to_app</span>
+      @if (!appConfig.appConfiguration.collapsed) {
+      <span class="sidebar__label">Exit</span>
+      }
+    </button>
+    }
   </div>
-}
 
-@if (isRightSideSettingOpen) {
-  <aside class="settings-panel">
-    <header class="settings-header">
-      <h3 class="settings-title">Preferences</h3>
-      <button class="settings-close-btn" (click)="toggleSettingSideBar()" aria-label="Close settings">
-        <span class="material-icons">close</span>
-      </button>
-    </header>
+</aside>
 
-    <section class="settings-section">
-      <h4 class="section-title">Navigation Menu</h4>
-      <p class="settings-description">
-        Choose how you want to navigate through the application.
-      </p>
 
-      <div class="radio-group">
-        <label class="radio-option">
-          <p-radioButton name="navigationType" value="sidebar" [(ngModel)]="navigationType" (click)="onNavigationTypeChange()">
-          </p-radioButton>
-          <span>Sidebar Navigation</span>
-        </label>
-
-        <label class="radio-option">
-          <p-radioButton name="navigationType" value="navbar" [(ngModel)]="navigationType" (click)="onNavigationTypeChange()">
-          </p-radioButton>
-          <span>Top Navigation</span>
-        </label>
-      </div>
-    </section>
-
-    <section class="settings-section">
-      <h4 class="section-title">Portal Brand</h4>
-      <p class="settings-description">
-        Change the portal branding location. Make sure there should be a sync between the <strong>Navigation Menu</strong> and <strong>Portal Brand</strong>
-      </p>
-      <div class="radio-group">
-        <label class="radio-option">
-          <p-radioButton name="brandLocation" [value]="true" [(ngModel)]="brandLocation" (click)="onChangeBrandLocation(true)">
-          </p-radioButton>
-          <span>Header</span>
-        </label>
-
-        <label class="radio-option">
-          <p-radioButton name="brandLocation" [value]="false" [(ngModel)]="brandLocation" (click)="onChangeBrandLocation(false)">
-          </p-radioButton>
-          <span>Sidebar</span>
-        </label>
-      </div>
-    </section>
-
-    <section class="settings-section">
-      <h4 class="section-title">Theme</h4>
-      <p class="settings-description">
-        Select a theme that suits your style.
-      </p>
-
-      <div class="theme-grid">
-        @for (theme of availableThemes(); track theme.id) {
-          <div class="theme-card" [class.active]="themeService.currentThemeId() === theme.id" (click)="onThemeChange(theme)">
-            <div class="theme-preview">
-              <div class="color-dot" [style.background]="theme.tokens['primary']"></div>
-              <div class="color-dot" [style.background]="theme.tokens['accent']"></div>
-              <div class="color-dot shadow" [style.background]="theme.tokens['surface']"></div>
-            </div>
-
-            <div class="theme-info">
-              <span class="theme-name">{{ theme.name }}</span>
-              @if (themeService.currentThemeId() === theme.id) {
-                <i class="material-icons check-icon">check_circle</i>
-              }
-            </div>
-          </div>
-        }
-      </div>
-    </section>
-  </aside>
-}
+<!-- ══════════════════════════════════════════════════════
+     NOTE: The settings trigger (⚙) and the right-side
+     preferences panel are rendered in main-layout.component.html
+     as viewport-level fixed overlays — outside the grid and
+     outside this component's off-canvas stacking context.
+     This component emits (settingsPanelChange) when the
+     internal state needs to toggle.
+     ══════════════════════════════════════════════════════ -->

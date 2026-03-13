@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, HostListener, Injector, Inject, computed } from '@angular/core';
+import { Component, Input, OnInit, HostListener, Injector, Inject, computed, EventEmitter, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -9,6 +9,10 @@ import { defaultConfig, LayoutConfig } from 'src/app/core/config/layout.config';
 import { CommonApp } from 'src/app/core/services/common';
 import { RouterModule } from '@angular/router';
 import { MenuItem } from 'src/app/core/config/menuItem.config';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
+
+/** Matches app-shell + navigation breakpoint. */
+const MOBILE_BREAKPOINT = 900;
 
 @Component({
   selector: 'app-sidebar',
@@ -22,37 +26,46 @@ import { MenuItem } from 'src/app/core/config/menuItem.config';
     ButtonModule,
     BadgeModule,
     RouterModule,
+    OverlayBadgeModule 
   ],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent extends CommonApp implements OnInit {
-  // @Input() appConfig: ;
+  // @Input() appConfig;
   isSidebarCollapsed = false;
   isRightSideSettingOpen = false;
   isMobileOpen = false;
   isMobile = false;
   currentSection = '';
-  navigationType: any = '';
-  brandLocation: any = this.appConfig?.appConfiguration?.logoLocationHeader;
   isMenuOpen = false;
   selectedTheme: string = this.appConfig.theme.name;
-  profileData = computed(() => {
-    return (
-      this.appService.profile()
-    );
-  });
+  @Output() collapseChange = new EventEmitter<boolean>();
+  profileData = computed(() => this.appService.profile());
+  notifications = computed(() => this.appService.notifications());
   availableThemes = computed(() => {
     const profile = this.profileData();
-    const themes = this.normalizeThemesResponse(profile?.themes || []);
-    return themes;
+    return this.normalizeThemesResponse(profile?.themes ?? []);
   });
 
-  notifications = computed(() => {
-    return (
-      this.appService.notifications()
-    );
-  });
+  // ── Local mirror of config fields for two-way radio bindings ─
+  /** ngModel binding for the navigation-type radio group. */
+  get navigationType(): string {
+    return this.appConfig?.appConfiguration?.type ?? 'sidebar';
+  }
+  set navigationType(val: string) {
+    this.appConfig.appConfiguration.type = val as 'sidebar' | 'navbar';
+  }
+
+  /** ngModel binding for the brand-location radio group. */
+  get brandLocation(): boolean {
+    return this.appConfig?.appConfiguration?.logoLocationHeader ?? false;
+  }
+  set brandLocation(val: boolean) {
+    this.appConfig.appConfiguration.logoLocationHeader = val;
+  }
+
+  private readonly _onResize = this._handleResize.bind(this);
 
   constructor(public override injector: Injector) {
     super(injector);
@@ -60,18 +73,17 @@ export class SidebarComponent extends CommonApp implements OnInit {
 
 
   ngOnInit() {
-    this.checkMobile();
-    window.addEventListener('resize', this.checkMobile.bind(this));
-    this.navigationType = this.appConfig?.appConfiguration?.type === 'sidebar' ? 'sidebar' : 'navbar';
+    this._handleResize();
+    window.addEventListener('resize', this._onResize);
   }
 
   ngOnDestroy() {
     window.removeEventListener('resize', this.checkMobile.bind(this));
   }
 
-  onThemeChange(event: any) {
-    this.appConfig.theme.name = event.name;
-    this.themeService.setTheme(event.id);
+  onThemeChange(theme: any) {
+    this.appConfig.theme.name = theme.name;
+    this.themeService.setTheme(theme.id);
   }
 
   checkMobile() {
@@ -83,9 +95,9 @@ export class SidebarComponent extends CommonApp implements OnInit {
   }
 
   toggleSidebarCollapse() {
-    this.appConfig.appConfiguration.collapsed = !this.appConfig.appConfiguration.collapsed;
-    this.isMenuOpen = !this.appConfig.appConfiguration.collapsed;
-    console.log('Sidebar collapsed:', this.appConfig.appConfiguration.collapsed);
+    const next = !this.appConfig.appConfiguration.collapsed;
+    this.appConfig.appConfiguration.collapsed = next;
+    this.collapseChange.emit(next);
   }
 
   toggleTheme() {
@@ -112,15 +124,16 @@ export class SidebarComponent extends CommonApp implements OnInit {
   }
 
   onNavigationTypeChange() {
-    this.appConfig.appConfiguration.type = this.navigationType;
-    if (this.isMobile) {
+    // navigationType setter already wrote to appConfig.
+    // Close panel on mobile to avoid covering the new layout.
+    if (this.appConfig.appConfiguration.isMobile) {
       this.isRightSideSettingOpen = false;
     }
   }
 
   onChangeBrandLocation(brandLocation: boolean) {
     this.appConfig.appConfiguration.logoLocationHeader = brandLocation;
-    if (this.isMobile) {
+    if (this.appConfig.appConfiguration.isMobile) {
       this.isRightSideSettingOpen = false;
     }
   }
@@ -144,5 +157,16 @@ export class SidebarComponent extends CommonApp implements OnInit {
     this.themeService.isDark.set(false);
     this.themeService.currentThemeId.set('');
     this.authService.logout();
+  }
+
+  private _handleResize(): void {
+    const nowMobile = window.innerWidth <= MOBILE_BREAKPOINT;
+    if (this.appConfig.appConfiguration.isMobile === nowMobile) { return; }
+    this.appConfig.appConfiguration.isMobile = nowMobile;
+
+    // When growing back to desktop, close the mobile overlay
+    if (!nowMobile) {
+      this.isRightSideSettingOpen = false;
+    }
   }
 }
