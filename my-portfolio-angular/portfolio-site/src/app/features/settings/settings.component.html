@@ -26,7 +26,11 @@
       <i class="material-icons">person</i>
       <span>Profile</span>
     </button>
-
+    <button type="button" class="tab-btn" [class.active]="activeSettingTab === 'aiChatMonitoring'"
+      (click)="activeSettingTab = 'aiChatMonitoring'">
+      <i class="material-icons">monitor_heart</i>
+      <span>AI chat Monitoring</span>
+    </button>
     <!-- Add more tabs here in future -->
     <!-- Example: -->
     <button type="button" class="tab-btn" [class.active]="activeSettingTab === 'monitoring'"
@@ -287,9 +291,9 @@
                   </button>
                 </div>
                 @if (passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched) {
-                  <div class="field-error">
-                    {{ passwordForm.get('currentPassword')?.hasError('required') ? 'Required' : 'Min 6 characters' }}
-                  </div>
+                <div class="field-error">
+                  {{ passwordForm.get('currentPassword')?.hasError('required') ? 'Required' : 'Min 6 characters' }}
+                </div>
                 }
               </div>
 
@@ -303,9 +307,9 @@
                   </button>
                 </div>
                 @if (passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched) {
-                  <div class="field-error">
-                    {{ passwordForm.get('newPassword')?.hasError('required') ? 'Required' : 'Min 6 characters' }}
-                  </div>
+                <div class="field-error">
+                  {{ passwordForm.get('newPassword')?.hasError('required') ? 'Required' : 'Min 6 characters' }}
+                </div>
                 }
               </div>
 
@@ -332,26 +336,26 @@
           <div class="card-body">
             <div class="theme-list">
               @for (theme of themesList; track $index) {
-                <div class="theme-option"
-                  [class.selected]="themeService.currentThemeId() === theme.id" (click)="selectAndSaveTheme(theme)">
-                  @if (themeService.currentThemeId() === theme.id) {
-                    <i class="material-icons check-icon">check_circle</i>
-                  }
-                  <div class="theme-colors">
-                    <span class="color-dot" [style.background]="theme.tokens.primary"></span>
-                    <span class="color-dot" [style.background]="theme.tokens.accent"></span>
-                    <span class="color-dot" [style.background]="theme.tokens.surface"></span>
-                  </div>
-                  <span class="theme-label">{{ theme.name }}</span>
-                  <div class="theme-buttons">
-                    <button type="button" class="icon-btn-small" (click)="editTheme(theme); $event.stopPropagation()">
-                      <i class="material-icons">edit</i>
-                    </button>
-                    <button type="button" class="icon-btn-small danger" (click)="deleteTheme(theme.id, $event)">
-                      <i class="material-icons">delete_outline</i>
-                    </button>
-                  </div>
+              <div class="theme-option" [class.selected]="themeService.currentThemeId() === theme.id"
+                (click)="selectAndSaveTheme(theme)">
+                @if (themeService.currentThemeId() === theme.id) {
+                <i class="material-icons check-icon">check_circle</i>
+                }
+                <div class="theme-colors">
+                  <span class="color-dot" [style.background]="theme.tokens.primary"></span>
+                  <span class="color-dot" [style.background]="theme.tokens.accent"></span>
+                  <span class="color-dot" [style.background]="theme.tokens.surface"></span>
                 </div>
+                <span class="theme-label">{{ theme.name }}</span>
+                <div class="theme-buttons">
+                  <button type="button" class="icon-btn-small" (click)="editTheme(theme); $event.stopPropagation()">
+                    <i class="material-icons">edit</i>
+                  </button>
+                  <button type="button" class="icon-btn-small danger" (click)="deleteTheme(theme.id, $event)">
+                    <i class="material-icons">delete_outline</i>
+                  </button>
+                </div>
+              </div>
               }
             </div>
             <button type="button" class="btn-secondary full-width" (click)="saveThemePreference()">
@@ -361,6 +365,15 @@
         </section>
 
       </aside>
+    </div>
+  </div>
+  }
+  @if (activeSettingTab === 'aiChatMonitoring') {
+  <div class="tab-content">
+    <div class="content-grid">
+      <div class="main-content">
+        <p style="color: var(--primary);">{{'AI chat management section will be coming soon...'}}</p>
+      </div>
     </div>
   </div>
   }

@@ -17,6 +17,7 @@ export class AppService {
     role = signal<UserRole>(null);
     private readonly apiProfileUrl = environment.baseUrl + '/api/profile';
     private readonly apiContactUrl = environment.baseUrl + '/api/contact';
+    private readonly apiAIChatUrl = environment.baseUrl + '/api/ai/chat';
 
     _profile = signal<Profile | null>(null);
     readonly profile: Signal<Profile | null> = this._profile;
@@ -104,10 +105,16 @@ export class AppService {
         return hasToken || isGuest;
     }
 
-    intialAppState(){
+    intialAppState() {
         this.appState.set(initialState);
         this.localStorageService.clear();
     }
+
+    aiChat(message: string, sessionId: string | null): Observable<AiChatResponse> {
+        return this.http.post<AiChatResponse>(this.apiAIChatUrl, { message, sessionId, userId: this.profile()?.id, role: this.role() });
+    }
+
+
 }
 
 interface AppState {
@@ -217,4 +224,10 @@ export interface ThemeDefinition {
     name: string;
     tokens: Record<string, string>;
     darkTokens?: Record<string, string>;
+}
+
+interface AiChatResponse {
+  response: string;
+  sessionId: string;
+  limitReached?: boolean;
 }

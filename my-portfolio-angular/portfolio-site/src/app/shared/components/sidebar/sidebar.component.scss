@@ -1,593 +1,256 @@
-/* =========================================================
-   SIDEBAR CONTAINER
-========================================================= */
-.sidebar-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 270px;
-  background: linear-gradient(
-    180deg,
-    var(--surface),
-    var(--background)
-  );
+/* =============================================================
+   SIDEBAR COMPONENT
+   =============================================================
+   BEM blocks:  .sidebar   (left nav panel)
+                .settings-trigger  (floating ⚙ button)
+                .settings-panel    (right preferences panel)
+
+   COLOR TOKEN MAP (API → CSS var, same as navigation)
+   ─────────────────────────────────────────────────────────────
+   background        → --background
+   surface           → --surface
+   surface-alt       → --surface-alt
+   text-primary      → --text-primary
+   text-secondary    → --text-secondary
+   text-muted        → --text-muted
+   primary           → --primary
+   accent            → --accent
+   primary-glow      → --primary-glow
+   border            → --border
+   error             → --error
+   logo-primary      → --logo-primary
+   logo-secondary    → --logo-secondary
+   logo-border       → --logo-border
+   logo-border-hover → --logo-border-hover
+   logo-shadow       → --logo-shadow
+   ─────────────────────────────────────────────────────────────
+   Layout tokens (--sidebar-width, --topbar-height, etc.) come
+   from the global _layout-tokens.scss, NOT from :root here.
+   ============================================================= */
+
+// ── Host fills the sidebar grid cell exactly ─────────────────
+:host {
+  display: block;
+  height: 100%;
+}
+
+/* =============================================================
+   LEFT SIDEBAR PANEL
+   ============================================================= */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: var(--sidebar-width, 240px);
+  background: linear-gradient(180deg, var(--surface) 0%, var(--background) 100%);
+  // Default: always anchored to the LEFT — border on the right edge
   border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  z-index: 1000;
-  transition: width 0.25s ease, transform 0.25s ease;
+  border-left: none;
+  transition: width var(--layout-transition, 0.25s ease);
+  overflow: hidden;
+
+  // Right-position variant — only applied when sidebarPosition === 'right'
+  // Flips the visible border to the left edge
+  &--right {
+    border-right: none;
+    border-left: 1px solid var(--border);
+  }
+
+  // Collapsed state — icon-only width
+  &--collapsed {
+    width: var(--sidebar-width-collapsed, 72px);
+  }
 }
 
-.sidebar-container.collapsed {
-  width: 80px;
-}
-
-.sidebar-container.none {
-  display: none;
-}
-
-/* Mobile open state */
-.sidebar-container.open {
-  transform: translateX(0);
-}
-
-/* =========================================================
-   SIDEBAR HEADER
-========================================================= */
-.sidebar-header {
-  height: 64px;
+// ── Sidebar Header ────────────────────────────────────────────
+.sidebar__header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.5rem;
+  height: var(--topbar-height, 64px);
+  padding: 0 0.85rem;
   border-bottom: 1px solid var(--border);
-}
-
-.sidebar-collapse-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  cursor: pointer;
-  border-radius: 50%;
-  display: flex;
-}
-
-.sidebar-collapse-btn:hover {
-  background: var(--surface-alt);
-  color: var(--text-primary);
-}
-
-/* =========================================================
-   SIDEBAR MENU
-========================================================= */
-.sidebar-menu {
-  flex: 1;
-  padding: 1rem 0.75rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 0.35rem;
-}
-
-.menu-icon {
-  
-}
-
-.sidebar-menu.collapsed {
-  align-items: center;
-}
-
-/* =========================================================
-   MENU ITEMS
-========================================================= */
-.menu-link,
-.theme-toggle,
-.resume-download-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  padding: 0.6rem 0.9rem;
-  border-radius: 0.75rem;
-  color: var(--text-primary);
-  text-decoration: none;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-}
-
-.menu-link:hover,
-.theme-toggle:hover,
-.resume-download-btn:hover {
-  background: linear-gradient(
-    135deg,
-    color-mix(in oklab, var(--primary) 12%, transparent),
-    color-mix(in oklab, var(--accent) 12%, transparent)
-  );
-}
-
-/* Active state (optional future use) */
-.menu-link.active {
-  background: linear-gradient(
-    135deg,
-    var(--primary),
-    var(--accent)
-  );
-  color: var(--background);
-}
-
-/* =========================================================
-   ICONS & LABELS
-========================================================= */
-.menu-icon {
-  font-size: 1.4rem;
-  color: var(--accent);
   flex-shrink: 0;
 }
 
-.menu-label {
-  white-space: nowrap;
-  font-size: 0.95rem;
+// Brand link
+.sidebar__brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  overflow: hidden;
+  transition: opacity 0.2s ease;
+
+  &:hover { opacity: 0.8; }
 }
 
-/* Hide labels when collapsed */
-.sidebar-container.collapsed .menu-label {
-  display: none;
-}
-
-/* Center icons when collapsed */
-.sidebar-container.collapsed .menu-link,
-.sidebar-container.collapsed .theme-toggle,
-.sidebar-container.collapsed .resume-download-btn {
+// Collapse toggle button
+.sidebar__collapse-btn {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 8px;
+  transition: color var(--global-transition-speed),
+              background var(--global-transition-speed);
+
+  .material-icons { font-size: 1.35rem; }
+
+  &:hover {
+    color: var(--primary);
+    background: var(--primary-glow);
+  }
 }
 
-/* =========================================================
-   THEME TOGGLE
-========================================================= */
-.theme-toggle {
-  margin-top: auto;
+// ── Menu ──────────────────────────────────────────────────────
+.sidebar__menu {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0.75rem 0.6rem;
+
+  // Custom thin scrollbar using token colours
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
+}
+
+.sidebar__menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sidebar__item {
   width: 100%;
 }
 
-/* =========================================================
-   SETTINGS TRIGGER (FLOATING BUTTON)
-========================================================= */
-.settings-trigger {
-  position: fixed;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  z-index: 1100;
-}
-
-.settings-trigger-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: none;
-  background: linear-gradient(
-    135deg,
-    var(--primary),
-    var(--accent)
-  );
-  color: var(--background);
-  cursor: pointer;
+// Shared link/button style — covers Types A B C D trigger rows
+.sidebar__link {
   display: flex;
   align-items: center;
-  justify-content: center;
-}
-
-/* =========================================================
-   SETTINGS PANEL
-========================================================= */
-.settings-panel {
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: 100vh;
-  width: 320px;
-  background: linear-gradient(
-    180deg,
-    var(--surface),
-    var(--background)
-  );
-  border-left: 1px solid var(--border);
-  z-index: 1200;
-  display: flex;
-  flex-direction: column;
-}
-
-/* =========================================================
-   HEADER
-========================================================= */
-.settings-header {
-  height: 56px;
-  padding: 0 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-}
-
-.settings-title {
-  font-size: 1rem;
-  font-weight: 600;
+  gap: 0.85rem;
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
   color: var(--text-primary);
-}
-
-.settings-close-btn {
+  text-decoration: none;
   background: transparent;
   border: none;
-  color: var(--text-secondary);
   cursor: pointer;
+  font-size: 0.925rem;
+  font-weight: 500;
+  transition: background var(--global-transition-speed),
+              color var(--global-transition-speed);
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--primary-glow);
+    color: var(--primary);
+
+    .sidebar__icon { color: var(--primary); }
+  }
+
+  // Active state set by routerLinkActive="active-item"
+  &.active-item {
+    background: var(--primary);
+    color: var(--background);
+
+    .sidebar__icon { color: var(--background); }
+  }
+
+  // Footer variants
+  &--footer {
+    background: none;
+    color: var(--text-secondary);
+
+    &:hover {
+      background: var(--primary-glow);
+      color: var(--primary);
+    }
+  }
+
+  &--danger:hover {
+    background: color-mix(in oklab, var(--error) 12%, transparent);
+    color: var(--error) !important;
+    .sidebar__icon { color: var(--error) !important; }
+  }
+
+  // Collapsed: center icons, hide everything else
+  .sidebar--collapsed & {
+    justify-content: center;
+    padding: 0.75rem;
+  }
 }
 
-/* =========================================================
-   CONTENT SECTIONS
-========================================================= */
-.settings-section {
-  padding: 1.25rem 1rem;
-  border-bottom: 1px solid var(--border);
+// ── Icons & labels ────────────────────────────────────────────
+.sidebar__icon {
+  font-size: 1.35rem;
+  color: var(--accent);
+  flex-shrink: 0;
+  transition: color var(--global-transition-speed);
 }
 
-.section-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--text-primary);
+.sidebar__label {
+  font-size: 0.925rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.settings-description {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin-bottom: 1rem;
+.sidebar__chevron {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+
+  .sidebar__item--expanded & {
+    transform: rotate(180deg);
+  }
 }
 
-/* =========================================================
-   RADIO GROUP
-========================================================= */
-.radio-group {
+// Hide label, chevron, submenu when collapsed
+.sidebar--collapsed {
+  .sidebar__label,
+  .sidebar__chevron,
+  .sidebar__submenu { display: none !important; }
+}
+
+// ── Submenu ───────────────────────────────────────────────────
+.sidebar__submenu {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.15rem;
+  margin: 0.2rem 0 0.4rem 1.4rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--border);
 }
 
-.radio-option {
+.sidebar__sub-link {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  font-size: 0.9rem;
-  color: var(--text-primary);
-  cursor: pointer;
-}
-
-/* =========================================================
-   THEME GRID
-========================================================= */
-.theme-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.theme-swatch {
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  border: 2px solid transparent;
-  cursor: pointer;
-}
-
-.theme-swatch.active {
-  border-color: var(--text-primary);
-}
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-@media (max-width: 768px) {
-  .settings-panel {
-    width: 100%;
-  }
-}
-
-/* =========================================================
-   THEME SELECTOR BUTTONS
-========================================================= */
-.custom-theme-btn {
-  border-radius: 999px !important;
-  width: 44px;
-  height: 44px;
-  border: 2px solid transparent;
-}
-
-.custom-theme-btn:hover {
-  border-color: var(--border);
-}
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-@media (max-width: 900px) {
-
-  /* Sidebar stays visible */
-  .sidebar-container {
-    width: 80px;              /* collapsed by default */
-  }
-
-  /* Expanded state still works */
-  .sidebar-container:not(.collapsed) {
-    width: 260px;
-  }
-
-  /* Hide labels when collapsed */
-  .sidebar-container.collapsed .menu-label {
-    display: none;
-  }
-
-  /* Center icons when collapsed */
-  .sidebar-container.collapsed .menu-link,
-  .sidebar-container.collapsed .theme-toggle,
-  .sidebar-container.collapsed .resume-download-btn {
-    justify-content: center;
-  }
-
-  /* Reduce padding for mobile */
-  .sidebar-menu {
-    padding: 0.75rem 0.5rem;
-  }
-
-  .sidebar-header {
-    padding: 0 0.5rem;
-  }
-}
-
-.theme-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  padding: 10px 0;
-}
-
-.theme-card {
-  background: var(--surface-alt);
-  border: 2px solid var(--border);
-  border-radius: 12px;
-  padding: 10px;
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  &:hover {
-    transform: translateY(-2px);
-    border-color: var(--primary);
-    box-shadow: 0 4px 12px var(--primary-glow);
-  }
-
-  &.active {
-    border-color: var(--primary);
-    background: var(--surface);
-    
-    .theme-name {
-      color: var(--primary);
-      font-weight: 700;
-    }
-  }
-}
-
-.theme-preview {
-  display: flex;
-  justify-content: center;
-  gap: 4px;
-  background: rgba(0,0,0,0.05);
-  padding: 6px;
-  border-radius: 6px;
-  
-  .color-dot {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.2);
-
-    &.shadow {
-        box-shadow: inset 0 0 4px rgba(0,0,0,0.1);
-    }
-  }
-}
-
-.theme-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  .theme-name {
-    font-size: 0.75rem;
-    color: var(--text-secondary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .check-icon {
-    font-size: 14px;
-    color: var(--primary);
-  }
-}
-
-.menu-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.logo-container {
-  display: flex;
-  align-items: center;
-  text-decoration: none; /* Removes the underline */
-  color: inherit;       /* Keeps your current text colors */
-  cursor: pointer;
-  gap: 5px;            /* Adjust spacing between initials and name */
-  transition: opacity 0.3s ease;
-}
-
-.logo-container:hover {
-  opacity: 0.8;         /* Subtle visual feedback on hover */
-}
-
-.logo-name {
-  font-size: 1.3rem;
-  font-weight: 700;
-  // margin-left: 0.7rem;
-  letter-spacing: 1px;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.logo-rohit {
-  color: var(--text-primary);
-}
-
-.logo-portfolio {
-  color: var(--text-secondary);
-  margin-left: 0.2rem;
-}
-
-.logo-initials,
-.logo-name {
-  color: var(--primary);
-}
-
-.logo-initials {
-  /* ... all the usual flex stuff to center it ... */
-  font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
-  /* Good fonts */
-  font-weight: 900;
-  /* Bold AF */
-  font-size: 2.2rem;
-  width: 52px;
-  /* Kept it the same size */
-  height: 52px;
-  /* Ditto */
-  border-radius: 50%;
-  /* Round boi */
-  background: linear-gradient(135deg, var(--global-logo-bg-gradient-start) 0%, var(--global-logo-bg-gradient-end) 100%);
-  /* That peachy gradient */
-  border: 2.5px solid var(--global-logo-border-color);
-  /* Terracotta border */
-  box-shadow: 0 4px 15px 0 var(--global-logo-main-shadow-color),
-    /* Softer shadow, looks good */
-    0 1.5px 0 var(--global-app-background-color) inset;
-  /* That pop-out shadow thingy */
-  /* ... other stuff like margin, position, etc. ... */
-  letter-spacing: -3px;
-  /* Squishes the letters a bit, looks cool */
-  user-select: none;
-  /* So ppl can't accidentally select it */
-  transition: box-shadow 0.25s ease-out, border-color 0.25s ease-out;
-  /* Smooth moves on hover */
-}
-
-.logo-initials:hover {
-  box-shadow: 0 7px 22px 0 var(--global-logo-main-shadow-color);
-  /* More shadow when you hover, neat! */
-  border-color: var(--global-logo-hover-border-color);
-  /* Border changes color too! */
-}
-
-.rn-r {
-  color: var(--primary);
-  /* That sienna brown for R */
-  font-size: 2.3rem;
-  /* Same size */
-  /* ... font family, margin for overlap ... */
-  z-index: 2;
-  /* R on top! */
-  text-shadow:
-    /* Just a tiny shadow to make it pop a bit */
-    0.5px 0.5px 0px var(--global-logo-letter-text-shadow);
-  letter-spacing: 0;
-  /* Normal spacing for the letter itself */
-  position: relative;
-}
-
-.rn-n {
-  color: var(--accent);
-  /* Saddle brown for N */
-  font-size: 2.1rem;
-  /* Same size */
-  /* ... font family, margin for overlap ... */
-  z-index: 1;
-  /* N underneath R */
-  text-shadow:
-    0.5px 0.5px 0px var(--global-logo-letter-text-shadow);
-  /* Same tiny shadow */
-  letter-spacing: 0;
-  /* Normal spacing here too */
-  position: relative;
-}
-
-.menu-item {
-  width: 100%;
-  
-  .menu-link {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    padding: 0.65rem 0.9rem;
-    border-radius: 0.75rem;
-    color: var(--text-primary);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background: color-mix(in oklab, var(--primary) 10%, transparent);
-    }
-
-    &.active-item {
-      background: var(--primary);
-      color: var(--background);
-      .menu-icon { color: var(--background); }
-    }
-  }
-
-  .chevron {
-    margin-left: auto;
-    font-size: 1.2rem;
-    color: var(--text-secondary);
-  }
-}
-
-/* Submenu Styling */
-.submenu-list {
-  display: flex;
-  flex-direction: column;
-  padding-left: 1.5rem; /* Indent sub-items */
-  margin: 0.25rem 0 0.5rem 0.8rem;
-  border-left: 1px solid var(--border); /* Visual guide line */
-  gap: 0.2rem;
-}
-
-.submenu-link {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  padding: 0.5rem 0.8rem;
-  border-radius: 0.5rem;
-  color: var(--text-secondary);
+  padding: 0.45rem 0.7rem;
+  border-radius: 8px;
+  color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.88rem;
-  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  transition: color 0.15s, background 0.15s;
 
   &:hover {
     color: var(--primary);
-    background: color-mix(in oklab, var(--primary) 5%, transparent);
+    background: color-mix(in oklab, var(--primary) 6%, transparent);
   }
 
   &.active-sub {
@@ -597,19 +260,118 @@
   }
 }
 
-.submenu-icon {
-  font-size: 1.1rem;
-  opacity: 0.8;
+.sidebar__sub-icon {
+  font-size: 1.05rem;
+  opacity: 0.75;
+  flex-shrink: 0;
 }
 
-/* Collapsed Sidebar Logic */
-.sidebar-container.collapsed {
-  .submenu-list, .chevron, .menu-label {
-    display: none !important;
+// ── Footer ────────────────────────────────────────────────────
+.sidebar__footer {
+  flex-shrink: 0;
+  padding: 0.6rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+// ── Logo (shared tokens with navigation) ─────────────────────
+.logo-initials {
+  font-family: var(--font-family-heading, 'Montserrat', sans-serif);
+  font-weight: 900;
+  font-size: 1.8rem;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--logo-primary) 0%, var(--logo-secondary) 100%);
+  border: 2.5px solid var(--logo-border);
+  box-shadow: 0 4px 15px 0 var(--logo-shadow),
+              0 1.5px 0 var(--background) inset;
+  letter-spacing: -3px;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: box-shadow 0.25s ease-out, border-color 0.25s ease-out;
+
+  &:hover {
+    box-shadow: 0 7px 22px 0 var(--logo-shadow);
+    border-color: var(--logo-border-hover);
   }
-  
-  .menu-link {
-    justify-content: center;
-    padding: 0.8rem;
+}
+
+.rn-r {
+  color: var(--logo-primary);
+  font-size: 1.8rem;
+  position: relative;
+  z-index: 2;
+  letter-spacing: 0;
+  text-shadow: 0 0 6px var(--primary-glow);
+}
+
+.rn-n {
+  color: var(--logo-secondary);
+  font-size: 1.6rem;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0;
+  text-shadow: 0 0 6px var(--primary-glow);
+}
+
+.logo-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.2rem;
+  letter-spacing: 0.5px;
+  overflow: hidden;
+}
+
+.logo-rohit     { color: var(--text-primary); }
+.logo-portfolio { color: var(--text-secondary); }
+
+
+/* =============================================================
+   RESPONSIVE
+   ============================================================= */
+
+// Mobile: sidebar becomes off-canvas (app-shell handles transform + position)
+// Reinforce left anchor so no external style can push it right.
+@media (max-width: 900px) {
+  .sidebar {
+    // Always full expanded width on mobile — no collapsed icon-only state
+    width: var(--sidebar-width, 240px) !important;
+    // Solid background — overlay must be fully opaque, not a transparent gradient
+    background: var(--surface) !important;
+    // Belt-and-suspenders: keep border on the right edge (left-anchored panel)
+    border-right: 1px solid var(--border) !important;
+    border-left: none !important;
+
+    &__header {
+      padding: 0 1rem;
+    }
   }
+
+  // Settings panel goes full-width on small screens
+  .settings-panel {
+    width: 100%;
+    border-left: none;
+  }
+}
+
+@media (max-width: 425px) {
+  .sidebar__menu {
+    padding: 0.5rem 0.4rem;
+  }
+}
+
+/* =============================================================
+   REDUCED MOTION
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .settings-panel { animation: none; transition: none; }
 }

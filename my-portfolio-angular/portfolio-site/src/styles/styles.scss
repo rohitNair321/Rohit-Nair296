@@ -4,12 +4,13 @@
 // Plus imports for other components in your app.
 
 /* Import Google Fonts */
-@import '_variables';
-@import 'mixins';
+@use '_variables';
+@use 'mixins';
 
 // styles.scss
-@import 'themes/theme-tokens';
-@import 'themes/theme-generator';
+@use 'themes/theme-tokens';
+@use 'themes/global.tokens';
+@use 'themes/theme-generator';
 
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');

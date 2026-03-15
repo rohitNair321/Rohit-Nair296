@@ -10,7 +10,6 @@ import { CardModule } from 'primeng/card';
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     ReactiveFormsModule,
     CardModule,
     ButtonModule,

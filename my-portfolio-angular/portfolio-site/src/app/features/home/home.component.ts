@@ -30,7 +30,6 @@ interface HomeData { hero: Hero; aboutTeaser?: AboutTeaser; contact?: ContactInf
   standalone: true,
   imports: [
     CommonModule,
-    RouterLink,
     ReactiveFormsModule,
     CardModule,
     ButtonModule,

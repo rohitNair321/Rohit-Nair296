@@ -1,5 +1,5 @@
 /* Import shared login/auth styles which already use tokens */
-@import '../login/login.component.scss';
+@use '../login/login.component.scss';
 
 :host {
   // Local token mapping with fallbacks to the new light/bright scheme
