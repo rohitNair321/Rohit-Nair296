@@ -1,7 +1,5 @@
 import { Injector } from "@angular/core";
 import { AuthService } from "src/app/auth/services/auth.service";
-import { OpenAIService } from "./open-ai.service";
-import { SupabaseService } from "./supabase.service";
 import { LoadingService } from "./loading.service";
 import { defaultConfig, LayoutConfig } from "../config/layout.config";
 import { AppService } from "./app.service";
@@ -10,33 +8,30 @@ import { AlertService } from "./alert.service";
 import { Router } from "@angular/router";
 import { LocalStorageService } from "src/app/shared/services/local-storage.service";
 import { MenuItem } from "../config/menuItem.config";
+import { ChatApiService } from "./chat-api.service";
 
 export class CommonApp {
 
   public loading;
   public authService;
-  public aiServices;
   public appService;
-  public portfolioServices;
   public themeService;
   public alertService;
   public router;
   public localStorageService;
+  public aiChatService;
   public appConfig: LayoutConfig = defaultConfig;
-  public menuItems: MenuItem[] = [
-
-  ];
+  public menuItems: MenuItem[] = [];
 
   constructor(public injector: Injector) {
     this.loading = this.injector.get(LoadingService);
     this.authService = this.injector.get(AuthService);
     this.appService = this.injector.get(AppService);
-    this.aiServices = this.injector.get(OpenAIService);
     this.alertService = this.injector.get(AlertService);
-    this.portfolioServices = this.injector.get(SupabaseService);
     this.themeService = this.injector.get(ThemeService);
     this.router = this.injector.get(Router);
     this.localStorageService = this.injector.get(LocalStorageService);
+    this.aiChatService = this.injector.get(ChatApiService);
 
     this.menuItems = [
       new MenuItem({ label: 'Home', key: 'home', href: '#home', icon: 'home' }),

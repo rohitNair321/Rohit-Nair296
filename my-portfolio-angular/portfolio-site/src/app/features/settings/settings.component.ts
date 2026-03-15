@@ -61,7 +61,7 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy, C
   showCurrentPassword = false;
   showNewPassword = false;
   lastPasswordUpdate: Date | null = null; // Set this from your profile data
-  activeSettingTab: 'profile' | 'monitoring' = 'profile';
+  activeSettingTab: 'profile' | 'aiChatMonitoring' | 'monitoring' = 'profile';
   adminEmail: string = '';
 
   constructor(public override injector: Injector, private fb: FormBuilder, private confirmationService: ConfirmationService) {

@@ -28,17 +28,17 @@ export class ProjectsPageComponent extends CommonApp implements OnInit {
   }
 
   getProjectList() {
-    this.portfolioServices.listProjects().subscribe({
-      next: res => {
-        this.projectList = res;
-        console.log('Project list:', res);
-        this.loading.hide();
-      },
-      error: err => {
-        console.error('Error fetching project list:', err);
-        this.loading.hide();
-      }
-    });
+    // this.portfolioServices.listProjects().subscribe({
+    //   next: res => {
+    //     this.projectList = res;
+    //     console.log('Project list:', res);
+    //     this.loading.hide();
+    //   },
+    //   error: err => {
+    //     console.error('Error fetching project list:', err);
+    //     this.loading.hide();
+    //   }
+    // });
   }
 
   techClass(tech: string): string {

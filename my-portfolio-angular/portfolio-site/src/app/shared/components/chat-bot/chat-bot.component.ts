@@ -1,183 +1,462 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, HostBinding, OnInit, ViewChild, ElementRef, Injector } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { RadioButtonModule } from 'primeng/radiobutton';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  Injector,
+  signal,
+  computed,
+  effect,
+} from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CommonApp } from 'src/app/core/services/common';
-import { AiRequest } from 'src/app/core/services/open-ai.service';
+
+// ── Types ─────────────────────────────────────────────────────
+
+export type ChatPosition = 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+
+export interface ChatMessage {
+  id: string;
+  text: string;
+  sender: 'user' | 'bot';
+  timestamp: Date;
+  loading?: boolean;
+  error?: boolean;
+}
+
+export interface ChatSession {
+  id: string;
+  title: string;         // auto-generated from first user message
+  messages: ChatMessage[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ModelVersion {
+  name: string;
+  model: string;
+  description: string;
+}
+
+// ── Dummy bot responses — replace with real API call ─────────
+
+const DUMMY_RESPONSES: string[] = [
+  "Rohit is a full-stack engineer with 5+ years of experience in Angular, Node.js, and cloud architectures.",
+  "He has worked on enterprise-scale dashboards, real-time data pipelines, and AI-powered portfolio tools.",
+  "Rohit's recent projects include an AI chatbot integration, a theme-based design system, and a microservices API platform.",
+  "He holds certifications in AWS Solutions Architect and Google Cloud Professional.",
+  "Rohit is passionate about clean code, performance engineering, and developer experience.",
+  "You can find his open-source contributions on GitHub — mostly Angular libraries and utility toolkits.",
+  "He has led cross-functional teams of up to 8 engineers, delivering projects on time and under budget.",
+  "Rohit specialises in building scalable frontends with Angular, RxJS, NgRx, and PrimeNG.",
+  "Feel free to ask me about his education, skills, work history, or project highlights!",
+  "Rohit is currently open to senior engineering and tech-lead roles. Shall I share his contact details?",
+];
+
+function randomResponse(): string {
+  return DUMMY_RESPONSES[Math.floor(Math.random() * DUMMY_RESPONSES.length)];
+}
+
+function uid(): string {
+  return Math.random().toString(36).slice(2, 10);
+}
+
+// ── Component ─────────────────────────────────────────────────
 
 @Component({
   selector: 'app-chat-bot',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CardModule,
-    RadioButtonModule,
-    ButtonModule,
-  ],
+  imports: [CommonModule, FormsModule, DatePipe],
   templateUrl: './chat-bot.component.html',
-  styleUrls: ['./chat-bot.component.scss']
+  styleUrls: ['./chat-bot.component.scss'],
 })
-export class ChatBotComponent extends CommonApp implements OnInit {
-  @Input() position: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left' = 'bottom-right';
-  @Input() primaryColor = '#3f51b5';
-  @Input() title = 'How can I help you?';
-  @Input() placeholder = 'Type your message...';
+export class ChatBotComponent extends CommonApp implements OnInit, OnDestroy {
 
-  @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
+  // ── Inputs ───────────────────────────────────────────────────
+  @Input() position: ChatPosition = 'bottom-right';
+  @Input() title = 'AiNg Assistant';
+  @Input() placeholder = 'Ask about Rohit…';
 
-  isOpen = false;
-  showWelcomeBubble = true;
-  messages: {
-    text: string,
-    sender: 'user' | 'bot',
-    timestamp: Date,
-    loading?: boolean,  // Add loading state
-    error?: boolean     // Add error state
-  }[] = [];
-  newMessage: string = '';
-  isSending = false;
+  // ── Template refs ────────────────────────────────────────────
+  @ViewChild('messagesEnd') private messagesEnd!: ElementRef<HTMLDivElement>;
+  @ViewChild('inputRef') private inputRef!: ElementRef<HTMLInputElement>;
 
-  versionList: any[] = [
-    {
-      name: 'v1.5-beta',
-      model: 'v1.5b'
-    },
-    {
-      name: 'v1.5-stb',
-      model: 'v1.5s'
-    },
-    {
-      name: 'v2.5-stb',
-      model: 'v2.5s'
-    }
+  // ── UI state (signals) ───────────────────────────────────────
+  isOpen = signal(false);
+  showWelcome = signal(true);
+  showHistory = signal(false);
+  isSending = signal(false);
+  newMessage = signal('');
+  chatDisabled = signal(false);
+
+  // ── Data (signals) ───────────────────────────────────────────
+  sessions = signal<ChatSession[]>([]);
+  activeSessionId = signal<string | null>(null);
+
+  // ── Model versions ───────────────────────────────────────────
+  readonly modelVersions: ModelVersion[] = [
+    { name: 'AiNg v1.5 Beta', model: 'v1.5b', description: 'Fast, experimental' },
+    { name: 'AiNg v1.5 Stable', model: 'v1.5s', description: 'Balanced' },
+    { name: 'AiNg v2.5 Stable', model: 'v2.5s', description: 'Most capable' },
   ];
-  selectedVersion: string = this.versionList[0].model;
-  currentReq: AiRequest = {
-    message: '',
-    modelVersion: this.selectedVersion
-  };
+  selectedModel = signal(this.modelVersions[0].model);
 
-  // @HostBinding('style') get hostStyles() {
-  //   return {
-  //     'position': 'fixed',
-  //     [this.position.split('-')[0]]: '20px',
-  //     [this.position.split('-')[1]]: '20px'
-  //   };
-  // }
+  // ── Derived ──────────────────────────────────────────────────
+  activeSession = computed(() =>
+    this.sessions().find(s => s.id === this.activeSessionId()) ?? null
+  );
+
+  activeMessages = computed(() =>
+    this.activeSession()?.messages ?? []
+  );
+
+  /** Side that the FAB + window anchor to. */
+  isLeft = computed(() => this.position.includes('left'));
+  isTop = computed(() => this.position.includes('top'));
+
+  // ── Cleanup ──────────────────────────────────────────────────
+  private _scrollEffect = effect(() => {
+    // Re-run whenever messages change so new messages scroll into view.
+    this.activeMessages();
+    this._scrollToBottom();
+  });
 
   constructor(public override injector: Injector) {
     super(injector);
-  } // Inject service
-
-  ngOnInit() {
-    this.setThemeColors();
   }
 
-  toggleChat() {
-    this.isOpen = !this.isOpen;
-    this.showWelcomeBubble = !this.showWelcomeBubble;
-    if (this.isOpen && this.messages.length === 0) {
-      this.addWelcomeMessage();
+  ngOnInit(): void {
+    this._loadHistory();
+  }
+
+  ngOnDestroy(): void {
+    this._scrollEffect.destroy();
+  }
+
+  // ── Chat window ───────────────────────────────────────────────
+
+  toggleChat(): void {
+    const opening = !this.isOpen();
+    this.isOpen.set(opening);
+    this.showWelcome.set(!opening);
+
+    if (opening) {
+      // Open into the most-recent session or create a fresh one
+      if (!this.activeSessionId() || !this.activeSession()) {
+        this._startNewSession();
+      }
+      setTimeout(() => this.inputRef?.nativeElement.focus(), 150);
     }
-    setTimeout(() => this.scrollToBottom(), 100);
   }
 
-  addWelcomeMessage() {
-    this.messages.push({
-      text: "Hello! I'm AiNg, Rohit's portfolio assistant. Ask me about Rohit's professional journey.",
-      sender: 'bot',
-      timestamp: new Date()
+  toggleHistory(): void {
+    this.showHistory.update(v => !v);
+  }
+
+  // ── Session management ────────────────────────────────────────
+
+  startNewChat(): void {
+
+    this.activeSessionId.set(null);
+
+    this.sessions.update(s => [
+      {
+        id: 'temp',
+        title: 'New chat',
+        messages: [],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      ...s
+    ]);
+
+  }
+
+  selectSession(id: string): void {
+
+    this.aiChatService.getSession(id).subscribe({
+      next: (session) => {
+        const mappedMessages = (session.messages || []).map(m => ({
+          id: uid(),
+          text: m.text,
+          sender: m.sender,
+          timestamp: new Date(m.time)
+        }));
+
+        this.sessions.update(list =>
+          list.map(s =>
+            s.id === id
+              ? { ...s, messages: mappedMessages }
+              : s
+          )
+        );
+        this.showHistory.update(v => !v);
+        this.activeSessionId.set(id);
+
+      }
+
     });
   }
 
+  clearAllHistory(): void {
 
-  onVersionChange(event: Event): void {
-    this.selectedVersion = (event.target as HTMLSelectElement).value;
+    this.aiChatService.deleteAllSessions().subscribe(() => {
+
+      this.sessions.set([]);
+      this.activeSessionId.set(null);
+
+    });
+
   }
 
-  sendMessage() {
-    const message = this.newMessage.trim();
-    if (!message || this.isSending) {
-      return;
-    }
+  // ── Messaging ─────────────────────────────────────────────────
 
-    // 1) Push the user's message
-    this.messages.push({
-      text: message,
+  async sendMessage(): Promise<void> {
+    const text = this.newMessage().trim();
+    if (!text || this.isSending()) return;
+
+    const sessionId = this.activeSessionId();
+
+    const userMsg: ChatMessage = {
+      id: uid(),
+      text,
       sender: 'user',
-      timestamp: new Date()
-    });
+      timestamp: new Date(),
+    };
 
-    // 2) Push a placeholder for the bot's reply
-    this.messages.push({
+    this._appendMessage(userMsg);
+
+    this.newMessage.set('');
+    this.isSending.set(true);
+
+    const loadingId = uid();
+
+    this._appendMessage({
+      id: loadingId,
       text: '',
       sender: 'bot',
       timestamp: new Date(),
-      loading: true
+      loading: true,
     });
 
-    // 3) Reset input & state, scroll down
-    this.newMessage = '';
-    this.isSending = true;
-    this.scrollToBottom();
+    this.appService.aiChat(text, sessionId).subscribe({
 
-    // 4) Call the backend via ChatService
-    this.currentReq.message = message;
-    this.currentReq.modelVersion = this.selectedVersion;
-    this.aiServices.sendMessage(this.currentReq).subscribe({
-      next: (resp) => {
-        // Replace the loading placeholder with actual text
-        const idx = this.messages.length - 1;
-        this.messages[idx] = {
-          text: resp.answer || "Sorry, I couldn't answer that.",
+      next: (res) => {
+
+        if (res.limitReached) {
+
+          this.isSending.set(false);
+
+          this._appendMessage({
+            id: uid(),
+            text:
+              "Chat limit reached. For more info go to contact section and send message to Rohit.",
+            sender: 'bot',
+            timestamp: new Date(),
+            error: true
+          });
+
+          this.chatDisabled.set(true);
+
+          return;
+        }
+        const reply = res.response;
+
+        // replace loading
+        this._replaceMessage(loadingId, {
+          id: uid(),
+          text: reply,
           sender: 'bot',
-          timestamp: new Date()
-        };
+          timestamp: new Date(),
+        });
+
+        // IMPORTANT → session created here
+        if (!sessionId) {
+
+          this.activeSessionId.set(res.sessionId);
+
+          // reload sessions list
+          this._loadHistory();
+        }
+
+        this.isSending.set(false);
       },
-      error: (err) => {
-        const idx = this.messages.length - 1;
-        this.messages[idx] = {
-          text: "Something went wrong. Please try again later.",
+
+      error: () => {
+
+        this._replaceMessage(loadingId, {
+          id: uid(),
+          text: 'Error',
           sender: 'bot',
           timestamp: new Date(),
           error: true
-        };
-        console.error('Chat Error:', err);
-      },
-      complete: () => {
-        this.isSending = false;
-        this.scrollToBottom();
+        });
+
+        this.isSending.set(false);
       }
+
+    });
+
+  }
+
+  deleteSession(id: string, event: Event): void {
+    event.stopPropagation();
+
+    this.aiChatService.deleteSession(id).subscribe({
+
+      next: () => {
+
+        const updated = this.sessions().filter(s => s.id !== id);
+        this.sessions.set(updated);
+
+        if (this.activeSessionId() === id) {
+
+          const next = updated[0] ?? null;
+
+          if (next) {
+            this.activeSessionId.set(next.id);
+          } else {
+            this.startNewChat();
+          }
+
+        }
+
+      },
+
+      error: () => {
+        console.error("Delete failed");
+      }
+
     });
   }
 
-
-  private scrollToBottom(): void {
-    setTimeout(() => {
-      try {
-        this.messagesContainer.nativeElement.scrollTop =
-          this.messagesContainer.nativeElement.scrollHeight;
-      } catch (err) { }
-    }, 100);
+  onInputKeydown(event: KeyboardEvent): void {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      this.sendMessage();
+    }
   }
 
-  private setThemeColors(): void {
-    document.documentElement.style.setProperty('--primary-color', this.primaryColor);
+  onModelChange(model: string): void {
+    this.selectedModel.set(model);
+  }
 
-    // Set complementary text color
-    const rgb = parseInt(this.primaryColor.substring(1), 16);
-    const r = (rgb >> 16) & 0xff;
-    const g = (rgb >> 8) & 0xff;
-    const b = (rgb >> 0) & 0xff;
-    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  trackById(_: number, item: ChatMessage | ChatSession): string {
+    return item.id;
+  }
 
-    document.documentElement.style.setProperty(
-      '--text-on-primary',
-      luminance < 120 ? '#ffffff' : '#000000'
+  // ── Private helpers ───────────────────────────────────────────
+
+  private _startNewSession(): void {
+    // this.aiChatService.createSession("").subscribe({
+
+    //   next: (session) => {
+
+    //     const newSession = {
+    //       id: session.id,
+    //       title: session.title ?? 'New chat',
+    //       messages: [],
+    //       createdAt: new Date(),
+    //       updatedAt: new Date(),
+    //     };
+
+    //     this.sessions.update(s => [newSession, ...s]);
+
+    //     this.activeSessionId.set(newSession.id);
+
+    //   },
+
+    //   error: () => {
+    //     console.error("Failed to create session");
+    //   }
+
+    // });
+  }
+
+  private _appendMessage(msg: ChatMessage): void {
+    this.sessions.update(sessions =>
+      sessions.map(s => {
+        if (s.id !== this.activeSessionId()) { return s; }
+        const messages = [...s.messages, msg];
+        // Auto-title from first user message
+        const title = s.title === 'New conversation'
+          ? (msg.sender === 'user' ? msg.text.slice(0, 36) + (msg.text.length > 36 ? '…' : '') : s.title)
+          : s.title;
+        return { ...s, messages, title, updatedAt: new Date() };
+      })
     );
+    this._saveHistory(this.sessions());
+    this._scrollToBottom();
+  }
+
+  private _replaceMessage(id: string, replacement: ChatMessage): void {
+    this.sessions.update(sessions =>
+      sessions.map(s => {
+        if (s.id !== this.activeSessionId()) { return s; }
+        return {
+          ...s,
+          messages: s.messages.map(m => m.id === id ? replacement : m),
+          updatedAt: new Date(),
+        };
+      })
+    );
+    this._saveHistory(this.sessions());
+  }
+
+  private _scrollToBottom(): void {
+    setTimeout(() => {
+      try {
+        this.messagesEnd?.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      } catch (_) { }
+    }, 80);
+  }
+
+  // ── Persistence (localStorage) ────────────────────────────────
+
+  private readonly _STORAGE_KEY = 'aing_chat_history';
+
+  private _saveHistory(sessions: ChatSession[]): void {
+    try {
+      // Keep only the 20 most recent sessions to avoid storage bloat
+      const trimmed = sessions.slice(0, 20);
+      localStorage.setItem(this._STORAGE_KEY, JSON.stringify(trimmed));
+    } catch (_) { }
+  }
+
+  private _loadHistory(): void {
+
+    this.aiChatService.getSessions().subscribe({
+
+      next: (sessions) => {
+
+        const mapped = sessions.map(s => ({
+
+          id: s.id,
+          title: s.title ?? 'Conversation',
+
+          messages: (s.messages || []).map(m => ({
+            id: uid(),
+            text: m.text,
+            sender: m.sender,
+            timestamp: new Date(m.time)
+          })),
+
+          createdAt: new Date(s.created_at),
+          updatedAt: new Date(s.updated_at)
+
+        }));
+
+        this.sessions.set(mapped);
+
+        if (mapped.length > 0) {
+          this.activeSessionId.set(mapped[0].id);
+        }
+
+      }
+
+    });
   }
 }

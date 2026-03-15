@@ -71,17 +71,23 @@
 
   // ── Mobile — sidebar is a fixed overlay, not a grid column ─
   @media (max-width: 900px) {
-    grid-template-columns: 0 1fr;
-    grid-template-areas:
-      "topbar  topbar"
-      "sidebar content";
+
+    &,
+    &[data-layout="sidebar"][data-collapsed="true"],
+    &[data-layout="sidebar"][data-collapsed="false"],
+    &[data-layout="navbar"] {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "topbar"
+        "content";
+    }
   }
 }
 
 // ── Topbar — always spans full width ─────────────────────────
 .app-shell__topbar {
   grid-area: topbar;
-  grid-column: 1 / -1;           // spans ALL columns unconditionally
+  grid-column: 1 / -1; // spans ALL columns unconditionally
   position: sticky;
   top: 0;
   z-index: var(--topbar-z);
@@ -98,7 +104,7 @@
   position: sticky;
   top: var(--topbar-height);
   height: calc(100dvh - var(--topbar-height));
-  overflow: hidden;              // hides content when column shrinks to 0
+  overflow: hidden; // hides content when column shrinks to 0
   z-index: var(--sidebar-z);
   transition: width var(--layout-transition);
 
@@ -136,7 +142,7 @@
   grid-area: content;
   display: flex;
   flex-direction: column;
-  min-width: 0;                  // prevent grid blowout
+  min-width: 0; // prevent grid blowout
   transition: all var(--layout-transition);
 }
 
@@ -167,8 +173,13 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 // ── Tiny screen gutters ───────────────────────────────────────
@@ -181,6 +192,7 @@
 
 // ── Reduced motion ────────────────────────────────────────────
 @media (prefers-reduced-motion: reduce) {
+
   .app-shell,
   .app-shell__sidebar,
   .app-shell__content {
@@ -216,7 +228,7 @@
 .app-settings-trigger__btn {
   width: 40px;
   height: 40px;
-  border-radius: 10px 0 0 10px;   // left corners rounded, right hugs viewport edge
+  border-radius: 10px 0 0 10px; // left corners rounded, right hugs viewport edge
   border: 1px solid var(--border);
   border-right: none;
   background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
@@ -228,11 +240,13 @@
   box-shadow: -3px 0 12px var(--primary-glow);
   transition: box-shadow 0.2s ease, translate 0.2s ease;
 
-  .material-icons { font-size: 1.2rem; }
+  .material-icons {
+    font-size: 1.2rem;
+  }
 
   &:hover {
     box-shadow: -5px 0 18px var(--primary-glow);
-    translate: -3px 0;   // `translate` property — does not override parent transform
+    translate: -3px 0; // `translate` property — does not override parent transform
   }
 }
 
@@ -240,7 +254,10 @@
   .app-settings-trigger__btn {
     width: 36px;
     height: 36px;
-    .material-icons { font-size: 1.1rem; }
+
+    .material-icons {
+      font-size: 1.1rem;
+    }
   }
 }
 
@@ -266,13 +283,27 @@
 
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
-  &::-webkit-scrollbar { width: 4px; }
-  &::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
 }
 
 @keyframes settingsPanelIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to   { transform: translateX(0);    opacity: 1; }
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .app-settings-panel__header {
@@ -304,7 +335,9 @@
   border-radius: 8px;
   transition: color 0.15s, background 0.15s;
 
-  .material-icons { font-size: 1.2rem; }
+  .material-icons {
+    font-size: 1.2rem;
+  }
 
   &:hover {
     color: var(--error);
@@ -316,7 +349,10 @@
   padding: 1.1rem 1rem;
   border-bottom: 1px solid var(--border);
 
-  &--theme { border-bottom: none; flex: 1; }
+  &--theme {
+    border-bottom: none;
+    flex: 1;
+  }
 }
 
 .app-settings-panel__section-title {
@@ -390,7 +426,10 @@
     background: var(--surface);
     box-shadow: 0 0 0 3px var(--primary-glow);
 
-    .app-settings-theme-card__name { color: var(--primary); font-weight: 700; }
+    .app-settings-theme-card__name {
+      color: var(--primary);
+      font-weight: 700;
+    }
   }
 }
 
@@ -410,7 +449,9 @@
   border: 1px solid var(--border);
   flex-shrink: 0;
 
-  &--surface { box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.12); }
+  &--surface {
+    box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.12);
+  }
 }
 
 .app-settings-theme-card__info {
@@ -436,11 +477,13 @@
 
 @media (max-width: 900px) {
   .app-settings-panel {
-    width: 100%;        // full-width sheet on small screens
+    width: 100%; // full-width sheet on small screens
     border-left: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .app-settings-panel { animation: none; }
+  .app-settings-panel {
+    animation: none;
+  }
 }

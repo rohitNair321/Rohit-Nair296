@@ -3,18 +3,29 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, finalize, throwError } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { AppService } from 'src/app/core/services/app.service';
 import { AlertService } from '../services/alert.service'; // Adjust path
 import { LoadingService } from '../services/loading.service'; // Adjust path
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
+  const app = inject(AppService);
   const router = inject(Router);
   const alert = inject(AlertService);
   const loading = inject(LoadingService);
   const token = auth.token();
 
-  const cloned = token
-    ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+  // Example: Add another header, e.g., X-User-Role
+  const role = auth.role ? auth.role() : undefined; // Assumes AuthService has a role() method
+  const setHeaders: any = {};
+  if (token) {
+    setHeaders['Authorization'] = `Bearer ${token}`;
+  }
+  if (role) {
+    setHeaders['X-User-Role'] = role;
+  }
+  const cloned = Object.keys(setHeaders).length > 0
+    ? req.clone({ setHeaders })
     : req;
 
   return next(cloned).pipe(
