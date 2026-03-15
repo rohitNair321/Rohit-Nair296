@@ -77,11 +77,11 @@ export class ChatApiService {
 
 
     deleteSession(id: string) {
-        return this.http.delete(`${this.apiChatSessionsUrl}/session/${id}`);
+        return this.http.delete(`${this.apiChatSessionsUrl}/deleteSessionById/${id}`);
     }
 
     deleteAllSessions() {
-        return this.http.delete(`${this.apiChatSessionsUrl}/sessions`);
+        return this.http.delete(`${this.apiChatSessionsUrl}/deleteAllSessions`);
     }
 
 }
