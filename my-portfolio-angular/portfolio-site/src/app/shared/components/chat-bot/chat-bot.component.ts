@@ -142,13 +142,18 @@ export class ChatBotComponent extends CommonApp implements OnInit, OnDestroy {
     const opening = !this.isOpen();
     this.isOpen.set(opening);
     this.showWelcome.set(!opening);
-
+ 
     if (opening) {
       // Open into the most-recent session or create a fresh one
       if (!this.activeSessionId() || !this.activeSession()) {
         this._startNewSession();
       }
-      setTimeout(() => this.inputRef?.nativeElement.focus(), 150);
+      // Delay gives Angular one cycle to render the window + messages
+      // before we attempt to scroll — otherwise messagesEnd doesn't exist yet.
+      setTimeout(() => {
+        this._scrollToBottom();
+        this.inputRef?.nativeElement.focus();
+      }, 150);
     }
   }
 
@@ -195,7 +200,7 @@ export class ChatBotComponent extends CommonApp implements OnInit, OnDestroy {
         );
         this.showHistory.update(v => !v);
         this.activeSessionId.set(id);
-
+        setTimeout(() => this._scrollToBottom(), 80);
       }
 
     });

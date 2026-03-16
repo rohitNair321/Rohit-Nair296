@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { AppService } from 'src/app/core/services/app.service';
 import { AlertService } from '../services/alert.service'; // Adjust path
 import { LoadingService } from '../services/loading.service'; // Adjust path
+import { LocalStorageService } from 'src/app/shared/services/local-storage.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
@@ -13,7 +14,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
   const alert = inject(AlertService);
   const loading = inject(LoadingService);
-  const token = auth.token();
+  const localStorageService = inject(LocalStorageService);
+  const token = auth.token() || localStorageService.getItem('auth_token');
 
   // Example: Add another header, e.g., X-User-Role
   const role = auth.role ? auth.role() : undefined; // Assumes AuthService has a role() method
