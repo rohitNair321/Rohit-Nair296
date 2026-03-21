@@ -1,4 +1,4 @@
-import { Injector } from "@angular/core";
+import { Injectable, Injector } from "@angular/core";
 import { AuthService } from "src/app/auth/services/auth.service";
 import { LoadingService } from "./loading.service";
 import { defaultConfig, LayoutConfig } from "../config/layout.config";
@@ -10,6 +10,7 @@ import { LocalStorageService } from "src/app/shared/services/local-storage.servi
 import { MenuItem } from "../config/menuItem.config";
 import { ChatApiService } from "./chat-api.service";
 
+@Injectable({ providedIn: 'root' })
 export class CommonApp {
 
   public loading;

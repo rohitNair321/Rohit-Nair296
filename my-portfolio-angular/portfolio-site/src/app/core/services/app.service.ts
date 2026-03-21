@@ -1,7 +1,8 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable, Signal, signal } from "@angular/core";
 import * as e from "cors";
-import { map, Observable, tap } from "rxjs";
+import { N } from "node_modules/@angular/cdk/number-property.d-CJVxXUcb";
+import { EMPTY, map, Observable, switchMap, tap, timer } from "rxjs";
 import { LocalStorageService } from "src/app/shared/services/local-storage.service";
 import { environment } from "src/environments/environments";
 
@@ -18,6 +19,9 @@ export class AppService {
     private readonly apiProfileUrl = environment.baseUrl + '/api/profile';
     private readonly apiContactUrl = environment.baseUrl + '/api/contact';
     private readonly apiAIChatUrl = environment.baseUrl + '/api/ai/chat';
+    private httpOptions = {
+        withCredentials: true
+    };
 
     _profile = signal<Profile | null>(null);
     readonly profile: Signal<Profile | null> = this._profile;
@@ -27,9 +31,10 @@ export class AppService {
 
     token = signal<string | null>(this.localStorageService.getItem('auth_token'));
 
-    private authHeaders(): HttpHeaders {
-        const token = this.token() || this.localStorageService.getItem('auth_token');
-        return new HttpHeaders({ Authorization: token ? `Bearer ${token}` : '' });
+    private authHeaders(): any {
+        // const token = this.token() || this.localStorageService.getItem('auth_token');
+        // return new HttpHeaders({ Authorization: token ? `Bearer ${token}` : '' });
+        return this.httpOptions;
     }
 
     hasValidToken(): boolean {
@@ -41,7 +46,7 @@ export class AppService {
 
     // Fetch profile from server and update signal
     getProfile(): Observable<Profile | null> {
-        return this.http.get<{ profile: Profile | null }>(`${this.apiProfileUrl}/getMyProfile`)
+        return this.http.get<{ profile: Profile | null }>(`${this.apiProfileUrl}/getMyProfile`, this.httpOptions)
             .pipe(
                 map(r => r.profile || null),
                 tap(p => this._profile.set(p))
@@ -49,16 +54,14 @@ export class AppService {
     }
 
     updateProfile(formData: FormData): Observable<Profile> {
-        return this.http.put<{ profile: Profile }>(`${this.apiProfileUrl}/saveUpdateMyProfile`, formData, {
-            headers: this.authHeaders() // HttpClient will set Content-Type automatically for FormData
-        }).pipe(
+        return this.http.put<{ profile: Profile }>(`${this.apiProfileUrl}/saveUpdateMyProfile`, formData, this.httpOptions).pipe(
             map(r => r.profile),
             tap(updated => this._profile.set(updated))
         );
     }
 
     getResumeSignedUrl(): Observable<{ url: string, expires_in: number }> {
-        return this.http.get<{ url: string, expires_in: number }>(`${this.apiProfileUrl}/me/resume`, { headers: this.authHeaders() });
+        return this.http.get<{ url: string, expires_in: number }>(`${this.apiProfileUrl}/me/resume`, this.httpOptions);
     }
 
     setLocalProfile(profile: Profile | null) {
@@ -74,21 +77,25 @@ export class AppService {
     }
 
     getNotifications(): Observable<Notification> {
-        return this.http.get<Notification>(`${this.apiContactUrl}/notifications`, { headers: this.authHeaders() }).pipe(
-            map(notification => notification || null),
-            tap(notification => this._notifications.set(notification))
-        );
+        if (this.role() === 'ADMIN') {
+            return timer(0, 20 * 60 * 1000).pipe(
+                switchMap(() => this.http.get<Notification>(`${this.apiContactUrl}/notifications`, this.httpOptions)),
+                map(notification => notification || null),
+                tap(notification => this._notifications.set(notification))
+            );
+        }
+        return EMPTY;
     }
 
     markMessageAsRead(id: string): Observable<Notification> {
-        return this.http.put<Notification>(`${this.apiContactUrl}/notifications/${id}/read`, { headers: this.authHeaders() }).pipe(
+        return this.http.put<Notification>(`${this.apiContactUrl}/notifications/${id}/read`, {}, this.httpOptions).pipe(
             map(notification => notification || null),
             tap(notification => this._notifications.set(notification))
         );
     }
 
     deleteMessage(id: string): Observable<Notification> {
-        return this.http.delete<Notification>(`${this.apiContactUrl}/delete/${id}`, { headers: this.authHeaders() }).pipe(
+        return this.http.delete<Notification>(`${this.apiContactUrl}/delete/${id}`, this.httpOptions).pipe(
             map(notification => notification || null),
             tap(notification => this._notifications.set(notification))
         );
@@ -113,7 +120,6 @@ export class AppService {
     aiChat(message: string, sessionId: string | null): Observable<AiChatResponse> {
         return this.http.post<AiChatResponse>(this.apiAIChatUrl, { message, sessionId, userId: this.profile()?.id, role: this.role() });
     }
-
 
 }
 
@@ -227,7 +233,7 @@ export interface ThemeDefinition {
 }
 
 interface AiChatResponse {
-  response: string;
-  sessionId: string;
-  limitReached?: boolean;
+    response: string;
+    sessionId: string;
+    limitReached?: boolean;
 }

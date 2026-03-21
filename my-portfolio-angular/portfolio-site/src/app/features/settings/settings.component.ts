@@ -94,7 +94,7 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy, C
       rejectButtonStyleClass: "p-button-text p-button-text",
       acceptIcon: "none",
       rejectIcon: "none",
-
+      closable: false,
       accept: () => {
         this.saveSettings(); // Call your existing save logic
         confirmationSubject.next(true); // Allow navigation after save attempt
@@ -815,7 +815,7 @@ togglePasswordVisibility(field: 'current' | 'new'): void {
       },
       error: (err) => {
         this.loading.hide();
-        this.alertService.showAlert('Failed to update settings.', 'error')
+        this.alertService.showAlert('Failed to update settings.', 'error');
         console.error('Save error', err);
       }
     });
@@ -838,7 +838,7 @@ togglePasswordVisibility(field: 'current' | 'new'): void {
         this.lastPasswordUpdate = new Date();
 
         // Show success message
-        // this.toasterService.showSuccess('Password updated successfully');
+        this.alertService.showAlert('Password updated successfully', 'success');
 
         // Reset only password fields, keep email
         this.passwordForm.patchValue({
@@ -854,9 +854,7 @@ togglePasswordVisibility(field: 'current' | 'new'): void {
       },
       error: (error) => {
         this.isChangingPassword = false;
-        // this.toasterService.showError(
-        //   error?.error?.message || 'Failed to update password'
-        // );
+        this.alertService.showAlert('Failed to update the password.', 'error');
       }
     });
   }

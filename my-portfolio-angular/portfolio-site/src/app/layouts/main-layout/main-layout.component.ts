@@ -17,6 +17,8 @@ import { ChatBotComponent } from 'src/app/shared/components/chat-bot/chat-bot.co
 import { FooterComponent } from 'src/app/shared/components/footer/footer.component';
 import { NavigationComponent } from 'src/app/shared/components/navigation/navigation.component';
 import { SidebarComponent } from 'src/app/shared/components/sidebar/sidebar.component';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 const MOBILE_BREAKPOINT = 900;
 
@@ -33,7 +35,9 @@ const MOBILE_BREAKPOINT = 900;
     FooterComponent,
     ChristmasAnimationComponent,
     NewYearAnimationComponent,
+    ConfirmDialogModule,
   ],
+  providers: [ConfirmationService],
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.scss'],
 })
@@ -45,7 +49,7 @@ export class MainLayoutComponent extends CommonApp implements OnInit, OnDestroy 
     this.normalizeThemesResponse(this.appService.profile()?.themes ?? [])
   );
 
-  constructor(public override injector: Injector) {
+  constructor(public override injector: Injector, private confirmationService: ConfirmationService) {
     super(injector);
 
     this.appConfig.theme.name = 'theme-6';
@@ -66,6 +70,7 @@ export class MainLayoutComponent extends CommonApp implements OnInit, OnDestroy 
   ngOnInit(): void {
     const resolvedId = THEME_NAME_MAP[this.appConfig.theme.name ?? 'theme-5'] ?? 'tron';
     this.themeService.setTheme(resolvedId);
+    this.startSessionTimer();
   }
 
   ngOnDestroy(): void {
@@ -122,5 +127,24 @@ export class MainLayoutComponent extends CommonApp implements OnInit, OnDestroy 
 
   private _isMobile(): boolean {
     return typeof window !== 'undefined' && window.innerWidth <= MOBILE_BREAKPOINT;
+  }
+
+  startSessionTimer() {
+    if (this.appService.role() !== 'ADMIN') {
+      setTimeout(() => {
+        this.confirmationService.confirm({
+          header: 'App session expiring',
+          message: 'Your session is about to expire. Do you want to refresh the session?',
+          acceptLabel: 'Ok',
+          acceptIcon: "none",
+          rejectVisible: false,
+          closeOnEscape: false,
+          closable: false,
+          accept: () => {
+            window.location.reload();
+          },
+        });
+      }, 10 * 60 * 1000);
+    }
   }
 }

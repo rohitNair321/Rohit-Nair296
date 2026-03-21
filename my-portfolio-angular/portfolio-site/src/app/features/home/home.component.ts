@@ -86,7 +86,6 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
   ngOnInit() {
     if (this.profileData()) {
       this.homeData = this.profileData();
-      this.applyThemeFromProfile(this.profileData());
     } else {
       this.getMyProfile();
       if (this.appService.role() === 'ADMIN') {
@@ -134,9 +133,7 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
   }
 
   getNotifications(): void {
-    this.pullNotification = timer(0, 300000).pipe(
-      switchMap(() => this.appService.getNotifications())
-    ).subscribe({
+    this.appService.getNotifications().subscribe({
       next: (notifications) => {
         if (notifications.unreadCount > 0) {
           this.alertService.showAlert(`You have ${notifications.unreadCount} notifications`, 'info');

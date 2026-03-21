@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { AlertComponent } from './shared/components/ui/alert-dialog/alert.component';
 import { SpinnerComponent } from './shared/components/ui/spinner-overlay/spinner.component';
 import { AnalyticsService } from './core/services/analytics.service';
 import { filter } from 'rxjs';
 import { environment } from 'src/environments/environments';
+import { CommonApp } from './core/services/common';
 
 @Component({
   selector: 'app-root',
@@ -14,9 +15,10 @@ import { environment } from 'src/environments/environments';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent extends CommonApp {
 
-  constructor(private router: Router, private analytics: AnalyticsService) {
+  constructor(public override injector: Injector, private analytics: AnalyticsService) {
+    super(injector);
     if (environment.production) {
       this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: any) => {
         this.analytics.trackEvent('page_view', {
@@ -27,6 +29,9 @@ export class AppComponent {
   }
 
   ngOnInit() {
-
+    
   }
+
+
+
 }
