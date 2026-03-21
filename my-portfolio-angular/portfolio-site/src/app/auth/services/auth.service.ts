@@ -28,12 +28,16 @@ export class AuthService {
   role = signal<UserRole>(null);
   private readonly baseUrl = ''; //api/auth
   private readonly apiBaseUrl = environment.baseUrl + '/api/auth';
+  private httpOptions = {
+    withCredentials: true
+  };
   user = signal<any | null>(null);
   token = signal<string | null>(null);
 
-  private authHeaders(): HttpHeaders {
-    const token = this.token() || this.localStorageService.getItem('auth_token');
-    return new HttpHeaders({ Authorization: token ? `Bearer ${token}` : '' });
+  private authHeaders(): any {
+    // const token = this.token() || this.localStorageService.getItem('auth_token');
+    // return new HttpHeaders({ Authorization: token ? `Bearer ${token}` : '' });
+    return this.httpOptions;
   }
   // Fetch profile data from Json.
   getCombinedData(): Observable<any> {
@@ -47,14 +51,18 @@ export class AuthService {
   }
 
   login(payload: LoginRequest): Observable<any> {
-    return this.http.post<any>(`${this.apiBaseUrl}/login`, payload).pipe(
+    return this.http.post<any>(`${this.apiBaseUrl}/login`, payload, this.httpOptions).pipe(
       map((res) => {
         this.token.set(res.token);
         this.user.set(res.user);
-        this.localStorageService.setItem('auth_token', res.token);
+        // this.localStorageService.setItem('auth_token', res.token);
         return res;
       })
     );
+  }
+
+  initiateApp(): Observable<any> {
+    return this.http.get(`${this.apiBaseUrl}/initApp`,{ withCredentials: true });
   }
 
   loginWithGoogle(): Observable<any> {
@@ -70,7 +78,7 @@ export class AuthService {
   }
 
   forgotPassword(email: string): Observable<any> {
-    return this.http.post(`${this.apiBaseUrl}/forgot-password`, { email });
+    return this.http.post(`${this.apiBaseUrl}/forgot-password`, { email }, this.httpOptions);
   }
 
   resetPassword(token?: string, password?: string): Observable<any> {
@@ -78,17 +86,29 @@ export class AuthService {
   }
 
   updatePassword(passwordData: FormData): Observable<any> {
-    return this.http.put(`${this.apiBaseUrl}/update-password`, passwordData, { headers: this.authHeaders() });
+    return this.http.put(`${this.apiBaseUrl}/update-password`, passwordData, this.httpOptions);
   }
 
   logout(): void {
-    this.token.set(null);
-    this.user.set(null);
-    this.role.set(null);
-    this.appServices._profile.set(null);
-    this.appServices._notifications.set(null);
-    this.localStorageService.clear();
-    this.router.navigate(['/login'])
+    this.http.post(`${this.apiBaseUrl}/logout`, {}, { withCredentials: true }
+    ).subscribe(() => {
+
+      this.user.set(null);
+      this.role.set(null);
+      this.appServices._profile.set(null);
+      this.appServices._notifications.set(null);
+      this.localStorageService.clear();
+
+      this.router.navigate(['/login']);
+
+    });
+    // this.token.set(null);
+    // this.user.set(null);
+    // this.role.set(null);
+    // this.appServices._profile.set(null);
+    // this.appServices._notifications.set(null);
+    // this.localStorageService.clear();
+    // this.router.navigate(['/login'])
   }
 
 }

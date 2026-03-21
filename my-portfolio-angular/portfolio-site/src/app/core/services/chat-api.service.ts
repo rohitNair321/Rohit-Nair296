@@ -42,13 +42,12 @@ export class ChatApiService {
     }
 
     getSessions(): Observable<ChatSessionDto[]> {
-        return this.http.get<ChatSessionDto[]>(`${this.apiChatSessionsUrl}/getSessions`);
+        return this.http.get<ChatSessionDto[]>(`${this.apiChatSessionsUrl}/getSessions`, {withCredentials: true});
     }
 
     getSession(id: string): Observable<ChatSessionDto> {
         return this.http.get<ChatSessionDto>(
-            `${this.apiChatSessionsUrl}/getSessionById/${id}`
-        );
+            `${this.apiChatSessionsUrl}/getSessionById/${id}`, {withCredentials: true});
     }
 
     saveMessage(
@@ -63,25 +62,26 @@ export class ChatApiService {
                 sender,
                 message,
                 userId: this.appService.profile()?.id
-            }
+            },
+            {withCredentials: true}
         );
     }
 
 
     getMessages(sessionId: string): Observable<ChatSessionDto[]> {
         return this.http.get<ChatSessionDto[]>(
-            `${this.apiChatSessionsUrl}/messages/${sessionId}`
+            `${this.apiChatSessionsUrl}/messages/${sessionId}`, {withCredentials: true}
         );
     }
 
 
 
     deleteSession(id: string) {
-        return this.http.delete(`${this.apiChatSessionsUrl}/deleteSessionById/${id}`);
+        return this.http.delete(`${this.apiChatSessionsUrl}/deleteSessionById/${id}`, {withCredentials: true});
     }
 
     deleteAllSessions() {
-        return this.http.delete(`${this.apiChatSessionsUrl}/deleteAllSessions`);
+        return this.http.delete(`${this.apiChatSessionsUrl}/deleteAllSessions`, {withCredentials: true});
     }
 
 }
