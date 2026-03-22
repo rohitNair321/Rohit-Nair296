@@ -27,7 +27,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     setHeaders['X-User-Role'] = role;
   }
   const cloned = Object.keys(setHeaders).length > 0
-    ? req.clone({ setHeaders })
+    ? req.clone({ setHeaders, withCredentials: true })
     : req;
 
   return next(cloned).pipe(
