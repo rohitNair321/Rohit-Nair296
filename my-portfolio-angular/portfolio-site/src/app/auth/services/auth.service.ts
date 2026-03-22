@@ -95,6 +95,7 @@ export class AuthService {
 
       this.user.set(null);
       this.role.set(null);
+      this.token.set(null);
       this.appServices._profile.set(null);
       this.appServices._notifications.set(null);
       this.localStorageService.clear();
