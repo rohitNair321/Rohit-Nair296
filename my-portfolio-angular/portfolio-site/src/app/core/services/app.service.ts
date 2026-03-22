@@ -46,7 +46,7 @@ export class AppService {
 
     // Fetch profile from server and update signal
     getProfile(): Observable<Profile | null> {
-        return this.http.get<{ profile: Profile | null }>(`${this.apiProfileUrl}/getMyProfile`, this.httpOptions)
+        return this.http.get<{ profile: Profile | null }>(`${this.apiProfileUrl}/getMyProfile`, {withCredentials: true})
             .pipe(
                 map(r => r.profile || null),
                 tap(p => this._profile.set(p))
@@ -54,14 +54,14 @@ export class AppService {
     }
 
     updateProfile(formData: FormData): Observable<Profile> {
-        return this.http.put<{ profile: Profile }>(`${this.apiProfileUrl}/saveUpdateMyProfile`, formData, this.httpOptions).pipe(
+        return this.http.put<{ profile: Profile }>(`${this.apiProfileUrl}/saveUpdateMyProfile`, formData, {withCredentials: true}).pipe(
             map(r => r.profile),
             tap(updated => this._profile.set(updated))
         );
     }
 
     getResumeSignedUrl(): Observable<{ url: string, expires_in: number }> {
-        return this.http.get<{ url: string, expires_in: number }>(`${this.apiProfileUrl}/me/resume`, this.httpOptions);
+        return this.http.get<{ url: string, expires_in: number }>(`${this.apiProfileUrl}/me/resume`, {withCredentials: true});
     }
 
     setLocalProfile(profile: Profile | null) {
@@ -69,7 +69,7 @@ export class AppService {
     }
 
     sendContactMessage(formData: any): Observable<any> {
-        return this.http.post<any>(`${this.apiContactUrl}/send`, formData).pipe(
+        return this.http.post<any>(`${this.apiContactUrl}/send`, formData, {withCredentials: true}).pipe(
             map((res) => {
                 return res;
             })
@@ -79,7 +79,7 @@ export class AppService {
     getNotifications(): Observable<Notification> {
         if (this.role() === 'ADMIN') {
             return timer(0, 20 * 60 * 1000).pipe(
-                switchMap(() => this.http.get<Notification>(`${this.apiContactUrl}/notifications`, this.httpOptions)),
+                switchMap(() => this.http.get<Notification>(`${this.apiContactUrl}/notifications`, {withCredentials: true})),
                 map(notification => notification || null),
                 tap(notification => this._notifications.set(notification))
             );
@@ -88,14 +88,14 @@ export class AppService {
     }
 
     markMessageAsRead(id: string): Observable<Notification> {
-        return this.http.put<Notification>(`${this.apiContactUrl}/notifications/${id}/read`, {}, this.httpOptions).pipe(
+        return this.http.put<Notification>(`${this.apiContactUrl}/notifications/${id}/read`, {}, {withCredentials: true}).pipe(
             map(notification => notification || null),
             tap(notification => this._notifications.set(notification))
         );
     }
 
     deleteMessage(id: string): Observable<Notification> {
-        return this.http.delete<Notification>(`${this.apiContactUrl}/delete/${id}`, this.httpOptions).pipe(
+        return this.http.delete<Notification>(`${this.apiContactUrl}/delete/${id}`, {withCredentials: true}).pipe(
             map(notification => notification || null),
             tap(notification => this._notifications.set(notification))
         );
