@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { catchError, debounceTime, forkJoin, map, mergeMap, Observable, of } from 'rxjs';
+import { catchError, debounceTime, forkJoin, map, mergeMap, Observable, of, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environments';
 import { AppService, UserRole } from 'src/app/core/services/app.service';
@@ -23,7 +23,7 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private localStorageService = inject(LocalStorageService);
   private router = inject(Router);
-  private appServices = inject(AppService);
+  public appService = inject(AppService);
 
   role = signal<UserRole>(null);
   private readonly baseUrl = ''; //api/auth
@@ -47,7 +47,7 @@ export class AuthService {
   }
 
   register(payload: RegisterRequest): Observable<any> {
-    return this.http.post(`${this.apiBaseUrl}/register`, payload);
+    return this.http.post(`${this.apiBaseUrl}/register`, payload);  
   }
 
   login(payload: LoginRequest): Observable<any> {
@@ -55,14 +55,22 @@ export class AuthService {
       map((res) => {
         this.token.set(res.token);
         this.user.set(res.user);
-        // this.localStorageService.setItem('auth_token', res.token);
-        return res;
+        this.role.set(res.user.role === 'admin' ? 'ADMIN' : 'GUEST');
+        this.appService.setRole(res.user.role === 'admin' ? 'ADMIN' : 'GUEST');
+        this.localStorageService.setItem('auth_token', res.token);
       })
     );
   }
 
-  initiateApp(): Observable<any> {
-    return this.http.get(`${this.apiBaseUrl}/initApp`,{ withCredentials: true });
+initiateApp(): Observable<any> {
+    return this.http.get(`${this.apiBaseUrl}/initApp`).pipe(
+      tap((res: any) => {
+        const role: UserRole = res.role === 'admin' ? 'ADMIN' : 'GUEST';
+        this.role.set(role);
+        this.appService.setRole(role);
+        this.user.set({ email: res.email, id: res.id, role: res.role });
+      })
+    );
   }
 
   loginWithGoogle(): Observable<any> {
@@ -89,27 +97,26 @@ export class AuthService {
     return this.http.put(`${this.apiBaseUrl}/update-password`, passwordData, this.httpOptions);
   }
 
+  logoutState(): void {
+    this.user.set(null);
+    this.role.set(null);
+    this.token.set(null);
+    this.appService.setRole('GUEST');
+    this.appService._profile.set(null);
+    this.localStorageService.clear();
+  }
+
   logout(): void {
-    this.http.post(`${this.apiBaseUrl}/logout`, {}, { withCredentials: true }
-    ).subscribe(() => {
-
-      this.user.set(null);
-      this.role.set(null);
-      this.token.set(null);
-      this.appServices._profile.set(null);
-      this.appServices._notifications.set(null);
-      this.localStorageService.clear();
-
-      this.router.navigate(['/login']);
-
+    this.http.post(`${this.apiBaseUrl}/logout`, {}).subscribe({
+      next: () => {
+        this.logoutState();
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        this.logoutState();
+        this.router.navigate(['/login']);
+      }
     });
-    // this.token.set(null);
-    // this.user.set(null);
-    // this.role.set(null);
-    // this.appServices._profile.set(null);
-    // this.appServices._notifications.set(null);
-    // this.localStorageService.clear();
-    // this.router.navigate(['/login'])
   }
 
 }

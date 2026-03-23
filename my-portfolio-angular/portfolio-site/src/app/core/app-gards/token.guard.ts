@@ -39,44 +39,37 @@ import { CommonApp } from "../services/common";
 //   return false;
 // };
 
-export const tokenGuard: CanActivateFn = (route, state) => {
 
+export const tokenGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const authService = inject(AuthService);
   const appService = inject(AppService);
   const themeService = inject(CommonApp);
 
   return authService.initiateApp().pipe(
-
     map((res: any) => {
-
-      const role = res?.role == 'admin' ? 'ADMIN' : "GUEST";
-
+      const role = res?.role === 'admin' ? 'ADMIN' : "GUEST";
       appService.setRole(role);
-
       themeService.applyThemeFromProfile(res.appData);
 
-      const isAdminRoute =
-        route.data?.['roles']?.includes('ADMIN');
+      const isAdminRoute = route.data?.['roles']?.includes('ADMIN');
 
       if (isAdminRoute && role !== 'ADMIN') {
-
         router.navigate(['/login']);
         return false;
-
       }
-
-      return true;
-
+      return true; // Let guests view public pages
     }),
-
     catchError(() => {
-
-      router.navigate(['/login']);
-      return of(false);
-
+      // Don't enforce login loop for public guests!
+      const isAdminRoute = route.data?.['roles']?.includes('ADMIN');
+      appService.setRole('GUEST');
+      
+      if (isAdminRoute) {
+        router.navigate(['/login']);
+        return of(false);
+      }
+      return of(true); 
     })
-
   );
-
 };
