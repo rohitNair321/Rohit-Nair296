@@ -1,5 +1,5 @@
 {
-  "name": "portfolio-site",
+  "name": "Rohit Profile site",
   "version": "5.0.0",
   "scripts": {
     "ng": "ng",
@@ -29,6 +29,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.18.2",
     "gsap": "^3.13.0",
+    "ngx-markdown": "^19.1.1",
     "primeicons": "^7.0.0",
     "primeng": "^19.1.4",
     "rxjs": "~7.8.0",
