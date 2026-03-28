@@ -32,13 +32,13 @@
   @if (showWelcome() && !isOpen()) {
   <div class="cb-welcome" role="status" aria-live="polite">
     <span class="cb-welcome__emoji">👋</span>
-    <span class="cb-welcome__text">Hi! I'm AiNg — need help?</span>
+    <span class="cb-welcome__text">Hi! I'm FolioAI — need help?</span>
   </div>
   }
 
   <!-- ── Chat window ─────────────────────────────────────────── -->
   @if (isOpen()) {
-  <div class="cb-window" role="dialog" aria-label="Chat with AiNg assistant">
+  <div class="cb-window" role="dialog" aria-label="Chat with FolioAI assistant">
 
     <!-- HEADER -->
     <div class="cb-window__header">
@@ -133,6 +133,7 @@
       @for (msg of activeMessages(); track trackById($index, msg)) {
       <div class="cb-msg" [class.cb-msg--user]="msg.sender === 'user'" [class.cb-msg--bot]="msg.sender === 'bot'"
         [class.cb-msg--loading]="msg.loading" [class.cb-msg--error]="msg.error">
+
         <!-- Bot avatar — only on bot messages -->
         @if (msg.sender === 'bot') {
         <span class="cb-msg__avatar" aria-hidden="true">
@@ -141,8 +142,9 @@
         }
 
         <div class="cb-msg__body">
+
           <!-- Typing indicator -->
-          @if (msg.loading) {
+          @if (isSending()) {
           <div class="cb-msg__bubble" aria-label="Bot is typing">
             <div class="cb-typing">
               <span></span><span></span><span></span>
@@ -154,17 +156,27 @@
           @if (msg.error && !msg.loading) {
           <div class="cb-msg__bubble cb-msg__bubble--error">
             <span class="material-icons cb-msg__error-icon">error_outline</span>
-            <span>{{ msg.text }}</span>
+            <span>{{ msg.text }} <a href="#contact" (click)="scrollToSection($event, '#contact')" (click)="toggleChat()">Contact Rohit</a> </span>
           </div>
           }
 
-          <!-- Normal message -->
+          <!-- ── Normal message ────────────────────────────────── -->
+          <!-- User messages: plain text (no markdown needed)       -->
+          <!-- Bot messages:  rendered markdown via ngx-markdown     -->
           @if (!msg.loading && !msg.error) {
-          <div class="cb-msg__bubble">{{ msg.text }}</div>
-          <time class="cb-msg__time" [dateTime]="msg.timestamp.toISOString()">
-            {{ msg.timestamp | date:'h:mm a' }}
-          </time>
+            @if (msg.sender === 'user') {
+              <div class="cb-msg__bubble">{{ msg.text }}</div>
+            } @else {
+              <!-- markdown directive renders **bold**, lists, tables, etc. -->
+              <div class="cb-msg__bubble cb-msg__bubble--markdown">
+                <markdown [data]="msg.text" />
+              </div>
+            }
+            <time class="cb-msg__time" [dateTime]="msg.timestamp.toISOString()">
+              {{ msg.timestamp | date:'h:mm a' }}
+            </time>
           }
+
         </div>
 
       </div>
@@ -177,7 +189,7 @@
     <!-- COMPOSER -->
     <div class="cb-composer">
 
-      <!-- Model selector row -->
+      <!-- Model selector row (uncomment to enable) -->
       <!-- <div class="cb-composer__model-row">
         <span class="material-icons cb-composer__model-icon">auto_awesome</span>
         <select #modelSelect class="cb-composer__model-select" [value]="selectedModel()"
@@ -190,11 +202,12 @@
 
       <!-- Input row -->
       <div class="cb-composer__input-row">
-        <textarea #inputRef class="cb-composer__input" [placeholder]="placeholder" [disabled]="isSending() || chatDisabled()"
-          [value]="newMessage()" (input)="newMessage.set(inputRef.value)" (keydown)="onInputKeydown($event)" rows="1"
+        <textarea #inputRef class="cb-composer__input" [placeholder]="placeholder"
+          [disabled]="isSending() || chatDisabled()" [value]="newMessage()"
+          (input)="newMessage.set(inputRef.value)" (keydown)="onInputKeydown($event)" rows="1"
           aria-label="Type your message"></textarea>
-        <button class="cb-composer__send" (click)="sendMessage()" [disabled]="isSending() || chatDisabled() || !newMessage().trim()"
-          aria-label="Send message">
+        <button class="cb-composer__send" (click)="sendMessage()"
+          [disabled]="isSending() || chatDisabled() || !newMessage().trim()" aria-label="Send message">
           @if (isSending()) {
           <span class="cb-composer__spinner" aria-hidden="true"></span>
           } @else {

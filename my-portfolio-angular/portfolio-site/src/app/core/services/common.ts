@@ -5,7 +5,7 @@ import { defaultConfig, LayoutConfig } from "../config/layout.config";
 import { AppService } from "./app.service";
 import { ThemeService } from "../theme/theme.service";
 import { AlertService } from "./alert.service";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { LocalStorageService } from "src/app/shared/services/local-storage.service";
 import { MenuItem } from "../config/menuItem.config";
 import { ChatApiService } from "./chat-api.service";
@@ -19,6 +19,7 @@ export class CommonApp {
   public themeService;
   public alertService;
   public router;
+  public route;
   public localStorageService;
   public aiChatService;
   public appConfig: LayoutConfig = defaultConfig;
@@ -31,6 +32,7 @@ export class CommonApp {
     this.alertService = this.injector.get(AlertService);
     this.themeService = this.injector.get(ThemeService);
     this.router = this.injector.get(Router);
+    this.route = this.injector.get(ActivatedRoute);
     this.localStorageService = this.injector.get(LocalStorageService);
     this.aiChatService = this.injector.get(ChatApiService);
 

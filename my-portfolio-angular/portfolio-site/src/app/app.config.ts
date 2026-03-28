@@ -12,6 +12,8 @@ import { authInterceptor } from './core/interceptors/app.interceptor';
 import { provideClientHydration } from '@angular/platform-browser';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
+import { provideMarkdown } from 'ngx-markdown';
+
 
 export function initApp() {
   return () => Promise.resolve();
@@ -19,6 +21,7 @@ export function initApp() {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideMarkdown(),
     providePrimeNG({ 
             theme: {
                 preset: Aura

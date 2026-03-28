@@ -13,7 +13,7 @@ import { CommonApp } from 'src/app/core/services/common';
 })
 export class ResetPasswordComponent extends CommonApp implements OnInit {
   private readonly fb = inject(FormBuilder);
-  private readonly route = inject(ActivatedRoute);
+  // private readonly route = inject(ActivatedRoute);
 
   // v18 Signals
   successMessage = signal<string | null>(null);

@@ -64,8 +64,12 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy, C
   activeSettingTab: 'profile' | 'aiChatMonitoring' | 'monitoring' = 'profile';
   adminEmail: string = '';
 
-  constructor(public override injector: Injector, private fb: FormBuilder, private confirmationService: ConfirmationService) {
+  constructor(public override injector: Injector, private fb: FormBuilder, private confirmationService: ConfirmationService, ) {
     super(injector);
+    this.route.queryParams.subscribe(params => {
+      console.log('Query params on init', params);
+    });
+
   }
 
   ngOnInit(): void {

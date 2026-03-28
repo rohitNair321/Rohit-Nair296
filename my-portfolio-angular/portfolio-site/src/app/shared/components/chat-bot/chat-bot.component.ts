@@ -13,6 +13,7 @@ import {
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommonApp } from 'src/app/core/services/common';
+import { MarkdownComponent } from 'ngx-markdown';
 
 // ── Types ─────────────────────────────────────────────────────
 
@@ -41,25 +42,6 @@ export interface ModelVersion {
   description: string;
 }
 
-// ── Dummy bot responses — replace with real API call ─────────
-
-const DUMMY_RESPONSES: string[] = [
-  "Rohit is a full-stack engineer with 5+ years of experience in Angular, Node.js, and cloud architectures.",
-  "He has worked on enterprise-scale dashboards, real-time data pipelines, and AI-powered portfolio tools.",
-  "Rohit's recent projects include an AI chatbot integration, a theme-based design system, and a microservices API platform.",
-  "He holds certifications in AWS Solutions Architect and Google Cloud Professional.",
-  "Rohit is passionate about clean code, performance engineering, and developer experience.",
-  "You can find his open-source contributions on GitHub — mostly Angular libraries and utility toolkits.",
-  "He has led cross-functional teams of up to 8 engineers, delivering projects on time and under budget.",
-  "Rohit specialises in building scalable frontends with Angular, RxJS, NgRx, and PrimeNG.",
-  "Feel free to ask me about his education, skills, work history, or project highlights!",
-  "Rohit is currently open to senior engineering and tech-lead roles. Shall I share his contact details?",
-];
-
-function randomResponse(): string {
-  return DUMMY_RESPONSES[Math.floor(Math.random() * DUMMY_RESPONSES.length)];
-}
-
 function uid(): string {
   return Math.random().toString(36).slice(2, 10);
 }
@@ -69,7 +51,7 @@ function uid(): string {
 @Component({
   selector: 'app-chat-bot',
   standalone: true,
-  imports: [CommonModule, FormsModule, DatePipe],
+  imports: [CommonModule, FormsModule, DatePipe, MarkdownComponent],
   templateUrl: './chat-bot.component.html',
   styleUrls: ['./chat-bot.component.scss'],
 })
@@ -142,7 +124,7 @@ export class ChatBotComponent extends CommonApp implements OnInit, OnDestroy {
     const opening = !this.isOpen();
     this.isOpen.set(opening);
     this.showWelcome.set(!opening);
- 
+
     if (opening) {
       // Open into the most-recent session or create a fresh one
       if (!this.activeSessionId() || !this.activeSession()) {
@@ -248,50 +230,40 @@ export class ChatBotComponent extends CommonApp implements OnInit, OnDestroy {
     });
 
     this.appService.aiChat(text, sessionId).subscribe({
-
       next: (res) => {
-
         if (res.limitReached) {
-
           this.isSending.set(false);
-
           this._appendMessage({
             id: uid(),
             text:
               "Chat limit reached. For more info go to contact section and send message to Rohit.",
             sender: 'bot',
             timestamp: new Date(),
-            error: true
+            error: true,
+            loading: false
           });
-
           this.chatDisabled.set(true);
-
           return;
         }
         const reply = res.response;
-
         // replace loading
         this._replaceMessage(loadingId, {
           id: uid(),
           text: reply,
           sender: 'bot',
           timestamp: new Date(),
+          loading: false
         });
-
         // IMPORTANT → session created here
         if (!sessionId) {
-
           this.activeSessionId.set(res.sessionId);
-
           // reload sessions list
           this._loadHistory();
         }
-
         this.isSending.set(false);
       },
 
       error: () => {
-
         this._replaceMessage(loadingId, {
           id: uid(),
           text: 'Error',
@@ -299,7 +271,6 @@ export class ChatBotComponent extends CommonApp implements OnInit, OnDestroy {
           timestamp: new Date(),
           error: true
         });
-
         this.isSending.set(false);
       }
 
