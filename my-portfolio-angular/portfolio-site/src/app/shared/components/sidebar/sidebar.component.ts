@@ -162,10 +162,8 @@ export class SidebarComponent extends CommonApp implements OnInit {
     }
   }
 
-  logout() {
-    this.themeService.isDark.set(false);
-    this.themeService.currentThemeId.set('');
-    this.authService.logout();
+  navigateToLogin() {
+    this.router.navigate(['/auth/login']);
   }
 
   private _handleResize(): void {

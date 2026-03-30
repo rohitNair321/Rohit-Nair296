@@ -139,11 +139,11 @@ initiateApp(): Observable<any> {
     this.http.post(`${this.apiV1BaseUrl}/logout`, {}).subscribe({
       next: () => {
         this.logoutState();
-        this.router.navigate(['/login']);
+        this.router.navigate(['/']);
       },
       error: () => {
         this.logoutState();
-        this.router.navigate(['/login']);
+        this.router.navigate(['/']);
       }
     });
   }

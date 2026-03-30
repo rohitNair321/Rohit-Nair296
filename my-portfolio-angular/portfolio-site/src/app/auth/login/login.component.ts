@@ -85,10 +85,7 @@ export class LoginComponent extends CommonApp {
     });
   }
 
-  onContinueAsGuest(): void {
-    this.appService.role.set('GUEST');
-    this.appService.token.set(null);
-    this.localStorageService.removeItem('auth_token');
+  cancelLogin(): void {
     this.router.navigate(['/']);
   }
 }

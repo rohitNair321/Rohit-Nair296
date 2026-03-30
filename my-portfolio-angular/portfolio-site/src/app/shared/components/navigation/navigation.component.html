@@ -131,16 +131,15 @@
       </button>
 
       <!-- Logout — non-admin only -->
-@if (appService.role() === 'ADMIN') {
-<button class="nav-bar__icon-btn btn-logout" title="Logout" (click)="logout()">
-  <span class="material-icons">logout</span>
-</button>
-} @else {
-<button class="nav-bar__btn-login" title="Admin Login" (click)="navigateToLogin()">
-  <span class="material-icons me-1">login</span>
-  Login
-</button>
-}
+      @if (appService.role() === 'ADMIN') {
+      <button class="nav-bar__icon-btn btn-logout" title="Logout" (click)="logout()">
+        <span class="material-icons">logout</span>
+      </button>
+      } @else {
+      <button class="nav-bar__btn-login" title="Admin Login" (click)="navigateToLogin()">
+        <span class="material-icons me-1">login</span>
+      </button>
+      }
 
       <!-- Profile -->
       @if (config?.appConfiguration?.showUserProfileView) {
@@ -273,24 +272,26 @@
 
       <!-- Bottom actions -->
       <div class="nav-bar__mobile-actions mt-auto pt-3">
-  <button class="mobile-theme-toggle w-100 d-flex align-items-center gap-3"
-    (click)="themeService.toggleDarkMode()">
-    <span class="material-icons">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
-    {{ themeService.isDark() ? 'Switch to Light' : 'Switch to Dark' }}
-  </button>
+        <button class="mobile-theme-toggle w-100 d-flex align-items-center gap-3"
+          (click)="themeService.toggleDarkMode()">
+          <span class="material-icons">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+          {{ themeService.isDark() ? 'Switch to Light' : 'Switch to Dark' }}
+        </button>
 
-  @if (appService.role() === 'ADMIN') {
-  <button class="mobile-theme-toggle btn-logout w-100 d-flex align-items-center gap-3 mt-2" (click)="logout()">
-    <span class="material-icons">logout</span>
-    Logout
-  </button>
-  } @else {
-  <button class="mobile-theme-toggle btn-login w-100 d-flex align-items-center gap-3 mt-2" (click)="navigateToLogin()">
-    <span class="material-icons">login</span>
-    Admin Login
-  </button>
-  }
-</div>
+        @if (appService.role() === 'GUEST') {
+        <!-- <button class="mobile-theme-toggle btn-logout w-100 d-flex align-items-center gap-3 mt-2" (click)="logout()">
+          <span class="material-icons">logout</span>
+          Logout
+        </button> -->
+        <button class="mobile-theme-toggle btn-login w-100 d-flex align-items-center gap-3 mt-2"
+          (click)="navigateToLogin()">
+          <span class="material-icons">login</span>
+          Admin Login
+        </button>
+        } @else {
+        
+        }
+      </div>
 
     </div>
   </div>
