@@ -48,7 +48,7 @@ export class LoginComponent extends CommonApp {
       next: () => {
         this.loading.hide();
         this.appService.setRole('ADMIN');
-        this.router.navigate(['/app/home']);
+        this.router.navigate(['/']);
       },
       error: () => {
         this.loading.hide();
@@ -89,6 +89,6 @@ export class LoginComponent extends CommonApp {
     this.appService.role.set('GUEST');
     this.appService.token.set(null);
     this.localStorageService.removeItem('auth_token');
-    this.router.navigate(['/app/home']);
+    this.router.navigate(['/']);
   }
 }

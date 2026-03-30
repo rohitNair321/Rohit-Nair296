@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, HostListener, Injector, Inject, computed, EventEmitter, Output } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, Input, OnInit, HostListener, Injector, Inject, computed, EventEmitter, Output, PLATFORM_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -66,19 +66,28 @@ export class SidebarComponent extends CommonApp implements OnInit {
   }
 
   private readonly _onResize = this._handleResize.bind(this);
+  private isBrowser: boolean;
 
-  constructor(public override injector: Injector) {
+  constructor(
+    public override injector: Injector,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     super(injector);
+    this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
 
   ngOnInit() {
-    this._handleResize();
-    window.addEventListener('resize', this._onResize);
+    if (this.isBrowser) {
+      this._handleResize();
+      window.addEventListener('resize', this._onResize);
+    }
   }
 
   ngOnDestroy() {
-    window.removeEventListener('resize', this.checkMobile.bind(this));
+    if (this.isBrowser) {
+      window.removeEventListener('resize', this.checkMobile.bind(this));
+    }
   }
 
   onThemeChange(theme: any) {
@@ -139,7 +148,7 @@ export class SidebarComponent extends CommonApp implements OnInit {
   }
 
   navigateToNotifications() {
-    this.router.navigate(['app/notifications']);
+    this.router.navigate(['admin/notifications']);
   }
 
   selectTheme(theme: any) {
@@ -160,6 +169,8 @@ export class SidebarComponent extends CommonApp implements OnInit {
   }
 
   private _handleResize(): void {
+    if (!this.isBrowser) return;
+    
     const nowMobile = window.innerWidth <= MOBILE_BREAKPOINT;
     if (this.appConfig.appConfiguration.isMobile === nowMobile) { return; }
     this.appConfig.appConfiguration.isMobile = nowMobile;

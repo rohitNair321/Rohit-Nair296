@@ -402,3 +402,50 @@
   .animate-nav-slide-in,
   .nav-bar__mobile-menu { animation: none; opacity: 1; }
 }
+
+.nav-bar__btn-login {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--primary);
+  border-radius: 0.375rem;
+  background: var(--primary);
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--primary-glow);
+    border-color: var(--primary-glow);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  .material-icons {
+    font-size: 1.125rem;
+  }
+}
+
+// Mobile login button variant
+.btn-login {
+  background: var(--primary) !important;
+  color: white !important;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--primary-glow) !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  }
+}

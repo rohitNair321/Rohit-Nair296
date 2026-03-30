@@ -6,10 +6,34 @@ import { PageNotFoundComponent } from './layouts/page-not-found/page-not-found.c
 import { canDeactivateGuard } from './core/app-gards/can-deactivate.guard';
 
 export const routes: Routes = [
+  // Main application routes - accessible to everyone (guest + admin)
   {
     path: '',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        loadComponent: () =>
+          import('./features/home/home.component').then(m => m.HomeComponent),
+      },
+      {
+        path: 'home',
+        loadComponent: () =>
+          import('./features/home/home.component').then(m => m.HomeComponent),
+      },
+      {
+        path: 'about',
+        loadComponent: () =>
+          import('./features/about-me/about-me.component').then(m => m.AboutMeComponent),
+      },
+    ],
+  },
+  
+  // Auth routes - for login/register (separate layout)
+  {
+    path: 'auth',
     component: AuthLayoutComponent,
-    // canActivate: [tokenGuard],
     children: [
       {
         path: 'login',
@@ -33,28 +57,15 @@ export const routes: Routes = [
           import('./auth/reset-password/reset-password.component')
             .then(m => m.ResetPasswordComponent),
       },
-      {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: 'login', // relative redirect (no leading slash!)
-      },
     ],
   },
+  
+  // Admin-only routes - require authentication
   {
-    path: 'app',
+    path: 'admin',
     component: MainLayoutComponent,
     canActivate: [tokenGuard],
     children: [
-      {
-        path: 'home',
-        loadComponent: () =>
-          import('./features/home/home.component').then(m => m.HomeComponent),
-      },
-      {
-        path: 'about',
-        loadComponent: () =>
-          import('./features/about-me/about-me.component').then(m => m.AboutMeComponent),
-      },
       {
         path: 'settings',
         loadComponent: () =>

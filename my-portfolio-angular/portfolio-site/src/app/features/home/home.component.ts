@@ -56,7 +56,7 @@ interface HomeData { hero: Hero; aboutTeaser?: AboutTeaser; contact?: ContactInf
 })
 export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
 
-  homeData: any;
+  homeData: any = { experiences: [] }; // Initialize with safe defaults
   contactForm: FormGroup;
   projectList: any[] = [];
   experienceYears = 5;
@@ -68,6 +68,7 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
   profileData = this.appService.profile;
   pullNotification!: Subscription;
   private destroy$ = new Subject<void>();
+  isDataLoaded = false;
 
   constructor(
     public override injector: Injector,
@@ -84,8 +85,10 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if (this.profileData()) {
-      this.homeData = this.profileData();
+    const profile = this.profileData();
+    if (profile) {
+      this.homeData = profile;
+      this.isDataLoaded = true;
     } else {
       this.getMyProfile();
       if (this.appService.role() === 'ADMIN') {
@@ -122,11 +125,13 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
     this.appService.getProfile().pipe(take(1)).subscribe({
       next: (profile) => {
         this.homeData = profile;
+        this.isDataLoaded = true;
         this.applyThemeFromProfile(this.profileData());
         this.loading.hide();
       },
       error: (e) => {
         console.error(e.error.message);
+        this.isDataLoaded = true; // Still set to true to stop loading state
         this.loading.hide();
       }
     });
@@ -156,7 +161,7 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
   }
 
   aboutMe(){
-    this.router.navigate(['app/about']);
+    this.router.navigate(['about']);
     // this.alertService.showAlert(`This about me page is under development, will be in functional soon!!`, 'info');
   }
 

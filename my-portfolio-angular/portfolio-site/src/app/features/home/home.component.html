@@ -59,7 +59,7 @@
             
             <div class="stat-block">
               <div class="stat-header">{{'PROJECTS'}}</div>
-              <div class="stat-number">{{homeData?.experiences[1]?.projects?.length || totalProjects}}</div>
+              <div class="stat-number">{{(homeData?.experiences && homeData.experiences[1]?.projects?.length) || totalProjects}}</div>
               <div class="stat-label">{{'SUCCESSFULLY DELIVERED'}}</div>
             </div>
             
@@ -104,7 +104,7 @@
         </div>
 
         <div class="projects-grid">
-          @for (project of homeData?.experiences[0]?.projects; track project; let i = $index) {
+          @for (project of homeData?.experiences?.[0]?.projects || []; track project; let i = $index) {
             <div class="project-item">
               <div class="project-header">
                 <div class="project-number">{{ (i + 1).toString().padStart(2, '0') }}</div>
