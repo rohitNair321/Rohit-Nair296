@@ -1,6 +1,6 @@
-import { Component, Input, OnInit, OnDestroy, HostBinding, Output, EventEmitter, Injector, computed } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, HostBinding, Output, EventEmitter, Injector, computed, PLATFORM_ID, Inject } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -9,7 +9,7 @@ import { BadgeModule } from 'primeng/badge';
 import { ProfileMenuComponent } from '../profile-menu/profile-menu.component';
 import { CommonApp } from 'src/app/core/services/common';
 import { MenuModule } from "primeng/menu";
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { MenuItem } from 'src/app/core/config/menuItem.config';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
@@ -62,17 +62,28 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
   profileData = computed(() => this.appService.profile());
   notifications = computed(() => this.appService.notifications());
   private readonly _onResize = this._handleResize.bind(this);
-  constructor(public override injector: Injector) {
+  // private router = this.injector.get(Router);
+  private isBrowser: boolean;
+  
+  constructor(
+    public override injector: Injector,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     super(injector);
+    this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   ngOnInit() {
-    this._handleResize();                            // set initial state
-    window.addEventListener('resize', this._onResize);
+    if (this.isBrowser) {
+      this._handleResize();                            // set initial state
+      window.addEventListener('resize', this._onResize);
+    }
   }
 
   ngOnDestroy() {
-    window.removeEventListener('resize', this.checkMobile.bind(this));
+    if (this.isBrowser) {
+      window.removeEventListener('resize', this.checkMobile.bind(this));
+    }
   }
 
   checkMobile() {
@@ -105,6 +116,15 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
     this.authService.logout();
   }
 
+  /**
+   * Navigate to login page
+   * For guests to access admin login
+   */
+  navigateToLogin() {
+    this.router.navigate(['/auth/login']);
+    this.isMenuOpen = false; // Close mobile menu if open
+  }
+
   toggleTheme() {
     this.themeToggle();
   }
@@ -131,6 +151,8 @@ export class NavigationComponent extends CommonApp implements OnInit, OnDestroy 
   }
 
   private _handleResize(): void {
+    if (!this.isBrowser) return;
+    
     const nowMobile = window.innerWidth <= MOBILE_BREAKPOINT;
 
     if (this.isMobile === nowMobile) { return; }  // no change — skip

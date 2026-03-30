@@ -65,9 +65,9 @@ export class ProfileMenuComponent extends CommonApp {
       command: () => this.navigate('/settings'),
     },
     {
-      label: 'Profile',
-      icon: 'pi pi-user',
-      command: () => this.navigate('/profile'),
+      label: 'Notifications',
+      icon: 'pi pi-bell',
+      command: () => this.navigate('/notifications'),
     },
     {
       separator: true,
@@ -81,7 +81,7 @@ export class ProfileMenuComponent extends CommonApp {
   ];
 
   navigate(route: string) {
-    this.router.navigateByUrl('app' + route);
+    this.router.navigateByUrl('admin' + route);
   }
 
   logout() {

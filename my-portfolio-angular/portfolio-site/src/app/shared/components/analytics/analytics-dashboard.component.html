@@ -1,0 +1,251 @@
+<!-- Analytics Dashboard -->
+<div class="analytics-dashboard">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h1 class="dashboard-title">Google Analytics Dashboard</h1>
+      <p class="dashboard-subtitle">Track your portfolio's performance and visitor insights</p>
+    </div>
+    
+    <div class="header-actions">
+      <!-- Time Range Selector -->
+      <div class="time-range-buttons">
+        <button 
+          pButton 
+          [label]="'Last 7 Days'"
+          [outlined]="selectedTimeRange() !== '7days'"
+          (click)="changeTimeRange('7days')"
+          class="range-btn"
+        ></button>
+        <button 
+          pButton 
+          [label]="'Last 30 Days'"
+          [outlined]="selectedTimeRange() !== '30days'"
+          (click)="changeTimeRange('30days')"
+          class="range-btn"
+        ></button>
+        <button 
+          pButton 
+          [label]="'Custom'"
+          [outlined]="selectedTimeRange() !== 'custom'"
+          (click)="changeTimeRange('custom')"
+          class="range-btn"
+        ></button>
+      </div>
+
+      <!-- Custom Date Range Picker -->
+      @if (selectedTimeRange() === 'custom') {
+        <div class="custom-range">
+          <p-calendar 
+            [(ngModel)]="customDateRange"
+            selectionMode="range"
+            [readonlyInput]="true"
+            placeholder="Select date range"
+            dateFormat="M dd, yy"
+          ></p-calendar>
+          <button 
+            pButton 
+            label="Apply" 
+            icon="pi pi-check"
+            (click)="applyCustomRange()"
+            class="apply-btn"
+          ></button>
+        </div>
+      }
+
+      <!-- Refresh Button -->
+      <button 
+        pButton 
+        icon="pi pi-refresh" 
+        [loading]="loading()"
+        (click)="refresh()"
+        class="refresh-btn"
+        pTooltip="Refresh Data"
+      ></button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-container">
+      <i class="pi pi-spin pi-spinner" style="font-size: 3rem; color: var(--primary-color)"></i>
+      <p>Loading analytics data...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @else if (error()) {
+    <div class="error-container">
+      <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #ef4444"></i>
+      <p>{{ error() }}</p>
+      <button pButton label="Retry" (click)="refresh()" class="retry-btn"></button>
+    </div>
+  }
+
+  <!-- Dashboard Content -->
+  @else if (dashboardData()) {
+    <div class="dashboard-content">
+      <!-- Key Metrics Cards -->
+      <div class="metrics-grid">
+        <p-card class="metric-card">
+          <div class="metric-content">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <i class="pi pi-users"></i>
+            </div>
+            <div class="metric-info">
+              <span class="metric-label">Total Users</span>
+              <span class="metric-value">{{ formatNumber(dashboardData()?.visitorStats?.totalUsers || 0) }}</span>
+              <span class="metric-detail">
+                <span class="badge badge-new">{{ formatNumber(dashboardData()?.visitorStats?.newUsers || 0) }}</span>
+                new users
+              </span>
+            </div>
+          </div>
+        </p-card>
+
+        <p-card class="metric-card">
+          <div class="metric-content">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+              <i class="pi pi-eye"></i>
+            </div>
+            <div class="metric-info">
+              <span class="metric-label">Page Views</span>
+              <span class="metric-value">{{ formatNumber(totalPageViews()) }}</span>
+              <span class="metric-detail">across all pages</span>
+            </div>
+          </div>
+        </p-card>
+
+        <p-card class="metric-card">
+          <div class="metric-content">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+              <i class="pi pi-chart-line"></i>
+            </div>
+            <div class="metric-info">
+              <span class="metric-label">Sessions</span>
+              <span class="metric-value">{{ formatNumber(dashboardData()?.visitorStats?.sessions || 0) }}</span>
+              <span class="metric-detail">
+                {{ formatDuration(dashboardData()?.visitorStats?.avgSessionDuration || 0) }} avg
+              </span>
+            </div>
+          </div>
+        </p-card>
+
+        <p-card class="metric-card">
+          <div class="metric-content">
+            <div class="metric-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+              <i class="pi pi-percentage"></i>
+            </div>
+            <div class="metric-info">
+              <span class="metric-label">Bounce Rate</span>
+              <span class="metric-value">{{ formatPercent(dashboardData()?.visitorStats?.bounceRate || 0) }}</span>
+              <span class="metric-detail">visitor engagement</span>
+            </div>
+          </div>
+        </p-card>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="charts-grid">
+        <!-- Page Views & Sessions Chart -->
+        <p-card class="chart-card full-width">
+          <ng-template pTemplate="header">
+            <div class="chart-header">
+              <h3>Page Views & Sessions Over Time</h3>
+              <p>Daily breakdown of site traffic</p>
+            </div>
+          </ng-template>
+          <div class="chart-container">
+            <canvas #pageViewsChart></canvas>
+          </div>
+        </p-card>
+
+        <!-- Device Types Chart -->
+        <p-card class="chart-card">
+          <ng-template pTemplate="header">
+            <div class="chart-header">
+              <h3>Devices</h3>
+              <p>Visitor device breakdown</p>
+            </div>
+          </ng-template>
+          <div class="chart-container small">
+            <canvas #devicesChart></canvas>
+          </div>
+        </p-card>
+
+        <!-- Traffic Sources Chart -->
+        <p-card class="chart-card">
+          <ng-template pTemplate="header">
+            <div class="chart-header">
+              <h3>Traffic Sources</h3>
+              <p>Where visitors come from</p>
+            </div>
+          </ng-template>
+          <div class="chart-container small">
+            <canvas #trafficChart></canvas>
+          </div>
+        </p-card>
+
+        <!-- Geographic Distribution Chart -->
+        <p-card class="chart-card full-width">
+          <ng-template pTemplate="header">
+            <div class="chart-header">
+              <h3>Geographic Distribution</h3>
+              <p>Top 10 countries by users</p>
+            </div>
+          </ng-template>
+          <div class="chart-container">
+            <canvas #geoChart></canvas>
+          </div>
+        </p-card>
+      </div>
+
+      <!-- Top Pages Table -->
+      <p-card class="table-card">
+        <ng-template pTemplate="header">
+          <div class="chart-header">
+            <h3>Top Pages</h3>
+            <p>Most visited pages on your portfolio</p>
+          </div>
+        </ng-template>
+        <div class="top-pages-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Page Title</th>
+                <th>Path</th>
+                <th class="text-center">Page Views</th>
+                <th class="text-center">Avg. Duration</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (page of dashboardData()?.topPages || []; track page.path) {
+                <tr>
+                  <td class="page-title">{{ page.title || 'Untitled' }}</td>
+                  <td class="page-path">{{ page.path }}</td>
+                  <td class="text-center">
+                    <span class="badge badge-views">{{ formatNumber(page.pageViews) }}</span>
+                  </td>
+                  <td class="text-center">{{ formatDuration(page.avgDuration) }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="4" class="text-center empty-state">No data available</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </p-card>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @else {
+    <div class="empty-state-container">
+      <i class="pi pi-chart-bar" style="font-size: 4rem; color: #94a3b8"></i>
+      <p>No analytics data available</p>
+      <button pButton label="Load Data" (click)="refresh()"></button>
+    </div>
+  }
+</div>

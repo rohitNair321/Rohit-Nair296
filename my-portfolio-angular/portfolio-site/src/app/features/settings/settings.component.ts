@@ -14,6 +14,7 @@ import { ExperienceDTO, Profile, } from 'src/app/core/services/app.service';
 import { CommonApp } from 'src/app/core/services/common';
 import { ConfirmationService } from 'primeng/api';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { AnalyticsComponent } from 'src/app/shared/components/analytics/analytics-dashboard.component';
 
 
 @Component({
@@ -28,7 +29,8 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
     DialogModule,
     RadioButtonModule,
     ConfirmDialogModule,
-    ToggleButtonModule
+    ToggleButtonModule,
+    AnalyticsComponent
   ],
   providers: [ConfirmationService],
   templateUrl: './settings.component.html',
