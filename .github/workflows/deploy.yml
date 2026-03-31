@@ -21,13 +21,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '24'
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
       - name: Prerender Angular app
-        run: npx ng run portfolio-site:prerender --configuration production --base-href "/my-portfolio-angular/"
+        run: npx ng run portfolio-site:prerender:production --base-href "/my-portfolio-angular/"
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
