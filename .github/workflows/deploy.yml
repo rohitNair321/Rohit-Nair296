@@ -27,7 +27,7 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Prerender Angular app
-        run: npx ng run portfolio-site:prerender:production --base-href "/my-portfolio-angular/"
+        run: npx ng run portfolio-site:prerender:production
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
