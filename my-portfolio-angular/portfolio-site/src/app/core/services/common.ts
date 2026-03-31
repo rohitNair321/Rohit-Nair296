@@ -41,7 +41,7 @@ export class CommonApp {
       new MenuItem({ label: 'About Me', key: 'aboutMe', href: '#about', icon: 'person' }),
       new MenuItem({ label: 'Projects', key: 'projects', href: '#projects', icon: 'work' }),
       new MenuItem({ label: 'Contact', key: 'contact', href: '#contact', icon: 'mail' }),
-      new MenuItem({ label: 'Notifications', routerLink: 'notifications', icon: 'notifications', key: 'notifications', isHide: this.appConfig.appConfiguration.showNotifications,  role: 'admin' }),
+      new MenuItem({ label: 'Notifications', routerLink: 'admin/notifications', icon: 'notifications', key: 'notifications', isHide: this.appConfig.appConfiguration.showNotifications,  role: 'admin' }),
       new MenuItem({
         label: 'Resume', icon: 'download', action: true, key: 'resume', tooltip: 'Download Resume', actions: (event) => {
           this.downloadResume(event);

@@ -132,9 +132,9 @@
 
       <!-- Logout — non-admin only -->
       @if (appService.role() === 'ADMIN') {
-      <button class="nav-bar__icon-btn btn-logout" title="Logout" (click)="logout()">
+      <!-- <button class="nav-bar__icon-btn btn-logout" title="Logout" (click)="logout()">
         <span class="material-icons">logout</span>
-      </button>
+      </button> -->
       } @else {
       <button class="nav-bar__btn-login" title="Admin Login" (click)="navigateToLogin()">
         <span class="material-icons me-1">login</span>
@@ -177,16 +177,13 @@
     <!-- ④ PROFILE + THEME — sidebar mode all screen sizes ──── -->
     @if (config?.appConfiguration?.type === 'sidebar') {
     <div class="ms-auto d-flex align-items-center gap-2">
-      <button class="nav-bar__icon-btn" (click)="themeService.toggleDarkMode()" title="Toggle theme">
-        <span class="material-icons">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</span>
-      </button>
       @if (config?.appConfiguration?.showUserProfileView) {
       <app-profile-menu></app-profile-menu>
       }
     </div>
     }
 
-  </div><!-- /nav-bar__inner -->
+  </div>
 
 
   <!-- ══════════════════════════════════════════════════════

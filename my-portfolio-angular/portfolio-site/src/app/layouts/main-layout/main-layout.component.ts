@@ -53,7 +53,7 @@ export class MainLayoutComponent extends CommonApp implements OnInit, OnDestroy 
     super(injector);
 
     this.appConfig.theme.name = 'theme-6';
-    this.appConfig.appConfiguration.type = 'sidebar';   // 'sidebar' | 'navbar'
+    this.appConfig.appConfiguration.type = 'navbar';   // 'sidebar' | 'navbar'
     this.appConfig.appConfiguration.theme = 'light';
     this.appConfig.appConfiguration.sidebarPosition = 'left';      // always left
     this.appConfig.appConfiguration.logoLocationHeader = false;       // brand in sidebar
