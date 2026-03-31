@@ -3,7 +3,7 @@ name: Deploy Rohit Portfolio Angular Web App to GitHub Pages
 on:
   push:
     branches:
-      - portfolio_web_app_ng-17
+      - main
 
 defaults:
   run:
@@ -20,16 +20,16 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'  # Angular 15 is compatible with Node 16 or 18
+          node-version: '18'
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Build Angular app
-        run: npx ng build --configuration production --base-href "/Rohit-Nair296/"
+      - name: Prerender Angular app
+        run: npx ng run portfolio-site:prerender --configuration production --base-href "/my-portfolio-angular/"
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: my-portfolio-angular/portfolio-site/dist
+          folder: my-portfolio-angular/portfolio-site/dist/portfolio-site/browser
