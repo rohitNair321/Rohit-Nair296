@@ -15,7 +15,7 @@ export const tokenGuard: CanActivateFn = (route, state) => {
     map((res: any) => {
       const role = res?.data.role === 'admin' ? 'ADMIN' : "GUEST";
       appService.setRole(role);
-      // themeService.applyThemeFromProfile(res.data.appData);
+      themeService.applyThemeFromProfile(res.data.appData);
 
       const isAdminRoute = route.data?.['roles']?.includes('ADMIN');
 

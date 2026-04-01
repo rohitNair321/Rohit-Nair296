@@ -1,6 +1,8 @@
 import { Injectable, signal, effect, computed, inject } from "@angular/core";
 import { AppService } from "../services/app.service";
 import { LocalStorageService } from "src/app/shared/services/local-storage.service";
+import { PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 export interface ThemeDefinition {
   id: string;
@@ -13,6 +15,7 @@ export interface ThemeDefinition {
 export class ThemeService {
   private readonly THEME_KEY = 'selected-theme-id';
   private readonly DARK_KEY = 'is-dark-mode';
+  private platformId = inject(PLATFORM_ID);
   appService = inject(AppService);
   localStorageService = inject(LocalStorageService);
   profileSignal = this.appService.profile;
@@ -77,6 +80,8 @@ export class ThemeService {
   }
 
   private applyTheme(id: string, dark: boolean) {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const theme = this.themeRegistry.get(id);
     if (!theme) return;
 
