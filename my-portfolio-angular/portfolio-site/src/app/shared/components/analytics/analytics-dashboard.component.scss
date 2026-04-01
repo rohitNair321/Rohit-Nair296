@@ -1,532 +1,763 @@
-// analytics-dashboard.component.scss
-// ---------------------------------------------------------
-// Analytics Dashboard — Refactored (Mobile-First)
-// Aligned with theme-token.scss variables
-// ---------------------------------------------------------
+/* =============================================================
+   ANALYTICS DASHBOARD  —  Refined Command Centre
+   =============================================================
+   COLOR TOKEN MAP (API → CSS custom property)
+   ─────────────────────────────────────────────────────────────
+   --background      page canvas
+   --surface         card background
+   --surface-alt     hover / zebra rows
+   --border          dividers, chart grid lines
+   --primary         accent bars, active states, badges
+   --accent          secondary highlight
+   --primary-glow    card glow shadows
+   --text-primary    headings, values
+   --text-secondary  labels, descriptions
+   --text-muted      meta, timestamps, placeholders
+   --error           error state, bounce-rate warn bar
+   --logo-shadow     deep card shadows
+   ─────────────────────────────────────────────────────────────
+   METRIC CARD ACCENT COLOURS — thin left-border only.
+   Uses CSS custom properties on each card variant so all four
+   accent colours derive from the active theme tokens.
+   ─────────────────────────────────────────────────────────────
+   Zero hardcoded hex values — every colour is a token.
+   ============================================================= */
 
-// --- Variables Snippet (Expected from theme-token.scss) ---
-// These are used below. Ensure your global styles define them.
-// :root {
-//   --background: #...; --surface: #...; --surface-alt: #...;
-//   --text-primary: #...; --text-secondary: #...; --text-muted: #...;
-//   --primary: #...; --accent: #...; --border: #...;
-// }
-// -----------------------------------------------------------
+// ── Shared constants ──────────────────────────────────────────
+$radius-card  : 16px;
+$radius-inner : 10px;
+$radius-badge :  6px;
+$transition   : 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+$card-shadow  : 0 2px 12px var(--logo-shadow, rgba(0,0,0,0.08));
+$card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
 
-.analytics-dashboard {
-  // Mobile-first padding
-  padding: 1rem;
-  background-color: var(--background);
-  min-height: 100vh;
+/* =============================================================
+   ROOT — BEM block
+   ============================================================= */
+.ad {
+  padding: 1.5rem 1.25rem 3rem;
+  background: var(--background);
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* =============================================================
+   HEADER
+   ============================================================= */
+.ad__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.ad__header-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--primary);
+  margin-bottom: 0.4rem;
+
+  .material-icons { font-size: 1rem; }
+}
+
+.ad__title {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800;
   color: var(--text-primary);
-  font-family: var(--font-family, sans-serif);
+  margin: 0 0 0.2rem;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
 
-  // Tablet / Desktop padding adjustment
-  @media (min-width: 768px) {
-    padding: 2rem;
+.ad__subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+// ── Controls ──────────────────────────────────────────────────
+.ad__header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.ad__range-group {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.ad__range-btn {
+  padding: 0.4rem 0.85rem;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background $transition, color $transition;
+  white-space: nowrap;
+
+  &--active {
+    background: var(--primary);
+    color: var(--background);
   }
 
-  // -------------------------------------------------------
-  // 1. Dashboard Header
-  // -------------------------------------------------------
-  .dashboard-header {
-    display: flex;
-    flex-direction: column; // Mobile default
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+  &:not(&--active):hover {
+    background: var(--surface-alt);
+    color: var(--text-primary);
+  }
+}
 
-    // Desktop layout adjustment
-    @media (min-width: 992px) {
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-    }
+.ad__custom-range {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
 
-    .header-content {
-      .dashboard-title {
-        font-size: 1.5rem; // Mobile
-        font-weight: 700;
-        color: var(--text-primary);
-        margin: 0 0 0.25rem 0;
-        letter-spacing: -0.025em;
+.ad__apply-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  border: none;
+  background: var(--primary);
+  color: var(--background);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity $transition;
 
-        @media (min-width: 768px) {
-          font-size: 2rem; // Desktop
-        }
-      }
+  .material-icons { font-size: 0.95rem; }
+  &:hover { opacity: 0.88; }
+}
 
-      .dashboard-subtitle {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-        margin: 0;
-      }
-    }
+.ad__refresh-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background $transition, color $transition, transform $transition;
 
-    .header-actions {
-      display: flex;
-      flex-direction: column; // Mobile default
-      gap: 1rem;
+  .material-icons { font-size: 1.2rem; }
 
-      // Small Tablet upwards
-      @media (min-width: 576px) {
-        flex-direction: row;
-        align-items: center;
-        justify-content: flex-start;
-      }
-
-      // Desktop alignment
-      @media (min-width: 992px) {
-        justify-content: flex-end;
-      }
-
-      .time-range-buttons {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); // Fill width on mobile
-        gap: 0.5rem;
-        width: 100%;
-
-        @media (min-width: 576px) {
-          display: flex;
-          width: auto;
-        }
-
-        .range-btn {
-          font-size: 0.8125rem;
-          white-space: nowrap;
-          justify-content: center; // Center text in grid item
-          
-          // PrimeNG button override for token alignment
-          &.p-button-outlined {
-            border-color: var(--border);
-            color: var(--text-secondary);
-
-            &:hover {
-              background-color: var(--surface-alt);
-              border-color: var(--border);
-              color: var(--text-primary);
-            }
-
-            &.p-highlight { // Active state
-              background-color: var(--primary);
-              border-color: var(--primary);
-              color: white; // Or var(--text-on-primary)
-            }
-          }
-        }
-      }
-
-      .custom-range {
-        display: flex;
-        flex-direction: column; // Stack on mobile
-        gap: 0.5rem;
-        width: 100%;
-
-        @media (min-width: 576px) {
-          flex-direction: row;
-          align-items: center;
-          width: auto;
-        }
-
-        ::ng-deep .p-calendar {
-          width: 100%; // Mobile full width
-
-          @media (min-width: 576px) {
-            width: 220px; // Desktop fixed width
-          }
-
-          .p-inputtext {
-            border-color: var(--border);
-            background-color: var(--surface);
-            color: var(--text-primary);
-            font-size: 0.875rem;
-
-            &:enabled:focus {
-              border-color: var(--primary);
-              box-shadow: 0 0 0 1px var(--primary-glow, rgba(67, 97, 238, 0.15));
-            }
-          }
-        }
-        
-        .apply-btn {
-          justify-content: center;
-        }
-      }
-
-      .refresh-btn {
-        // Keeps refresh btn aligned on mobile
-        align-self: flex-end; 
-        
-        @media (min-width: 576px) {
-          align-self: center;
-        }
-
-        &.p-button-icon-only {
-          width: 2.5rem;
-          height: 2.5rem;
-          border-color: var(--border);
-          color: var(--text-secondary);
-
-          &:hover {
-            background-color: var(--surface-alt);
-            color: var(--primary);
-          }
-        }
-      }
-    }
+  &:hover {
+    background: var(--primary-glow);
+    color: var(--primary);
   }
 
-  // -------------------------------------------------------
-  // 2. States (Loading, Error, Empty)
-  // -------------------------------------------------------
-  .loading-container,
-  .error-container,
-  .empty-state-container {
+  &--spinning .material-icons {
+    animation: ad-spin 0.9s linear infinite;
+  }
+
+  @keyframes ad-spin {
+    to { transform: rotate(360deg); }
+  }
+}
+
+/* =============================================================
+   SKELETON LOADING
+   ============================================================= */
+.ad__skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.ad__skeleton-card {
+  background: var(--surface);
+  border-radius: $radius-card;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  border: 1px solid var(--border);
+}
+
+.ad__skeleton-line {
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--surface-alt) 25%,
+    color-mix(in oklab, var(--surface-alt) 60%, var(--background)) 50%,
+    var(--surface-alt) 75%
+  );
+  background-size: 200% 100%;
+  animation: ad-shimmer 1.4s ease infinite;
+
+  &--short  { height: 12px; width: 50%; }
+  &--tall   { height: 36px; width: 70%; }
+  &--medium { height: 12px; width: 65%; }
+}
+
+.ad__skeleton-chart {
+  height: 280px;
+  border-radius: $radius-card;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  @extend .ad__skeleton-line;
+}
+
+@keyframes ad-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* =============================================================
+   STATE PANELS  (error / empty)
+   ============================================================= */
+.ad__state-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: $radius-card;
+  text-align: center;
+
+  &--error .ad__state-icon { color: var(--error); }
+}
+
+.ad__state-icon {
+  font-size: 3rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.ad__state-message {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.ad__state-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.6rem 1.4rem;
+  border-radius: 10px;
+  border: none;
+  background: var(--primary);
+  color: var(--background);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity $transition;
+
+  .material-icons { font-size: 1rem; }
+  &:hover { opacity: 0.88; }
+}
+
+/* =============================================================
+   BODY WRAPPER
+   ============================================================= */
+.ad__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* =============================================================
+   METRIC CARDS
+   ============================================================= */
+.ad__metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+// Shared card base
+.ad__metric-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: $radius-card;
+  padding: 1.35rem 1.25rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  box-shadow: $card-shadow;
+  overflow: hidden;
+  // Staggered entrance
+  opacity: 0;
+  transform: translateY(12px);
+  animation: ad-card-in 0.4s ease forwards var(--card-delay, 0ms);
+  transition: box-shadow $transition, transform $transition;
+
+  &:hover {
+    box-shadow: $card-shadow-hover;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes ad-card-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// Thin left-border accent — colour varies per card
+.ad__metric-card-accent {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  border-radius: $radius-card 0 0 $radius-card;
+}
+
+// Per-card accent colour using theme tokens
+.ad__metric-card--1 .ad__metric-card-accent { background: var(--primary); }
+.ad__metric-card--2 .ad__metric-card-accent { background: var(--accent); }
+.ad__metric-card--3 .ad__metric-card-accent {
+  background: linear-gradient(180deg, var(--primary), var(--accent));
+}
+.ad__metric-card--4 .ad__metric-card-accent { background: var(--error); }
+
+// Subtle glow wash behind the number — same token, very low opacity
+.ad__metric-card--1::after,
+.ad__metric-card--2::after,
+.ad__metric-card--3::after,
+.ad__metric-card--4::after {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.06;
+}
+.ad__metric-card--1::after { background: var(--primary); }
+.ad__metric-card--2::after { background: var(--accent); }
+.ad__metric-card--3::after { background: var(--primary); }
+.ad__metric-card--4::after { background: var(--error); }
+
+.ad__metric-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.ad__metric-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+}
+
+.ad__metric-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--surface-alt);
+  color: var(--primary);
+
+  .material-icons { font-size: 1.1rem; }
+}
+
+.ad__metric-card--2 .ad__metric-icon-wrap { color: var(--accent); }
+.ad__metric-card--4 .ad__metric-icon-wrap { color: var(--error); }
+
+.ad__metric-value {
+  font-size: clamp(1.6rem, 3vw, 2.1rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+
+.ad__metric-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.ad__metric-badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 99px;
+  background: color-mix(in oklab, var(--primary) 14%, transparent);
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.72rem;
+}
+
+.ad__metric-card--4 .ad__metric-badge {
+  background: color-mix(in oklab, var(--error) 14%, transparent);
+  color: var(--error);
+}
+
+// Mini progress bar at the bottom of each card
+.ad__metric-bar {
+  height: 3px;
+  border-radius: 99px;
+  background: var(--surface-alt);
+  overflow: hidden;
+  margin-top: auto;
+}
+
+.ad__metric-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: var(--primary);
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
+
+  &--warn { background: var(--error); }
+}
+
+/* =============================================================
+   CHART SECTIONS
+   ============================================================= */
+.ad__charts-row {
+  display: grid;
+  gap: 1rem;
+
+  &--single { grid-template-columns: 1fr; }
+  &--two    { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+}
+
+// Shared chart card
+.ad__chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: $radius-card;
+  padding: 1.35rem 1.25rem 1.25rem;
+  box-shadow: $card-shadow;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: ad-card-in 0.4s ease forwards var(--card-delay, 0ms);
+  transition: box-shadow $transition;
+
+  &:hover { box-shadow: $card-shadow-hover; }
+}
+
+.ad__chart-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.ad__chart-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.2rem;
+}
+
+.ad__chart-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.ad__chart-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 99px;
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
+  color: var(--primary);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  .material-icons { font-size: 0.85rem; }
+}
+
+.ad__chart-header-icon {
+  font-size: 1.3rem;
+  color: var(--text-muted);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.ad__chart-wrap {
+  position: relative;
+  height: 240px;
+
+  &--tall { height: 300px; }
+
+  canvas { width: 100% !important; height: 100% !important; }
+}
+
+/* =============================================================
+   TOP PAGES TABLE
+   ============================================================= */
+.ad__table-section {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: ad-card-in 0.4s ease forwards var(--card-delay, 0ms);
+}
+
+.ad__table-wrap {
+  overflow-x: auto;
+  border-radius: $radius-inner;
+  border: 1px solid var(--border);
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.ad__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.845rem;
+}
+
+.ad__th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  background: var(--surface-alt);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+
+  &--rank { width: 48px; text-align: center; }
+  &--num  { text-align: right; }
+  &--bar  { width: 120px; }
+}
+
+.ad__tr {
+  border-bottom: 1px solid var(--border);
+  transition: background $transition;
+
+  &:last-child { border-bottom: none; }
+  &:hover      { background: var(--surface-alt); }
+}
+
+.ad__td {
+  padding: 0.85rem 1rem;
+  color: var(--text-primary);
+  vertical-align: middle;
+
+  &--rank     { text-align: center; }
+  &--num      { text-align: right; white-space: nowrap; }
+  &--duration { color: var(--text-secondary); font-size: 0.82rem; }
+
+  &--empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 3rem 1rem;
-    text-align: center;
-    background-color: var(--surface);
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    margin-top: 2rem;
+    gap: 8px;
 
-    @media (min-width: 768px) {
-      padding: 5rem 2rem;
-    }
+    .material-icons { font-size: 1.2rem; opacity: 0.5; }
+  }
+}
 
-    p {
-      margin: 1rem 0;
-      color: var(--text-secondary);
-      font-size: 1rem;
-      max-width: 400px;
-    }
+.ad__rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--surface-alt);
 
-    i {
-      color: var(--text-muted);
-    }
+  &--top {
+    background: color-mix(in oklab, var(--primary) 14%, transparent);
+    color: var(--primary);
+  }
+}
+
+.ad__page-title {
+  display: block;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.ad__page-path {
+  display: block;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.ad__views-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 99px;
+  background: color-mix(in oklab, var(--accent) 14%, transparent);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+.ad__share-bar {
+  height: 5px;
+  border-radius: 99px;
+  background: var(--surface-alt);
+  overflow: hidden;
+}
+
+.ad__share-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+}
+
+/* =============================================================
+   RESPONSIVE — mobile-first breakpoints
+   ============================================================= */
+
+// Phones  ≤ 480px
+@media (max-width: 480px) {
+  .ad {
+    padding: 1rem 0.875rem 2rem;
+    gap: 1.25rem;
   }
 
-  // -------------------------------------------------------
-  // 3. Main Content Layout
-  // -------------------------------------------------------
-  .dashboard-content {
-    display: flex;
+  .ad__header {
     flex-direction: column;
-    gap: 1.5rem;
-
-    @media (min-width: 768px) {
-      gap: 2rem;
-    }
+    align-items: stretch;
   }
 
-  // -------------------------------------------------------
-  // 4. Shared Card Styles (PrimeNG p-card overrides)
-  // -------------------------------------------------------
-  ::ng-deep .p-card {
-    background-color: var(--surface);
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-    transition: box-shadow 0.2s;
-
-    &:hover {
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    }
-
-    .p-card-body {
-      padding: 1.25rem; // Mobile padding
-
-      @media (min-width: 768px) {
-        padding: 1.5rem; // Desktop padding
-      }
-    }
-
-    // Card Header Styling
-    .p-card-header {
-      padding: 1.25rem 1.25rem 0; // Match body padding
-      border-bottom: none;
-
-      @media (min-width: 768px) {
-        padding: 1.5rem 1.5rem 0;
-      }
-    }
+  .ad__header-controls {
+    flex-direction: column;
+    align-items: stretch;
   }
 
-  // Shared inner chart/table header
-  .chart-header {
-    margin-bottom: 1rem;
-
-    h3 {
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin: 0 0 0.25rem 0;
-    }
-
-    p {
-      font-size: 0.8125rem;
-      color: var(--text-secondary);
-      margin: 0;
-    }
-  }
-
-  // -------------------------------------------------------
-  // 5. Metrics Grid (KPI Cards)
-  // -------------------------------------------------------
-  .metrics-grid {
+  .ad__range-group {
     display: grid;
-    // Mobile: 1 col, Tablet: 2 cols, Desktop: 4 cols
-    grid-template-columns: 1fr; 
-    gap: 1rem;
-
-    @media (min-width: 576px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (min-width: 1200px) {
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
-    }
-
-    .metric-card {
-      .metric-content {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-
-        .metric-icon {
-          width: 48px; // Mobile
-          height: 48px;
-          border-radius: 10px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          // Gradients are defined inline in HTML, but we use tokens for fallback
-          background-color: var(--surface-alt); 
-
-          @media (min-width: 768px) {
-            width: 56px; // Desktop
-            height: 56px;
-          }
-
-          i {
-            font-size: 1.25rem; // Mobile
-            color: white; // Contrast against gradient
-
-            @media (min-width: 768px) {
-              font-size: 1.5rem; // Desktop
-            }
-          }
-        }
-
-        .metric-info {
-          display: flex;
-          flex-direction: column;
-          flex: 1; // Take remaining space
-          min-width: 0; // Prevent text overflow breaking layout
-
-          .metric-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            margin-bottom: 0.125rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-          }
-
-          .metric-value {
-            font-size: 1.5rem; // Mobile
-            font-weight: 700;
-            color: var(--text-primary);
-            line-height: 1.1;
-            margin-bottom: 0.25rem;
-            
-            @media (min-width: 768px) {
-              font-size: 1.75rem; // Desktop
-            }
-          }
-
-          .metric-detail {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-
-            .badge-new {
-              // Themed Badge replacement
-              background-color: var(--primary-glow, rgba(67, 97, 238, 0.1));
-              color: var(--primary);
-              padding: 0.125rem 0.375rem;
-              border-radius: 4px;
-              font-weight: 600;
-              margin-right: 0.25rem;
-            }
-          }
-        }
-      }
-    }
+    grid-template-columns: repeat(3, 1fr);
   }
 
-  // -------------------------------------------------------
-  // 6. Charts Grid
-  // -------------------------------------------------------
-  .charts-grid {
-    display: grid;
-    // Mobile: 1 col, Desktop: 2 cols
-    grid-template-columns: 1fr; 
-    gap: 1rem;
-
-    @media (min-width: 992px) {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-    }
-
-    .chart-card {
-      // Logic for 2nd and 5th child to be full width on desktop (assuming order in HTML)
-      @media (min-width: 992px) {
-        &:nth-child(1), // Over time chart
-        &:nth-child(4)  // Geo chart
-        {
-          grid-column: 1 / -1; // Span both columns
-        }
-      }
-
-      .chart-container {
-        position: relative;
-        // Adjust height for mobile vs desktop
-        height: 250px; 
-
-        @media (min-width: 768px) {
-          height: 300px; 
-        }
-
-        &.small {
-          height: 200px;
-          @media (min-width: 768px) {
-            height: 250px; 
-          }
-        }
-      }
-    }
+  .ad__range-btn {
+    text-align: center;
+    padding: 0.45rem 0.4rem;
+    font-size: 0.75rem;
   }
 
-  // -------------------------------------------------------
-  // 7. Top Pages Table
-  // -------------------------------------------------------
-  .table-card {
-    .top-pages-table {
-      margin: 0 -1.25rem; // Negative margin to flush table to edges on mobile
-      overflow-x: auto; // Required for mobile scrolling
-      -webkit-overflow-scrolling: touch;
+  .ad__custom-range { flex-direction: column; align-items: stretch; }
+  .ad__apply-btn    { justify-content: center; }
+  .ad__refresh-btn  { align-self: flex-start; }
 
-      @media (min-width: 768px) {
-        margin: 0; // Reset margin on desktop
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 500px; // Ensure table doesn't get too squished
-
-        thead {
-          background-color: var(--surface-alt);
-          border-bottom: 1px solid var(--border);
-
-          th {
-            padding: 0.75rem 1.25rem;
-            text-align: left;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            white-space: nowrap;
-
-            &.text-center {
-              text-align: center;
-            }
-          }
-        }
-
-        tbody {
-          tr {
-            border-bottom: 1px solid var(--border);
-            transition: background-color 0.15s;
-
-            &:last-child {
-              border-bottom: none;
-            }
-
-            &:hover {
-              background-color: var(--surface-alt);
-            }
-
-            td {
-              padding: 0.875rem 1.25rem;
-              font-size: 0.875rem;
-              color: var(--text-primary);
-              vertical-align: middle;
-
-              &.text-center {
-                text-align: center;
-              }
-
-              &.page-title {
-                font-weight: 500;
-                // Prevent very long titles breaking layout
-                max-width: 250px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-              }
-
-              &.page-path {
-                font-family: var(--font-family-mono, 'Courier New', monospace);
-                color: var(--text-muted);
-                font-size: 0.8125rem;
-              }
-
-              &.empty-state {
-                padding: 3rem 1rem;
-                color: var(--text-muted);
-                text-align: center;
-              }
-
-              .badge-views {
-                background-color: var(--surface-alt);
-                color: var(--primary);
-                padding: 0.25rem 0.5rem;
-                border-radius: 4px;
-                font-size: 0.75rem;
-                font-weight: 600;
-                font-family: var(--font-family-mono, monospace);
-              }
-            }
-          }
-        }
-      }
-    }
+  .ad__metrics {
+    grid-template-columns: 1fr 1fr;
   }
 
-  // -------------------------------------------------------
-  // 8. Global PrimeNG Overrides (Specific to this component)
-  // -------------------------------------------------------
-  ::ng-deep {
-    .p-tooltip {
-      .p-tooltip-text {
-        background-color: var(--text-primary); // High contrast
-        color: var(--surface);
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-      }
-      .p-tooltip-arrow {
-        border-top-color: var(--text-primary);
-      }
-    }
+  .ad__metric-value {
+    font-size: 1.5rem;
+  }
+
+  // Stack the two-col chart row on small phones
+  .ad__charts-row--two {
+    grid-template-columns: 1fr;
+  }
+
+  .ad__chart-wrap { height: 200px; }
+  .ad__chart-wrap--tall { height: 240px; }
+
+  // Hide the share-bar column on small screens
+  .ad__th--bar,
+  .ad__td--bar { display: none; }
+}
+
+// Tablets  481px – 768px
+@media (min-width: 481px) and (max-width: 768px) {
+  .ad {
+    padding: 1.25rem 1rem 2.5rem;
+  }
+
+  .ad__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ad__header-controls { flex-wrap: wrap; }
+
+  .ad__metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ad__charts-row--two {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Desktop  ≥ 769px — all defaults apply
+
+// Wide  ≥ 1400px
+@media (min-width: 1400px) {
+  .ad {
+    padding: 2rem 2rem 3rem;
+  }
+
+  .ad__charts-row--two {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* =============================================================
+   REDUCED MOTION
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .ad__metric-card,
+  .ad__chart-card,
+  .ad__table-section {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .ad__skeleton-line,
+  .ad__skeleton-chart {
+    animation: none;
+  }
+
+  .ad__refresh-btn--spinning .material-icons {
+    animation: none;
   }
 }

@@ -27,6 +27,12 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/about-me/about-me.component').then(m => m.AboutMeComponent),
       },
+      {
+        path: 'projects',
+        loadComponent: () =>
+          import('./features/projects-page/projects-page.component')
+            .then(m => m.ProjectsPageComponent),
+      },
     ],
   },
   

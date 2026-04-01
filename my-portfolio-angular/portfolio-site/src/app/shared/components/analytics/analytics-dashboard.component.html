@@ -1,251 +1,319 @@
-<!-- Analytics Dashboard -->
-<div class="analytics-dashboard">
-  <!-- Header Section -->
-  <div class="dashboard-header">
-    <div class="header-content">
-      <h1 class="dashboard-title">Google Analytics Dashboard</h1>
-      <p class="dashboard-subtitle">Track your portfolio's performance and visitor insights</p>
+<!-- ═══════════════════════════════════════════════════════════
+     ANALYTICS DASHBOARD
+     Refined command-centre aesthetic.
+     All colours from theme tokens — zero hardcoded hex values.
+     ═══════════════════════════════════════════════════════════ -->
+<div class="ad">
+
+  <!-- ── HEADER ───────────────────────────────────────────────── -->
+  <header class="ad__header">
+    <div class="ad__header-title-block">
+      <div class="ad__header-eyebrow">
+        <span class="material-icons ad__header-icon">analytics</span>
+        <span>Google Analytics</span>
+      </div>
+      <h1 class="ad__title">Portfolio Dashboard</h1>
+      <p class="ad__subtitle">Visitor insights &amp; performance metrics</p>
     </div>
-    
-    <div class="header-actions">
-      <!-- Time Range Selector -->
-      <div class="time-range-buttons">
-        <button 
-          pButton 
-          [label]="'Last 7 Days'"
-          [outlined]="selectedTimeRange() !== '7days'"
-          (click)="changeTimeRange('7days')"
-          class="range-btn"
-        ></button>
-        <button 
-          pButton 
-          [label]="'Last 30 Days'"
-          [outlined]="selectedTimeRange() !== '30days'"
-          (click)="changeTimeRange('30days')"
-          class="range-btn"
-        ></button>
-        <button 
-          pButton 
-          [label]="'Custom'"
-          [outlined]="selectedTimeRange() !== 'custom'"
-          (click)="changeTimeRange('custom')"
-          class="range-btn"
-        ></button>
+
+    <div class="ad__header-controls">
+      <!-- Time range pill group -->
+      <div class="ad__range-group" role="group" aria-label="Time range">
+        @for (opt of timeRangeOptions; track opt.value) {
+          <button
+            class="ad__range-btn"
+            [class.ad__range-btn--active]="selectedTimeRange() === opt.value"
+            (click)="changeTimeRange(opt.value)"
+            [attr.aria-pressed]="selectedTimeRange() === opt.value"
+          >{{ opt.label }}</button>
+        }
       </div>
 
-      <!-- Custom Date Range Picker -->
+      <!-- Custom date range -->
       @if (selectedTimeRange() === 'custom') {
-        <div class="custom-range">
-          <p-calendar 
+        <div class="ad__custom-range">
+          <p-calendar
             [(ngModel)]="customDateRange"
             selectionMode="range"
             [readonlyInput]="true"
             placeholder="Select date range"
             dateFormat="M dd, yy"
+            styleClass="ad__calendar"
           ></p-calendar>
-          <button 
-            pButton 
-            label="Apply" 
-            icon="pi pi-check"
-            (click)="applyCustomRange()"
-            class="apply-btn"
-          ></button>
+          <button class="ad__apply-btn" (click)="applyCustomRange()">
+            <span class="material-icons">check</span>
+            Apply
+          </button>
         </div>
       }
 
-      <!-- Refresh Button -->
-      <button 
-        pButton 
-        icon="pi pi-refresh" 
-        [loading]="loading()"
+      <!-- Refresh -->
+      <button
+        class="ad__refresh-btn"
         (click)="refresh()"
-        class="refresh-btn"
-        pTooltip="Refresh Data"
-      ></button>
+        [class.ad__refresh-btn--spinning]="loading()"
+        pTooltip="Refresh data"
+        tooltipPosition="left"
+        aria-label="Refresh analytics data"
+      >
+        <span class="material-icons">refresh</span>
+      </button>
     </div>
-  </div>
+  </header>
 
-  <!-- Loading State -->
+  <!-- ── LOADING ──────────────────────────────────────────────── -->
   @if (loading()) {
-    <div class="loading-container">
-      <i class="pi pi-spin pi-spinner" style="font-size: 3rem; color: var(--primary-color)"></i>
-      <p>Loading analytics data...</p>
+    <div class="ad__skeleton-grid">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="ad__skeleton-card">
+          <div class="ad__skeleton-line ad__skeleton-line--short"></div>
+          <div class="ad__skeleton-line ad__skeleton-line--tall"></div>
+          <div class="ad__skeleton-line ad__skeleton-line--medium"></div>
+        </div>
+      }
     </div>
+    <div class="ad__skeleton-chart"></div>
   }
 
-  <!-- Error State -->
+  <!-- ── ERROR ────────────────────────────────────────────────── -->
   @else if (error()) {
-    <div class="error-container">
-      <i class="pi pi-exclamation-triangle" style="font-size: 3rem; color: #ef4444"></i>
-      <p>{{ error() }}</p>
-      <button pButton label="Retry" (click)="refresh()" class="retry-btn"></button>
+    <div class="ad__state-panel ad__state-panel--error">
+      <span class="material-icons ad__state-icon">error_outline</span>
+      <p class="ad__state-message">{{ error() }}</p>
+      <button class="ad__state-btn" (click)="refresh()">
+        <span class="material-icons">refresh</span> Retry
+      </button>
     </div>
   }
 
-  <!-- Dashboard Content -->
+  <!-- ── DATA ─────────────────────────────────────────────────── -->
   @else if (dashboardData()) {
-    <div class="dashboard-content">
-      <!-- Key Metrics Cards -->
-      <div class="metrics-grid">
-        <p-card class="metric-card">
-          <div class="metric-content">
-            <div class="metric-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-              <i class="pi pi-users"></i>
-            </div>
-            <div class="metric-info">
-              <span class="metric-label">Total Users</span>
-              <span class="metric-value">{{ formatNumber(dashboardData()?.visitorStats?.totalUsers || 0) }}</span>
-              <span class="metric-detail">
-                <span class="badge badge-new">{{ formatNumber(dashboardData()?.visitorStats?.newUsers || 0) }}</span>
-                new users
-              </span>
-            </div>
-          </div>
-        </p-card>
+    <div class="ad__body">
 
-        <p-card class="metric-card">
-          <div class="metric-content">
-            <div class="metric-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-              <i class="pi pi-eye"></i>
-            </div>
-            <div class="metric-info">
-              <span class="metric-label">Page Views</span>
-              <span class="metric-value">{{ formatNumber(totalPageViews()) }}</span>
-              <span class="metric-detail">across all pages</span>
-            </div>
+      <!-- ── METRIC CARDS ──────────────────────────────────────── -->
+      <section class="ad__metrics" aria-label="Key metrics">
+        <!-- Total Users -->
+        <div class="ad__metric-card ad__metric-card--1" style="--card-delay:0ms">
+          <div class="ad__metric-card-accent"></div>
+          <div class="ad__metric-top">
+            <span class="ad__metric-label">Total Users</span>
+            <span class="ad__metric-icon-wrap">
+              <span class="material-icons">group</span>
+            </span>
           </div>
-        </p-card>
-
-        <p-card class="metric-card">
-          <div class="metric-content">
-            <div class="metric-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-              <i class="pi pi-chart-line"></i>
-            </div>
-            <div class="metric-info">
-              <span class="metric-label">Sessions</span>
-              <span class="metric-value">{{ formatNumber(dashboardData()?.visitorStats?.sessions || 0) }}</span>
-              <span class="metric-detail">
-                {{ formatDuration(dashboardData()?.visitorStats?.avgSessionDuration || 0) }} avg
-              </span>
-            </div>
+          <div class="ad__metric-value">
+            {{ formatNumber(dashboardData()?.visitorStats?.totalUsers || 0) }}
           </div>
-        </p-card>
-
-        <p-card class="metric-card">
-          <div class="metric-content">
-            <div class="metric-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
-              <i class="pi pi-percentage"></i>
-            </div>
-            <div class="metric-info">
-              <span class="metric-label">Bounce Rate</span>
-              <span class="metric-value">{{ formatPercent(dashboardData()?.visitorStats?.bounceRate || 0) }}</span>
-              <span class="metric-detail">visitor engagement</span>
-            </div>
+          <div class="ad__metric-sub">
+            <span class="ad__metric-badge">
+              {{ formatNumber(dashboardData()?.visitorStats?.newUsers || 0) }} new
+            </span>
+            this period
           </div>
-        </p-card>
-      </div>
+          <div class="ad__metric-bar">
+            <div class="ad__metric-bar-fill" [style.width.%]="newUserPercent()"></div>
+          </div>
+        </div>
 
-      <!-- Charts Section -->
-      <div class="charts-grid">
-        <!-- Page Views & Sessions Chart -->
-        <p-card class="chart-card full-width">
-          <ng-template pTemplate="header">
-            <div class="chart-header">
-              <h3>Page Views & Sessions Over Time</h3>
-              <p>Daily breakdown of site traffic</p>
+        <!-- Page Views -->
+        <div class="ad__metric-card ad__metric-card--2" style="--card-delay:60ms">
+          <div class="ad__metric-card-accent"></div>
+          <div class="ad__metric-top">
+            <span class="ad__metric-label">Page Views</span>
+            <span class="ad__metric-icon-wrap">
+              <span class="material-icons">visibility</span>
+            </span>
+          </div>
+          <div class="ad__metric-value">
+            {{ formatNumber(totalPageViews()) }}
+          </div>
+          <div class="ad__metric-sub">across all pages</div>
+          <div class="ad__metric-bar">
+            <div class="ad__metric-bar-fill" style="width:72%"></div>
+          </div>
+        </div>
+
+        <!-- Sessions -->
+        <div class="ad__metric-card ad__metric-card--3" style="--card-delay:120ms">
+          <div class="ad__metric-card-accent"></div>
+          <div class="ad__metric-top">
+            <span class="ad__metric-label">Sessions</span>
+            <span class="ad__metric-icon-wrap">
+              <span class="material-icons">timeline</span>
+            </span>
+          </div>
+          <div class="ad__metric-value">
+            {{ formatNumber(dashboardData()?.visitorStats?.sessions || 0) }}
+          </div>
+          <div class="ad__metric-sub">
+            <span class="ad__metric-badge">
+              {{ formatDuration(dashboardData()?.visitorStats?.avgSessionDuration || 0) }}
+            </span>
+            avg duration
+          </div>
+          <div class="ad__metric-bar">
+            <div class="ad__metric-bar-fill" style="width:58%"></div>
+          </div>
+        </div>
+
+        <!-- Bounce Rate -->
+        <div class="ad__metric-card ad__metric-card--4" style="--card-delay:180ms">
+          <div class="ad__metric-card-accent"></div>
+          <div class="ad__metric-top">
+            <span class="ad__metric-label">Bounce Rate</span>
+            <span class="ad__metric-icon-wrap">
+              <span class="material-icons">trending_down</span>
+            </span>
+          </div>
+          <div class="ad__metric-value">
+            {{ formatPercent(dashboardData()?.visitorStats?.bounceRate || 0) }}
+          </div>
+          <div class="ad__metric-sub">visitor engagement</div>
+          <div class="ad__metric-bar">
+            <div
+              class="ad__metric-bar-fill ad__metric-bar-fill--warn"
+              [style.width.%]="(dashboardData()?.visitorStats?.bounceRate || 0) * 100"
+            ></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── CHARTS ROW 1: line (full) ────────────────────────── -->
+      <section class="ad__charts-row ad__charts-row--single">
+        <div class="ad__chart-card" style="--card-delay:240ms">
+          <div class="ad__chart-card-header">
+            <div>
+              <h2 class="ad__chart-title">Page Views &amp; Sessions</h2>
+              <p class="ad__chart-desc">Daily breakdown of site traffic</p>
             </div>
-          </ng-template>
-          <div class="chart-container">
+            <span class="ad__chart-badge">
+              <span class="material-icons">show_chart</span> Live
+            </span>
+          </div>
+          <div class="ad__chart-wrap ad__chart-wrap--tall">
             <canvas #pageViewsChart></canvas>
           </div>
-        </p-card>
+        </div>
+      </section>
 
-        <!-- Device Types Chart -->
-        <p-card class="chart-card">
-          <ng-template pTemplate="header">
-            <div class="chart-header">
-              <h3>Devices</h3>
-              <p>Visitor device breakdown</p>
+      <!-- ── CHARTS ROW 2: doughnut + bar ─────────────────────── -->
+      <section class="ad__charts-row ad__charts-row--two">
+        <div class="ad__chart-card" style="--card-delay:300ms">
+          <div class="ad__chart-card-header">
+            <div>
+              <h2 class="ad__chart-title">Devices</h2>
+              <p class="ad__chart-desc">Visitor device breakdown</p>
             </div>
-          </ng-template>
-          <div class="chart-container small">
+            <span class="material-icons ad__chart-header-icon">devices</span>
+          </div>
+          <div class="ad__chart-wrap">
             <canvas #devicesChart></canvas>
           </div>
-        </p-card>
+        </div>
 
-        <!-- Traffic Sources Chart -->
-        <p-card class="chart-card">
-          <ng-template pTemplate="header">
-            <div class="chart-header">
-              <h3>Traffic Sources</h3>
-              <p>Where visitors come from</p>
+        <div class="ad__chart-card" style="--card-delay:360ms">
+          <div class="ad__chart-card-header">
+            <div>
+              <h2 class="ad__chart-title">Traffic Sources</h2>
+              <p class="ad__chart-desc">Where visitors come from</p>
             </div>
-          </ng-template>
-          <div class="chart-container small">
+            <span class="material-icons ad__chart-header-icon">travel_explore</span>
+          </div>
+          <div class="ad__chart-wrap">
             <canvas #trafficChart></canvas>
           </div>
-        </p-card>
+        </div>
+      </section>
 
-        <!-- Geographic Distribution Chart -->
-        <p-card class="chart-card full-width">
-          <ng-template pTemplate="header">
-            <div class="chart-header">
-              <h3>Geographic Distribution</h3>
-              <p>Top 10 countries by users</p>
+      <!-- ── CHARTS ROW 3: geo (full) ─────────────────────────── -->
+      <section class="ad__charts-row ad__charts-row--single">
+        <div class="ad__chart-card" style="--card-delay:420ms">
+          <div class="ad__chart-card-header">
+            <div>
+              <h2 class="ad__chart-title">Geographic Distribution</h2>
+              <p class="ad__chart-desc">Top 10 countries by users</p>
             </div>
-          </ng-template>
-          <div class="chart-container">
+            <span class="material-icons ad__chart-header-icon">public</span>
+          </div>
+          <div class="ad__chart-wrap ad__chart-wrap--tall">
             <canvas #geoChart></canvas>
           </div>
-        </p-card>
-      </div>
-
-      <!-- Top Pages Table -->
-      <p-card class="table-card">
-        <ng-template pTemplate="header">
-          <div class="chart-header">
-            <h3>Top Pages</h3>
-            <p>Most visited pages on your portfolio</p>
-          </div>
-        </ng-template>
-        <div class="top-pages-table">
-          <table>
-            <thead>
-              <tr>
-                <th>Page Title</th>
-                <th>Path</th>
-                <th class="text-center">Page Views</th>
-                <th class="text-center">Avg. Duration</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (page of dashboardData()?.topPages || []; track page.path) {
-                <tr>
-                  <td class="page-title">{{ page.title || 'Untitled' }}</td>
-                  <td class="page-path">{{ page.path }}</td>
-                  <td class="text-center">
-                    <span class="badge badge-views">{{ formatNumber(page.pageViews) }}</span>
-                  </td>
-                  <td class="text-center">{{ formatDuration(page.avgDuration) }}</td>
-                </tr>
-              } @empty {
-                <tr>
-                  <td colspan="4" class="text-center empty-state">No data available</td>
-                </tr>
-              }
-            </tbody>
-          </table>
         </div>
-      </p-card>
+      </section>
+
+      <!-- ── TOP PAGES TABLE ───────────────────────────────────── -->
+      <section class="ad__table-section" style="--card-delay:480ms">
+        <div class="ad__chart-card">
+          <div class="ad__chart-card-header">
+            <div>
+              <h2 class="ad__chart-title">Top Pages</h2>
+              <p class="ad__chart-desc">Most visited pages on your portfolio</p>
+            </div>
+            <span class="material-icons ad__chart-header-icon">list_alt</span>
+          </div>
+
+          <div class="ad__table-wrap">
+            <table class="ad__table" role="table">
+              <thead>
+                <tr>
+                  <th class="ad__th ad__th--rank">#</th>
+                  <th class="ad__th">Page</th>
+                  <th class="ad__th ad__th--num">Views</th>
+                  <th class="ad__th ad__th--num">Avg Duration</th>
+                  <th class="ad__th ad__th--bar">Share</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (page of dashboardData()?.topPages || []; track page.path; let i = $index) {
+                  <tr class="ad__tr">
+                    <td class="ad__td ad__td--rank">
+                      <span class="ad__rank" [class.ad__rank--top]="i < 3">{{ i + 1 }}</span>
+                    </td>
+                    <td class="ad__td">
+                      <span class="ad__page-title">{{ page.title || 'Untitled' }}</span>
+                      <span class="ad__page-path">{{ page.path }}</span>
+                    </td>
+                    <td class="ad__td ad__td--num">
+                      <span class="ad__views-badge">{{ formatNumber(page.pageViews) }}</span>
+                    </td>
+                    <td class="ad__td ad__td--num ad__td--duration">
+                      {{ formatDuration(page.avgDuration) }}
+                    </td>
+                    <td class="ad__td ad__td--bar">
+                      <div class="ad__share-bar">
+                        <div
+                          class="ad__share-bar-fill"
+                          [style.width.%]="pageShare(page.pageViews)"
+                        ></div>
+                      </div>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr>
+                    <td colspan="5" class="ad__td ad__td--empty">
+                      <span class="material-icons">inbox</span>
+                      <span>No page data available</span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
     </div>
   }
 
-  <!-- Empty State -->
+  <!-- ── EMPTY ─────────────────────────────────────────────────── -->
   @else {
-    <div class="empty-state-container">
-      <i class="pi pi-chart-bar" style="font-size: 4rem; color: #94a3b8"></i>
-      <p>No analytics data available</p>
-      <button pButton label="Load Data" (click)="refresh()"></button>
+    <div class="ad__state-panel">
+      <span class="material-icons ad__state-icon">bar_chart</span>
+      <p class="ad__state-message">No analytics data available</p>
+      <button class="ad__state-btn" (click)="refresh()">
+        <span class="material-icons">download</span> Load Data
+      </button>
     </div>
   }
+
 </div>

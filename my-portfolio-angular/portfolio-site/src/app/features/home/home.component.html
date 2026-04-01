@@ -1,44 +1,61 @@
 @if (homeData) {
   <div class="home-page-container" @pageAnimations>
 
-    <!-- HERO SECTION - Brutalist Grid -->
+    <!-- HERO SECTION - Modern Split Layout -->
     <section id="home" class="hero-section animate-section">
+      <div class="hero-bg-pattern"></div>
       <div class="container">
-        <div class="hero-layout">
-          <div class="hero-left">
-            <div class="status-bar">
-              @if (profileData()?.open_to_work) {
-                <span class="status-indicator"></span>
-              }
-              <span class="status-text">{{ profileData()?.open_to_work ? 'AVAILABLE FOR PROJECTS' : 'NOT AVAILABLE FOR PROJECTS' }}</span>
+        <div class="hero-grid">
+          <div class="hero-content">
+            <div class="hero-badge">
+              <span class="badge-dot"></span>
+              <span class="badge-text">{{ profileData()?.open_to_work ? 'OPEN FOR WORK' : 'AVAILABLE FOR HIRE' }}</span>
             </div>
             
-            <div class="hero-content">
-              <div class="hero-label">{{'PROFESSIONAL DEVELOPER'}}</div>
-              <h1 class="hero-heading">
-                <span class="heading-line">{{'HI, I AM'}}</span>
-                <span class="heading-name">{{ homeData?.full_name?.toUpperCase() }}</span>
-              </h1>
-              
-              <div class="hero-cta-group">
-                <button class="cta-primary" (click)="scrollToSection($event, '#projects')">
-                  <span class="cta-text">{{'VIEW WORK'}}</span>
-                  <span class="cta-icon">→</span>
-                </button>
-                <button class="cta-secondary" (click)="scrollToSection($event, '#contact')">
-                  <span class="cta-text">{{'CONTACT'}}</span>
-                </button>
+            <h1 class="hero-title">
+              <span class="title-greeting">Hi, I'm</span>
+              <span class="title-name">{{ homeData?.full_name }}</span>
+            </h1>
+            
+            <p class="hero-description">
+              {{ homeData?.short_bio || 'Building exceptional digital experiences with modern web technologies. Specialized in creating scalable, performant applications.' }}
+            </p>
+            
+            <div class="hero-stats">
+              <div class="stat">
+                <span class="stat-number">{{ experienceYears }}+</span>
+                <span class="stat-label">Years Experience</span>
               </div>
+              <div class="stat-divider"></div>
+              <div class="stat">
+                <span class="stat-number">{{ totalProjects }}+</span>
+                <span class="stat-label">Projects Delivered</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Client Satisfaction</span>
+              </div>
+            </div>
+            
+            <div class="hero-actions">
+              <button class="btn-primary" (click)="scrollToSection($event, '#projects')">
+                <span>View Projects</span>
+                <i class="material-icons">arrow_forward</i>
+              </button>
+              <button class="btn-secondary" (click)="scrollToSection($event, '#contact')">
+                <span>Contact Me</span>
+                <i class="material-icons">mail_outline</i>
+              </button>
             </div>
           </div>
           
-          <div class="hero-right">
-            <div class="image-container">
-              <div class="image-border"></div>
+          <div class="hero-visual">
+            <div class="hero-image-wrapper">
+              <div class="image-glow"></div>
               <img [src]="homeData?.avatar_url" [alt]="homeData?.full_name" class="hero-image">
-              <div class="image-label">
-                <span>{{'PORTFOLIO'}}</span>
-                <span class="label-year">{{'2026'}}</span>
+              <div class="hero-tagline">
+                <span>{{ (homeData?.experiences?.[0]?.role || 'Developer') }}</span>
               </div>
             </div>
           </div>
@@ -46,171 +63,233 @@
       </div>
     </section>
 
-    <!-- ABOUT SECTION - Asymmetric Grid -->
+    <!-- ABOUT SECTION - Minimal & Impactful -->
     <section id="about" class="about-section animate-section">
       <div class="container">
-        <div class="about-layout">
-          <div class="about-stats">
-            <div class="stat-block">
-              <div class="stat-header">{{'EXPERIENCE'}}</div>
-              <div class="stat-number">{{experienceYears}}<span class="stat-plus">+</span></div>
-              <div class="stat-label">{{'YEARS IN INDUSTRY'}}</div>
+        <div class="about-grid">
+          <div class="about-content">
+            <div class="section-header">
+              <span class="section-badge">About Me</span>
+              <h2 class="section-title">Crafting Code,<br>Building Experiences</h2>
             </div>
             
-            <div class="stat-block">
-              <div class="stat-header">{{'PROJECTS'}}</div>
-              <div class="stat-number">{{(homeData?.experiences && homeData.experiences[1]?.projects?.length) || totalProjects}}</div>
-              <div class="stat-label">{{'SUCCESSFULLY DELIVERED'}}</div>
-            </div>
+            <div class="about-text" [innerHTML]="homeData?.description"></div>
             
-            <div class="stat-block stat-block-wide">
-              <div class="stat-header">{{'LOCATION'}}</div>
-              <div class="stat-info">{{ homeData?.location || 'Remote / Worldwide' }}</div>
+            <div class="about-skills">
+              <h3 class="skills-title">Core Expertise</h3>
+              <div class="skills-cloud">
+                <span class="skill-tag">Angular</span>
+                <span class="skill-tag">TypeScript</span>
+                <span class="skill-tag">Node.js</span>
+                <span class="skill-tag">RxJS</span>
+                <span class="skill-tag">TailwindCSS</span>
+                <span class="skill-tag">REST APIs</span>
+              </div>
             </div>
-          </div>
-          
-          <div class="about-main">
-            <div class="section-tag">{{'ABOUT'}}</div>
-            <h2 class="about-title">{{'BUILDING DIGITAL SOLUTIONS WITH PRECISION'}}</h2>
-            <div class="about-description" [innerHTML]="homeData?.description"></div>
             
             <div class="about-actions">
-              <button class="action-btn action-primary" (click)="downloadResume(profileData()?.resume_url)">
-                <i class="material-icons">download</i>
-                <span>{{'RESUME.PDF'}}</span>
+              <button class="btn-outline" (click)="downloadResume(profileData()?.resume_url)">
+                <i class="material-icons">file_download</i>
+                <span>Download Resume</span>
               </button>
-              <button class="action-btn action-outline" (click)="aboutMe()">
-                <span>{{'READ MORE'}}</span>
+              <button class="btn-link" (click)="aboutMe()">
+                <span>More About Me</span>
                 <i class="material-icons">arrow_forward</i>
               </button>
             </div>
           </div>
+          
+          <div class="about-highlights">
+            <div class="highlight-card">
+              <div class="highlight-icon">
+                <i class="material-icons">rocket_launch</i>
+              </div>
+              <h4>Fast & Scalable</h4>
+              <p>Optimized performance with modern architecture patterns</p>
+            </div>
+            <div class="highlight-card">
+              <div class="highlight-icon">
+                <i class="material-icons">design_services</i>
+              </div>
+              <h4>Pixel Perfect</h4>
+              <p>Attention to detail with responsive, accessible designs</p>
+            </div>
+            <div class="highlight-card">
+              <div class="highlight-icon">
+                <i class="material-icons">code</i>
+              </div>
+              <h4>Clean Code</h4>
+              <p>Maintainable, tested, and documented solutions</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- PROJECTS SECTION - Industrial Grid -->
+    <!-- PROJECTS SECTION - Modern Card Grid -->
     <section id="projects" class="projects-section animate-section">
       <div class="container">
-        <div class="projects-header">
-          <div class="header-left">
-            <div class="section-tag">{{'PORTFOLIO'}}</div>
-            <h2 class="projects-title">{{'FEATURED WORK'}}</h2>
-          </div>
-          <a class="header-link" (click)="goToProjects()">
-            <span>{{'VIEW ALL PROJECTS'}}</span>
-            <span class="link-arrow">→</span>
-          </a>
+        <div class="section-header centered">
+          <span class="section-badge">Portfolio</span>
+          <h2 class="section-title">Featured Projects</h2>
+          <p class="section-subtitle">Selected work that showcases my expertise and creativity</p>
         </div>
 
         <div class="projects-grid">
           @for (project of homeData?.experiences?.[0]?.projects || []; track project; let i = $index) {
-            <div class="project-item">
-              <div class="project-header">
-                <div class="project-number">{{ (i + 1).toString().padStart(2, '0') }}</div>
-                <div class="project-status-tag"
-                  [ngClass]="project?.projectProgress === 'in-progress' ? 'status-active' : 'status-complete'">
-                  <span class="status-bullet"></span>
-                  <span>{{ project?.projectProgress === 'in-progress' ? 'IN PROGRESS' : 'COMPLETED' }}</span>
+            @if (i < 6) {
+              <div class="project-card" [class.project-card--featured]="i === 0">
+                <div class="project-card-inner">
+                  <div class="project-image-wrapper">
+                    <img [src]="project.image || 'assets/images/placeholder.jpg'" [alt]="project.title" class="project-image">
+                    <div class="project-overlay">
+                      <button class="project-quick-view" (click)="openProject(project)">
+                        <i class="material-icons">visibility</i>
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div class="project-content">
+                    <div class="project-meta">
+                      <span class="project-status" [class.status-completed]="project?.projectProgress === 'completed'" [class.status-progress]="project?.projectProgress === 'in-progress'">
+                        <span class="status-dot"></span>
+                        {{ project?.projectProgress === 'completed' ? 'Completed' : 'In Progress' }}
+                      </span>
+                      <span class="project-category">{{ project.category || 'Web App' }}</span>
+                    </div>
+                    
+                    <h3 class="project-title">{{ project.title }}</h3>
+                    <p class="project-description">{{ project.description | slice:0:120 }}{{ project.description.length > 120 ? '...' : '' }}</p>
+                    
+                    <div class="project-tech-stack">
+                      @for (tech of project.technologies | slice:0:4; track tech) {
+                        <span class="tech-pill">{{ tech }}</span>
+                      }
+                      @if (project.technologies.length > 4) {
+                        <span class="tech-pill more">+{{ project.technologies.length - 4 }}</span>
+                      }
+                    </div>
+                    
+                    <button class="project-link-btn" (click)="openProject(project)">
+                      <span>View Case Study</span>
+                      <i class="material-icons">arrow_forward</i>
+                    </button>
+                  </div>
                 </div>
               </div>
-              
-              <h3 class="project-title">{{ project?.title?.toUpperCase() }}</h3>
-              
-              <div class="project-tech">
-                <div class="tech-label">{{'STACK:'}}</div>
-                <div class="tech-list">
-                  @for (tech of project?.technologies | slice:0:4; track tech) {
-                    <span class="tech-item">{{tech}}</span>
-                  }
-                </div>
-              </div>
-              
-              <button class="project-link" (click)="openProject(project)">
-                <span>{{'VIEW PROJECT'}}</span>
-                <span class="link-icon">↗</span>
-              </button>
-            </div>
+            }
           }
+        </div>
+        
+        <div class="projects-footer">
+          <button class="btn-primary btn-large" (click)="goToProjects()">
+            <span>View All Projects</span>
+            <i class="material-icons">grid_view</i>
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- CONTACT SECTION - Split Industrial -->
+    <!-- CONTACT SECTION - Split Modern Form -->
     <section id="contact" class="contact-section animate-section">
       <div class="container">
-        <div class="contact-layout">
-          <div class="contact-info-panel">
-            <div class="section-tag">{{'CONTACT'}}</div>
-            <h2 class="contact-heading">
-              {{"LET'S BUILD"}} <span class="heading-accent">{{'SOMETHING'}}</span> {{'TOGETHER'}}
-            </h2>
-            <p class="contact-intro">
-              {{'Currently accepting new freelance projects and full-time opportunities.'}}
+        <div class="contact-container">
+          <div class="contact-info">
+            <div class="section-header">
+              <span class="section-badge">Get In Touch</span>
+              <h2 class="section-title">Let's Work<br>Together</h2>
+            </div>
+            
+            <p class="contact-description">
+              Have a project in mind? I'd love to hear about it. Whether it's a full-scale application or a small feature enhancement, I'm ready to help bring your ideas to life.
             </p>
-
+            
             <div class="contact-details">
-              <div class="detail-block">
+              <div class="contact-detail-item">
                 <div class="detail-icon">
                   <i class="material-icons">location_on</i>
                 </div>
-                <div class="detail-info">
-                  <div class="detail-title">{{'LOCATION'}}</div>
-                  <div class="detail-text">{{ homeData?.location || 'Remote / Worldwide' }}</div>
+                <div class="detail-content">
+                  <span class="detail-label">Location</span>
+                  <span class="detail-value">{{ homeData?.location || 'Remote / Worldwide' }}</span>
                 </div>
               </div>
-
-              <div class="detail-block">
+              
+              <div class="contact-detail-item">
                 <div class="detail-icon">
                   <i class="material-icons">email</i>
                 </div>
-                <div class="detail-info">
-                  <div class="detail-title">{{'EMAIL'}}</div>
-                  <a [href]="'mailto:' + homeData?.email" class="detail-text detail-link">{{ homeData?.email }}</a>
+                <div class="detail-content">
+                  <span class="detail-label">Email</span>
+                  <a [href]="'mailto:' + homeData?.email" class="detail-value detail-link">{{ homeData?.email }}</a>
                 </div>
               </div>
-
-              <!-- <div class="detail-block">
+              
+              <div class="contact-detail-item">
                 <div class="detail-icon">
-                  <i class="material-icons">phone</i>
+                  <i class="material-icons">schedule</i>
                 </div>
-                <div class="detail-info">
-                  <div class="detail-title">{{'PHONE'}}</div>
-                  <a [href]="'tel:' + homeData?.primary_phone" class="detail-text detail-link">{{ homeData?.primary_phone }}</a>
+                <div class="detail-content">
+                  <span class="detail-label">Availability</span>
+                  <span class="detail-value">{{ profileData()?.open_to_work ? 'Available for opportunities' : 'Currently booked until March 2026' }}</span>
                 </div>
-              </div> -->
+              </div>
             </div>
           </div>
-
-          <div class="contact-form-panel">
-            <form [formGroup]="contactForm" (ngSubmit)="onSubmitContact()" class="contact-form">
-              <div class="form-header">{{'SEND MESSAGE'}}</div>
+          
+          <div class="contact-form-wrapper">
+            <form [formGroup]="contactForm" (ngSubmit)="onSubmitContact()" class="contact-form-modern">
+              <div class="form-header">
+                <h3>Send a Message</h3>
+                <p>I'll get back to you within 24 hours</p>
+              </div>
               
-              <div class="form-row-split">
+              <div class="form-row">
                 <div class="form-group">
-                  <label class="form-label">{{'FIRST NAME'}}</label>
-                  <input formControlName="firstName" type="text" class="form-control" placeholder="Rohit">
+                  <label class="form-label">First Name</label>
+                  <input formControlName="firstName" type="text" class="form-input" placeholder="John" [class.error]="firstName?.invalid && firstName?.touched">
+                  @if (firstName?.invalid && firstName?.touched) {
+                    <span class="error-message">First name is required</span>
+                  }
                 </div>
+                
                 <div class="form-group">
-                  <label class="form-label">{{'LAST NAME'}}</label>
-                  <input formControlName="lastName" type="text" class="form-control" placeholder="Nair">
+                  <label class="form-label">Last Name</label>
+                  <input formControlName="lastName" type="text" class="form-input" placeholder="Doe" [class.error]="lastName?.invalid && lastName?.touched">
+                  @if (lastName?.invalid && lastName?.touched) {
+                    <span class="error-message">Last name is required</span>
+                  }
                 </div>
               </div>
-
+              
               <div class="form-group">
-                <label class="form-label">{{'EMAIL ADDRESS'}}</label>
-                <input formControlName="email" type="email" class="form-control" placeholder="john@example.com">
+                <label class="form-label">Email Address</label>
+                <input formControlName="email" type="email" class="form-input" placeholder="hello@example.com" [class.error]="email?.invalid && email?.touched">
+                @if (email?.invalid && email?.touched) {
+                  <span class="error-message">Please enter a valid email address</span>
+                }
               </div>
-
+              
               <div class="form-group">
-                <label class="form-label">{{'MESSAGE'}}</label>
-                <textarea formControlName="message" rows="6" class="form-control form-textarea" 
-                  placeholder="Tell me about your project..."></textarea>
+                <label class="form-label">Subject</label>
+                <input formControlName="subject" type="text" class="form-input" placeholder="Project Inquiry" [class.error]="subject?.invalid && subject?.touched">
+                @if (subject?.invalid && subject?.touched) {
+                  <span class="error-message">Subject is required</span>
+                }
               </div>
-
-              <button type="submit" class="form-submit">
-                <span>{{'SEND MESSAGE'}}</span>
-                <i class="material-icons">send</i>
+              
+              <div class="form-group">
+                <label class="form-label">Message</label>
+                <textarea formControlName="message" rows="5" class="form-textarea" placeholder="Tell me about your project..." [class.error]="message?.invalid && message?.touched"></textarea>
+                @if (message?.invalid && message?.touched) {
+                  <span class="error-message">Message is required (max 500 characters)</span>
+                }
+                <span class="char-count">{{ message?.value?.length || 0 }}/500</span>
+              </div>
+              
+              <button type="submit" class="btn-primary btn-full" [disabled]="contactForm.invalid || send">
+                <span>{{ send ? 'Sending...' : 'Send Message' }}</span>
+                <i class="material-icons">{{ send ? 'hourglass_empty' : 'send' }}</i>
               </button>
             </form>
           </div>
@@ -218,64 +297,52 @@
       </div>
     </section>
 
-    <!-- PROJECT DIALOG - Brutalist Style -->
+    <!-- PROJECT DIALOG - Modern Minimal -->
     <p-dialog [(visible)]="showProjectDialog" [modal]="true" 
-      [header]="selectedProject?.title?.toUpperCase()" 
+      [header]="selectedProject?.title" 
       [draggable]="false" 
       [resizable]="false"
-      styleClass="brutalist-dialog responsive-dialog">
+      styleClass="modern-dialog responsive-dialog">
         @if (selectedProject) {
-          <div class="dialog-content-brutalist">
-            <!-- Dialog Header Info -->
-            <div class="dialog-meta">
-              <div class="meta-item">
-                <span class="meta-label">{{'PROJECT TYPE'}}</span>
-                <span class="meta-value">{{'WEB APPLICATION'}}</span>
+          <div class="dialog-content-modern">
+            <div class="dialog-image-area">
+              <img [src]="selectedProject.image" [alt]="selectedProject?.title" class="dialog-image">
+              <div class="dialog-status-badge" [class.status-completed]="selectedProject?.projectProgress === 'completed'" [class.status-progress]="selectedProject?.projectProgress === 'in-progress'">
+                <span class="status-dot"></span>
+                {{ selectedProject?.projectProgress === 'completed' ? 'Completed' : 'In Progress' }}
               </div>
-              <div class="meta-item">
-                <span class="meta-label">{{'STATUS'}}</span>
-                <div class="meta-status" 
-                  [ngClass]="selectedProject?.projectProgress === 'in-progress' ? 'status-active' : 'status-complete'">
-                  <span class="status-bullet"></span>
-                  <span>{{ selectedProject?.projectProgress === 'in-progress' ? 'IN PROGRESS' : 'COMPLETED' }}</span>
+            </div>
+            
+            <div class="dialog-body">
+              <h3 class="dialog-title">{{ selectedProject.title }}</h3>
+              <p class="dialog-description">{{ selectedProject.description }}</p>
+              
+              <div class="dialog-section">
+                <h4 class="dialog-section-title">Technologies Used</h4>
+                <div class="tech-list-modern">
+                  @for (tech of selectedProject.technologies; track $index) {
+                    <span class="tech-chip">{{ tech }}</span>
+                  }
                 </div>
               </div>
-            </div>
-
-            <!-- Project Image -->
-            <div class="dialog-image-container">
-              <div class="image-border-accent"></div>
-              <img [src]="selectedProject.image" [alt]="selectedProject?.title" class="dialog-project-image">
-              <div class="image-overlay">
-                <span class="overlay-label">{{'PROJECT PREVIEW'}}</span>
+              
+              @if (selectedProject.highlights?.length) {
+                <div class="dialog-section">
+                  <h4 class="dialog-section-title">Key Features</h4>
+                  <ul class="features-list">
+                    @for (highlight of selectedProject.highlights; track $index) {
+                      <li>{{ highlight }}</li>
+                    }
+                  </ul>
+                </div>
+              }
+              
+              <div class="dialog-actions-modern">
+                <button class="btn-secondary-small" (click)="showProjectDialog = false">
+                  <i class="material-icons">close</i>
+                  <span>Close</span>
+                </button>
               </div>
-            </div>
-
-            <!-- Project Description -->
-            <div class="dialog-section">
-              <div class="section-header-tag">{{'DESCRIPTION'}}</div>
-              <p class="dialog-description">{{ selectedProject.description }}</p>
-            </div>
-
-            <!-- Technologies -->
-            <div class="dialog-section">
-              <div class="section-header-tag">{{'TECH STACK'}}</div>
-              <div class="tech-grid-brutalist">
-                @for (tech of selectedProject.technologies; track $index) {
-                  <div class="tech-block">
-                    <span class="tech-icon">#</span>
-                    <span class="tech-name">{{ tech }}</span>
-                  </div>
-                }
-              </div>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="dialog-actions">
-              <button pButton pRipple icon="pi pi-times" severity="secondary" class="p-button-warning" (click)="showProjectDialog = false">
-                <i class="material-icons">close</i>
-                <span>{{'CLOSE'}}</span>
-              </button>
             </div>
           </div>
         }

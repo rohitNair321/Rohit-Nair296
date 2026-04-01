@@ -152,7 +152,8 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
   }
 
   goToProjects(){
-    this.alertService.showAlert(`This project page is under development, will be in functional soon!!`, 'info');
+    this.router.navigate(['projects']);
+    // this.alertService.showAlert(`This project page is under development, will be in functional soon!!`, 'info');
   }
 
   openProject(project: any) {

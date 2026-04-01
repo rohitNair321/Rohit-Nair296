@@ -1,187 +1,81 @@
-<footer class="brutalist-footer">
-  
-  <!-- Footer Main Content -->
-  <div class="footer-main">
-    <div class="container">
-      
-      <!-- Top Section -->
-      <div class="footer-top">
-        <div class="footer-brand-section">
-          <div class="brand-header">
-            <div class="brand-marker">■</div>
-            <div class="brand-title">ROHIT_PORTFOLIO</div>
-          </div>
-          <p class="brand-description">
-            Passionate Professional Developer focused on crafting clean, high-performance, 
-            and user-centric digital experiences.
-          </p>
-          
-          <!-- Social Links -->
-          <div class="social-grid">
-            <a class="social-link" aria-label="LinkedIn" (click)="openLink($event, profileData()?.linkedin)">
-              <span class="link-icon">
-                <i class="material-icons">linkedin</i>
-              </span>
-              <span class="link-label">LINKEDIN</span>
-            </a>
-            <a class="social-link" aria-label="GitHub" (click)="openLink($event, profileData()?.github)">
-              <span class="link-icon">
-                <i class="material-icons">code</i>
-              </span>
-              <span class="link-label">GITHUB</span>
-            </a>
-            <!-- <a href="#" class="social-link" aria-label="Twitter">
-              <span class="link-icon">
-                <i class="material-icons">flutter_dash</i>
-              </span>
-              <span class="link-label">TWITTER</span>
-            </a> -->
-          </div>
-        </div>
-
-        <!-- Status Box -->
-        <div class="status-box">
-          <div class="status-header">
-            @if (profileData()?.open_to_work) {
-            <span class="status-dot"></span>
-            }
-            <span class="status-text">{{profileData()?.open_to_work ? 'CURRENTLY_AVAILABLE' : 'NOT_AVAILABLE' }}</span>
-          </div>
-          <div class="status-info">
-            <div class="info-item">
-              <span class="info-label">LOCATION:</span>
-              <span class="info-value">REMOTE / WORLDWIDE</span>
-            </div>
-            <div class="info-item">
-              <span class="info-label">EMAIL:</span>
-              <a href="mailto:{{profileData()?.email}}" class="info-link">{{profileData()?.email}}</a>
-            </div>
-          </div>
+<footer class="modern-footer">
+  <div class="container">
+    <!-- Main Footer Content -->
+    <div class="footer-main">
+      <!-- Brand & Social Section -->
+      <div class="footer-brand">
+        <h3 class="brand-name">{{ profileData()?.full_name || 'ROHIT PORTFOLIO' }}</h3>
+        <p class="brand-bio">
+          {{ 'Building exceptional digital experiences with modern web technologies.' }}
+        </p>
+        <div class="social-links">
+          <a class="social-icon" aria-label="LinkedIn" (click)="openLink($event, profileData()?.linkedin)">
+            <i class="material-icons">linkedin</i>
+          </a>
+          <a class="social-icon" aria-label="GitHub" (click)="openLink($event, profileData()?.github)">
+            <i class="material-icons">code</i>
+          </a>
+          <a class="social-icon" aria-label="Email" [href]="'mailto:' + profileData()?.email">
+            <i class="material-icons">email</i>
+          </a>
         </div>
       </div>
 
-      <!-- Grid Section -->
-      <div class="footer-grid">
-        
-        <!-- Navigation Column -->
-        <div class="footer-column">
-          <div class="column-header">
-            <span class="header-number">01</span>
-            <h4 class="column-title">NAVIGATION</h4>
-          </div>
-          <div class="column-divider"></div>
-          <ul class="footer-list">
+      <!-- Navigation Links -->
+      <div class="footer-links">
+        <div class="links-column">
+          <h4 class="column-title">Navigation</h4>
+          <ul class="links-list">
             @for (item of menuItems; track item) {
-            <li>
               @if (!item.isHide) {
-              <a [href]="item.href" class="footer-link"
-                (click)="scrollToSection($event, item.href!)">
-                <span class="link-arrow">→</span>
-                <span class="link-text">{{ item.label }}</span>
-              </a>
+                <li>
+                  <a [href]="item.href" class="footer-link" (click)="scrollToSection($event, item.href!)">
+                    {{ item.label }}
+                  </a>
+                </li>
+              }
             }
-            </li>
-          }
           </ul>
         </div>
 
-        <!-- Services Column -->
-        <div class="footer-column">
-          <div class="column-header">
-            <span class="header-number">02</span>
-            <h4 class="column-title">SERVICES</h4>
-          </div>
-          <div class="column-divider"></div>
-          <ul class="footer-list">
-            <li>
-              <span class="list-item">
-                <span class="item-bullet">▣</span>
-                <span>WEB_DEVELOPMENT</span>
-              </span>
-            </li>
-            <li>
-              <span class="list-item">
-                <span class="item-bullet">▣</span>
-                <span>UI/UX_DESIGN</span>
-              </span>
-            </li>
-            <li>
-              <span class="list-item">
-                <span class="item-bullet">▣</span>
-                <span>API_INTEGRATION</span>
-              </span>
-            </li>
-            <li>
-              <span class="list-item">
-                <span class="item-bullet">▣</span>
-                <span>CONSULTATION</span>
-              </span>
-            </li>
+        <div class="links-column">
+          <h4 class="column-title">Services</h4>
+          <ul class="links-list">
+            <li><span class="footer-link">Web Development</span></li>
+            <li><span class="footer-link">UI/UX Design</span></li>
+            <li><span class="footer-link">API Integration</span></li>
+            <li><span class="footer-link">Consultation</span></li>
           </ul>
         </div>
 
-        <!-- Quick Links Column -->
-        <div class="footer-column">
-          <div class="column-header">
-            <span class="header-number">03</span>
-            <h4 class="column-title">RESOURCES</h4>
-          </div>
-          <div class="column-divider"></div>
-          <ul class="footer-list">
-            <li>
-              <a href="#" class="footer-link">
-                <span class="link-arrow">→</span>
-                <span class="link-text">PRIVACY_POLICY</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="footer-link">
-                <span class="link-arrow">→</span>
-                <span class="link-text">TERMS_OF_SERVICE</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" class="footer-link">
-                <span class="link-arrow">→</span>
-                <span class="link-text">DOCUMENTATION</span>
-              </a>
-            </li>
+        <div class="links-column">
+          <h4 class="column-title">Resources</h4>
+          <ul class="links-list">
+            <li><a href="#" class="footer-link">Privacy Policy</a></li>
+            <li><a href="#" class="footer-link">Terms of Service</a></li>
+            <li><a href="#" class="footer-link">Documentation</a></li>
           </ul>
         </div>
-
       </div>
-
     </div>
-  </div>
 
-  <!-- Footer Bottom Bar -->
-  <div class="footer-bottom">
-    <div class="container">
-      <div class="bottom-grid">
-        
-        <div class="bottom-left">
-          <div class="copyright-text">
-            © 2025 ROHIT_PORTFOLIO
-          </div>
-          <div class="built-with">
-            <span>BUILT_WITH</span>
-            <span class="tech-stack">ANGULAR</span>
-            <span class="separator">+</span>
-            <span class="tech-stack">TYPESCRIPT</span>
-          </div>
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <div class="bottom-content">
+        <div class="copyright">
+          © {{ currentYear }} {{ profileData()?.full_name || 'Rohit Portfolio' }}. All rights reserved.
         </div>
-
-        <div class="bottom-right">
-          <button class="back-to-top-btn" 
-                  aria-label="Back to top" 
-                  (click)="scrollToSection($event, '#home')">
-            <span class="btn-text">BACK_TO_TOP</span>
-            <span class="btn-icon">↑</span>
-          </button>
+        <div class="tech-stack">
+          <span>Built with</span>
+          <span class="tech-badge">Angular</span>
+          <span class="tech-badge">TypeScript</span>
+          <span class="tech-badge">SCSS</span>
         </div>
-
+        <button class="back-to-top" aria-label="Back to top" (click)="scrollToSection($event, '#home')">
+          <i class="material-icons">arrow_upward</i>
+          <span>Top</span>
+        </button>
       </div>
     </div>
   </div>
-
 </footer>

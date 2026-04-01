@@ -24,6 +24,7 @@ import { CommonApp } from 'src/app/core/services/common';
 })
 export class FooterComponent extends CommonApp {
 
+  currentYear = new Date().getFullYear();
   profileInfo = this.appService.profile();
   constructor(public override injector: Injector,) {
     super(injector);
