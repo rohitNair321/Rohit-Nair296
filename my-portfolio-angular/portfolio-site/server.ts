@@ -12,7 +12,16 @@ export function app(): express.Express {
   const browserDistFolder = resolve(serverDistFolder, '../browser');
   const indexHtml = join(serverDistFolder, 'index.server.html');
 
-  const commonEngine = new CommonEngine();
+  const commonEngine = new CommonEngine({
+    allowedHosts: [
+      'http://localhost:4200',
+      'http://localhost:3000',
+      'https://rohitnair321.github.io',
+      'https://rohit-nair296.onrender.com',
+      'https://portfolio-backend-bpmw.onrender.com',
+      'https://www.mintpixel.in'
+    ]
+  });
 
   server.set('view engine', 'html');
   server.set('views', browserDistFolder);
