@@ -38,7 +38,6 @@
           },
           "configurations": {
             "production": {
-              "baseHref": "/my-portfolio-angular/",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environments.ts",
