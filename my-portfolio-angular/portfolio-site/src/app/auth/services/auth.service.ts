@@ -86,9 +86,9 @@ initiateApp(): Observable<any> {
       });
 
       // Load profile if available
-      if (data.appData) {
-        this.appService.setLocalProfile(data.appData);
-      }
+      // if (data.appData) {
+      //   this.appService.setLocalProfile(data.appData);
+      // }
 
       console.log('✅ Session restored:', { role, id: data.id });
     }),
