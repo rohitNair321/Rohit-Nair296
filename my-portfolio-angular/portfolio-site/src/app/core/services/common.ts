@@ -36,58 +36,29 @@ export class CommonApp {
     this.localStorageService = this.injector.get(LocalStorageService);
     this.aiChatService = this.injector.get(ChatApiService);
 
-    this.initializeMenuItems();
-  }
-
-  /**
-   * Initialize menu items
-   * Called in constructor and can be re-called when role changes
-   */
-  initializeMenuItems() {
-    const isAdmin = this.appService.role() === 'ADMIN';
-    
     this.menuItems = [
       new MenuItem({ label: 'Home', key: 'home', href: '#home', icon: 'home' }),
       new MenuItem({ label: 'About Me', key: 'aboutMe', href: '#about', icon: 'person' }),
       new MenuItem({ label: 'Projects', key: 'projects', href: '#projects', icon: 'work' }),
       new MenuItem({ label: 'Contact', key: 'contact', href: '#contact', icon: 'mail' }),
-      // Notifications - only show for admin
-      new MenuItem({ 
-        label: 'Notifications', 
-        routerLink: '/admin/notifications', 
-        icon: 'notifications', 
-        key: 'notifications', 
-        isHide: !isAdmin, // Hide if not admin
-        role: 'admin' 
-      }),
+      new MenuItem({ label: 'Notifications', routerLink: 'notifications', icon: 'notifications', key: 'notifications', isHide: this.appConfig.appConfiguration.showNotifications,  role: 'admin' }),
       new MenuItem({
-        label: 'Resume', 
-        icon: 'download', 
-        action: true, 
-        key: 'resume', 
-        tooltip: 'Download Resume', 
-        actions: (event) => {
+        label: 'Resume', icon: 'download', action: true, key: 'resume', tooltip: 'Download Resume', actions: (event) => {
           this.downloadResume(event);
         }
       }),
-    ];
-  }
 
-  /**
-   * Check if menu item should be visible based on role
-   */
-  isMenuItemVisible(item: MenuItem): boolean {
-    // If item has no role requirement, it's visible to all
-    if (!item.role) {
-      return true;
-    }
-    
-    // If item requires admin role, check if user is admin
-    if (item.role === 'admin') {
-      return this.appService.role() === 'ADMIN';
-    }
-    
-    return true;
+      // new MenuItem({
+      //   label: 'Admin',
+      //   key: 'admin',
+      //   icon: 'dashboard_customize',
+      //   expanded: false,
+      //   subMenu: [
+      //     new MenuItem({ label: 'Dashboard', key: 'dashboard', routerLink: '/admin/dashboard', icon: 'dashboard' }),
+      //     new MenuItem({ label: 'Settings', key: 'settings', routerLink: '/admin/settings', icon: 'settings' })
+      //   ]
+      // }),
+    ];
   }
 
   public themeToggle() {
