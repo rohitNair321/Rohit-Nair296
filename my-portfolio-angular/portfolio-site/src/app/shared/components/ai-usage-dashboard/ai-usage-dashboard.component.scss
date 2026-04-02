@@ -1,0 +1,910 @@
+/* =============================================================
+   AI USAGE DASHBOARD
+   =============================================================
+   COLOR TOKEN MAP
+   ─────────────────────────────────────────────────────────────
+   --background      page canvas
+   --surface         card bg
+   --surface-alt     skeleton base, zebra rows, icon wrap bg
+   --border          card borders, dividers
+   --primary         input tokens, hero card bar, active range
+   --accent          output tokens, accent badges
+   --primary-glow    card hover shadow, hero glow
+   --text-primary    values, headings
+   --text-secondary  descriptions, sub-labels
+   --text-muted      eyebrow, meta, rate desc
+   --error           error state
+   --logo-shadow     deep card shadows
+   ─────────────────────────────────────────────────────────────
+   Zero hardcoded hex values.  All colours from theme tokens.
+   ============================================================= */
+
+$radius-card : 16px;
+$radius-badge : 99px;
+$radius-btn : 10px;
+$transition : 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+$card-shadow : 0 2px 10px var(--logo-shadow, rgba(0, 0, 0, 0.07));
+$card-hover-sh : 0 6px 24px var(--primary-glow, rgba(0, 0, 0, 0.14));
+
+/* =============================================================
+   ROOT
+   ============================================================= */
+.aud {
+  padding: 1.25rem;
+  background: var(--background);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-height: 100%;
+}
+
+/* =============================================================
+   HEADER
+   ============================================================= */
+.aud__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.aud__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--primary);
+  margin-bottom: 0.3rem;
+
+  .material-icons {
+    font-size: 0.9rem;
+  }
+}
+
+.aud__title {
+  font-size: clamp(1.2rem, 3vw, 1.65rem);
+  font-weight: 900;
+  color: var(--text-primary);
+  margin: 0 0 0.2rem;
+  letter-spacing: -0.4px;
+}
+
+.aud__subtitle {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.aud__header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+// ── Range pill group ──────────────────────────────────────────
+.aud__range-group {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.aud__range-btn {
+  padding: 0.35rem 0.8rem;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background $transition, color $transition;
+
+  &--active {
+    background: var(--primary);
+    color: var(--background);
+  }
+
+  &:not(&--active):hover {
+    background: var(--surface-alt);
+    color: var(--text-primary);
+  }
+}
+
+.aud__refresh-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background $transition, color $transition;
+
+  .material-icons {
+    font-size: 1.1rem;
+  }
+
+  &:hover {
+    background: var(--primary-glow);
+    color: var(--primary);
+  }
+
+  &--spinning .material-icons {
+    animation: aud-spin 0.85s linear infinite;
+  }
+
+  @keyframes aud-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+/* =============================================================
+   SKELETON LOADING
+   ============================================================= */
+.aud__skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+}
+
+.aud__sk-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: $radius-card;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+%sk-line {
+  border-radius: 6px;
+  background: linear-gradient(90deg,
+      var(--surface-alt) 25%,
+      color-mix(in oklab, var(--surface-alt) 55%, var(--background)) 50%,
+      var(--surface-alt) 75%);
+  background-size: 200% 100%;
+  animation: aud-shimmer 1.4s ease infinite;
+}
+
+.aud__sk-line {
+  @extend %sk-line;
+  height: 12px;
+  width: 100%;
+
+  &--short {
+    width: 45%;
+  }
+
+  &--tall {
+    height: 28px;
+    width: 65%;
+  }
+
+  &--medium {
+    width: 55%;
+  }
+}
+
+@keyframes aud-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* =============================================================
+   KPI ROW
+   ============================================================= */
+.aud__kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.85rem;
+}
+
+// ── Shared KPI card ───────────────────────────────────────────
+.aud__kpi-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: $radius-card;
+  padding: 1.1rem 1rem 0.9rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  box-shadow: $card-shadow;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: aud-in 0.35s ease forwards var(--d, 0ms);
+  transition: box-shadow $transition, transform $transition;
+
+  &:hover {
+    box-shadow: $card-hover-sh;
+    transform: translateY(-2px);
+  }
+
+  // Hero card gets extra top padding for breathing room
+  &--hero {
+    grid-column: span 1; // takes natural width in grid
+  }
+}
+
+@keyframes aud-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Left-border accent bars
+.aud__kpi-card-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: $radius-card 0 0 $radius-card;
+  background: var(--primary);
+
+  &--2 {
+    background: var(--accent);
+  }
+
+  &--3 {
+    background: var(--primary);
+  }
+
+  &--4 {
+    background: var(--accent);
+  }
+}
+
+// Hero card glow wash
+.aud__kpi-card--hero::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: var(--primary);
+  opacity: 0.05;
+  pointer-events: none;
+}
+
+.aud__kpi-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+}
+
+.aud__kpi-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text-muted);
+}
+
+.aud__kpi-icon-wrap {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: var(--surface-alt);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .material-icons {
+    font-size: 1rem;
+  }
+
+  &--hero {
+    background: color-mix(in oklab, var(--primary) 14%, transparent);
+  }
+
+  &--3 {
+    color: var(--primary);
+  }
+
+  &--4 {
+    color: var(--accent);
+    background: color-mix(in oklab, var(--accent) 12%, transparent);
+  }
+}
+
+.aud__kpi-value {
+  font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+  font-weight: 900;
+  color: var(--text-primary);
+  letter-spacing: -0.8px;
+  line-height: 1;
+  margin-bottom: 0.2rem;
+
+  &--hero {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: var(--primary);
+  }
+}
+
+.aud__kpi-sub {
+  font-size: 0.73rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.aud__pct-badge {
+  padding: 1px 6px;
+  border-radius: $radius-badge;
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.68rem;
+
+  &--accent {
+    background: color-mix(in oklab, var(--accent) 12%, transparent);
+    color: var(--accent);
+  }
+}
+
+/* =============================================================
+   TOKEN FLOW SPLIT BAR
+   ============================================================= */
+.aud__flow-section,
+.aud__chart-card,
+.aud__pricing-card,
+.aud__cost-footer {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: $radius-card;
+  padding: 1.1rem 1.1rem 1rem;
+  box-shadow: $card-shadow;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: aud-in 0.35s ease forwards var(--d, 0ms);
+}
+
+.aud__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.aud__section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+
+  .material-icons {
+    font-size: 1rem;
+    color: var(--primary);
+  }
+}
+
+.aud__section-meta {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+// ── Split bar ─────────────────────────────────────────────────
+.aud__split-bar {
+  display: flex;
+  height: 36px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.aud__split-bar-input,
+.aud__split-bar-output {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--background);
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.aud__split-bar-input {
+  background: var(--primary);
+}
+
+.aud__split-bar-output {
+  background: var(--accent);
+}
+
+// ── Legend ────────────────────────────────────────────────────
+.aud__split-legend {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.aud__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.aud__legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+
+  .aud__legend-item--input & {
+    background: var(--primary);
+  }
+
+  .aud__legend-item--output & {
+    background: var(--accent);
+  }
+}
+
+/* =============================================================
+   LOWER ROW: trend chart + pricing card
+   ============================================================= */
+.aud__lower-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+}
+
+// ── Trend bar chart ───────────────────────────────────────────
+.aud__bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 120px;
+}
+
+.aud__bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+}
+
+.aud__bar-wrap {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+
+.aud__bar {
+  width: 100%;
+  background: linear-gradient(180deg, var(--primary) 0%, var(--accent) 100%);
+  border-radius: 6px 6px 3px 3px;
+  position: relative;
+  transition: height 0.7s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
+    opacity $transition;
+  cursor: pointer;
+  min-height: 4px;
+
+  &:hover {
+    opacity: 0.85;
+
+    .aud__bar-tooltip {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  }
+}
+
+.aud__bar-tooltip {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: var(--text-primary);
+  color: var(--background);
+  padding: 6px 9px;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.aud__bar-label {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.aud__no-data {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 120px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+
+  .material-icons {
+    opacity: 0.4;
+  }
+}
+
+// ── Rate card ─────────────────────────────────────────────────
+.aud__rate-table {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 1rem;
+}
+
+.aud__rate-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  transition: background $transition;
+
+  &:hover {
+    background: var(--surface-alt);
+  }
+
+  &--active {
+    background: color-mix(in oklab, var(--accent) 8%, transparent);
+    border: 1px solid color-mix(in oklab, var(--accent) 18%, transparent);
+  }
+}
+
+.aud__rate-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.aud__rate-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+
+  &--output {
+    background: var(--accent);
+  }
+}
+
+.aud__rate-type {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.aud__rate-desc {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aud__rate-right {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.aud__rate-price {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.aud__rate-unit {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+// ── Efficiency metric ─────────────────────────────────────────
+.aud__efficiency {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.75rem;
+  background: var(--surface-alt);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.aud__efficiency-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+
+  .material-icons {
+    font-size: 0.95rem;
+    color: var(--primary);
+  }
+}
+
+.aud__efficiency-value {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aud__efficiency-note {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: $radius-badge;
+  background: color-mix(in oklab, var(--primary) 10%, transparent);
+  color: var(--primary);
+}
+
+/* =============================================================
+   COST BREAKDOWN FOOTER
+   ============================================================= */
+.aud__cost-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.aud__cost-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.7rem 0;
+  flex-wrap: wrap;
+
+  &--total {
+    padding-top: 0.85rem;
+    margin-top: 0.1rem;
+  }
+}
+
+.aud__cost-divider {
+  height: 1px;
+  background: var(--border);
+}
+
+.aud__cost-item-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+
+  .material-icons {
+    font-size: 1rem;
+    color: var(--primary);
+  }
+}
+
+.aud__cost-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &--input {
+    background: var(--primary);
+  }
+
+  &--output {
+    background: var(--accent);
+  }
+}
+
+.aud__cost-item-value {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: right;
+
+  strong {
+    color: var(--text-primary);
+    font-weight: 700;
+  }
+
+  &--total {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: var(--primary);
+  }
+}
+
+/* =============================================================
+   ERROR / EMPTY STATE
+   ============================================================= */
+.aud__state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 3rem 1rem;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.aud__state-icon {
+  font-size: 2.5rem;
+  opacity: 0.5;
+
+  &--error {
+    color: var(--error);
+    opacity: 1;
+  }
+}
+
+.aud__state-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0.5rem 1.1rem;
+  border-radius: $radius-btn;
+  border: none;
+  background: var(--primary);
+  color: var(--background);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity $transition;
+
+  .material-icons {
+    font-size: 0.95rem;
+  }
+
+  &:hover {
+    opacity: 0.86;
+  }
+}
+
+/* =============================================================
+   RESPONSIVE — MOBILE FIRST
+   ============================================================= */
+
+// Phones ≤ 480px — 1-col KPI cards, header stacks
+@media (max-width: 480px) {
+  .aud {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .aud__header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .aud__header-right {
+    justify-content: space-between;
+  }
+
+  .aud__kpi-row {
+    grid-template-columns: 1fr 1fr; // 2×2 grid on small phones
+  }
+
+  .aud__kpi-card--hero {
+    grid-column: 1 / -1; // hero spans full width
+  }
+
+  .aud__bar-label {
+    display: none;
+  }
+
+  // too cramped on tiny screens
+}
+
+// Tablets 481–768px
+@media (min-width: 481px) and (max-width: 768px) {
+  .aud__kpi-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .aud__kpi-card--hero {
+    grid-column: 1 / -1;
+  }
+}
+
+// Laptops ≥ 769px — side by side lower row
+@media (min-width: 769px) {
+  .aud__kpi-row {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .aud__lower-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* =============================================================
+   REDUCED MOTION
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+
+  .aud__kpi-card,
+  .aud__flow-section,
+  .aud__chart-card,
+  .aud__pricing-card,
+  .aud__cost-footer {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .aud__sk-line {
+    animation: none;
+  }
+
+  .aud__refresh-btn--spinning .material-icons {
+    animation: none;
+  }
+
+  .aud__bar {
+    transition: none;
+  }
+
+  .aud__split-bar-input,
+  .aud__split-bar-output {
+    transition: none;
+  }
+}

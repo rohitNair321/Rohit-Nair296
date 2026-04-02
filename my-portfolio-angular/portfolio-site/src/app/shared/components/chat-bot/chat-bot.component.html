@@ -144,7 +144,7 @@
         <div class="cb-msg__body">
 
           <!-- Typing indicator -->
-          @if (isSending()) {
+          @if (msg.loading) {
           <div class="cb-msg__bubble" aria-label="Bot is typing">
             <div class="cb-typing">
               <span></span><span></span><span></span>

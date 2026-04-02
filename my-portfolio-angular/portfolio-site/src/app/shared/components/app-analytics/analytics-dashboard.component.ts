@@ -40,9 +40,9 @@ function cssVar(name: string, fallback = '#888'): string {
 // ── Helper: derive an rgba string from a CSS var hex value ────
 function cssVarAlpha(name: string, alpha: number, fallback = '#888'): string {
   const hex = cssVar(name, fallback).replace('#', '');
-  const r   = parseInt(hex.substring(0, 2), 16);
-  const g   = parseInt(hex.substring(2, 4), 16);
-  const b   = parseInt(hex.substring(4, 6), 16);
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
@@ -64,15 +64,15 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // ── Canvas refs ───────────────────────────────────────────────
   @ViewChild('pageViewsChart') pageViewsChartRef!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('devicesChart')   devicesChartRef!:   ElementRef<HTMLCanvasElement>;
-  @ViewChild('trafficChart')   trafficChartRef!:   ElementRef<HTMLCanvasElement>;
-  @ViewChild('geoChart')       geoChartRef!:       ElementRef<HTMLCanvasElement>;
+  @ViewChild('devicesChart') devicesChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('trafficChart') trafficChartRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('geoChart') geoChartRef!: ElementRef<HTMLCanvasElement>;
 
   // ── Chart instances ───────────────────────────────────────────
   private _pageViewsChart: Chart | null = null;
-  private _devicesChart:   Chart | null = null;
-  private _trafficChart:   Chart | null = null;
-  private _geoChart:       Chart | null = null;
+  private _devicesChart: Chart | null = null;
+  private _trafficChart: Chart | null = null;
+  private _geoChart: Chart | null = null;
 
   // ── UI signals ────────────────────────────────────────────────
   selectedTimeRange = signal<'7days' | '30days' | 'custom'>('7days');
@@ -80,15 +80,15 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // ── Time range options (drives the pill buttons in the template) ──
   readonly timeRangeOptions: TimeRangeOption[] = [
-    { label: '7 Days',  value: '7days'  },
+    { label: '7 Days', value: '7days' },
     { label: '30 Days', value: '30days' },
-    { label: 'Custom',  value: 'custom' },
+    { label: 'Custom', value: 'custom' },
   ];
 
   // ── Data from service ─────────────────────────────────────────
   dashboardData = computed(() => this.analyticsService.dashboardData());
-  loading       = computed(() => this.analyticsService.loading());
-  error         = computed(() => this.analyticsService.error());
+  loading = computed(() => this.analyticsService.loading());
+  error = computed(() => this.analyticsService.error());
 
   // ── Computed metrics ──────────────────────────────────────────
   totalPageViews = computed(() =>
@@ -161,13 +161,13 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
   loadAnalytics(): void {
     const range = this.selectedTimeRange();
     let startDate = '7daysAgo';
-    let endDate   = 'today';
+    let endDate = 'today';
 
     if (range === '30days') {
       startDate = '30daysAgo';
     } else if (range === 'custom' && this.customDateRange?.length) {
       startDate = this._formatDate(this.customDateRange[0]);
-      endDate   = this._formatDate(this.customDateRange[1] ?? this.customDateRange[0]);
+      endDate = this._formatDate(this.customDateRange[1] ?? this.customDateRange[0]);
     }
 
     const sub = this.analyticsService.getDashboard(startDate, endDate).subscribe();
@@ -222,16 +222,16 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
     this._trafficChart?.destroy();
     this._geoChart?.destroy();
     this._pageViewsChart = null;
-    this._devicesChart   = null;
-    this._trafficChart   = null;
-    this._geoChart       = null;
+    this._devicesChart = null;
+    this._trafficChart = null;
+    this._geoChart = null;
   }
 
   // ── Shared Chart.js defaults (token-aware) ────────────────────
   private _sharedOptions(overrides: Partial<ChartConfiguration['options']> = {}): ChartConfiguration['options'] {
-    const textMuted  = cssVar('--text-muted',      '#888');
-    const border     = cssVar('--border',           '#ddd');
-    const textSecond = cssVar('--text-secondary',   '#666');
+    const textMuted = cssVar('--text-muted', '#888');
+    const border = cssVar('--border', '#ddd');
+    const textSecond = cssVar('--text-secondary', '#666');
 
     return {
       responsive: true,
@@ -247,24 +247,24 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         tooltip: {
           backgroundColor: cssVar('--surface'),
-          titleColor:      cssVar('--text-primary'),
-          bodyColor:       textSecond,
-          borderColor:     border,
-          borderWidth:     1,
-          padding:         10,
-          cornerRadius:    8,
-          mode:            'index',
-          intersect:       false,
+          titleColor: cssVar('--text-primary'),
+          bodyColor: textSecond,
+          borderColor: border,
+          borderWidth: 1,
+          padding: 10,
+          cornerRadius: 8,
+          mode: 'index',
+          intersect: false,
         },
       },
       scales: {
         x: {
           ticks: { color: textMuted, font: { size: 11 } },
-          grid:  { color: border, drawBorder: false } as any,
+          grid: { color: border, drawBorder: false } as any,
         },
         y: {
-          ticks:      { color: textMuted, font: { size: 11 }, precision: 0 },
-          grid:       { color: border, drawBorder: false } as any,
+          ticks: { color: textMuted, font: { size: 11 }, precision: 0 },
+          grid: { color: border, drawBorder: false } as any,
           beginAtZero: true,
         },
       },
@@ -279,7 +279,7 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!ctx) { return; }
 
     const primary = cssVar('--primary');
-    const accent  = cssVar('--accent');
+    const accent = cssVar('--accent');
 
     const config: ChartConfiguration = {
       type: 'line',
@@ -289,7 +289,7 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
           {
             label: 'Page Views',
             data: data.pageViews.map(pv => pv.pageViews),
-            borderColor:     primary,
+            borderColor: primary,
             backgroundColor: cssVarAlpha('--primary', 0.08),
             tension: 0.45,
             fill: true,
@@ -300,7 +300,7 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
           {
             label: 'Sessions',
             data: data.pageViews.map(pv => pv.sessions),
-            borderColor:     accent,
+            borderColor: accent,
             backgroundColor: cssVarAlpha('--accent', 0.07),
             tension: 0.45,
             fill: true,
@@ -333,39 +333,39 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
     const config: ChartConfiguration = {
       type: 'doughnut',
       data: {
-        labels:   Array.from(deviceMap.keys()),
+        labels: Array.from(deviceMap.keys()),
         datasets: [{
-          data:            Array.from(deviceMap.values()),
+          data: Array.from(deviceMap.values()),
           backgroundColor: [
             cssVar('--primary'),
             cssVar('--accent'),
             cssVarAlpha('--primary', 0.45),
           ],
-          borderColor:  cssVar('--surface'),
-          borderWidth:  3,
-          hoverOffset:  6,
+          borderColor: cssVar('--surface'),
+          borderWidth: 3,
+          hoverOffset: 6,
         }],
       },
       options: {
-        responsive:          true,
+        responsive: true,
         maintainAspectRatio: false,
         plugins: {
           legend: {
             position: 'bottom',
-            labels:   {
-              color:    cssVar('--text-secondary'),
-              font:     { size: 12 },
+            labels: {
+              color: cssVar('--text-secondary'),
+              font: { size: 12 },
               boxWidth: 10,
-              padding:  12,
+              padding: 12,
             },
           },
           tooltip: {
             backgroundColor: cssVar('--surface'),
-            titleColor:      cssVar('--text-primary'),
-            bodyColor:       cssVar('--text-secondary'),
-            borderColor:     cssVar('--border'),
-            borderWidth:     1,
-            cornerRadius:    8,
+            titleColor: cssVar('--text-primary'),
+            bodyColor: cssVar('--text-secondary'),
+            borderColor: cssVar('--border'),
+            borderWidth: 1,
+            cornerRadius: 8,
           },
         },
       },
@@ -383,14 +383,14 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
     const config: ChartConfiguration = {
       type: 'bar',
       data: {
-        labels:   data.traffic.map(t => t.source),
+        labels: data.traffic.map(t => t.source),
         datasets: [{
-          label:           'Sessions',
-          data:            data.traffic.map(t => t.sessions),
+          label: 'Sessions',
+          data: data.traffic.map(t => t.sessions),
           backgroundColor: cssVarAlpha('--primary', 0.75),
-          borderColor:     cssVar('--primary'),
-          borderWidth:     1,
-          borderRadius:    6,
+          borderColor: cssVar('--primary'),
+          borderWidth: 1,
+          borderRadius: 6,
         }],
       },
       options: this._sharedOptions({
@@ -412,14 +412,14 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
     const config: ChartConfiguration = {
       type: 'bar',
       data: {
-        labels:   top10.map(g => g.country),
+        labels: top10.map(g => g.country),
         datasets: [{
-          label:           'Users',
-          data:            top10.map(g => g.users),
+          label: 'Users',
+          data: top10.map(g => g.users),
           backgroundColor: cssVarAlpha('--accent', 0.75),
-          borderColor:     cssVar('--accent'),
-          borderWidth:     1,
-          borderRadius:    5,
+          borderColor: cssVar('--accent'),
+          borderWidth: 1,
+          borderRadius: 5,
         }],
       },
       options: {
@@ -427,13 +427,13 @@ export class AnalyticsComponent implements OnInit, AfterViewInit, OnDestroy {
         indexAxis: 'y',
         scales: {
           x: {
-            ticks:       { color: cssVar('--text-muted'), font: { size: 11 }, precision: 0 },
-            grid:        { color: cssVar('--border'), drawBorder: false } as any,
+            ticks: { color: cssVar('--text-muted'), font: { size: 11 }, precision: 0 },
+            grid: { color: cssVar('--border'), drawBorder: false } as any,
             beginAtZero: true,
           },
           y: {
             ticks: { color: cssVar('--text-muted'), font: { size: 11 } },
-            grid:  { display: false } as any,
+            grid: { display: false } as any,
           },
         },
       },

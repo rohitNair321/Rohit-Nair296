@@ -14,7 +14,8 @@ import { ExperienceDTO, Profile, } from 'src/app/core/services/app.service';
 import { CommonApp } from 'src/app/core/services/common';
 import { ConfirmationService } from 'primeng/api';
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { AnalyticsComponent } from 'src/app/shared/components/analytics/analytics-dashboard.component';
+import { AnalyticsComponent } from 'src/app/shared/components/app-analytics/analytics-dashboard.component';
+import { AiUsageDashboardComponent } from 'src/app/shared/components/ai-usage-dashboard/ai-usage-dashboard.component';
 
 
 @Component({
@@ -30,7 +31,8 @@ import { AnalyticsComponent } from 'src/app/shared/components/analytics/analytic
     RadioButtonModule,
     ConfirmDialogModule,
     ToggleButtonModule,
-    AnalyticsComponent
+    AnalyticsComponent,
+    AiUsageDashboardComponent
   ],
   providers: [ConfirmationService],
   templateUrl: './settings.component.html',
