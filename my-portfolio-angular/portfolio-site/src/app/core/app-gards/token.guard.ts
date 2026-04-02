@@ -2,83 +2,65 @@ import { inject } from "@angular/core";
 import { CanActivateFn, Router } from "@angular/router";
 import { AppService } from "../services/app.service";
 import { AuthService } from "src/app/auth/services/auth.service";
-import { LocalStorageService } from "src/app/shared/services/local-storage.service";
 import { map, catchError, of, tap } from "rxjs";
 import { CommonApp } from "../services/common";
 
 /**
- * Token Guard with Persistent Session Caching
+ * Token Guard with Session Caching
  * 
- * - Checks localStorage for cached role (persists across refreshes)
- * - Only calls initiateApp() if no cached session exists
- * - Validates admin routes based on cached or fetched role
- * - Prevents unnecessary API calls on every navigation
+ * - Calls initiateApp() only ONCE on app load
+ * - Caches the session state
+ * - Subsequent navigations use cached state
+ * - Re-validates only if cache is empty or expired
  */
 export const tokenGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const authService = inject(AuthService);
   const appService = inject(AppService);
-  const localStorage = inject(LocalStorageService);
   const themeService = inject(CommonApp);
 
-  // Check for cached role in localStorage (persists across refreshes)
+  // Check if we already have a role set (session cached)
   const cachedRole = appService.role();
-  const hasToken = !!localStorage.getItem('auth_token');
-  const isAdminRoute = route.data?.['roles']?.includes('ADMIN');
   
-  // If we have a cached role, use it (no API call needed)
   if (cachedRole) {
+    // Use cached session state
     console.log('🔒 Using cached session:', cachedRole);
     
-    // Admin trying to access admin route with token - allow
-    if (isAdminRoute && cachedRole === 'ADMIN' && hasToken) {
-      return true;
-    }
+    const isAdminRoute = route.data?.['roles']?.includes('ADMIN');
     
-    // Admin trying to access admin route without token - re-init
-    if (isAdminRoute && cachedRole === 'ADMIN' && !hasToken) {
-      console.log('⚠️ Admin role cached but no token, re-initializing...');
-      appService.clearRole(); // Clear stale role
-      // Fall through to init
-    }
-    // Guest trying to access admin route - block
-    else if (isAdminRoute && cachedRole === 'GUEST') {
+    if (isAdminRoute && cachedRole !== 'ADMIN') {
       router.navigate(['/login']);
       return false;
     }
-    // Non-admin route - allow
-    else if (!isAdminRoute) {
-      return true;
-    }
+    return true;
   }
 
-  // No cached session or need to re-validate - call backend
+  // No cached session - call backend to initialize
   console.log('🔄 Initializing session from backend...');
   
   return authService.initiateApp().pipe(
-    tap(() => console.log('✅ Session initialized from backend')),
+    tap(() => console.log('✅ Session initialized')),
     map((res: any) => {
       const role = res?.role === 'admin' ? 'ADMIN' : "GUEST";
-      appService.setRole(role); // This now persists to localStorage
+      appService.setRole(role);
       
       // Apply theme if available
       if (res?.appData) {
         themeService.applyThemeFromProfile(res.appData);
       }
 
-      // Check access for admin routes
+      const isAdminRoute = route.data?.['roles']?.includes('ADMIN');
+
       if (isAdminRoute && role !== 'ADMIN') {
-        console.log('❌ Admin route blocked for:', role);
         router.navigate(['/login']);
         return false;
       }
-      
-      console.log('✅ Access granted for:', role);
       return true;
     }),
     catchError((error) => {
       console.warn('⚠️ Session init failed, defaulting to GUEST', error);
       
+      const isAdminRoute = route.data?.['roles']?.includes('ADMIN');
       appService.setRole('GUEST');
       
       if (isAdminRoute) {
