@@ -15,7 +15,7 @@ export class AppService {
 
     // Single source of truth
     appState = signal<AppState>(initialState);
-    role = signal<UserRole>(this.getStoredRole()); // Initialize from localStorage
+    role = signal<UserRole>(null);
     private readonly apiProfileUrl = environment.baseUrl + '/api/profile';
     private readonly apiContactUrl = environment.baseUrl + '/api/contact';
     private readonly apiAIChatUrl = environment.baseUrl + '/api/ai/chat';
@@ -30,14 +30,6 @@ export class AppService {
     readonly notifications: Signal<Notification | null> = this._notifications;
 
     token = signal<string | null>(this.localStorageService.getItem('auth_token'));
-
-    /**
-     * Get role from localStorage (persists across refreshes)
-     */
-    private getStoredRole(): UserRole {
-        const storedRole = this.localStorageService.getItem('user_role');
-        return (storedRole === 'ADMIN' || storedRole === 'GUEST') ? storedRole : null;
-    }
 
     private authHeaders(): any {
         // const token = this.token() || this.localStorageService.getItem('auth_token');
@@ -109,24 +101,8 @@ export class AppService {
         );
     }
 
-    /**
-     * Set user role and persist to localStorage
-     */
     setRole(newRole: UserRole) {
         this.role.set(newRole);
-        if (newRole) {
-            this.localStorageService.setItem('user_role', newRole);
-        } else {
-            this.localStorageService.removeItem('user_role');
-        }
-    }
-
-    /**
-     * Clear role from memory and localStorage
-     */
-    clearRole() {
-        this.role.set(null);
-        this.localStorageService.removeItem('user_role');
     }
 
     // A simple check to see if we should allow entry to the app

@@ -1,5 +1,4 @@
-// src/app/app.config.ts
-import { ApplicationConfig, importProvidersFrom, inject } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideAppInitializer } from '@angular/core';
 import { provideRouter, withHashLocation, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
@@ -13,6 +12,32 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { provideMarkdown } from 'ngx-markdown';
+import { AuthService } from './auth/services/auth.service';
+
+
+/**
+ * Application Initializer
+ * This runs BEFORE Angular bootstraps the app
+ * Used to restore user session from backend on app startup/refresh
+ */
+export function initializeApp(authService: AuthService) {
+  return (): Promise<void> => {
+    return new Promise((resolve) => {
+      // Call backend to restore session (admin or guest)
+      authService.initiateApp().subscribe({
+        next: (response) => {
+          console.log('✅ App initialized successfully', response);
+          resolve();
+        },
+        error: (error) => {
+          console.warn('⚠️ App initialization failed, continuing as guest', error);
+          // Even if init fails, continue loading the app
+          resolve();
+        }
+      });
+    });
+  };
+}
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -31,7 +56,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideHttpClient(
       withFetch(),
-      withInterceptors([authInterceptor])
+      withInterceptors([authInterceptor]) // <- add if you have one
     ),
     provideAnimations(),
     importProvidersFrom(
@@ -41,6 +66,11 @@ export const appConfig: ApplicationConfig = {
       CardModule,
       DialogModule
     ),
+    // APP_INITIALIZER: Restore user session before app loads
+    provideAppInitializer(() => {
+        const authService = new AuthService();
+        return initializeApp(authService)();
+      }), 
     provideClientHydration(),
   ],
 };
