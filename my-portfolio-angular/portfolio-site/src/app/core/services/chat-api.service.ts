@@ -20,6 +20,75 @@ export interface ChatSessionDto {
     updated_at: string;
 }
 
+export interface UsageSummary {
+    totalTokens: number;
+    inputTokens: number;
+    outputTokens: number;
+    totalCost: number;
+}
+
+export interface UsageTrend {
+    date: string;
+    tokens: number;
+    inputTokens: number;
+    outputTokens: number;
+    cost: number;
+    requests: number;
+}
+
+export interface ModelBreakdown {
+    model: string;
+    totalTokens: number;
+    inputTokens: number;
+    outputTokens: number;
+    cost: number;
+    requests: number;
+}
+
+export interface RoleBlock {
+    totalTokens: number;
+    inputTokens: number;
+    outputTokens: number;
+    cost: number;
+    requests: number;
+}
+
+export interface SessionSummary {
+    sessionId: string;
+    date: string;
+    totalTokens: number;
+    inputTokens: number;
+    outputTokens: number;
+    cost: number;
+    requests: number;
+    model: string;
+}
+
+export interface AllTimeBlock {
+    totalTokens: number;
+    inputTokens: number;
+    outputTokens: number;
+    totalRequests: number;
+    totalCost: number;
+}
+
+export interface UsageResponse {
+    summary: UsageSummary;
+    trend: UsageTrend[];
+    byModel: ModelBreakdown[];
+    byRole: { admin: RoleBlock; guest: RoleBlock };
+    sessions: SessionSummary[];
+    allTime: AllTimeBlock;
+}
+
+export interface BalanceResponse {
+    source: 'openai' | 'supabase';
+    totalUsedUSD: number;
+    hardLimitUSD: number | null;
+    remainingUSD: number | null;
+    remainingPct: number | null;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -72,7 +141,11 @@ export class ChatApiService {
         sessionId?: string;
         range?: string;
     }) {
-        return this.http.get<any>(`${this.apiChatSessionsUrl}/usage`, {params: params as any, withCredentials: true});
+        return this.http.get<any>(`${this.apiChatSessionsUrl}/usage`, { params: params as any, withCredentials: true });
+    }
+
+    getBalance(): Observable<BalanceResponse> {
+        return this.http.get<BalanceResponse>(`${this.apiChatSessionsUrl}/balance`, { withCredentials: true });
     }
 
     getMessages(sessionId: string): Observable<ChatSessionDto[]> {
