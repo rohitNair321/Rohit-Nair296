@@ -1,0 +1,351 @@
+// =============================================================
+// _theme-tokens.scss
+// =============================================================
+// ALL themes are defined here as SCSS maps.
+// The ThemeService reads token values from the API and calls
+// document.documentElement.style.setProperty() to apply them
+// at runtime — so this file is the SCSS source-of-truth for
+// design tokens in both SSR and browser contexts.
+//
+// STATIC FALLBACK STRATEGY
+// ─────────────────────────────────────────────────────────────
+// The [data-theme] attribute selectors below provide static CSS
+// fallbacks so the page renders correctly before the Angular app
+// boots and before the API returns theme data.
+//
+// TOKEN NAMING CONVENTION
+// ─────────────────────────────────────────────────────────────
+// All tokens use kebab-case on :root.
+// The SCSS map keys use the same names (underscores are
+// auto-converted to hyphens by the ThemeService).
+//
+// GROUPS IN EVERY THEME
+// ─────────────────────────────────────────────────────────────
+//   Backgrounds : background, surface, surface-alt
+//   Text        : text-primary, text-secondary, text-muted
+//   Brand       : primary, accent, primary-glow
+//   Borders     : border
+//   Status      : success, warning, error
+//   Logo        : logo-primary, logo-secondary, logo-border,
+//                 logo-border-hover, logo-shadow
+// =============================================================
+
+// ── 1. Boilerplate (default) — clean, professional slate ─────
+[data-theme='boilerplate'] {
+    --background:    #F5F7FA;
+    --surface:       #FFFFFF;
+    --surface-alt:   #EFF2F7;
+  
+    --text-primary:  #1B2333;
+    --text-secondary:#3D4F66;
+    --text-muted:    #6B7A99;
+  
+    --primary:       #2563EB;
+    --accent:        #0EA5E9;
+    --primary-glow:  rgba(37, 99, 235, 0.15);
+  
+    --border:        #DDE3EE;
+  
+    --success:       #16A34A;
+    --warning:       #D97706;
+    --error:         #DC2626;
+    --highlight:     #7C3AED;
+  
+    --logo-primary:      #2563EB;
+    --logo-secondary:    #0EA5E9;
+    --logo-border:       #BFDBFE;
+    --logo-border-hover: #93C5FD;
+    --logo-shadow:       rgba(37, 99, 235, 0.18);
+  }
+  
+  [data-theme='boilerplate-dark'] {
+    --background:    #0D1117;
+    --surface:       #161B27;
+    --surface-alt:   #1C2333;
+  
+    --text-primary:  #E2E8F0;
+    --text-secondary:#94A3B8;
+    --text-muted:    #64748B;
+  
+    --primary:       #3B82F6;
+    --accent:        #38BDF8;
+    --primary-glow:  rgba(59, 130, 246, 0.35);
+  
+    --border:        #1E293B;
+  
+    --success:       #22C55E;
+    --warning:       #F59E0B;
+    --error:         #EF4444;
+    --highlight:     #A78BFA;
+  
+    --logo-primary:      #3B82F6;
+    --logo-secondary:    #38BDF8;
+    --logo-border:       rgba(59, 130, 246, 0.28);
+    --logo-border-hover: rgba(59, 130, 246, 0.5);
+    --logo-shadow:       rgba(0, 0, 0, 0.6);
+  }
+  
+  // ── 2. Warm Earth ─────────────────────────────────────────────
+  [data-theme='warm-earth'] {
+    --background:    #F8F5F2;
+    --surface:       #FFFFFF;
+    --surface-alt:   #F0EBE6;
+  
+    --text-primary:  #2D3741;
+    --text-secondary:#5C6B7A;
+    --text-muted:    #8A9BAA;
+  
+    --primary:       #4A6B7D;
+    --accent:        #9B7E6B;
+    --primary-glow:  rgba(74, 107, 125, 0.2);
+  
+    --border:        #DDD6CF;
+  
+    --success:       #6B9080;
+    --warning:       #D4A373;
+    --error:         #C44536;
+  
+    --logo-primary:      #4A6B7D;
+    --logo-secondary:    #9B7E6B;
+    --logo-border:       #D3CEC9;
+    --logo-border-hover: #B8A89E;
+    --logo-shadow:       rgba(74, 107, 125, 0.2);
+  }
+  
+  [data-theme='warm-earth-dark'] {
+    --background:    #1A242D;
+    --surface:       #24323D;
+    --surface-alt:   #1F2A33;
+  
+    --text-primary:  #E3E9EC;
+    --text-secondary:#A8B5BE;
+    --text-muted:    #6E818A;
+  
+    --primary:       #6B9080;
+    --accent:        #D4A373;
+    --primary-glow:  rgba(107, 144, 128, 0.35);
+  
+    --border:        #364551;
+  
+    --success:       #6B9080;
+    --warning:       #D4A373;
+    --error:         #E76F51;
+  
+    --logo-primary:      #6B9080;
+    --logo-secondary:    #D4A373;
+    --logo-border:       rgba(107, 144, 128, 0.3);
+    --logo-border-hover: rgba(107, 144, 128, 0.5);
+    --logo-shadow:       rgba(0, 0, 0, 0.5);
+  }
+  
+  // ── 3. Modern Blue ────────────────────────────────────────────
+  [data-theme='modern-blue'] {
+    --background:    #F9FBFD;
+    --surface:       #FFFFFF;
+    --surface-alt:   #F0F4FB;
+  
+    --text-primary:  #1A202C;
+    --text-secondary:#4A5568;
+    --text-muted:    #718096;
+  
+    --primary:       #4361EE;
+    --accent:        #7B61FF;
+    --primary-glow:  rgba(99, 130, 255, 0.15);
+  
+    --border:        #E3E8EF;
+  
+    --success:       #38A169;
+    --warning:       #DD6B20;
+    --error:         #E53E3E;
+  
+    --logo-primary:      #4361EE;
+    --logo-secondary:    #7B61FF;
+    --logo-border:       #D6E0FF;
+    --logo-border-hover: #A3B8FF;
+    --logo-shadow:       rgba(99, 130, 255, 0.18);
+  }
+  
+  [data-theme='modern-blue-dark'] {
+    --background:    #121826;
+    --surface:       #1D2433;
+    --surface-alt:   #161E2E;
+  
+    --text-primary:  #E2E8F0;
+    --text-secondary:#A0AEC0;
+    --text-muted:    #718096;
+  
+    --primary:       #5B75F6;
+    --accent:        #9D8AFF;
+    --primary-glow:  rgba(91, 117, 246, 0.35);
+  
+    --border:        #2D3748;
+  
+    --success:       #38A169;
+    --warning:       #DD6B20;
+    --error:         #E53E3E;
+  
+    --logo-primary:      #7B90FF;
+    --logo-secondary:    #9D8AFF;
+    --logo-border:       rgba(123, 145, 255, 0.24);
+    --logo-border-hover: rgba(123, 145, 255, 0.45);
+    --logo-shadow:       rgba(15, 20, 50, 0.55);
+  }
+  
+  // ── 4. Neon Tron ──────────────────────────────────────────────
+  [data-theme='tron'] {
+    --background:    #F3F9FB;
+    --surface:       #FFFFFF;
+    --surface-alt:   #E9F3F7;
+  
+    --text-primary:  #1C2B32;
+    --text-secondary:#4B6A75;
+    --text-muted:    #7B9AA6;
+  
+    --primary:       #2FB8C6;
+    --accent:        #C63A4B;
+    --primary-glow:  rgba(47, 184, 198, 0.18);
+  
+    --border:        #D4E6EC;
+  
+    --success:       #2FB88A;
+    --warning:       #E6A23C;
+    --error:         #C63A4B;
+  
+    --logo-primary:      #2FB8C6;
+    --logo-secondary:    #C63A4B;
+    --logo-border:       #CFE4EA;
+    --logo-border-hover: #B9D9E3;
+    --logo-shadow:       rgba(47, 184, 198, 0.18);
+  }
+  
+  [data-theme='tron-dark'] {
+    --background:    #070B0E;
+    --surface:       #0E1A20;
+    --surface-alt:   #132830;
+  
+    --text-primary:  #E6F6FA;
+    --text-secondary:#A8C9D4;
+    --text-muted:    #6E98A3;
+  
+    --primary:       #3AD0DE;
+    --accent:        #FF3B4F;
+    --primary-glow:  rgba(58, 208, 222, 0.4);
+  
+    --border:        rgba(58, 208, 222, 0.2);
+  
+    --success:       #3DDC97;
+    --warning:       #F4B860;
+    --error:         #FF3B4F;
+  
+    --logo-primary:      #3AD0DE;
+    --logo-secondary:    #FF3B4F;
+    --logo-border:       rgba(58, 208, 222, 0.35);
+    --logo-border-hover: rgba(255, 59, 79, 0.6);
+    --logo-shadow:       rgba(0, 0, 0, 0.7);
+  }
+  
+  // ── 5. Plum Mint ──────────────────────────────────────────────
+  [data-theme='plum-mint'] {
+    --background:    #FDFAFC;
+    --surface:       #FFFFFF;
+    --surface-alt:   #FAF5FA;
+  
+    --text-primary:  #2E2630;
+    --text-secondary:#6D5E71;
+    --text-muted:    #9E94A0;
+  
+    --primary:       #5D3A5F;
+    --accent:        #4FA49C;
+    --primary-glow:  rgba(93, 58, 95, 0.12);
+  
+    --border:        #EDE7ED;
+  
+    --success:       #4FA49C;
+    --warning:       #E9A639;
+    --error:         #D84C73;
+  
+    --logo-primary:      #5D3A5F;
+    --logo-secondary:    #4FA49C;
+    --logo-border:       #E5D3E0;
+    --logo-border-hover: #D2B8CE;
+    --logo-shadow:       rgba(93, 58, 95, 0.14);
+  }
+  
+  [data-theme='plum-mint-dark'] {
+    --background:    #16121A;
+    --surface:       #201C24;
+    --surface-alt:   #1D1820;
+  
+    --text-primary:  #F0EAF2;
+    --text-secondary:#B5A9BC;
+    --text-muted:    #8A7F90;
+  
+    --primary:       #A47DA9;
+    --accent:        #6FD1C8;
+    --primary-glow:  rgba(164, 125, 169, 0.4);
+  
+    --border:        #383240;
+  
+    --success:       #6FD1C8;
+    --warning:       #E9A639;
+    --error:         #D84C73;
+  
+    --logo-primary:      #A47DA9;
+    --logo-secondary:    #6FD1C8;
+    --logo-border:       rgba(164, 125, 169, 0.3);
+    --logo-border-hover: rgba(164, 125, 169, 0.55);
+    --logo-shadow:       rgba(22, 18, 26, 0.7);
+  }
+  
+  // ── 6. Christmas ──────────────────────────────────────────────
+  [data-theme='christmas'] {
+    --background:    #F8FBFA;
+    --surface:       #FFFFFF;
+    --surface-alt:   #F0F7F4;
+  
+    --text-primary:  #12261B;
+    --text-secondary:#2D523E;
+    --text-muted:    #5C8A73;
+  
+    --primary:       #D32F2F;
+    --accent:        #1B5E20;
+    --primary-glow:  rgba(211, 47, 47, 0.15);
+  
+    --border:        #E0EDE5;
+  
+    --success:       #2E7D32;
+    --warning:       #FBC02D;
+    --error:         #C62828;
+  
+    --logo-primary:      #D32F2F;
+    --logo-secondary:    #1B5E20;
+    --logo-border:       #C8E6C9;
+    --logo-border-hover: #81C784;
+    --logo-shadow:       rgba(27, 94, 32, 0.15);
+  }
+  
+  [data-theme='christmas-dark'] {
+    --background:    #050F0A;
+    --surface:       #0A1E14;
+    --surface-alt:   #122D1F;
+  
+    --text-primary:  #F0F7F4;
+    --text-secondary:#B2D8C5;
+    --text-muted:    #7DA891;
+  
+    --primary:       #FF5252;
+    --accent:        #4CAF50;
+    --primary-glow:  rgba(255, 82, 82, 0.3);
+  
+    --border:        rgba(255, 255, 255, 0.1);
+  
+    --success:       #4CAF50;
+    --warning:       #FFD700;
+    --error:         #FF5252;
+  
+    --logo-primary:      #FF5252;
+    --logo-secondary:    #4CAF50;
+    --logo-border:       rgba(255, 255, 255, 0.15);
+    --logo-border-hover: rgba(255, 255, 255, 0.3);
+    --logo-shadow:       rgba(0, 0, 0, 0.5);
+  }

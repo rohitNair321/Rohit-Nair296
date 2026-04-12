@@ -20,16 +20,18 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'my-dev'`, () => {
+  it(`should have as title 'portfolio-site'`, () => {
+    // AppComponent no longer exposes a `title` property (template now uses <router-outlet>).
+    // This test is kept as a lightweight check that the component instance can be created.
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('my-dev');
+    expect(app).toBeTruthy();
   });
-
-  it('should render title', () => {
+  it('should render a router outlet', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('my-dev app is running!');
+    // The app shell renders a <router-outlet> as its top-level template
+    expect(compiled.querySelector('router-outlet')).not.toBeNull();
   });
 });

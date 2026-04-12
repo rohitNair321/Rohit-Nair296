@@ -1,0 +1,12 @@
+@if (alertService.isOpen()) {
+<div class="alert-container" [ngClass]="alertService.type()">
+  <div class="alert-content">
+    <i class="material-icons">{{ icon }}</i>
+    <span class="message">{{ alertService.message() }}</span>
+  </div>
+  <button class="close-btn" (click)="alertService.close()">
+    <i class="material-icons">close</i>
+  </button>
+  <div class="progress-bar"></div>
+</div>
+}

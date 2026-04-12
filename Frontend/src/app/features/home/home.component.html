@@ -1,0 +1,292 @@
+<!--
+  ROHIT ANGULAR BOILERPLATE — Home Page
+  ══════════════════════════════════════════════════════════════
+  Sections:
+    ① Hero          — title, tagline, CTA, live theme preview
+    ② Features      — 6 feature cards
+    ③ Tech Stack    — badge strip
+    ④ Theme Switcher— interactive swatch palette
+    ⑤ Getting Started — code snippet block
+    ⑥ Footer        — links + credit
+  ══════════════════════════════════════════════════════════════
+-->
+
+<div class="bp">
+
+  <!-- ════════════════════════════════════════════════════════
+       ① HERO
+       ════════════════════════════════════════════════════════ -->
+  <section class="bp__hero">
+
+    <!-- Background decoration -->
+    <div class="bp__hero-bg" aria-hidden="true">
+      <div class="bp__hero-blob bp__hero-blob--1"></div>
+      <div class="bp__hero-blob bp__hero-blob--2"></div>
+      <div class="bp__hero-grid"></div>
+    </div>
+
+    <div class="bp__hero-content">
+      <div class="bp__hero-badge">
+        <span class="material-icons">bolt</span>
+        Angular 19 · Standalone · Signals
+      </div>
+
+      <h1 class="bp__hero-title">
+        <span class="bp__hero-title-line">Rohit Angular</span>
+        <span class="bp__hero-title-accent">Boilerplate</span>
+      </h1>
+
+      <p class="bp__hero-tagline">
+        A production-ready Angular starter with a token-driven theme engine,
+        responsive layouts, PrimeNG, Highcharts, and everything you need
+        to ship beautiful apps fast.
+      </p>
+
+      <div class="bp__hero-actions">
+        <button class="bp__btn bp__btn--primary">
+          <span class="material-icons">rocket_launch</span>
+          Get Started
+        </button>
+        <button class="bp__btn bp__btn--ghost">
+          <span class="material-icons">code</span>
+          View Source
+        </button>
+      </div>
+
+      <!-- Live stats strip -->
+      <div class="bp__hero-stats">
+        <div class="bp__stat">
+          <span class="bp__stat-value">{{ themeService.availableThemes().length }}</span>
+          <span class="bp__stat-label">Themes</span>
+        </div>
+        <div class="bp__stat-divider"></div>
+        <div class="bp__stat">
+          <span class="bp__stat-value">Angular 19</span>
+          <span class="bp__stat-label">Framework</span>
+        </div>
+        <div class="bp__stat-divider"></div>
+        <div class="bp__stat">
+          <span class="bp__stat-value">100%</span>
+          <span class="bp__stat-label">Token-driven</span>
+        </div>
+        <div class="bp__stat-divider"></div>
+        <div class="bp__stat">
+          <span class="bp__stat-value">Responsive</span>
+          <span class="bp__stat-label">Mobile-first</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hero visual: colour token swatches -->
+    <div class="bp__hero-visual" aria-hidden="true">
+      <div class="bp__swatch-card">
+        <div class="bp__swatch-row">
+          <div class="bp__swatch bp__swatch--primary"  title="--primary"></div>
+          <div class="bp__swatch bp__swatch--accent"   title="--accent"></div>
+          <div class="bp__swatch bp__swatch--success"  title="--success"></div>
+          <div class="bp__swatch bp__swatch--warning"  title="--warning"></div>
+          <div class="bp__swatch bp__swatch--error"    title="--error"></div>
+        </div>
+        <div class="bp__swatch-labels">
+          <span>primary</span><span>accent</span>
+          <span>success</span><span>warning</span><span>error</span>
+        </div>
+        <div class="bp__mock-ui">
+          <div class="bp__mock-bar"></div>
+          <div class="bp__mock-content">
+            <div class="bp__mock-line bp__mock-line--wide"></div>
+            <div class="bp__mock-line bp__mock-line--medium"></div>
+            <div class="bp__mock-line bp__mock-line--short"></div>
+          </div>
+          <div class="bp__mock-btns">
+            <div class="bp__mock-btn bp__mock-btn--primary">Save</div>
+            <div class="bp__mock-btn bp__mock-btn--ghost">Cancel</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       ② FEATURES
+       ════════════════════════════════════════════════════════ -->
+  <section class="bp__section">
+    <div class="bp__section-header">
+      <div class="bp__section-eyebrow">
+        <span class="material-icons">star</span>
+        What's included
+      </div>
+      <h2 class="bp__section-title">Everything you need, nothing you don't</h2>
+    </div>
+
+    <div class="bp__features">
+      @for (feat of features; track feat.icon; let i = $index) {
+        <div class="bp__feature-card" [style.--fi]="i">
+          <div class="bp__feature-icon-wrap">
+            <span class="material-icons">{{ feat.icon }}</span>
+          </div>
+          <h3 class="bp__feature-title">{{ feat.title }}</h3>
+          <p class="bp__feature-desc">{{ feat.desc }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       ③ TECH STACK
+       ════════════════════════════════════════════════════════ -->
+  <section class="bp__section bp__section--alt">
+    <div class="bp__section-header">
+      <div class="bp__section-eyebrow">
+        <span class="material-icons">layers</span>
+        Tech stack
+      </div>
+      <h2 class="bp__section-title">Built on the best tools</h2>
+    </div>
+
+    <div class="bp__tech-strip">
+      @for (tech of techStack; track tech.name) {
+        <div class="bp__tech-badge" [style.--tc]="tech.color">
+          <span class="bp__tech-dot"></span>
+          {{ tech.name }}
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       ④ THEME SWITCHER
+       ════════════════════════════════════════════════════════ -->
+  <section class="bp__section">
+    <div class="bp__section-header">
+      <div class="bp__section-eyebrow">
+        <span class="material-icons">palette</span>
+        Live theme engine
+      </div>
+      <h2 class="bp__section-title">Switch themes instantly</h2>
+      <p class="bp__section-sub">
+        Every colour is a CSS custom property set by the ThemeService.
+        The API can override any token at runtime.
+      </p>
+    </div>
+
+    <!-- Dark mode toggle -->
+    <div class="bp__theme-controls">
+      <button
+        class="bp__btn bp__btn--ghost bp__dark-toggle"
+        (click)="themeService.toggleDarkMode()"
+      >
+        <span class="material-icons">
+          {{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}
+        </span>
+        {{ themeService.isDark() ? 'Light Mode' : 'Dark Mode' }}
+      </button>
+    </div>
+
+    <!-- Theme palette -->
+    <div class="bp__theme-grid">
+      @for (theme of themeService.availableThemes(); track theme.id) {
+        <button
+          class="bp__theme-card"
+          [class.bp__theme-card--active]="themeService.currentThemeId() === theme.id"
+          (click)="selectTheme(theme.id)"
+          [attr.aria-pressed]="themeService.currentThemeId() === theme.id"
+          [attr.title]="theme.name"
+        >
+          <!-- Token preview dots -->
+          <div class="bp__theme-swatches">
+            <span class="bp__theme-dot" [style.background]="theme.tokens['primary']"></span>
+            <span class="bp__theme-dot" [style.background]="theme.tokens['accent']"></span>
+            <span class="bp__theme-dot" [style.background]="theme.tokens['surface-alt'] || theme.tokens['surface_alt']"></span>
+          </div>
+          <span class="bp__theme-name">{{ theme.name }}</span>
+          @if (themeService.currentThemeId() === theme.id) {
+            <span class="material-icons bp__theme-check">check_circle</span>
+          }
+        </button>
+      }
+    </div>
+
+    <!-- Live token preview -->
+    <div class="bp__token-preview">
+      <div class="bp__token-row">
+        @for (token of tokenPreview; track token.name) {
+          <div class="bp__token-item">
+            <div class="bp__token-swatch" [style.background]="'var(' + token.var + ')'"></div>
+            <div class="bp__token-info">
+              <code class="bp__token-var">{{ token.var }}</code>
+              <span class="bp__token-label">{{ token.name }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       ⑤ GETTING STARTED
+       ════════════════════════════════════════════════════════ -->
+  <section class="bp__section bp__section--alt">
+    <div class="bp__section-header">
+      <div class="bp__section-eyebrow">
+        <span class="material-icons">terminal</span>
+        Getting started
+      </div>
+      <h2 class="bp__section-title">Up and running in minutes</h2>
+    </div>
+
+    <div class="bp__steps">
+
+      @for (step of gettingStarted; track step.step) {
+        <div class="bp__step">
+          <div class="bp__step-number">{{ step.step }}</div>
+          <div class="bp__step-body">
+            <h3 class="bp__step-title">{{ step.title }}</h3>
+            <p class="bp__step-desc">{{ step.desc }}</p>
+            @if (step.code) {
+              <div class="bp__code-block">
+                <div class="bp__code-header">
+                  <span class="bp__code-lang">{{ step.lang }}</span>
+                  <span class="bp__code-dots">
+                    <span></span><span></span><span></span>
+                  </span>
+                </div>
+                <pre class="bp__code"><code>{{ step.code }}</code></pre>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+    </div>
+  </section>
+
+  <!-- ════════════════════════════════════════════════════════
+       ⑥ FOOTER
+       ════════════════════════════════════════════════════════ -->
+  <footer class="bp__footer">
+    <div class="bp__footer-brand">
+      <div class="bp__logo">
+        <span class="bp__logo-r">R</span><span class="bp__logo-n">N</span>
+      </div>
+      <div>
+        <div class="bp__footer-title">Rohit Angular Boilerplate</div>
+        <div class="bp__footer-sub">v1.0 · Angular 19 · MIT License</div>
+      </div>
+    </div>
+
+    <div class="bp__footer-links">
+      <a class="bp__footer-link" href="#">Documentation</a>
+      <a class="bp__footer-link" href="#">GitHub</a>
+      <a class="bp__footer-link" href="#">Changelog</a>
+      <a class="bp__footer-link" href="#">License</a>
+    </div>
+
+    <div class="bp__footer-meta">
+      Built with <span class="material-icons bp__heart">favorite</span>
+      by Rohit Nair
+    </div>
+  </footer>
+
+</div>

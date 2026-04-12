@@ -1,24 +1,27 @@
-import { Component } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { AuthService } from './core/services/auth.service';
-import { SvgInjectorService } from './core/services/svg-injector.service';
+import { CommonModule } from '@angular/common';
+import { Component, Injector } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { AlertComponent } from './shared/components/ui/alert-dialog/alert.component';
+import { SpinnerComponent } from './shared/components/ui/spinner-overlay/spinner.component';
+import { CommonApp } from './core/services/common';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, RouterOutlet, SpinnerComponent, AlertComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
-  isTaskListPage: boolean = false;
-  showProfilePopup: boolean = false;
-  constructor(private router: Router, private auth: AuthService, private svgInjectorService: SvgInjectorService) {
-    // Listen for route changes
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        // Check if the current route is the task-list page
-        this.isTaskListPage = this.auth.isLoggedIn();
-      }
-    });
+export class AppComponent extends CommonApp {
+
+  constructor(public override injector: Injector) {
+    super(injector);
   }
+
+  ngOnInit() {
+    
+  }
+
+
 
 }

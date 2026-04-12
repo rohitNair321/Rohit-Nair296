@@ -1,0 +1,174 @@
+{
+    "home": {
+        "hero": {
+        "name": "Rohit Nair",
+        "title": "A Passionate Web Developer Specialized in Angular & Node.js",
+        "description": "I have good exprieance in build exceptional digital experiences that are fast, accessible, responsive mostly in finance domain building banking product application to Investment web application from legacy application to latest web technology.",
+        "skills": ["Angular", "TypeScript", "HTML/CSS"],
+        "profileImage": "https://images.unsplash.com/photo-1618477247222-acbdb0e159b3?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.0.3",
+        "resume": "assets/Rohit.Nair.pdf"
+        },
+        "aboutTeaser": {
+        "photo": "assets/images/profile.jpg",
+        "title": "About Me",
+        "description": "I have <span class='highlight'>4.5 years of experience</span> building user interfaces for web applications in the <span class='highlight'>Finance and Wealth Management</span> sector. Proficient in <span class='highlight'>Angular, TypeScript, HTML, CSS</span>, and various UI component libraries. Proven ability to collaborate effectively in team environments and deliver <span class='highlight'>high-quality solutions</span>. I also have little work experience in backend technology like in .Net, Node js, Seeking to contribute technical expertise in an environment of growth and excellence to achieve both personal and organizational goals.",
+        "resume": "assets/Rohit.Nair.pdf"
+        },
+        "projects": [
+            {
+                "title": "PFM (Personal Finance Management)",
+                "description": "A comprehensive personal finance management product application for Fiserv, Inc. Re-developed PFM in new technology: Angular v17 (Frontend), Java (Backend). The entire application was built with custom classes and components, no component library or Bootstrap used. Created custom UI architecture so the product can be used by multiple financial institutes. Designed architecture for SSO using NGRX for state management to optimize performance. Implemented ADA (Americans with Disabilities Act) compliance for accessibility. Status: Live.",
+                "technologies": ["Angular 17", "Java", "NGRX", "Custom CSS"],
+                "liveDemo": "",
+                "sourceCode": "",
+                "featured": true
+            },
+            {
+                "title": "HBNO-Wealthermapper (Neples)",
+                "description": "Developed a secure investment web application for managing investments in funds and stocks for Handelsbanken. Built using Angular 14 and .NET Core. Utilized Bootstrap classes and Primeng component library for responsive design. Status: Live.",
+                "technologies": ["Angular 14", ".NET Core", "Bootstrap", "Primeng"],
+                "liveDemo": "",
+                "sourceCode": "",
+                "featured": true
+            },
+            {
+                "title": "Suitability Test Web Application",
+                "description": "Created a web-based suitability test for Handelsbanken to assess customer knowledge before investment. This survey/assessment helps suggest suitable funds for investment. Used Bootstrap classes and Primeng component library for responsive design. Status: Live.",
+                "technologies": ["Angular", "Bootstrap", "Primeng"],
+                "liveDemo": "",
+                "sourceCode": "",
+                "featured": true
+            },
+            {
+                "title": "I1Wealth (Product)",
+                "description": "Contributed to the development of a modular Wealth Management platform. The application combines wealth management and insurance management. Built using Angular 8, ABP framework, Bootstrap classes, and Primeng component library for responsive design.",
+                "technologies": ["Angular 8", "ABP Framework", "Bootstrap", "Primeng"],
+                "liveDemo": "",
+                "sourceCode": "",
+                "featured": true
+            }
+        ],
+        "contact": {
+        "headingText": "Let's Work Together",
+        "subHeadingText": "Have a project in mind or want to discuss potential opportunities? Feel free to reach out to me through any of the following channels.",
+        "email": "rohit296nair@yahoo.com",
+        "phone": "+91-8668671077 / 9921313026",
+        "address": "Hinjewadi, Pune, Maharashtra, India"
+        }
+    },
+    "aboutMe": {
+        "name": "ROHIT NAIR",
+        "title": "Frontend Developer",
+        "contact": {
+        "phone": "+91-8668671077 / 9921313026",
+        "email": "rohit296nair@yahoo.com",
+        "location": "Pune, India"
+        },
+        "summary": "Frontend Developer with 4.5 years of experience building user interfaces for web applications in the Finance and Wealth Management sector. Proficient in Angular, TypeScript, HTML, CSS, and various UI component libraries. Proven ability to collaborate effectively in team environments and deliver high-quality solutions. Seeking to contribute technical expertise in an environment of growth and excellence to achieve both personal and organizational goals.",
+        "workExperience": [
+        {
+            "company": "Infosys Limited",
+            "location": "Pune, India",
+            "role": "Technology Analyst (Angular Frontend Developer)",
+            "duration": "August 2024 - Present",
+            "responsibilities": [
+            "Developed web applications using Angular v17 with a focus on modern architecture patterns",
+            "Implemented NGRX state management to optimize application performance and reusability",
+            "Created responsive UIs with custom CSS and Flexbox layouts",
+            "Engineered dynamic components for use across multiple application flows"
+            ],
+            "projects": [
+            {
+                "title": "PFM (Personal Finance Management)",
+                "client": "Fiserv",
+                "responsibilities": [
+                "Migrated PFM product to modern technology stack (Angular, Java Spring boot)",
+                "Designed architecture for Single Sign-On (SSO) using NGRX state management",
+                "Created custom UI architecture enabling adoption by multiple financial institutions",
+                "Implemented ADA compliance for accessibility standards"
+                ]
+            }
+            ]
+        },
+        {
+            "company": "Ikione Systems Pvt Ltd",
+            "location": "Pune, India",
+            "role": "Frontend Developer",
+            "duration": "January 2021 – July 2024",
+            "responsibilities": [
+            "Developed user interfaces for wealth management applications using Angular, Bootstrap, HTML, CSS",
+            "Created interactive financial charts with Highcharts for market data visualization",
+            "Integrated third-party APIs for customer verification and real-time market data",
+            "Implemented Identity Provider (IdP) configuration for secure FINODS environment access"
+            ],
+            "projects": [
+            {
+                "title": "HBNO-Welathermapper (Handelsbanken)",
+                "responsibilities": [
+                "Developed secure investment web application for managing funds and stocks (Angular 14)",
+                "Implemented real-time portfolio tracking and financial analytics"
+                ]
+            },
+            {
+                "title": "Suitability Test Web Application (Handelsbanken)",
+                "responsibilities": [
+                "Created web-based suitability assessment for investor knowledge evaluation (Angular 10)",
+                "Designed dynamic questionnaire engine with scoring system"
+                ]
+            },
+            {
+                "title": "I1Wealth (Product)",
+                "responsibilities": [
+                "Contributed to development of modular Wealth Management platform (Angular 8)",
+                "Integrated multiple financial data sources into unified dashboard"
+                ]
+            }
+            ]
+        }
+        ],
+        "education": [
+        {
+            "degree": "Master of Computer Applications (MCA)",
+            "institution": "IMCC, Pune (SPPU)",
+            "year": "2021"
+        },
+        {
+            "degree": "Bachelor of Computer Applications (BCA)",
+            "institution": "MMCC, Pune (SPPU)",
+            "year": "2017"
+        },
+        {
+            "degree": "Higher Secondary Certificate (HSC)",
+            "institution": "Sinhgad Public School, Lonavala (CBSE)",
+            "year": "2014"
+        },
+        {
+            "degree": "Secondary School Certificate (SSC)",
+            "institution": "Kendriya Vidyalaya, Lonavala (CBSE)",
+            "year": "2012"
+        }
+        ],
+        "skills": {
+        "languages": ["TypeScript", "JavaScript"],
+        "webTechnologies": ["HTML5", "CSS3", "Responsive Design"],
+        "frameworksLibraries": ["Angular (8,10,12,14,17)", "Bootstrap", "Highcharts", "Component Libraries", "NGRX"],
+        "toolsPractices": ["Git & GitHub", "RESTful APIs", "ADA Compliance", "SSO Implementation", "Agile Methodologies"]
+        },
+        "strengths": [
+        "UI/UX Design",
+        "State Management",
+        "Performance Optimization",
+        "Cross-Browser Dev",
+        "Technical Documentation",
+        "Team Collaboration",
+        "Problem Solving"
+        ],
+        "industryExperience": [
+        "Finance",
+        "Wealth Management",
+        "Fintech",
+        "Banking Solutions"
+        ],
+        "resume": "assets/Rohit.Nair.pdf"
+    }
+}

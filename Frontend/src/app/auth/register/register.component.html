@@ -1,70 +1,116 @@
-<div class="container d-flex justify-content-center align-items-center vh-100">
-  <div class="card w-50">
-    <div class="card-header text-center">
-        Registration
+<div class="auth-page">
+  <div class="auth-card register-card">
+    
+    <div class="auth-branding">
+      <div class="logo-initials">
+        <span class="rn-r">R</span><span class="rn-n">N</span>
+      </div>
+      <div class="auth-header">
+        <h1>Create Account</h1>
+        <p>Join the community and build your portfolio</p>
+      </div>
     </div>
-    <div class="card-body">
-        <div class="d-flex flex-column">
-          <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="row g-3">
-            <div class="col-md-6">
-                <label for="firstName">First Name</label>
-                <input type="text" id="firstName" class="form-control" [ngClass]="{'is-invalid': registrationForm.get('firstName')?.touched && registrationForm.get('firstName')?.invalid}" formControlName="firstName">
-                <div *ngIf="registrationForm.get('firstName')?.touched && registrationForm.get('firstName')?.invalid" class="invalid-feedback">
-                  Field is required.
-                </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="auth-form">
+      
+      <div class="form-row">
+        <div class="form-field" [class.invalid]="name?.invalid && name?.touched">
+          <label for="name">Full Name</label>
+          <div class="input-wrapper">
+            <i class="material-icons">person_outline</i>
+            <input id="name" type="text" formControlName="name" placeholder="Rohit Nair" />
+          </div>
+          @if (name?.errors && name?.touched) {
+            <div class="field-error">
+              @if (name?.errors?.['required']) { <small>Name is required</small> }
             </div>
-            <div class="col-md-6">
-                <label for="lastName">Last Name</label>
-                <input type="text" id="lastName" class="form-control" [ngClass]="{'is-invalid': registrationForm.get('lastName')?.touched && registrationForm.get('lastName')?.invalid}" formControlName="lastName">
-                <div *ngIf="registrationForm.get('lastName')?.touched && registrationForm.get('lastName')?.invalid" class="invalid-feedback">
-                  Field is required.
-                </div>
-            </div>
-            <div class="col-md-6">
-              <label for="username">Username</label>
-              <input type="text" id="username" class="form-control" [ngClass]="{'is-invalid': registrationForm.get('username')?.touched && registrationForm.get('username')?.invalid}" formControlName="username" >
-              <div *ngIf="registrationForm.get('username')?.touched && registrationForm.get('username')?.invalid" class="invalid-feedback">
-                Field is required.
-              </div>
-            </div>
-            <div class="col-md-6">
-                <label for="emailId">Email ID</label>
-                <input type="email" id="emailId" class="form-control" [ngClass]="{'is-invalid': registrationForm.get('emailId')?.touched && registrationForm.get('emailId')?.invalid}" formControlName="emailId" >
-                <div *ngIf="registrationForm.get('emailId')?.invalid && registrationForm.get('emailId')?.touched" class="invalid-feedback">
-                  <small *ngIf="registrationForm.get('emailId')?.errors?.['required']">Email is required.</small>
-                  <small *ngIf="registrationForm.get('emailId')?.value !== '' && registrationForm.get('emailId')?.status === 'INVALID'">Enter a valid email.</small>
-                </div>
-            </div>
-            <div class="col-md-6">
-              <label for="password">Password</label>
-              <input type="password" id="password" class="form-control" [ngClass]="{'is-invalid': registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid}" formControlName="password" >
-              <div *ngIf="registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid" class="text-break invalid-feedback">
-                <small *ngIf="registrationForm.get('password')?.errors?.['required']">Password is required.</small>
-                <small *ngIf="registrationForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters long.</small>
-                <small *ngIf="registrationForm.get('password')?.errors?.['maxlength']">Password cannot be more the 10 characters long.</small>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <label for="confirmPassword">Confirm Password</label>
-              <input type="password" id="confirmPassword" class="form-control" [ngClass]="{'is-invalid': passwordMismatch}" formControlName="confirmPassword" 
-              (input)="checkPasswordMismatch()">
-              <div *ngIf="passwordMismatch" class="invalid-feedback">
-                <!-- Field is required. -->
-                <small *ngIf="registrationForm.get('confirmPassword')?.value == ''">Confirm Password is required.</small>
-                <small *ngIf="registrationForm.get('confirmPassword')?.value != '' && passwordMismatch">Password must match.</small>
-              </div>
-            </div>
-            <div class="d-flex justify-content-end gap-2">
-              <button type="submit" class="btn btn-primary" [disabled]="registrationForm.invalid || passwordMismatch || loading">
-                <span class="spinner-border spinner-border-sm" aria-hidden="false" *ngIf="loading"></span>
-                Register
-              </button>
-              <button type="submit" class="btn btn-danger" (click)="cancelRegistration()">
-                Cancel
-              </button>
-            </div>
-          </form>
+          }
         </div>
-    </div>
+      </div>
+
+      <div class="form-field" [class.invalid]="email?.invalid && email?.touched">
+        <label for="email">Email Address</label>
+        <div class="input-wrapper">
+          <i class="material-icons">mail_outline</i>
+          <input id="email" type="email" formControlName="email" placeholder="name@example.com" />
+        </div>
+        @if (email?.errors && email?.touched) {
+          <div class="field-error">
+            @if (email?.errors?.['required']) { <small>Email is required</small> }
+            @if (email?.errors?.['email']) { <small>Invalid email format</small> }
+          </div>
+        }
+      </div>
+
+      <div class="form-grid">
+        <div class="form-field" [class.invalid]="password?.invalid && password?.touched">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <i class="material-icons">lock_open</i>
+            <input id="password" type="password" formControlName="password" placeholder="••••••••" />
+          </div>
+        </div>
+
+        <div class="form-field" [class.invalid]="confirmPassword?.touched && form.hasError('passwordMismatch')">
+          <label for="confirmPassword">Confirm</label>
+          <div class="input-wrapper">
+            <i class="material-icons">done_all</i>
+            <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="••••••••" />
+          </div>
+        </div>
+      </div>
+
+      @if (confirmPassword?.touched && form.hasError('passwordMismatch')) {
+        <div class="field-error password-mismatch">
+          <small>Passwords do not match</small>
+        </div>
+      }
+
+      <div class="form-meta terms-container" [class.invalid]="acceptTerms?.invalid && acceptTerms?.touched">
+        <label class="remember-me">
+          <input type="checkbox" formControlName="acceptTerms" />
+          <span class="custom-checkbox"></span>
+          <span class="terms-text">
+            I agree to the <a href="javascript:void(0)" class="forgot-link">Terms & Conditions</a>
+          </span>
+        </label>
+      </div>
+
+      @if (error()) {
+        <div class="field-error" style="text-align: center; margin-bottom: 1rem;">
+          {{ error() }}
+        </div>
+      }
+
+      <button type="submit" class="btn-primary-auth" [disabled]="isLoading() || form.invalid">
+        @if (!isLoading()) {
+          <div>Create Account</div>
+        } @else {
+          <div class="spinner-container">
+            <span class="auth-spinner"></span>
+            <span>Creating...</span>
+          </div>
+        }
+      </button>
+
+      <div class="divider">
+        <span>or register with</span>
+      </div>
+
+      <div class="social-grid">
+        <button type="button" class="btn-social" (click)="onLoginWithGoogle()">
+          <img src="assets/icons/google.svg" alt="">
+          <span>Google</span>
+        </button>
+        <button type="button" class="btn-social" (click)="onLoginWithFacebook()">
+          <img src="assets/icons/facebook.svg" alt="">
+          <span>Facebook</span>
+        </button>
+      </div>
+
+      <p class="auth-footer-text">
+        Already have an account? <a routerLink="/login">Sign In</a>
+      </p>
+    </form>
   </div>
 </div>

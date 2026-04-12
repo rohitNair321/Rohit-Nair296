@@ -1,106 +1,91 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from 'src/app/core/services/auth.service';
-import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environments';
-
-declare const google: any;
+import { ChangeDetectionStrategy, Component, inject, Injector, signal } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { CommonApp } from 'src/app/core/services/common';
 
 @Component({
+  standalone: true,
   selector: 'app-login',
+  imports: [ReactiveFormsModule, RouterModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+  styleUrls: ['./login.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent implements OnInit {
-  loginForm!: FormGroup;
-  loading: boolean = false;
-  googleClientId: string = environment.googleClientId;
-  googleLoginUri: string = environment.authApiUrl + '/google-login';
+export class LoginComponent extends CommonApp {
+  private readonly fb = inject(FormBuilder);
 
-  constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private authService: AuthService,
-    private http: HttpClient
-  ) {}
+  isloading = signal<boolean>(false);
+  error = signal<string | null>(null);
 
-  ngOnInit(): void {
-    // Initialize the login form
-    this.loginForm = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required],
-    });
+  form: FormGroup = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    rememberMe: [true],
+  });
 
-    this.initializeGoogleSignIn();
+  constructor(public override injector: Injector) {
+    super(injector);
   }
 
-  initializeGoogleSignIn(): void {
-    google.accounts.id.initialize({
-      client_id: environment.googleClientId,
-      callback: this.handleGoogleSignIn.bind(this),
-      auto_select: true,
-      itp_support: true,
-      cancel_on_tap_outside: true,
-    });
-    // @ts-ignore
-    google.accounts.id.renderButton(
-    // @ts-ignore
-    document.getElementById("google-signin-button"),
-      { theme: "outline",
-        type:"standard",
-        shape:"pill",
-        size:"medium",
-        text:"signin",
-        logo_alignment:"left"
-      }
-    );
-    // @ts-ignore
-    google.accounts.id.prompt((notification: PromptMomentNotification) => {});
+  get email() {
+    return this.form.get('email');
   }
 
-  // Handle standard login
+  get password() {
+    return this.form.get('password');
+  }
+
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      this.loading = true;
-      this.authService.login(this.loginForm.value).subscribe({
-        next: (result) => {
-          this.loading = false;
-          if (result) {
-            console.log('Login successful');
-            this.router.navigateByUrl('features/dashboard');
-          }
-        },
-        error: (error) => {
-          this.loading = false;
-          console.error('Login failed:', error);
-        },
-      });
+    if (this.form.invalid || this.isloading()) {
+      this.form.markAllAsTouched();
+      return;
     }
-  }
 
-  // Handle Google Sign-In callback
-  handleGoogleSignIn(response: any): void {
-    console.log('Google Sign-In Response:', response);
+    this.loading.show('Authenticating...');
+    this.error.set(null);
 
-    // Send the ID token to the backend for validation
-    this.authService.googleLogin(response).subscribe({
-      next: (isAuthenticated) => {
-        if (isAuthenticated) {
-          console.log('Google login successful');
-          this.router.navigate(['/features/dashboard']);
-        } else {
-          console.error('Google login failed');
-        }
+    this.authService.login(this.form.value).subscribe({
+      next: () => {
+        this.loading.hide();
+        this.appService.setRole('ADMIN');
+        this.router.navigate(['/']);
       },
-      error: (error) => {
-        console.error('Google login error:', error);
+      error: () => {
+        this.loading.hide();
+        this.error.set('Invalid Admin Credentials');
       },
     });
   }
 
-  // Navigate to the registration page
-  register(): void {
-    this.router.navigateByUrl('/auth/register');
+  onLoginWithGoogle(): void {
+    this.isloading.set(true);
+    this.authService.loginWithGoogle().subscribe({
+      next: () => {
+        this.isloading.set(false);
+        this.router.navigateByUrl('/');
+      },
+      error: (err) => {
+        this.isloading.set(false);
+        this.error.set(err?.message ?? 'Google login failed.');
+      },
+    });
+  }
+
+  onLoginWithFacebook(): void {
+    this.isloading.set(true);
+    this.authService.loginWithFacebook().subscribe({
+      next: () => {
+        this.isloading.set(false);
+        this.router.navigateByUrl('/');
+      },
+      error: (err) => {
+        this.isloading.set(false);
+        this.error.set(err?.message ?? 'Facebook login failed.');
+      },
+    });
+  }
+
+  cancelLogin(): void {
+    this.router.navigate(['/']);
   }
 }
