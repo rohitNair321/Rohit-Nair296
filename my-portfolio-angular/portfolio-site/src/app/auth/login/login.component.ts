@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, Injector, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Injector, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { CommonApp } from 'src/app/core/services/common';
+import { SeoService } from 'src/app/core/services/seo.service';
 
 @Component({
   standalone: true,
@@ -11,8 +12,9 @@ import { CommonApp } from 'src/app/core/services/common';
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent extends CommonApp {
+export class LoginComponent extends CommonApp implements OnInit {
   private readonly fb = inject(FormBuilder);
+  private readonly seo = inject(SeoService);
 
   isloading = signal<boolean>(false);
   error = signal<string | null>(null);
@@ -25,6 +27,13 @@ export class LoginComponent extends CommonApp {
 
   constructor(public override injector: Injector) {
     super(injector);
+  }
+
+  ngOnInit(): void {
+    this.seo.set({
+      title: 'Admin Login',
+      description: 'Portfolio admin panel — Rohit Nair.',
+    });
   }
 
   get email() {

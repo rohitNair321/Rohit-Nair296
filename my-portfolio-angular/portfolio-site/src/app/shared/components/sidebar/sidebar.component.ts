@@ -29,7 +29,7 @@ const MOBILE_BREAKPOINT = 900;
     OverlayBadgeModule 
   ],
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent extends CommonApp implements OnInit {
   // @Input() appConfig;
@@ -148,7 +148,7 @@ export class SidebarComponent extends CommonApp implements OnInit {
   }
 
   navigateToNotifications() {
-    this.router.navigate(['admin/notifications']);
+    this.router.navigate(['/admin/notifications']);
   }
 
   selectTheme(theme: any) {

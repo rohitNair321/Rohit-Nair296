@@ -90,7 +90,6 @@ initiateApp(): Observable<any> {
       //   this.appService.setLocalProfile(data.appData);
       // }
 
-      console.log('✅ Session restored:', { role, id: data.id });
     }),
     catchError((error) => {
       console.warn('⚠️ Session restore failed, defaulting to guest', error);
@@ -104,13 +103,11 @@ initiateApp(): Observable<any> {
 
   loginWithGoogle(): Observable<any> {
     // TODO: integrate Google OAuth / Supabase OAuth
-    console.log('Login with Google called');
     return of({ success: true });
   }
 
   loginWithFacebook(): Observable<any> {
     // TODO: integrate Facebook OAuth / Supabase OAuth
-    console.log('Login with Facebook called');
     return of({ success: true });
   }
 

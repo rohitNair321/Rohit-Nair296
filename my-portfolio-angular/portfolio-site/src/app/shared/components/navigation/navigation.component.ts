@@ -1,15 +1,11 @@
-import { Component, Input, OnInit, OnDestroy, HostBinding, Output, EventEmitter, Injector, computed, PLATFORM_ID, Inject } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Component, Input, OnInit, OnDestroy, Output, EventEmitter, Injector, computed, PLATFORM_ID, Inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { CardModule } from 'primeng/card';
-import { RadioButtonModule } from 'primeng/radiobutton';
 import { BadgeModule } from 'primeng/badge';
 import { ProfileMenuComponent } from '../profile-menu/profile-menu.component';
 import { CommonApp } from 'src/app/core/services/common';
-import { MenuModule } from "primeng/menu";
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { MenuItem } from 'src/app/core/config/menuItem.config';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
@@ -22,18 +18,14 @@ const MOBILE_BREAKPOINT = 900;
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
-    CardModule,
-    RadioButtonModule,
     ButtonModule,
     ProfileMenuComponent,
-    MenuModule,
     BadgeModule,
     RouterModule,
     OverlayBadgeModule
   ],
   templateUrl: './navigation.component.html',
-  styleUrls: ['./navigation.component.scss']
+  styleUrls: ['./navigation.component.scss'],
 })
 export class NavigationComponent extends CommonApp implements OnInit, OnDestroy {
   @Input() config: any;

@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, HostListener, Injector, OnDestroy, OnInit, signal, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener, Injector, OnDestroy, OnInit, signal, effect, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { CommonApp } from 'src/app/core/services/common';
+import { SeoService } from 'src/app/core/services/seo.service';
 
 @Component({
   selector: 'app-about-me',
@@ -25,6 +26,8 @@ export class AboutMeComponent extends CommonApp implements OnInit {
   scrollPercentage = signal<number>(0);
   profileData = this.appService.profile; // Assuming this is already a signal from AppService
 
+  private seo = inject(SeoService);
+
   constructor(public override injector: Injector) {
     super(injector);
   }
@@ -39,7 +42,13 @@ export class AboutMeComponent extends CommonApp implements OnInit {
     this.scrollPercentage.set(Math.round(scrolled));
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.seo.set({
+      title: 'About Rohit Nair',
+      description: "Learn about Rohit Nair's background, skills, and experience as a Full Stack Developer.",
+      url: 'https://www.mintpixel.in/#/about',
+    });
+  }
 
   openContactDialog() {
     this.showContactDialog.set(true);

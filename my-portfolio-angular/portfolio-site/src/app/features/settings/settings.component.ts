@@ -1,7 +1,6 @@
-import { CommonModule, NgFor, NgIf } from '@angular/common';
-import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Injector, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
@@ -16,6 +15,8 @@ import { ConfirmationService } from 'primeng/api';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { AnalyticsComponent } from 'src/app/shared/components/app-analytics/analytics-dashboard.component';
 import { AiUsageDashboardComponent } from 'src/app/shared/components/ai-usage-dashboard/ai-usage-dashboard.component';
+import { AboutMeEditorComponent } from 'src/app/shared/components/about-me-editor/about-me-editor.component';
+import { MyLearningPostComponent } from 'src/app/shared/components/my-learning-post/my-learning-post.component';
 
 
 @Component({
@@ -32,11 +33,14 @@ import { AiUsageDashboardComponent } from 'src/app/shared/components/ai-usage-da
     ConfirmDialogModule,
     ToggleButtonModule,
     AnalyticsComponent,
-    AiUsageDashboardComponent
+    AiUsageDashboardComponent,
+    AboutMeEditorComponent,
+    MyLearningPostComponent
   ],
   providers: [ConfirmationService],
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.css']
+  styleUrls: ['./settings.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent extends CommonApp implements OnInit, OnDestroy, CanComponentDeactivate {
   profileForm!: FormGroup;
@@ -59,19 +63,21 @@ export class SettingsComponent extends CommonApp implements OnInit, OnDestroy, C
   isEditingTheme = false;
   editingThemeId: string | null = null;
   selectedResumeFile: File | null = null;
+  pendingResumeFile = signal<File | null>(null);
+  isDragOver = signal(false);
+  isDeletingResume = signal(false);
   private destroy$ = new Subject<void>();
   passwordForm!: FormGroup;
   isChangingPassword: boolean = false;
   showCurrentPassword = false;
   showNewPassword = false;
   lastPasswordUpdate: Date | null = null; // Set this from your profile data
-  activeSettingTab: 'profile' | 'aiChatMonitoring' | 'monitoring' = 'profile';
+  activeSettingTab: 'profile' | 'aiChatMonitoring' | 'monitoring' | 'myLearningPosts' | 'aboutMeEditor' = 'profile';
   adminEmail: string = '';
 
   constructor(public override injector: Injector, private fb: FormBuilder, private confirmationService: ConfirmationService, ) {
     super(injector);
-    this.route.queryParams.subscribe(params => {
-      console.log('Query params on init', params);
+    this.route.queryParams.subscribe(_params => {
     });
 
   }
@@ -342,7 +348,7 @@ togglePasswordVisibility(field: 'current' | 'new'): void {
 
   selectAndSaveTheme(theme: any) {
     this.themeService.setTheme(theme.id);
-    this.currentTheme = theme.name;
+    this.currentTheme = theme.id;
   }
 
   saveThemePreference() {
@@ -468,10 +474,15 @@ togglePasswordVisibility(field: 'current' | 'new'): void {
 
   addSkill(value = '') {
     if (!value || !value.trim()) return;
-    this.skills.push(new FormControl(value.trim()));
+    value.split(',')
+      .map(s => s.trim())
+      .filter(Boolean)
+      .forEach(s => this.skills.push(new FormControl(s)));
+    this.profileForm.markAsDirty();
   }
   removeSkill(i: number) {
     this.skills.removeAt(i);
+    this.profileForm.markAsDirty();
   }
 
   // Helper to get technologies array for a project
@@ -621,8 +632,7 @@ togglePasswordVisibility(field: 'current' | 'new'): void {
     // ensure main form reflects the change
     if (this.profileForm) this.profileForm.markAsDirty();
 
-    const profileData = this.buildFormData();
-    console.log('Built profile data with experiences:', profileData);
+    this.buildFormData();
     this.closeDialog();
   }
 
@@ -699,30 +709,23 @@ togglePasswordVisibility(field: 'current' | 'new'): void {
 
     this.applyThemeFromProfile(p);
     this.themesList = this.normalizeThemesResponse(p.themes || []);
-    // this.themeService.registerThemes(this.themesList);
 
-    const selectedTheme = this.themesList.find(t => t.name === p.currenttheme);
-    // 3. Apply current theme
-    if (p.currenttheme) {
-      this.currentTheme = p.currenttheme;
-      // this.themeService.setTheme(selectedTheme?.id);
-    }
+    // Use the ID that applyThemeFromProfile resolved and stored in the service
+    this.currentTheme = this.themeService.currentThemeId();
 
     // avatar url (public)
     this.avatarDataUrl = p.avatar_url ?? null;
     // resume file name: the server stores resume_url as path (e.g. resumes/<id>/uuid.pdf)
     if (p.resume_url) {
-      const parts = p.resume_url.split('/');
       this.resumeUrl = p.resume_url;
-      this.resumeFileName = 'Rohit_Resume.pdf';
-      this.profileForm.patchValue({
-        resume: p.resume_url
-      });
+      this.resumeFileName = 'Resume.pdf';
+      this.profileForm.patchValue({ resume: p.resume_url });
       this.profileForm.get('resume')?.setErrors(null);
     } else {
       this.resumeUrl = null;
-      this.resumeFileName = null;;
+      this.resumeFileName = null;
     }
+    this.pendingResumeFile.set(null);
 
     this.profileForm.markAsPristine();
     this.profileForm.markAsUntouched();
@@ -744,13 +747,43 @@ togglePasswordVisibility(field: 'current' | 'new'): void {
     const input = ev.target as HTMLInputElement;
     const f = input.files?.[0];
     if (!f) return;
-    if (f.type !== 'application/pdf' && !f.name.toLowerCase().endsWith('.pdf')) {
+    this.applyResumeFile(f);
+  }
+
+  onResumeDragOver(ev: DragEvent): void {
+    ev.preventDefault();
+    this.isDragOver.set(true);
+  }
+
+  onResumeDragLeave(ev: DragEvent): void {
+    ev.preventDefault();
+    this.isDragOver.set(false);
+  }
+
+  onResumeDrop(ev: DragEvent): void {
+    ev.preventDefault();
+    this.isDragOver.set(false);
+    const file = ev.dataTransfer?.files?.[0];
+    if (!file) { return; }
+    this.applyResumeFile(file);
+  }
+
+  private applyResumeFile(file: File): void {
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
       this.profileForm.get('resume')?.setErrors({ fileType: true });
       return;
     }
-    this.resumeFileName = f.name;
-    this.profileForm.patchValue({ resume: f });
-    // clear any previous fileType error when a valid file is set
+    this.resumeFileName = file.name;
+    this.pendingResumeFile.set(file);
+    this.profileForm.patchValue({ resume: file });
+    this.profileForm.get('resume')?.setErrors(null);
+    this.profileForm.markAsDirty();
+  }
+
+  cancelPendingResume(): void {
+    this.pendingResumeFile.set(null);
+    this.resumeFileName = null;
+    this.profileForm.patchValue({ resume: null });
     this.profileForm.get('resume')?.setErrors(null);
   }
 
@@ -766,40 +799,42 @@ togglePasswordVisibility(field: 'current' | 'new'): void {
     return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
-  // Build FormData: convert arrays to JSON strings because server expects JSON strings for some fields
+  // Build FormData: only append fields that have actual values so the backend
+  // partial-update logic doesn't overwrite existing DB data with empty strings.
   private buildFormData(): FormData {
     const fd = new FormData();
     const v = this.profileForm.value;
-    fd.append('name', v.name || '');
-    fd.append('full_name', v.name || '');
-    fd.append('description', v.description || '');
-    fd.append('email', v.email || '');
-    fd.append('logo_initials', v.logo_initials || '');
-    fd.append('primaryPhone', v.primaryPhone || '');
-    fd.append('secondaryPhone', v.secondaryPhone || '');
-    fd.append('location', v.location || '');
-    fd.append('website', v.website || '');
-    fd.append('linkedin', v.linkedin || '');
-    fd.append('github', v.github || '');
-    fd.append('currenttheme', this.currentTheme || '');
+
+    if (v.name) { fd.append('name', v.name); fd.append('full_name', v.name); }
+    if (v.description) fd.append('description', v.description);
+    if (v.email) fd.append('email', v.email);
+    if (v.logo_initials) fd.append('logo_initials', v.logo_initials);
+    if (v.primaryPhone) fd.append('primaryPhone', v.primaryPhone);
+    if (v.secondaryPhone) fd.append('secondaryPhone', v.secondaryPhone);
+    if (v.location) fd.append('location', v.location);
+    if (v.website) fd.append('website', v.website);
+    if (v.linkedin) fd.append('linkedin', v.linkedin);
+    if (v.github) fd.append('github', v.github);
+    if (this.currentTheme) fd.append('currenttheme', this.currentTheme);
+
+    // Boolean always sent — it's meaningful as either true or false
     fd.append('openToWork', String(!!v.openToWork));
 
-    // arrays → stringify
+    // Arrays always sent — frontend is the source of truth for these lists
     fd.append('skills', JSON.stringify(this.skills.value || []));
     const experiences = this.experiences.value.map((exp: any) => ({
       ...exp,
       startDate: exp.startDate ? this.formatMonth(exp.startDate) : '',
       endDate: exp.endDate ? this.formatMonth(exp.endDate) : '',
-      projects: exp.projects || [] // Include projects
+      projects: exp.projects || []
     }));
-    fd.append('experiences', JSON.stringify(experiences || []));
+    fd.append('experiences', JSON.stringify(experiences));
 
     const avatarFile = this.profileForm.get('avatar')?.value as File | null;
     if (avatarFile) fd.append('avatar', avatarFile, avatarFile.name);
 
     const resumeValue = this.profileForm.get('resume')?.value;
     if (resumeValue instanceof File) {
-      // Only append if it's a new binary file
       fd.append('resume', resumeValue, resumeValue.name);
     }
 
@@ -841,7 +876,7 @@ togglePasswordVisibility(field: 'current' | 'new'): void {
 
     // Your API call here
     this.authService.updatePassword(passwordData).pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response) => {
+      next: () => {
         this.isChangingPassword = false;
         this.lastPasswordUpdate = new Date();
 
@@ -860,7 +895,7 @@ togglePasswordVisibility(field: 'current' | 'new'): void {
         this.showCurrentPassword = false;
         this.showNewPassword = false;
       },
-      error: (error) => {
+      error: () => {
         this.isChangingPassword = false;
         this.alertService.showAlert('Failed to update the password.', 'error');
       }
@@ -883,11 +918,30 @@ togglePasswordVisibility(field: 'current' | 'new'): void {
   }
 
   removeResume() {
-    this.resumeUrl = null;
-    this.resumeFileName = null;
-    this.profileForm.patchValue({ resume: null });
-    // ensure no lingering resume errors block saving
-    this.profileForm.get('resume')?.setErrors(null);
+    this.confirmationService.confirm({
+      header: 'Delete Resume',
+      message: 'This will permanently remove your resume from storage. Continue?',
+      acceptLabel: 'Delete',
+      rejectLabel: 'Cancel',
+      acceptButtonStyleClass: 'p-button-danger p-button-text',
+      rejectButtonStyleClass: 'p-button-text',
+      acceptIcon: 'none',
+      rejectIcon: 'none',
+      accept: () => {
+        this.isDeletingResume.set(true);
+        this.appService.deleteResume().pipe(take(1)).subscribe({
+          next: (profile) => {
+            this.patchFromProfile(profile);
+            this.isDeletingResume.set(false);
+            this.alertService.showAlert('Resume deleted successfully.', 'success');
+          },
+          error: () => {
+            this.isDeletingResume.set(false);
+            this.alertService.showAlert('Failed to delete resume. Try again.', 'error');
+          }
+        });
+      }
+    });
   }
 
   resetDefaults() {

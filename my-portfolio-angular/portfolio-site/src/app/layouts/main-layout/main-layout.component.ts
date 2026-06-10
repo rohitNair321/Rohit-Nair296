@@ -5,10 +5,9 @@ import {
   OnInit,
   OnDestroy,
   computed,
-} from '@angular/core';
+ ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { RadioButton } from 'primeng/radiobutton';
 import { THEME_NAME_MAP } from 'src/app/core/config/theme.config';
 import { CommonApp } from 'src/app/core/services/common';
 import { ChristmasAnimationComponent } from 'src/app/core/theme/ThemeAnimationsComponent/christmas-animation/christmas-animation.component';
@@ -28,7 +27,6 @@ const MOBILE_BREAKPOINT = 900;
   imports: [
     RouterOutlet,
     FormsModule,
-    RadioButton,
     ChatBotComponent,
     NavigationComponent,
     SidebarComponent,
@@ -40,6 +38,7 @@ const MOBILE_BREAKPOINT = 900;
   providers: [ConfirmationService],
   templateUrl: './main-layout.component.html',
   styleUrls: ['./main-layout.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainLayoutComponent extends CommonApp implements OnInit, OnDestroy {
 
@@ -53,7 +52,7 @@ export class MainLayoutComponent extends CommonApp implements OnInit, OnDestroy 
     super(injector);
 
     this.appConfig.theme.name = 'theme-6';
-    this.appConfig.appConfiguration.type = 'navbar';   // 'sidebar' | 'navbar'
+    this.appConfig.appConfiguration.type = 'sidebar';   // 'sidebar' | 'navbar'
     this.appConfig.appConfiguration.theme = 'light';
     this.appConfig.appConfiguration.sidebarPosition = 'left';      // always left
     this.appConfig.appConfiguration.logoLocationHeader = false;       // brand in sidebar
@@ -71,6 +70,14 @@ export class MainLayoutComponent extends CommonApp implements OnInit, OnDestroy 
     const resolvedId = THEME_NAME_MAP[this.appConfig.theme.name ?? 'theme-5'] ?? 'tron';
     this.themeService.setTheme(resolvedId);
     this.startSessionTimer();
+    this._applyRoleLayout();
+  }
+
+  private _applyRoleLayout(): void {
+    const isAdmin = this.appService.role() === 'ADMIN';
+    this.appConfig.appConfiguration.type = isAdmin ? 'sidebar' : 'navbar';
+    this.appConfig.appConfiguration.showUserProfileView = isAdmin;
+    this.appConfig.appConfiguration.showNotifications   = isAdmin;
   }
 
   ngOnDestroy(): void {

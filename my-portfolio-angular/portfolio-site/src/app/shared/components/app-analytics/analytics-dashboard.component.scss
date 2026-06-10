@@ -1,39 +1,23 @@
 /* =============================================================
-   ANALYTICS DASHBOARD  —  Refined Command Centre
+   ANALYTICS DASHBOARD  —  Highcharts + PrimeNG Table
    =============================================================
-   COLOR TOKEN MAP (API → CSS custom property)
+   COLOR TOKEN MAP
    ─────────────────────────────────────────────────────────────
-   --background      page canvas
-   --surface         card background
-   --surface-alt     hover / zebra rows
-   --border          dividers, chart grid lines
-   --primary         accent bars, active states, badges
-   --accent          secondary highlight
-   --primary-glow    card glow shadows
-   --text-primary    headings, values
-   --text-secondary  labels, descriptions
-   --text-muted      meta, timestamps, placeholders
-   --error           error state, bounce-rate warn bar
-   --logo-shadow     deep card shadows
-   ─────────────────────────────────────────────────────────────
-   METRIC CARD ACCENT COLOURS — thin left-border only.
-   Uses CSS custom properties on each card variant so all four
-   accent colours derive from the active theme tokens.
-   ─────────────────────────────────────────────────────────────
-   Zero hardcoded hex values — every colour is a token.
+   --background   --surface    --surface-alt  --border
+   --primary      --accent     --primary-glow --text-primary
+   --text-secondary  --text-muted  --error  --logo-shadow
    ============================================================= */
 
-// ── Shared constants ──────────────────────────────────────────
-$radius-card  : 16px;
-$radius-inner : 10px;
-$radius-badge :  6px;
-$transition   : 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-$card-shadow  : 0 2px 12px var(--logo-shadow, rgba(0,0,0,0.08));
-$card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
+$radius-card : 16px;
+$radius-badge : 99px;
+$radius-btn : 10px;
+$transition : 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+$card-shadow : 0 2px 12px var(--logo-shadow, rgba(0, 0, 0, 0.08));
+$card-hover-sh : 0 6px 24px var(--primary-glow, rgba(0, 0, 0, 0.14));
 
 /* =============================================================
-   ROOT — BEM block
-   ============================================================= */
+      ROOT
+      ============================================================= */
 .ad {
   padding: 1.5rem 1.25rem 3rem;
   background: var(--background);
@@ -44,8 +28,8 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
 }
 
 /* =============================================================
-   HEADER
-   ============================================================= */
+      HEADER
+      ============================================================= */
 .ad__header {
   display: flex;
   align-items: flex-start;
@@ -65,7 +49,9 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   color: var(--primary);
   margin-bottom: 0.4rem;
 
-  .material-icons { font-size: 1rem; }
+  .material-icons {
+    font-size: 1rem;
+  }
 }
 
 .ad__title {
@@ -74,7 +60,6 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   color: var(--text-primary);
   margin: 0 0 0.2rem;
   letter-spacing: -0.5px;
-  line-height: 1.15;
 }
 
 .ad__subtitle {
@@ -83,7 +68,6 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   margin: 0;
 }
 
-// ── Controls ──────────────────────────────────────────────────
 .ad__header-controls {
   display: flex;
   align-items: center;
@@ -111,7 +95,6 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   font-weight: 600;
   cursor: pointer;
   transition: background $transition, color $transition;
-  white-space: nowrap;
 
   &--active {
     background: var(--primary);
@@ -145,8 +128,13 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   cursor: pointer;
   transition: opacity $transition;
 
-  .material-icons { font-size: 0.95rem; }
-  &:hover { opacity: 0.88; }
+  .material-icons {
+    font-size: 0.95rem;
+  }
+
+  &:hover {
+    opacity: 0.88;
+  }
 }
 
 .ad__refresh-btn {
@@ -160,9 +148,11 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background $transition, color $transition, transform $transition;
+  transition: background $transition, color $transition;
 
-  .material-icons { font-size: 1.2rem; }
+  .material-icons {
+    font-size: 1.2rem;
+  }
 
   &:hover {
     background: var(--primary-glow);
@@ -174,13 +164,15 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   }
 
   @keyframes ad-spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
 }
 
 /* =============================================================
-   SKELETON LOADING
-   ============================================================= */
+      SKELETONS
+      ============================================================= */
 .ad__skeleton-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -197,20 +189,34 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   border: 1px solid var(--border);
 }
 
-.ad__skeleton-line {
+%sk-shimmer {
   border-radius: 6px;
-  background: linear-gradient(
-    90deg,
-    var(--surface-alt) 25%,
-    color-mix(in oklab, var(--surface-alt) 60%, var(--background)) 50%,
-    var(--surface-alt) 75%
-  );
+  background: linear-gradient(90deg,
+      var(--surface-alt) 25%,
+      color-mix(in oklab, var(--surface-alt) 60%, var(--background)) 50%,
+      var(--surface-alt) 75%);
   background-size: 200% 100%;
   animation: ad-shimmer 1.4s ease infinite;
+}
 
-  &--short  { height: 12px; width: 50%; }
-  &--tall   { height: 36px; width: 70%; }
-  &--medium { height: 12px; width: 65%; }
+.ad__skeleton-line {
+  @extend %sk-shimmer;
+  height: 12px;
+  width: 100%;
+
+  &--short {
+    width: 50%;
+  }
+
+  &--tall {
+    height: 36px;
+    width: 70%;
+  }
+
+  &--medium {
+    height: 12px;
+    width: 65%;
+  }
 }
 
 .ad__skeleton-chart {
@@ -218,17 +224,22 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   border-radius: $radius-card;
   background: var(--surface);
   border: 1px solid var(--border);
-  @extend .ad__skeleton-line;
+  @extend %sk-shimmer;
 }
 
 @keyframes ad-shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* =============================================================
-   STATE PANELS  (error / empty)
-   ============================================================= */
+      STATE PANELS
+      ============================================================= */
 .ad__state-panel {
   display: flex;
   flex-direction: column;
@@ -241,7 +252,9 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   border-radius: $radius-card;
   text-align: center;
 
-  &--error .ad__state-icon { color: var(--error); }
+  &--error .ad__state-icon {
+    color: var(--error);
+  }
 }
 
 .ad__state-icon {
@@ -270,13 +283,18 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   cursor: pointer;
   transition: opacity $transition;
 
-  .material-icons { font-size: 1rem; }
-  &:hover { opacity: 0.88; }
+  .material-icons {
+    font-size: 1rem;
+  }
+
+  &:hover {
+    opacity: 0.88;
+  }
 }
 
 /* =============================================================
-   BODY WRAPPER
-   ============================================================= */
+      BODY
+      ============================================================= */
 .ad__body {
   display: flex;
   flex-direction: column;
@@ -284,15 +302,14 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
 }
 
 /* =============================================================
-   METRIC CARDS
-   ============================================================= */
+      METRIC CARDS
+      ============================================================= */
 .ad__metrics {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
 }
 
-// Shared card base
 .ad__metric-card {
   position: relative;
   background: var(--surface);
@@ -304,55 +321,79 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   gap: 0.25rem;
   box-shadow: $card-shadow;
   overflow: hidden;
-  // Staggered entrance
   opacity: 0;
   transform: translateY(12px);
   animation: ad-card-in 0.4s ease forwards var(--card-delay, 0ms);
   transition: box-shadow $transition, transform $transition;
 
   &:hover {
-    box-shadow: $card-shadow-hover;
+    box-shadow: $card-hover-sh;
     transform: translateY(-2px);
   }
 }
 
 @keyframes ad-card-in {
-  to { opacity: 1; transform: translateY(0); }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-// Thin left-border accent — colour varies per card
 .ad__metric-card-accent {
   position: absolute;
-  left: 0; top: 0; bottom: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
   width: 4px;
   border-radius: $radius-card 0 0 $radius-card;
 }
 
-// Per-card accent colour using theme tokens
-.ad__metric-card--1 .ad__metric-card-accent { background: var(--primary); }
-.ad__metric-card--2 .ad__metric-card-accent { background: var(--accent); }
+.ad__metric-card--1 .ad__metric-card-accent {
+  background: var(--primary);
+}
+
+.ad__metric-card--2 .ad__metric-card-accent {
+  background: var(--accent);
+}
+
 .ad__metric-card--3 .ad__metric-card-accent {
   background: linear-gradient(180deg, var(--primary), var(--accent));
 }
-.ad__metric-card--4 .ad__metric-card-accent { background: var(--error); }
 
-// Subtle glow wash behind the number — same token, very low opacity
+.ad__metric-card--4 .ad__metric-card-accent {
+  background: var(--error);
+}
+
 .ad__metric-card--1::after,
 .ad__metric-card--2::after,
 .ad__metric-card--3::after,
 .ad__metric-card--4::after {
   content: '';
   position: absolute;
-  top: -20px; right: -20px;
-  width: 100px; height: 100px;
+  top: -20px;
+  right: -20px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   pointer-events: none;
   opacity: 0.06;
 }
-.ad__metric-card--1::after { background: var(--primary); }
-.ad__metric-card--2::after { background: var(--accent); }
-.ad__metric-card--3::after { background: var(--primary); }
-.ad__metric-card--4::after { background: var(--error); }
+
+.ad__metric-card--1::after {
+  background: var(--primary);
+}
+
+.ad__metric-card--2::after {
+  background: var(--accent);
+}
+
+.ad__metric-card--3::after {
+  background: var(--primary);
+}
+
+.ad__metric-card--4::after {
+  background: var(--error);
+}
 
 .ad__metric-top {
   display: flex;
@@ -379,11 +420,18 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   background: var(--surface-alt);
   color: var(--primary);
 
-  .material-icons { font-size: 1.1rem; }
+  .material-icons {
+    font-size: 1.1rem;
+  }
 }
 
-.ad__metric-card--2 .ad__metric-icon-wrap { color: var(--accent); }
-.ad__metric-card--4 .ad__metric-icon-wrap { color: var(--error); }
+.ad__metric-card--2 .ad__metric-icon-wrap {
+  color: var(--accent);
+}
+
+.ad__metric-card--4 .ad__metric-icon-wrap {
+  color: var(--error);
+}
 
 .ad__metric-value {
   font-size: clamp(1.6rem, 3vw, 2.1rem);
@@ -407,22 +455,16 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
 .ad__metric-badge {
   display: inline-block;
   padding: 1px 7px;
-  border-radius: 99px;
+  border-radius: $radius-badge;
   background: color-mix(in oklab, var(--primary) 14%, transparent);
   color: var(--primary);
   font-weight: 700;
   font-size: 0.72rem;
 }
 
-.ad__metric-card--4 .ad__metric-badge {
-  background: color-mix(in oklab, var(--error) 14%, transparent);
-  color: var(--error);
-}
-
-// Mini progress bar at the bottom of each card
 .ad__metric-bar {
   height: 3px;
-  border-radius: 99px;
+  border-radius: $radius-badge;
   background: var(--surface-alt);
   overflow: hidden;
   margin-top: auto;
@@ -430,25 +472,31 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
 
 .ad__metric-bar-fill {
   height: 100%;
-  border-radius: 99px;
+  border-radius: $radius-badge;
   background: var(--primary);
   transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s;
 
-  &--warn { background: var(--error); }
+  &--warn {
+    background: var(--error);
+  }
 }
 
 /* =============================================================
-   CHART SECTIONS
-   ============================================================= */
+      CHART SECTIONS
+      ============================================================= */
 .ad__charts-row {
   display: grid;
   gap: 1rem;
 
-  &--single { grid-template-columns: 1fr; }
-  &--two    { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  &--single {
+    grid-template-columns: 1fr;
+  }
+
+  &--two {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
 }
 
-// Shared chart card
 .ad__chart-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -463,7 +511,9 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   animation: ad-card-in 0.4s ease forwards var(--card-delay, 0ms);
   transition: box-shadow $transition;
 
-  &:hover { box-shadow: $card-shadow-hover; }
+  &:hover {
+    box-shadow: $card-hover-sh;
+  }
 }
 
 .ad__chart-card-header {
@@ -491,17 +541,18 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   align-items: center;
   gap: 4px;
   padding: 3px 10px;
-  border-radius: 99px;
+  border-radius: $radius-badge;
   background: color-mix(in oklab, var(--primary) 12%, transparent);
   color: var(--primary);
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
   white-space: nowrap;
   flex-shrink: 0;
 
-  .material-icons { font-size: 0.85rem; }
+  .material-icons {
+    font-size: 0.85rem;
+  }
 }
 
 .ad__chart-header-icon {
@@ -511,87 +562,118 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   flex-shrink: 0;
 }
 
+// ── Chart container height strategy ──────────────────────────
+// KEY FIX: chart wrappers are `height: auto` so Highcharts drives
+// their own height via `chart.height` in Options.
+// The pie chart uses chart.height:320 (explicit px) so it gets
+// full space for the donut + legend without any CSS override.
+// Line/bar/column charts use chart.height:'100%' with a min-height
+// on the wrapper so they have a sensible floor on mobile.
 .ad__chart-wrap {
   position: relative;
-  height: 240px;
+  // height: auto — Highcharts controls its own height
+  height: auto;
+  min-height: 260px; // floor for line/bar charts on mobile
 
-  &--tall { height: 300px; }
+  &--tall {
+    min-height: 300px;
+  }
 
-  canvas { width: 100% !important; height: 100% !important; }
+  // The Highcharts container div needs block display
+  highcharts-chart {
+    display: block;
+  }
+}
+
+// Pie / donut charts must NOT have a min-height CSS constraint
+// because the chart.height:320 in TS already sets a fixed pixel height.
+// Apply this class to the pie card's .ad__chart-wrap in the HTML.
+.ad__chart-wrap--pie {
+  min-height: 0 !important;
+  height: auto !important;
 }
 
 /* =============================================================
-   TOP PAGES TABLE
-   ============================================================= */
+      TABLE SECTION
+      ============================================================= */
 .ad__table-section {
   opacity: 0;
   transform: translateY(10px);
   animation: ad-card-in 0.4s ease forwards var(--card-delay, 0ms);
 }
 
-.ad__table-wrap {
-  overflow-x: auto;
-  border-radius: $radius-inner;
-  border: 1px solid var(--border);
+// ── PrimeNG p-table theme override ────────────────────────────
+::ng-deep .ad__p-table {
 
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
-}
+  .p-datatable-thead>tr>th {
+    background: var(--surface-alt) !important;
+    color: var(--text-muted) !important;
+    border-color: var(--border) !important;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 0.7rem 0.85rem;
+  }
 
-.ad__table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.845rem;
-}
+  .p-sortable-column .p-sortable-column-icon {
+    color: var(--text-muted) !important;
+  }
 
-.ad__th {
-  padding: 0.75rem 1rem;
-  text-align: left;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--text-muted);
-  background: var(--surface-alt);
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
+  .p-sortable-column.p-highlight {
+    color: var(--primary) !important;
+  }
 
-  &--rank { width: 48px; text-align: center; }
-  &--num  { text-align: right; }
-  &--bar  { width: 120px; }
-}
+  .p-sortable-column.p-highlight .p-sortable-column-icon {
+    color: var(--primary) !important;
+  }
 
-.ad__tr {
-  border-bottom: 1px solid var(--border);
-  transition: background $transition;
+  .p-datatable-tbody>tr {
+    background: var(--surface) !important;
+    border-color: var(--border) !important;
+    color: var(--text-primary) !important;
+    transition: background $transition;
 
-  &:last-child { border-bottom: none; }
-  &:hover      { background: var(--surface-alt); }
-}
+    &:hover {
+      background: var(--surface-alt) !important;
+    }
 
-.ad__td {
-  padding: 0.85rem 1rem;
-  color: var(--text-primary);
-  vertical-align: middle;
+    >td {
+      border-color: var(--border) !important;
+      padding: 0.8rem 0.85rem;
+      font-size: 0.845rem;
+    }
+  }
 
-  &--rank     { text-align: center; }
-  &--num      { text-align: right; white-space: nowrap; }
-  &--duration { color: var(--text-secondary); font-size: 0.82rem; }
+  .p-paginator {
+    background: var(--surface) !important;
+    border-color: var(--border) !important;
+    color: var(--text-secondary) !important;
 
-  &--empty {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: var(--text-muted);
+    .p-paginator-element {
+      color: var(--text-secondary) !important;
+      border-radius: 8px !important;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+      &:hover {
+        background: var(--surface-alt) !important;
+      }
 
-    .material-icons { font-size: 1.2rem; opacity: 0.5; }
+      &.p-highlight {
+        background: var(--primary) !important;
+        color: var(--background) !important;
+      }
+    }
+  }
+
+  .p-datatable-tbody>tr>td::before {
+    color: var(--text-muted) !important;
+    font-weight: 700;
+    font-size: 0.68rem;
+    text-transform: uppercase;
   }
 }
 
+// ── Custom table cell styles ──────────────────────────────────
 .ad__rank {
   display: inline-flex;
   align-items: center;
@@ -627,32 +709,57 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
 .ad__views-badge {
   display: inline-block;
   padding: 3px 10px;
-  border-radius: 99px;
+  border-radius: $radius-badge;
   background: color-mix(in oklab, var(--accent) 14%, transparent);
   color: var(--accent);
   font-weight: 700;
   font-size: 0.78rem;
 }
 
+.ad__td--duration {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+}
+
 .ad__share-bar {
   height: 5px;
-  border-radius: 99px;
+  border-radius: $radius-badge;
   background: var(--surface-alt);
   overflow: hidden;
+  margin-bottom: 3px;
 }
 
 .ad__share-bar-fill {
   height: 100%;
-  border-radius: 99px;
+  border-radius: $radius-badge;
   background: linear-gradient(90deg, var(--primary), var(--accent));
   transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
 }
 
-/* =============================================================
-   RESPONSIVE — mobile-first breakpoints
-   ============================================================= */
+.ad__share-label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
 
-// Phones  ≤ 480px
+.ad__table-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 2rem;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+
+  .material-icons {
+    opacity: 0.45;
+  }
+}
+
+/* =============================================================
+      RESPONSIVE
+      ============================================================= */
+
+// ── Small phones ≤ 480px ──────────────────────────────────────
 @media (max-width: 480px) {
   .ad {
     padding: 1rem 0.875rem 2rem;
@@ -680,10 +787,6 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
     font-size: 0.75rem;
   }
 
-  .ad__custom-range { flex-direction: column; align-items: stretch; }
-  .ad__apply-btn    { justify-content: center; }
-  .ad__refresh-btn  { align-self: flex-start; }
-
   .ad__metrics {
     grid-template-columns: 1fr 1fr;
   }
@@ -692,20 +795,19 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
     font-size: 1.5rem;
   }
 
-  // Stack the two-col chart row on small phones
   .ad__charts-row--two {
     grid-template-columns: 1fr;
   }
 
-  .ad__chart-wrap { height: 200px; }
-  .ad__chart-wrap--tall { height: 240px; }
-
-  // Hide the share-bar column on small screens
-  .ad__th--bar,
-  .ad__td--bar { display: none; }
+  // FIX: do NOT override height on pie wraps on mobile —
+  // the pie chart drives its own height (320px) from TS options.
+  // Only set a mobile floor for non-pie (line/bar/column) charts.
+  .ad__chart-wrap:not(.ad__chart-wrap--pie) {
+    min-height: 220px;
+  }
 }
 
-// Tablets  481px – 768px
+// ── Tablets 481–768px ─────────────────────────────────────────
 @media (min-width: 481px) and (max-width: 768px) {
   .ad {
     padding: 1.25rem 1rem 2.5rem;
@@ -716,8 +818,6 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
     align-items: stretch;
   }
 
-  .ad__header-controls { flex-wrap: wrap; }
-
   .ad__metrics {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -727,9 +827,7 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   }
 }
 
-// Desktop  ≥ 769px — all defaults apply
-
-// Wide  ≥ 1400px
+// ── Wide screens ≥ 1400px ─────────────────────────────────────
 @media (min-width: 1400px) {
   .ad {
     padding: 2rem 2rem 3rem;
@@ -740,10 +838,9 @@ $card-shadow-hover: 0 6px 24px var(--primary-glow, rgba(0,0,0,0.14));
   }
 }
 
-/* =============================================================
-   REDUCED MOTION
-   ============================================================= */
+// ── Reduced motion ────────────────────────────────────────────
 @media (prefers-reduced-motion: reduce) {
+
   .ad__metric-card,
   .ad__chart-card,
   .ad__table-section {

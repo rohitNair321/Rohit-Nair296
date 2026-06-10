@@ -1,5 +1,5 @@
 // notification.component.ts
-import { Component, computed, inject, Injector, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, Injector, OnDestroy, OnInit, signal , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
@@ -14,7 +14,8 @@ import { Subject } from 'rxjs';
   standalone: true,
   imports: [CommonModule,AccordionModule, ButtonModule, OverlayBadgeModule, BadgeModule, TimeAgoPipe],
   templateUrl: './notification.component.html',
-  styleUrls: ['./notification.component.scss']
+  styleUrls: ['./notification.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationComponent extends CommonApp implements OnInit, OnDestroy {
 

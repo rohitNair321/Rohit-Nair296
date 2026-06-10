@@ -189,16 +189,13 @@
     <!-- COMPOSER -->
     <div class="cb-composer">
 
-      <!-- Model selector row (uncomment to enable) -->
-      <!-- <div class="cb-composer__model-row">
-        <span class="material-icons cb-composer__model-icon">auto_awesome</span>
-        <select #modelSelect class="cb-composer__model-select" [value]="selectedModel()"
-          (change)="onModelChange(modelSelect.value)" aria-label="Select model version">
-          @for (v of modelVersions; track v.model) {
-          <option [value]="v.model">{{ v.name }}</option>
-          }
-        </select>
-      </div> -->
+      <!-- Guest limit-reached notice -->
+      @if (chatDisabled()) {
+      <div class="cb-composer__limit-notice" role="status" aria-live="polite">
+        <span class="material-icons" aria-hidden="true">lock_outline</span>
+        <span>Free limit reached. <a href="#/auth/login" (click)="toggleChat()">Log in</a> for unlimited chat.</span>
+      </div>
+      }
 
       <!-- Input row -->
       <div class="cb-composer__input-row">

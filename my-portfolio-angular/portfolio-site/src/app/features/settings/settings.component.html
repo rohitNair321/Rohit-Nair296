@@ -1,21 +1,10 @@
 @if (profileForm) {
 <section class="admin-settings-container" [formGroup]="profileForm">
-
   <!-- Header Bar -->
   <header class="admin-header">
     <div class="header-left">
       <h1 class="page-title">Settings</h1>
       <p class="page-subtitle">Manage your profile, experience, and application preferences</p>
-    </div>
-    <div class="header-actions">
-      <button type="button" class="btn-secondary" [disabled]="!profileForm.dirty" (click)="resetDefaults()">
-        <i class="material-icons">refresh</i>
-        <span>Discard</span>
-      </button>
-      <button type="button" class="btn-primary" (click)="saveSettings()" [disabled]="!isFormChanged()">
-        <i class="material-icons">save</i>
-        <span>Save Changes</span>
-      </button>
     </div>
   </header>
 
@@ -37,6 +26,16 @@
       (click)="activeSettingTab = 'monitoring'">
       <i class="material-icons">monitor_heart</i>
       <span>Monitoring</span>
+    </button>
+    <button type="button" class="tab-btn" [class.active]="activeSettingTab === 'myLearningPosts'"
+      (click)="activeSettingTab = 'myLearningPosts'">
+      <i class="material-icons">school</i>
+      <span>My Learning Posts</span>
+    </button>
+    <button type="button" class="tab-btn" [class.active]="activeSettingTab === 'aboutMeEditor'"
+      (click)="activeSettingTab = 'aboutMeEditor'">
+      <i class="material-icons">person</i>
+      <span>About Me Editor</span>
     </button>
   </nav>
 
@@ -89,38 +88,67 @@
                 <div class="form-field">
                   <label class="field-label">Resume (PDF)</label>
 
+                  <!-- State 1: resume saved on server -->
                   @if (resumeUrl) {
-                  <div class="resume-container">
-                    <div class="resume-info">
-                      <i class="material-icons file-icon">picture_as_pdf</i>
-                      <div class="resume-details">
-                        <span class="resume-filename">{{ resumeFileName || 'resume.pdf' }}</span>
-                        <span class="resume-type">PDF Document</span>
-                      </div>
+                  <div class="resume-card">
+                    <div class="resume-card__icon">
+                      <i class="material-icons">picture_as_pdf</i>
                     </div>
-                    <div class="resume-buttons">
-                      <button type="button" class="icon-btn" (click)="viewResume()" title="View">
-                        <i class="material-icons">visibility</i>
+                    <div class="resume-card__info">
+                      <span class="resume-card__name">{{ resumeFileName || 'Resume.pdf' }}</span>
+                      <span class="resume-card__meta">PDF · Saved</span>
+                    </div>
+                    <div class="resume-card__actions">
+                      <button type="button" class="icon-btn" (click)="viewResume()" title="Open">
+                        <i class="material-icons">open_in_new</i>
                       </button>
-                      <button type="button" class="icon-btn" (click)="downloadResume(resumeUrl)" title="Download">
-                        <i class="material-icons">download</i>
-                      </button>
-                      <button type="button" class="icon-btn danger" (click)="removeResume()" title="Delete">
-                        <i class="material-icons">delete_outline</i>
+                      <label class="icon-btn" for="resumeReplace" title="Replace">
+                        <i class="material-icons">swap_horiz</i>
+                      </label>
+                      <input id="resumeReplace" type="file" accept="application/pdf" (change)="onResumeChange($event)" hidden>
+                      <button type="button" class="icon-btn danger" title="Delete"
+                        [disabled]="isDeletingResume()" (click)="removeResume()">
+                        <i class="material-icons">{{ isDeletingResume() ? 'hourglass_empty' : 'delete_outline' }}</i>
                       </button>
                     </div>
                   </div>
-                  } @else {
-                  <ng-template>
-                    <div class="upload-area">
-                      <input id="resumeUpload" type="file" accept="application/pdf" (change)="onResumeChange($event)"
-                        hidden>
-                      <label for="resumeUpload" class="upload-btn">
-                        <i class="material-icons">upload_file</i>
-                        <span>Upload Resume</span>
-                      </label>
+
+                  <!-- State 2: file selected locally, not yet saved -->
+                  } @else if (pendingResumeFile()) {
+                  <div class="resume-pending">
+                    <div class="resume-pending__icon">
+                      <i class="material-icons">picture_as_pdf</i>
                     </div>
-                  </ng-template>
+                    <div class="resume-pending__info">
+                      <span class="resume-pending__name">{{ pendingResumeFile()!.name }}</span>
+                      <span class="resume-pending__meta">Ready to upload — save changes to confirm</span>
+                    </div>
+                    <button type="button" class="icon-btn" title="Clear selection" (click)="cancelPendingResume()">
+                      <i class="material-icons">close</i>
+                    </button>
+                  </div>
+
+                  <!-- State 3: no resume — show dropzone -->
+                  } @else {
+                  <div class="resume-dropzone" [class.resume-dropzone--dragover]="isDragOver()"
+                    (dragover)="onResumeDragOver($event)"
+                    (dragleave)="onResumeDragLeave($event)"
+                    (drop)="onResumeDrop($event)">
+                    <div class="resume-dropzone__icon">
+                      <i class="material-icons">upload_file</i>
+                    </div>
+                    <p class="resume-dropzone__title">Drag &amp; drop your PDF here</p>
+                    <p class="resume-dropzone__subtitle">or click the button to browse</p>
+                    <label class="btn-secondary btn-sm resume-dropzone__btn" for="resumeUpload">
+                      <i class="material-icons">folder_open</i>
+                      Browse files
+                    </label>
+                    <input id="resumeUpload" type="file" accept="application/pdf"
+                      (change)="onResumeChange($event)" hidden>
+                    @if (profileForm.get('resume')?.hasError('fileType')) {
+                    <p class="field-error" style="margin-top: 0.5rem">Only PDF files are allowed.</p>
+                    }
+                  </div>
                   }
                 </div>
 
@@ -176,6 +204,60 @@
               <label class="field-label">Professional Bio</label>
               <textarea formControlName="description" rows="4" class="form-textarea"></textarea>
             </div>
+          </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="admin-card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="material-icons">psychology</i>
+              <span>Skills</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <p class="field-description" style="margin-bottom:1rem">
+              Add your technical skills. They appear on the public profile under "Core Expertise".
+            </p>
+
+            <!-- Existing skill chips -->
+            <div class="skills-tag-cloud" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;">
+              @for (ctrl of skills.controls; track i; let i = $index) {
+                <span class="skill-chip tech-tag">
+                  {{ ctrl.value }}
+                  <button
+                    type="button"
+                    class="skill-chip__remove"
+                    (click)="removeSkill(i)"
+                    [attr.aria-label]="'Remove ' + ctrl.value">
+                    <i class="material-icons">close</i>
+                  </button>
+                </span>
+              }
+              @if (skills.length === 0) {
+                <span class="field-description" style="color:var(--text-muted);font-style:italic">No skills added yet.</span>
+              }
+            </div>
+
+            <!-- Add new skill -->
+            <div class="skill-input-row" style="display:flex;gap:8px;align-items:center;">
+              <input
+                #skillInput
+                type="text"
+                class="form-input"
+                placeholder="e.g. Angular, Node.js, TypeScript"
+                style="flex:1;max-width:320px;"
+                (keydown.enter)="addSkill(skillInput.value); skillInput.value = ''; $event.preventDefault()"
+              >
+              <button
+                type="button"
+                class="btn-secondary"
+                (click)="addSkill(skillInput.value); skillInput.value = ''">
+                <i class="material-icons">add</i>
+                <span>Add</span>
+              </button>
+            </div>
+            <p class="field-description" style="margin-top:6px">Press Enter or click Add after typing a skill.</p>
           </div>
         </section>
 
@@ -376,11 +458,16 @@
   @if (activeSettingTab === 'monitoring') {
   <div class="tab-content">
     <app-analytics></app-analytics>
-    <!-- <div class="content-grid">
-      <div class="main-content">
-        
-      </div>
-    </div> -->
+  </div>
+  }
+  @if (activeSettingTab === 'aboutMeEditor') {
+  <div class="tab-content">
+    <app-about-me-editor></app-about-me-editor>
+  </div>
+  }
+  @if (activeSettingTab === 'myLearningPosts') {
+  <div class="tab-content">
+    <app-my-learning-post></app-my-learning-post>
   </div>
   }
 </section>
@@ -727,3 +814,17 @@
 </p-dialog>
 
 <p-confirmDialog></p-confirmDialog>
+
+<!-- Sticky save bar — appears when form has unsaved changes -->
+@if (profileForm && isFormChanged()) {
+  <div class="settings-sticky-bar" role="toolbar" aria-label="Unsaved changes">
+    <span class="settings-sticky-bar__label">
+      <i class="material-icons">edit</i>
+      You have unsaved changes
+    </span>
+    <div class="settings-sticky-bar__actions">
+      <button type="button" class="btn-secondary btn-sm" (click)="resetDefaults()">Discard</button>
+      <button type="button" class="btn-primary btn-sm" (click)="saveSettings()">Save Changes</button>
+    </div>
+  </div>
+}

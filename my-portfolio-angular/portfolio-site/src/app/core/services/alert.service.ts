@@ -1,23 +1,35 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core';
 
 export type AlertType = 'success' | 'error' | 'warning' | 'info';
 
+export interface Alert {
+  id: string;
+  message: string;
+  type: AlertType;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AlertService {
-  isOpen = signal(false);
-  message = signal('');
-  type = signal<AlertType>('info');
+  // Primary queue — supports stacked alerts
+  readonly alerts = signal<Alert[]>([]);
 
-  showAlert(message: string, type: AlertType = 'info') {
-    this.message.set(message);
-    this.type.set(type);
-    this.isOpen.set(true);
+  // Legacy computed signals — derived from queue for backward compat
+  readonly isOpen  = computed(() => this.alerts().length > 0);
+  readonly message = computed(() => this.alerts()[0]?.message ?? '');
+  readonly type    = computed<AlertType>(() => this.alerts()[0]?.type ?? 'info');
 
-    // Auto-hide after 5 seconds
-    setTimeout(() => this.isOpen.set(false), 5000);
+  showAlert(message: string, type: AlertType = 'info'): void {
+    const id = Math.random().toString(36).slice(2, 9);
+    this.alerts.update(q => [...q, { id, message, type }]);
+    setTimeout(() => this.dismiss(id), 5000);
   }
 
-  close() {
-    this.isOpen.set(false);
+  dismiss(id: string): void {
+    this.alerts.update(q => q.filter(a => a.id !== id));
+  }
+
+  close(): void {
+    const first = this.alerts()[0];
+    if (first) this.dismiss(first.id);
   }
 }

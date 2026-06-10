@@ -1,14 +1,15 @@
 import {
+  ChangeDetectionStrategy,
   Component,
-  Input,
-  OnInit,
-  OnDestroy,
-  ViewChild,
   ElementRef,
   Injector,
-  signal,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
   computed,
   effect,
+  signal,
 } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -54,6 +55,7 @@ function uid(): string {
   imports: [CommonModule, FormsModule, DatePipe, MarkdownComponent],
   templateUrl: './chat-bot.component.html',
   styleUrls: ['./chat-bot.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatBotComponent extends CommonApp implements OnInit, OnDestroy {
 
@@ -97,7 +99,7 @@ export class ChatBotComponent extends CommonApp implements OnInit, OnDestroy {
 
   /** Side that the FAB + window anchor to. */
   isLeft = computed(() => this.position.includes('left'));
-  isTop = computed(() => this.position.includes('top'));
+  isTop  = computed(() => this.position.includes('top'));
 
   // ── Cleanup ──────────────────────────────────────────────────
   private _scrollEffect = effect(() => {

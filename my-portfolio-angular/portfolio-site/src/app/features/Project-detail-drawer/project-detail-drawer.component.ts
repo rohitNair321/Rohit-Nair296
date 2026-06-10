@@ -9,7 +9,7 @@ import {
   HostListener,
   signal,
   computed,
-} from '@angular/core';
+ ChangeDetectionStrategy } from '@angular/core';
 import { NgClass as NgClassDirective } from '@angular/common';
 
 // Re-export types from projects-page so they share one source of truth.
@@ -22,6 +22,7 @@ import { ProjectItem } from '../projects-page/projects-page.component';
   imports: [NgClassDirective],
   templateUrl: './project-detail-drawer.component.html',
   styleUrls: ['./project-detail-drawer.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDetailDrawerComponent implements OnChanges, OnDestroy {
 

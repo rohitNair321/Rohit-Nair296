@@ -85,9 +85,14 @@ export class ThemeService {
     const theme = this.themeRegistry.get(id);
     if (!theme) return;
 
-    const tokens = dark ? theme.dark_tokens : theme.tokens;
-    const root = document.documentElement;
+    // Fall back to light tokens when dark_tokens aren't defined for this theme
+    const tokens = (dark && theme.dark_tokens && Object.keys(theme.dark_tokens).length > 0)
+      ? theme.dark_tokens
+      : theme.tokens;
 
+    if (!tokens || Object.keys(tokens).length === 0) return;
+
+    const root = document.documentElement;
     Object.entries(tokens).forEach(([key, value]) => {
       root.style.setProperty(`--${key.replace(/_/g, '-')}`, value);
     });

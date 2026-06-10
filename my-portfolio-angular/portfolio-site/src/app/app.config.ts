@@ -1,4 +1,6 @@
-import { ApplicationConfig, importProvidersFrom, provideAppInitializer } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, importProvidersFrom, provideAppInitializer } from '@angular/core';
+import { GlobalErrorHandler } from './shared/components/ui/error-boundary/error-boundary.component';
+
 import { provideRouter, withHashLocation, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
@@ -13,6 +15,7 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { provideMarkdown } from 'ngx-markdown';
 import { AuthService } from './auth/services/auth.service';
+import { provideHighcharts } from 'highcharts-angular';
 
 
 /**
@@ -25,8 +28,7 @@ export function initializeApp(authService: AuthService) {
     return new Promise((resolve) => {
       // Call backend to restore session (admin or guest)
       authService.initiateApp().subscribe({
-        next: (response) => {
-          console.log('✅ App initialized successfully', response);
+        next: (_response) => {
           resolve();
         },
         error: (error) => {
@@ -42,6 +44,7 @@ export function initializeApp(authService: AuthService) {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideMarkdown(),
+    provideHighcharts(),
     providePrimeNG({ 
             theme: {
                 preset: Aura
@@ -72,5 +75,7 @@ export const appConfig: ApplicationConfig = {
         return initializeApp(authService)();
       }), 
     provideClientHydration(),
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
+    GlobalErrorHandler,
   ],
 };

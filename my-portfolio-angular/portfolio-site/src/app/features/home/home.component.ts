@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, Renderer2, computed, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, Renderer2, computed, inject , ChangeDetectionStrategy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import * as e from 'cors';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { SecurityContext } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
@@ -12,6 +13,7 @@ import { RippleModule } from 'primeng/ripple';
 import { TextareaModule  } from 'primeng/textarea';
 import { Subject, Subscription, switchMap, take, timer } from 'rxjs';
 import { CommonApp } from 'src/app/core/services/common';
+import { SeoService } from 'src/app/core/services/seo.service';
 import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 
 interface Hero {
@@ -52,11 +54,19 @@ interface HomeData { hero: Hero; aboutTeaser?: AboutTeaser; contact?: ContactInf
         ], { optional: true })
       ])
     ])
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
 
+  private sanitizer = inject(DomSanitizer);
+  private seo = inject(SeoService);
+
   homeData: any = { experiences: [] }; // Initialize with safe defaults
+
+  get safeDescription(): SafeHtml {
+    return this.sanitizer.sanitize(SecurityContext.HTML, this.homeData?.description ?? '') ?? '';
+  }
   contactForm: FormGroup;
   projectList: any[] = [];
   experienceYears = 5;
@@ -65,6 +75,7 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
   send: boolean = false;
   selectedProject: any = null;
   showContactDialog = false;
+  contactSent = false;
   profileData = this.appService.profile;
   pullNotification!: Subscription;
   private destroy$ = new Subject<void>();
@@ -85,6 +96,12 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.seo.set({
+      title: 'Rohit Nair — Full Stack Developer',
+      description: 'Full Stack Developer specialising in Angular and Node.js. View my projects and get in touch.',
+      keywords: 'Full Stack Developer, Angular, Node.js, TypeScript, Pune, India',
+      url: 'https://www.mintpixel.in/#/home',
+    });
     const profile = this.profileData();
     if (profile) {
       this.homeData = profile;
@@ -101,10 +118,10 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
     this.loading.show('Sending your message...');
     const formData = this.contactForm.value;
     this.appService.sendContactMessage(formData).pipe(take(1)).subscribe({
-      next: (response) => {
+      next: (_response) => {
         this.loading.hide();
         this.contactForm.reset();
-        this.alertService.showAlert(`Message sent successfully! ${this.profileData()?.full_name} will be notified about it. `, 'success');
+        this.contactSent = true;
       },
       error: (err) => {
         this.loading.hide();

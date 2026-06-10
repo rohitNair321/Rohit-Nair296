@@ -11,14 +11,14 @@ import { AlertService } from 'src/app/core/services/alert.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertComponent {
-public alertService = inject(AlertService);
+  public alertService = inject(AlertService);
 
-  get icon(): string {
-    switch (this.alertService.type()) {
+  iconFor(type: string): string {
+    switch (type) {
       case 'success': return 'check_circle';
-      case 'error': return 'error';
+      case 'error':   return 'error';
       case 'warning': return 'warning';
-      default: return 'info';
+      default:        return 'info';
     }
   }
 }

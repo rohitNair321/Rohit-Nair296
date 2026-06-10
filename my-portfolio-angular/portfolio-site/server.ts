@@ -28,14 +28,24 @@ export function app(): express.Express {
   // CORS middleware for SSR
   server.use((req, res, next) => {
     const origin = req.headers.origin;
-    const host = req.headers.host?.split(':')[0];
-    
-    // Allow requests from allowed hosts
-    if (origin && ALLOWED_HOSTS.some(allowedHost => origin.includes(allowedHost))) {
-      res.setHeader('Access-Control-Allow-Origin', origin);
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
+    if (origin) {
+      const isAllowed = ALLOWED_HOSTS.some(host =>
+        origin === `https://${host}` ||
+        origin === `http://${host}` ||
+        origin === `http://${host}:4200` ||
+        origin === `http://${host}:3000`
+      );
+      if (isAllowed) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Access-Control-Allow-Credentials', 'true');
+        res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+      }
     }
-    
+    if (req.method === 'OPTIONS') {
+      res.sendStatus(204);
+      return;
+    }
     next();
   });
 

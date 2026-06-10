@@ -1,7 +1,5 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { inject, Injectable, Signal, signal } from "@angular/core";
-import * as e from "cors";
-import { N } from "node_modules/@angular/cdk/number-property.d-CJVxXUcb";
 import { EMPTY, map, Observable, switchMap, tap, timer } from "rxjs";
 import { LocalStorageService } from "src/app/shared/services/local-storage.service";
 import { environment } from "src/environments/environments";
@@ -16,12 +14,9 @@ export class AppService {
     // Single source of truth
     appState = signal<AppState>(initialState);
     role = signal<UserRole>(null);
-    private readonly apiProfileUrl = environment.baseUrl + '/api/profile';
+    private readonly apiProfileUrl = environment.baseUrl + '/api/v1/profile';
     private readonly apiContactUrl = environment.baseUrl + '/api/contact';
-    private readonly apiAIChatUrl = environment.baseUrl + '/api/ai/chat';
-    private httpOptions = {
-        withCredentials: true
-    };
+    private readonly apiAIChatUrl = environment.baseUrl + '/api/v1/chat/send';
 
     _profile = signal<Profile | null>(null);
     readonly profile: Signal<Profile | null> = this._profile;
@@ -30,12 +25,6 @@ export class AppService {
     readonly notifications: Signal<Notification | null> = this._notifications;
 
     token = signal<string | null>(this.localStorageService.getItem('auth_token'));
-
-    private authHeaders(): any {
-        // const token = this.token() || this.localStorageService.getItem('auth_token');
-        // return new HttpHeaders({ Authorization: token ? `Bearer ${token}` : '' });
-        return this.httpOptions;
-    }
 
     hasValidToken(): boolean {
         const token = localStorage.getItem('auth_token');
@@ -46,7 +35,7 @@ export class AppService {
 
     // Fetch profile from server and update signal
     getProfile(): Observable<Profile | null> {
-        return this.http.get<{ profile: Profile | null }>(`${this.apiProfileUrl}/getMyProfile`, {withCredentials: true})
+        return this.http.get<{ profile: Profile | null }>(`${this.apiProfileUrl}`, {withCredentials: true})
             .pipe(
                 map(r => r.profile || null),
                 tap(p => this._profile.set(p))
@@ -54,14 +43,21 @@ export class AppService {
     }
 
     updateProfile(formData: FormData): Observable<Profile> {
-        return this.http.put<{ profile: Profile }>(`${this.apiProfileUrl}/saveUpdateMyProfile`, formData, {withCredentials: true}).pipe(
+        return this.http.put<{ profile: Profile }>(`${this.apiProfileUrl}`, formData, {withCredentials: true}).pipe(
             map(r => r.profile),
             tap(updated => this._profile.set(updated))
         );
     }
 
     getResumeSignedUrl(): Observable<{ url: string, expires_in: number }> {
-        return this.http.get<{ url: string, expires_in: number }>(`${this.apiProfileUrl}/me/resume`, {withCredentials: true});
+        return this.http.get<{ url: string, expires_in: number }>(`${this.apiProfileUrl}/resume`, {withCredentials: true});
+    }
+
+    deleteResume(): Observable<Profile> {
+        return this.http.delete<{ profile: Profile }>(`${this.apiProfileUrl}/resume`, {withCredentials: true}).pipe(
+            map(r => r.profile),
+            tap(updated => this._profile.set(updated))
+        );
     }
 
     setLocalProfile(profile: Profile | null) {
@@ -118,7 +114,8 @@ export class AppService {
     }
 
     aiChat(message: string, sessionId: string | null): Observable<AiChatResponse> {
-        return this.http.post<AiChatResponse>(this.apiAIChatUrl, { message, sessionId, userId: this.profile()?.id, role: this.role() });
+        return this.http.post<{ data: AiChatResponse }>(this.apiAIChatUrl, { message, sessionId, userId: this.profile()?.id, role: this.role() })
+            .pipe(map(r => r.data));
     }
 
 }

@@ -33,9 +33,23 @@ export const routes: Routes = [
           import('./features/projects-page/projects-page.component')
             .then(m => m.ProjectsPageComponent),
       },
+      // ── Public Posts ──────────────────────────────────
+      {
+        path: 'posts',
+        loadComponent: () =>
+          import('./features/posts/posts-list/posts-list.component')
+            .then(m => m.PostsListComponent),
+        title: 'Posts — Rohit Nair',
+      },
+      {
+        path: 'posts/:slug',
+        loadComponent: () =>
+          import('./features/posts/post-detail/post-detail.component')
+            .then(m => m.PostDetailComponent),
+      },
     ],
   },
-  
+
   // Auth routes - for login/register (separate layout)
   {
     path: 'auth',
@@ -97,6 +111,31 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/projects-page/projects-page.component')
             .then(m => m.ProjectsPageComponent),
+      },
+      // ── Admin Posts ───────────────────────────────────
+      {
+        path: 'posts',
+        canActivate: [tokenGuard],
+        loadComponent: () =>
+          import('./features/posts/admin-posts/admin-posts.component')
+            .then(m => m.AdminPostsComponent),
+        data: { roles: ['ADMIN'] },
+      },
+      {
+        path: 'posts/new',
+        canActivate: [tokenGuard],
+        loadComponent: () =>
+          import('./features/posts/post-editor/post-editor.component')
+            .then(m => m.PostEditorComponent),
+        data: { roles: ['ADMIN'] },
+      },
+      {
+        path: 'posts/:id/edit',
+        canActivate: [tokenGuard],
+        loadComponent: () =>
+          import('./features/posts/post-editor/post-editor.component')
+            .then(m => m.PostEditorComponent),
+        data: { roles: ['ADMIN'] },
       },
     ],
   },

@@ -4,10 +4,13 @@ import {
   OnInit,
   signal,
   computed,
+  inject,
 } from '@angular/core';
 import { NgClass, SlicePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { ChangeDetectionStrategy } from '@angular/core';
 import { CommonApp } from 'src/app/core/services/common';
+import { SeoService } from 'src/app/core/services/seo.service';
 import { ProjectDetailDrawerComponent } from '../Project-detail-drawer/project-detail-drawer.component';
 
 // ── API shape types ───────────────────────────────────────────
@@ -54,6 +57,7 @@ interface FilterOption {
   imports: [NgClass, RouterLink, SlicePipe, ProjectDetailDrawerComponent],
   templateUrl: './projects-page.component.html',
   styleUrls: ['./projects-page.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectsPageComponent extends CommonApp implements OnInit {
 
@@ -102,11 +106,18 @@ export class ProjectsPageComponent extends CommonApp implements OnInit {
     ).length;
   }
 
+  private seo = inject(SeoService);
+
   constructor(public override injector: Injector) {
     super(injector);
   }
 
   ngOnInit(): void {
+    this.seo.set({
+      title: 'Projects',
+      description: "Explore Rohit Nair's completed and ongoing software projects.",
+      url: 'https://www.mintpixel.in/#/projects',
+    });
     this.isLoading.set(true);
     this._loadProjects();
   }

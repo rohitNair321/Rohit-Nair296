@@ -1,7 +1,17 @@
-.alert-container {
+.alert-stack {
   position: fixed;
   top: 24px;
   right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.alert-container {
+  pointer-events: all;
+  position: relative;
   min-width: 300px;
   max-width: 450px;
   padding: 16px;

@@ -40,8 +40,9 @@ export class CommonApp {
       new MenuItem({ label: 'Home', key: 'home', href: '#home', icon: 'home' }),
       new MenuItem({ label: 'About Me', key: 'aboutMe', href: '#about', icon: 'person' }),
       new MenuItem({ label: 'Projects', key: 'projects', href: '#projects', icon: 'work' }),
+      new MenuItem({ label: 'Posts', key: 'posts', routerLink: '/posts', icon: 'article', isHide: true }),
       new MenuItem({ label: 'Contact', key: 'contact', href: '#contact', icon: 'mail' }),
-      new MenuItem({ label: 'Notifications', routerLink: 'notifications', icon: 'notifications', key: 'notifications', isHide: this.appConfig.appConfiguration.showNotifications,  role: 'admin' }),
+      new MenuItem({ label: 'Notifications', routerLink: '/admin/notifications', icon: 'notifications', key: 'notifications', isHide: this.appConfig.appConfiguration.showNotifications,  role: 'admin' }),
       new MenuItem({
         label: 'Resume', icon: 'download', action: true, key: 'resume', tooltip: 'Download Resume', actions: (event) => {
           this.downloadResume(event);
@@ -114,13 +115,16 @@ export class CommonApp {
   applyThemeFromProfile(profile: any) {
     if (!profile) return;
     const themeList = this.normalizeThemesResponse(profile.themes);
-    const currentTheme = themeList.find(theme => theme.name === profile.currenttheme);
     this.themeService.registerThemes(themeList);
 
-    // Apply selected theme
-    if (currentTheme) {
-      this.themeService.setTheme(currentTheme.id);
-    }
+    if (themeList.length === 0) return;
+
+    // Look up by ID first (current format), then by name (legacy format), then fall back to first theme
+    const resolved = themeList.find((t: any) => t.id === profile.currenttheme)
+      ?? themeList.find((t: any) => t.name === profile.currenttheme)
+      ?? themeList[0];
+
+    this.themeService.setTheme(resolved.id);
   }
 
   downloadResume(resumeUrl: any) {
