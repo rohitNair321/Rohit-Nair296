@@ -38,7 +38,7 @@ jobs:
           cache-dependency-path: Frontend/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps
 
       - name: Build (CSR, production)
         run: npx ng build --configuration=production --base-href "${{ env.BASE_HREF }}"
