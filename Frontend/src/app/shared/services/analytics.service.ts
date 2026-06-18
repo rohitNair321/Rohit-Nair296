@@ -1,8 +1,6 @@
-// shared/services/analytics.service.ts
-import { Injectable, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
-import { environment } from 'src/environments/environments';
+import { Injectable, signal } from '@angular/core';
+import { Observable, of, tap } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 export interface AnalyticsDashboard {
   pageViews: PageView[];
@@ -57,99 +55,112 @@ export interface TopPage {
   avgDuration: number;
 }
 
+// ── Mock data ─────────────────────────────────────────────────────────────────
+
+function pastDate(daysAgo: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() - daysAgo);
+  return `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+}
+
+const MOCK_ANALYTICS: AnalyticsDashboard = {
+  pageViews: Array.from({ length: 30 }, (_, i) => ({
+    date: pastDate(29 - i),
+    pageViews: Math.floor(Math.random() * 800) + 200,
+    sessions:  Math.floor(Math.random() * 500) + 120,
+  })),
+  visitorStats: {
+    totalUsers:          4_812,
+    newUsers:            3_241,
+    activeUsers:         1_089,
+    sessions:            6_304,
+    avgSessionDuration:  187,
+    bounceRate:          0.42,
+  },
+  geographic: [
+    { country: 'United States', city: 'New York',       users: 1_820, sessions: 2_340 },
+    { country: 'India',         city: 'Bengaluru',      users:   910, sessions: 1_190 },
+    { country: 'United Kingdom',city: 'London',         users:   540, sessions:   690 },
+    { country: 'Germany',       city: 'Berlin',         users:   412, sessions:   530 },
+    { country: 'Canada',        city: 'Toronto',        users:   388, sessions:   495 },
+    { country: 'Australia',     city: 'Sydney',         users:   276, sessions:   354 },
+    { country: 'France',        city: 'Paris',          users:   218, sessions:   281 },
+    { country: 'Brazil',        city: 'São Paulo',      users:   194, sessions:   248 },
+    { country: 'Netherlands',   city: 'Amsterdam',      users:   142, sessions:   183 },
+    { country: 'Singapore',     city: 'Singapore',      users:   112, sessions:   145 },
+  ],
+  devices: [
+    { device: 'desktop', os: 'Windows', users: 2_640, sessions: 3_410 },
+    { device: 'mobile',  os: 'iOS',     users: 1_430, sessions: 1_890 },
+    { device: 'mobile',  os: 'Android', users:   560, sessions:   720 },
+    { device: 'tablet',  os: 'iPadOS',  users:   182, sessions:   284 },
+  ],
+  traffic: [
+    { source: 'Direct',    medium: 'none',    sessions: 2_120, users: 1_680 },
+    { source: 'Organic',   medium: 'search',  sessions: 1_840, users: 1_420 },
+    { source: 'GitHub',    medium: 'referral',sessions:   920, users:   740 },
+    { source: 'LinkedIn',  medium: 'social',  sessions:   640, users:   510 },
+    { source: 'Twitter',   medium: 'social',  sessions:   420, users:   330 },
+    { source: 'dev.to',    medium: 'referral',sessions:   364, users:   288 },
+  ],
+  topPages: [
+    { path: '/',           title: 'Home',           pageViews: 3_240, avgDuration: 142 },
+    { path: '/admin',      title: 'Dashboard',      pageViews: 1_860, avgDuration: 312 },
+    { path: '/auth/login', title: 'Login',          pageViews:   980, avgDuration:  68 },
+    { path: '/#features',  title: 'Features',       pageViews:   720, avgDuration: 188 },
+    { path: '/#theming',   title: 'Theme Demo',     pageViews:   540, avgDuration: 225 },
+  ],
+  dateRange: { startDate: pastDate(29), endDate: pastDate(0) },
+};
+
+// ── Service ───────────────────────────────────────────────────────────────────
+
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService {
-  private http = inject(HttpClient);
-  private apiUrl = environment.baseUrl + '/api/v1/analytics';
 
-  // Signals for reactive state
   dashboardData = signal<AnalyticsDashboard | null>(null);
-  loading = signal(false);
-  error = signal<string | null>(null);
+  loading       = signal(false);
+  error         = signal<string | null>(null);
 
-  /**
-   * Get complete analytics dashboard data
-   */
-  getDashboard(startDate: string = '7daysAgo', endDate: string = 'today'): Observable<any> {
+  getDashboard(_startDate: string = '7daysAgo', _endDate: string = 'today'): Observable<any> {
     this.loading.set(true);
     this.error.set(null);
-
-    return this.http
-      .get<any>(`${this.apiUrl}/dashboard`, {
-        params: { startDate, endDate },
-        withCredentials: true,
+    return of({ data: MOCK_ANALYTICS }).pipe(
+      delay(450),
+      tap({
+        next: (response) => {
+          this.dashboardData.set(response.data);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.error.set('Failed to fetch analytics data');
+          this.loading.set(false);
+        },
       })
-      .pipe(
-        tap({
-          next: (response) => {
-            this.dashboardData.set(response.data);
-            this.loading.set(false);
-          },
-          error: (err) => {
-            this.error.set(err.message || 'Failed to fetch analytics data');
-            this.loading.set(false);
-          },
-        })
-      );
+    );
   }
 
-  /**
-   * Get page views data
-   */
-  getPageViews(startDate: string = '7daysAgo', endDate: string = 'today'): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/pageviews`, {
-      params: { startDate, endDate },
-      withCredentials: true,
-    });
+  getPageViews(_start = '7daysAgo', _end = 'today'): Observable<any> {
+    return of({ data: MOCK_ANALYTICS.pageViews }).pipe(delay(300));
   }
 
-  /**
-   * Get visitor statistics
-   */
-  getVisitorStats(startDate: string = '7daysAgo', endDate: string = 'today'): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/visitors`, {
-      params: { startDate, endDate },
-      withCredentials: true,
-    });
+  getVisitorStats(_start = '7daysAgo', _end = 'today'): Observable<any> {
+    return of({ data: MOCK_ANALYTICS.visitorStats }).pipe(delay(300));
   }
 
-  /**
-   * Get geographic data
-   */
-  getGeographic(startDate: string = '7daysAgo', endDate: string = 'today'): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/geographic`, {
-      params: { startDate, endDate },
-      withCredentials: true,
-    });
+  getGeographic(_start = '7daysAgo', _end = 'today'): Observable<any> {
+    return of({ data: MOCK_ANALYTICS.geographic }).pipe(delay(300));
   }
 
-  /**
-   * Get device data
-   */
-  getDevices(startDate: string = '7daysAgo', endDate: string = 'today'): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/devices`, {
-      params: { startDate, endDate },
-      withCredentials: true,
-    });
+  getDevices(_start = '7daysAgo', _end = 'today'): Observable<any> {
+    return of({ data: MOCK_ANALYTICS.devices }).pipe(delay(300));
   }
 
-  /**
-   * Get traffic sources
-   */
-  getTraffic(startDate: string = '7daysAgo', endDate: string = 'today'): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/traffic`, {
-      params: { startDate, endDate },
-      withCredentials: true,
-    });
+  getTraffic(_start = '7daysAgo', _end = 'today'): Observable<any> {
+    return of({ data: MOCK_ANALYTICS.traffic }).pipe(delay(300));
   }
 
-  /**
-   * Get top pages
-   */
-  getTopPages(startDate: string = '7daysAgo', endDate: string = 'today'): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/pages`, {
-      params: { startDate, endDate },
-      withCredentials: true,
-    });
+  getTopPages(_start = '7daysAgo', _end = 'today'): Observable<any> {
+    return of({ data: MOCK_ANALYTICS.topPages }).pipe(delay(300));
   }
 }

@@ -108,6 +108,13 @@ export class ThemeService {
     // Seed built-in themes so the page renders before API loads
     BUILT_IN_THEMES.forEach(t => this._registry.set(t.id, t));
 
+    // If the stored theme ID doesn't match any registered theme
+    // (e.g. a stale value from a previous build), reset to the default.
+    if (!this._registry.has(this.currentThemeId())) {
+      this.currentThemeId.set('boilerplate');
+      this.localStorageService.setItem(this.THEME_KEY, 'boilerplate');
+    }
+
     // Auto re-apply whenever ID or dark mode changes
     effect(() => {
       this._applyTheme(this.currentThemeId(), this.isDark());

@@ -1,41 +1,47 @@
-import {
-  Component,
-  Injector,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { Subject } from 'rxjs';
 import { CommonApp } from 'src/app/core/services/common';
 
 interface Feature {
-  icon:  string;
+  icon: string;
   title: string;
-  desc:  string;
+  desc: string;
+  badge?: string;
+}
+
+interface DemoPage {
+  icon: string;
+  title: string;
+  desc: string;
+  route: string;
+  badge?: string;
+  requiresAuth?: boolean;
 }
 
 interface TechBadge {
-  name:  string;
-  color: string;   // used as CSS custom property value for the dot
+  name: string;
+  color: string;
 }
 
 interface Step {
-  step:  number;
+  step: number;
   title: string;
-  desc:  string;
+  desc: string;
   code?: string;
   lang?: string;
 }
 
 interface TokenPreview {
   name: string;
-  var:  string;   // CSS variable e.g. '--primary'
+  var: string;
 }
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -46,144 +52,194 @@ export class HomeComponent extends CommonApp implements OnInit, OnDestroy {
   // ── Feature cards ─────────────────────────────────────────────
   readonly features: Feature[] = [
     {
-      icon:  'palette',
+      icon: 'palette',
       title: 'Token-Driven Theming',
-      desc:  'Every colour is a CSS custom property. Switch themes at runtime — from code or the API — with zero page reloads.',
+      desc: 'Every colour is a CSS custom property. Switch themes at runtime from code or the settings panel with zero page reloads.',
+      badge: 'Core',
     },
     {
-      icon:  'bolt',
+      icon: 'bolt',
       title: 'Angular 19 Signals',
-      desc:  'Fully signal-based reactive state: no Zone.js overhead, faster change detection, and cleaner component logic.',
+      desc: 'Fully signal-based reactive state across services. No Zone.js overhead, faster change detection, cleaner component logic.',
+      badge: 'Performance',
     },
     {
-      icon:  'view_sidebar',
-      title: 'Adaptive Layout',
-      desc:  'CSS Grid shell with sidebar + topbar. Collapses to off-canvas on mobile. Supports left/right sidebar and navbar modes.',
+      icon: 'view_sidebar',
+      title: 'Adaptive Layout Shell',
+      desc: 'CSS Grid shell with sidebar and topbar modes. Collapses to off-canvas overlay on mobile. Supports left sidebar and navbar.',
+      badge: 'Layout',
     },
     {
-      icon:  'bar_chart',
+      icon: 'smart_toy',
+      title: 'AI Chat Widget',
+      desc: 'Floating chat assistant with session history, markdown rendering, and localStorage persistence. Drop in your own LLM endpoint.',
+      badge: 'AI',
+    },
+    {
+      icon: 'bar_chart',
       title: 'Highcharts Integration',
-      desc:  'Token-aware Highcharts charts that automatically read CSS variables — themes update all charts without re-render.',
+      desc: 'Token-aware charts that automatically read CSS variables. Theme updates propagate to all charts without re-rendering.',
     },
     {
-      icon:  'table_chart',
+      icon: 'table_chart',
       title: 'PrimeNG Components',
-      desc:  'Sortable, paginated p-table, date pickers, tooltips, and more — all styled to match the active theme tokens.',
+      desc: 'Sortable tables, dialogs, calendars, radio buttons, and more — all styled to match the active theme tokens via Aura preset.',
     },
     {
-      icon:  'cloud_sync',
+      icon: 'admin_panel_settings',
+      title: 'Admin CMS Shell',
+      desc: 'Profile editor, experience tracker, theme builder, password management, and analytics — fully wired with reactive forms.',
+      badge: 'Admin',
+    },
+    {
+      icon: 'notifications',
+      title: 'Notification Inbox',
+      desc: 'Accordion-based message inbox with read, unread, and delete actions. Ready to connect to any contact or event backend.',
+    },
+    {
+      icon: 'cloud_sync',
       title: 'API-Ready Architecture',
-      desc:  'ThemeService accepts raw API token payloads and applies them to :root instantly. Drop your backend in and go.',
+      desc: 'All services are wired for mock data today. Swap in real endpoints by updating service methods — no component changes needed.',
+    },
+  ];
+
+  // ── Demo pages ────────────────────────────────────────────────
+  readonly demoPages: DemoPage[] = [
+    {
+      icon: 'home',
+      title: 'Landing Page',
+      desc: 'This page — a fully themed, responsive startup landing page with feature grid, tech stack, theme switcher, and getting started guide.',
+      route: '/',
+      badge: 'Public',
+    },
+    {
+      icon: 'settings',
+      title: 'Settings & Profile',
+      desc: 'Full admin profile editor with skills, experience, theme builder, avatar upload, and password management. Uses reactive forms.',
+      route: '/admin/settings',
+      badge: 'Admin',
+      requiresAuth: true,
+    },
+    {
+      icon: 'notifications',
+      title: 'Notification Inbox',
+      desc: 'Message inbox with accordion layout, unread badges, mark-as-read, and delete. Pre-loaded with sample contact form submissions.',
+      route: '/admin/notifications',
+      badge: 'Admin',
+      requiresAuth: true,
+    },
+    {
+      icon: 'login',
+      title: 'Auth Pages',
+      desc: 'Login, Register, Forgot Password, and Reset Password — all as clean form demos. Use admin@demo.com / admin123 to sign in.',
+      route: '/auth/login',
+      badge: 'Auth',
     },
   ];
 
   // ── Tech stack badges ─────────────────────────────────────────
   readonly techStack: TechBadge[] = [
-    { name: 'Angular 19',     color: 'var(--error)' },
-    { name: 'TypeScript',     color: '#3178C6' },
-    { name: 'Highcharts',     color: '#1F3864' },
-    { name: 'PrimeNG',        color: '#10B981' },
-    { name: 'SCSS',           color: '#CF649A' },
-    { name: 'RxJS',           color: '#E2006A' },
-    { name: 'Supabase',       color: '#3ECF8E' },
-    { name: 'Node.js',        color: '#68A063' },
-    { name: 'CSS Variables',  color: 'var(--primary)' },
+    { name: 'Angular 19',    color: 'var(--error)' },
+    { name: 'TypeScript',    color: '#3178C6' },
+    { name: 'PrimeNG 19',    color: '#10B981' },
+    { name: 'Highcharts',    color: '#1F3864' },
+    { name: 'SCSS',          color: '#CF649A' },
+    { name: 'RxJS 7',        color: '#E2006A' },
+    { name: 'CSS Variables', color: 'var(--primary)' },
+    { name: 'SSR / Express', color: '#68A063' },
+    { name: 'Bootstrap 5',   color: '#7952B3' },
   ];
 
   // ── Token preview strip ───────────────────────────────────────
   readonly tokenPreview: TokenPreview[] = [
-    { name: 'Background',    var: '--background'    },
-    { name: 'Surface',       var: '--surface'       },
-    { name: 'Primary',       var: '--primary'       },
-    { name: 'Accent',        var: '--accent'        },
-    { name: 'Success',       var: '--success'       },
-    { name: 'Warning',       var: '--warning'       },
-    { name: 'Error',         var: '--error'         },
-    { name: 'Border',        var: '--border'        },
-    { name: 'Text Primary',  var: '--text-primary'  },
-    { name: 'Text Muted',    var: '--text-muted'    },
+    { name: 'Background',   var: '--background'   },
+    { name: 'Surface',      var: '--surface'      },
+    { name: 'Primary',      var: '--primary'      },
+    { name: 'Accent',       var: '--accent'       },
+    { name: 'Success',      var: '--success'      },
+    { name: 'Warning',      var: '--warning'      },
+    { name: 'Error',        var: '--error'        },
+    { name: 'Border',       var: '--border'       },
+    { name: 'Text Primary', var: '--text-primary' },
+    { name: 'Text Muted',   var: '--text-muted'   },
   ];
 
   // ── Getting started steps ─────────────────────────────────────
   readonly gettingStarted: Step[] = [
     {
-      step:  1,
+      step: 1,
       title: 'Clone & install',
-      desc:  'Clone the repository and install dependencies.',
-      code:  `git clone https://github.com/your-org/rohit-angular-boilerplate.git
-cd rohit-angular-boilerplate
-npm install`,
+      desc: 'Clone the repository and install dependencies.',
+      code: `git clone https://github.com/your-org/angular-boilerplate.git
+cd angular-boilerplate
+npm install
+npm run dev`,
       lang: 'bash',
     },
     {
-      step:  2,
-      title: 'Register your themes',
-      desc:  'Inject ThemeService and register themes from your API or use the built-in tokens.',
-      code:  `// app.component.ts
-export class AppComponent implements OnInit {
-  constructor(private themeService: ThemeService) {}
+      step: 2,
+      title: 'Wire in your API endpoints',
+      desc: 'All services are pre-built for mock data. Replace the mock methods with real HTTP calls.',
+      code: `// src/app/core/services/app.service.ts
+// Replace this:
+getProfile(): Observable<Profile | null> {
+  return of(MOCK_PROFILE).pipe(delay(300));
+}
 
-  ngOnInit() {
-    this.api.getThemes().subscribe(themes => {
-      // Accepts raw API payload — applies tokens to :root
-      this.themeService.setThemeFromAPI(themes);
-    });
-  }
+// With this:
+getProfile(): Observable<Profile | null> {
+  return this.http.get<{ profile: Profile }>('/api/profile')
+    .pipe(map(r => r.profile), tap(p => this._profile.set(p)));
 }`,
       lang: 'typescript',
     },
     {
-      step:  3,
-      title: 'Use tokens in your SCSS',
-      desc:  'Reference CSS custom properties anywhere — they update automatically when the theme changes.',
-      code:  `.my-card {
-  background: var(--surface);
-  border:     1px solid var(--border);
-  color:      var(--text-primary);
-
-  &:hover {
-    box-shadow: 0 4px 16px var(--primary-glow);
-  }
-
-  .title { color: var(--primary); }
-}`,
-      lang: 'scss',
+      step: 3,
+      title: 'Register your themes',
+      desc: 'Add custom themes via the settings panel UI, or load them from your API at startup.',
+      code: `// From any component or service:
+this.themeService.registerThemes([{
+  id: 'ocean',
+  name: 'Ocean Blue',
+  tokens: {
+    primary: '#0EA5E9',
+    accent: '#6366F1',
+    background: '#F0F9FF',
+    surface: '#FFFFFF',
+    // ... all token keys
+  },
+  darkTokens: { /* dark variants */ }
+}]);`,
+      lang: 'typescript',
     },
     {
-      step:  4,
-      title: 'Apply a theme from anywhere',
-      desc:  'Call setTheme() with any registered ID to switch the active theme and persist the choice.',
-      code:  `// From any component
-this.themeService.setTheme('modern-blue');
-
-// Or toggle dark mode
-this.themeService.toggleDarkMode();
-
-// Read current state
-const isDark = this.themeService.isDark();       // Signal<boolean>
-const themeId = this.themeService.currentThemeId(); // Signal<string>`,
+      step: 4,
+      title: 'Configure your layout',
+      desc: 'Toggle between sidebar and navbar modes, adjust brand position, and set the default theme.',
+      code: `// src/app/layouts/main-layout/main-layout.component.ts
+this.appConfig.appConfiguration.type = 'sidebar'; // or 'navbar'
+this.appConfig.appConfiguration.collapsed = true;
+this.appConfig.appConfiguration.showAgentChat = true;`,
       lang: 'typescript',
     },
   ];
-
-  // ──────────────────────────────────────────────────────────────
 
   constructor(public override injector: Injector) {
     super(injector);
   }
 
-  ngOnInit(): void {
-    // Seed theme from profile API if available
-    // (profile is loaded by the parent layout; themes registered there)
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
-  // ── Theme selection ───────────────────────────────────────────
   selectTheme(id: string): void {
     this.themeService.setTheme(id);
+  }
+
+  navigateTo(route: string): void {
+    this.router.navigate([route]);
   }
 }

@@ -5,7 +5,8 @@
     "ng": "ng",
     "dev": "ng serve",
     "build": "ng build --configuration=production",
-    "start": "node dist/portfolio-site/server/server.mjs"
+    "preview": "npx http-server dist/portfolio-site/browser -p 4200 -o",
+    "start:ssr": "node dist/portfolio-site/server/server.mjs"
   },
   "private": true,
   "dependencies": {

@@ -1,16 +1,16 @@
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { Observable, Subject, take, takeUntil } from 'rxjs';
+import { Observable, Subject, of, take, takeUntil } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { CanComponentDeactivate } from 'src/app/core/app-gards/can-deactivate.guard';
-import { ExperienceDTO, Profile, } from 'src/app/core/services/app.service';
+import { Profile } from 'src/app/core/services/app.service';
 import { CommonApp } from 'src/app/core/services/common';
 import { ConfirmationService } from 'primeng/api';
 import { ToggleButtonModule } from 'primeng/togglebutton';
@@ -18,7 +18,6 @@ import { AnalyticsComponent } from 'src/app/shared/components/app-analytics/anal
 import { AiUsageDashboardComponent } from 'src/app/shared/components/ai-usage-dashboard/ai-usage-dashboard.component';
 import { AboutMeEditorComponent } from 'src/app/shared/components/about-me-editor/about-me-editor.component';
 import { MyLearningPostComponent } from 'src/app/shared/components/my-learning-post/my-learning-post.component';
-
 
 @Component({
   selector: 'app-settings',
@@ -43,727 +42,556 @@ import { MyLearningPostComponent } from 'src/app/shared/components/my-learning-p
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent extends CommonApp implements OnInit, OnDestroy, CanComponentDeactivate {
+
   profileForm!: FormGroup;
   avatarDataUrl: string | null = null;
   resumeFileName: string | null = null;
   resumeUrl: string | null = null;
   profileSignal = this.appService.profile;
-  selectedAvatar?: File;
-  selectedResume?: File;
-  experienceDialogVisible = false;
   selectedExperienceIndex: number | null = null;
   isAddingNewExperience = false;
-  showExperienceDialog: boolean = false;
+  showExperienceDialog = false;
   showThemeBuilder = false;
   customThemeForm!: FormGroup;
-  currentTheme: string = '';
+  currentTheme = '';
   experienceDialogForm!: FormGroup;
   activeTab: 'light' | 'dark' = 'light';
   themesList: any[] = [];
   isEditingTheme = false;
   editingThemeId: string | null = null;
-  selectedResumeFile: File | null = null;
   private destroy$ = new Subject<void>();
   passwordForm!: FormGroup;
-  isChangingPassword: boolean = false;
+  isChangingPassword = false;
   showCurrentPassword = false;
   showNewPassword = false;
-  lastPasswordUpdate: Date | null = null; // Set this from your profile data
+  lastPasswordUpdate: Date | null = null;
   activeSettingTab: 'profile' | 'aiChatMonitoring' | 'monitoring' | 'myLearningPosts' | 'aboutMeEditor' = 'profile';
-  adminEmail: string = '';
 
-  constructor(public override injector: Injector, private fb: FormBuilder, private confirmationService: ConfirmationService, ) {
+  constructor(
+    public override injector: Injector,
+    private fb: FormBuilder,
+    private confirmationService: ConfirmationService
+  ) {
     super(injector);
-    this.route.queryParams.subscribe(params => {
-      console.log('Query params on init', params);
-    });
-
   }
 
   ngOnInit(): void {
     this.buildForm();
-    if (this.appService.profile()) {
-      this.patchFromProfile(this.appService.profile());
-    } else {
-      this.getMyProfile();
-      this.getNotifications();
-    }
+    this.patchFromProfile(this.appService.profile());
+    this.notifyUnread();
   }
 
   canDeactivate(): Observable<boolean> | boolean {
-    if (!this.profileForm.dirty) {
-      return true;
-    }
+    if (!this.profileForm.dirty) return true;
 
-    const confirmationSubject = new Subject<boolean>();
+    const result$ = new Subject<boolean>();
 
     this.confirmationService.confirm({
       header: 'Unsaved Changes',
       message: 'You have pending changes. Would you like to save them before leaving, or discard them?',
       acceptLabel: 'Save & Leave',
       rejectLabel: 'Discard & Leave',
-      acceptButtonStyleClass: "p-button-danger p-button-text",
-      rejectButtonStyleClass: "p-button-text p-button-text",
-      acceptIcon: "none",
-      rejectIcon: "none",
+      acceptButtonStyleClass: 'p-button-danger p-button-text',
+      rejectButtonStyleClass: 'p-button-text p-button-text',
+      acceptIcon: 'none',
+      rejectIcon: 'none',
       closable: false,
-      accept: () => {
-        this.saveSettings(); // Call your existing save logic
-        confirmationSubject.next(true); // Allow navigation after save attempt
-        confirmationSubject.complete();
-      },
-
-      reject: () => {
-        this.resetDefaults(); // Reset state so guard doesn't trigger again
-        confirmationSubject.next(true); // Allow navigation
-        confirmationSubject.complete();
-      }
+      accept: () => { this.saveSettings(); result$.next(true); result$.complete(); },
+      reject: () => { this.resetDefaults(); result$.next(true); result$.complete(); }
     });
 
-    return confirmationSubject.asObservable();
+    return result$.asObservable();
   }
 
-  getMyProfile(): void {
-    this.loading.show();
-    this.appService.getProfile().pipe(take(1)).subscribe({
-      next: (p) => {
-        this.patchFromProfile(p);
+  // ── Save / Load ──────────────────────────────────────────────
+
+  saveSettings(): void {
+    if (!this.profileForm.dirty) return;
+    this.loading.show('Saving profile...');
+    this.appService.updateProfile(this.buildProfilePayload()).pipe(take(1)).subscribe({
+      next: updated => {
+        this.patchFromProfile(updated);
         this.loading.hide();
+        this.alertService.showAlert('Profile saved successfully!', 'success');
       },
-      error: (e) => {
-        console.error(e.error.message);
+      error: () => {
         this.loading.hide();
+        this.alertService.showAlert('Failed to save. Please try again.', 'error');
       }
     });
   }
 
-  getNotifications(): void {
-    this.appService.getNotifications().pipe(take(1)).subscribe({
-      next: (notifications) => {
-        if (notifications.unreadCount > 0) {
-          this.alertService.showAlert(`You have ${notifications.unreadCount} notifications`, 'info');
-        }
-      },
-      error: (err) => {
-        this.alertService.showAlert(`Failed to fetch notifications. Please try again later.`, 'error');
-        console.error('Failed to fetch notifications', err);
-      }
+  resetDefaults(): void {
+    this.patchFromProfile(this.appService.profile());
+  }
+
+  // ── Password ─────────────────────────────────────────────────
+
+  updatePassword(): void {
+    if (this.passwordForm.invalid) {
+      this.passwordForm.markAllAsTouched();
+      return;
+    }
+    this.isChangingPassword = true;
+    of(null).pipe(delay(600), take(1)).subscribe(() => {
+      this.isChangingPassword = false;
+      this.lastPasswordUpdate = new Date();
+      this.alertService.showAlert('Password updated successfully!', 'success');
+      this.passwordForm.patchValue({ currentPassword: '', newPassword: '' });
+      this.passwordForm.markAsPristine();
+      this.passwordForm.markAsUntouched();
+      this.showCurrentPassword = false;
+      this.showNewPassword = false;
     });
   }
 
-  private buildForm() {
-    this.profileForm = this.fb.group({
-      name: ['', [Validators.maxLength(80)]],
-      description: ['', [Validators.maxLength(600)]],
-      email: ['', [Validators.email]],
-      logo_initials: ['', [Validators.maxLength(3)]],
-      primaryPhone: ['', [Validators.pattern(/^\+?[0-9\s\-]{7,20}$/)]],
-      secondaryPhone: [''],
-      location: ['', Validators.maxLength(120)],
-      website: ['', Validators.pattern(/https?:\/\/.+/i)],
-      linkedin: [''],
-      github: [''],
-      openToWork: [false],
-      skills: this.fb.array([]),
-      resume: [null],
-      avatar: [null],
-      currentTheme: ['', [Validators.maxLength(80)]],
-      experiences: this.fb.array([]),
-      themes: this.fb.array([])
-    });
-    this.initAdminForm();
-    this.initDialogForm();
-
-    // Ensure direct input changes are recognized as form dirty
-    this.profileForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      if (this.profileForm && !this.profileForm.dirty) {
-        this.profileForm.markAsDirty();
-      }
-    });
+  togglePasswordVisibility(field: 'current' | 'new'): void {
+    if (field === 'current') {
+      this.showCurrentPassword = !this.showCurrentPassword;
+    } else {
+      this.showNewPassword = !this.showNewPassword;
+    }
   }
 
-  private initAdminForm() {
-    this.passwordForm = this.fb.group({
-      email: ['', [Validators.email]],
-      currentPassword: ['', [Validators.required, Validators.minLength(6)]],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]]
-    });
-  }
-
-  // Toggle password visibility
-togglePasswordVisibility(field: 'current' | 'new'): void {
-  if (field === 'current') {
-    this.showCurrentPassword = !this.showCurrentPassword;
-  } else {
-    this.showNewPassword = !this.showNewPassword;
-  }
-}
-
-  // Get password strength (0-4)
   getPasswordStrength(): number {
-    const password = this.passwordForm.get('newPassword')?.value || '';
-    if (!password) return 0;
-
-    let strength = 0;
-
-    // Length check
-    if (password.length >= 6) strength++;
-    if (password.length >= 10) strength++;
-
-    // Character variety checks
-    if (/[A-Z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
-    if (/[^A-Za-z0-9]/.test(password)) strength++;
-
-    // Cap at 4
-    return Math.min(strength, 4);
+    const pw = this.passwordForm.get('newPassword')?.value || '';
+    if (!pw) return 0;
+    let s = 0;
+    if (pw.length >= 6) s++;
+    if (pw.length >= 10) s++;
+    if (/[A-Z]/.test(pw)) s++;
+    if (/[0-9]/.test(pw)) s++;
+    if (/[^A-Za-z0-9]/.test(pw)) s++;
+    return Math.min(s, 4);
   }
 
-  // Get password strength text
   getPasswordStrengthText(): string {
-    const strength = this.getPasswordStrength();
-    const texts = ['VERY_WEAK', 'WEAK', 'FAIR', 'STRONG', 'VERY_STRONG'];
-    return texts[strength] || 'VERY_WEAK';
+    return ['VERY_WEAK', 'WEAK', 'FAIR', 'STRONG', 'VERY_STRONG'][this.getPasswordStrength()] ?? 'VERY_WEAK';
   }
 
-  // Check if password has uppercase
-  hasUpperCase(): boolean {
-    const password = this.passwordForm.get('newPassword')?.value || '';
-    return /[A-Z]/.test(password);
-  }
+  hasUpperCase(): boolean { return /[A-Z]/.test(this.passwordForm.get('newPassword')?.value || ''); }
+  hasNumber(): boolean    { return /[0-9]/.test(this.passwordForm.get('newPassword')?.value || ''); }
 
-  // Check if password has number
-  hasNumber(): boolean {
-    const password = this.passwordForm.get('newPassword')?.value || '';
-    return /[0-9]/.test(password);
-  }
-  // In ngOnInit, initialize the dialog form
-  private initDialogForm() {
-    this.experienceDialogForm = this.fb.group({
-      role: ['', Validators.required],
-      company: ['', Validators.required],
-      startDate: ['', Validators.required],
-      endDate: [''],
-      present: [false],
-      description: ['', Validators.maxLength(1000)],
-      projects: this.fb.array([])
-    });
+  // ── Themes ───────────────────────────────────────────────────
+
+  openThemeBuilder(): void {
     this.initThemeForm();
-
-    // Mark main profile form dirty when dialog (experience) values change
-    this.experienceDialogForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      if (this.profileForm) this.profileForm.markAsDirty();
-    });
-  }
-
-  initThemeForm() {
-    this.customThemeForm = this.fb.group({
-      theme_name: ['', Validators.required],
-      tokens: this.fb.group({
-        primary: ['', Validators.required],
-        accent: ['', Validators.required],
-        primary_glow: ['', Validators.required],
-        background: ['', Validators.required],
-        surface: ['', Validators.required],
-        surface_alt: ['', Validators.required],
-        text_primary: ['', Validators.required],
-        text_secondary: ['', Validators.required],
-        text_muted: ['', Validators.required],
-        success: ['', Validators.required],
-        warning: ['', Validators.required],
-        error: ['', Validators.required],
-        border: ['', Validators.required],
-      }),
-
-      dark_tokens: this.fb.group({
-        primary: ['', Validators.required],
-        accent: ['', Validators.required],
-        primary_glow: ['', Validators.required],
-        background: ['', Validators.required],
-        surface: ['', Validators.required],
-        surface_alt: ['', Validators.required],
-        text_primary: ['', Validators.required],
-        text_secondary: ['', Validators.required],
-        text_muted: ['', Validators.required],
-        success: ['', Validators.required],
-        warning: ['', Validators.required],
-        error: ['', Validators.required],
-        border: ['', Validators.required],
-      })
-    });
-
-    // mark main profile form dirty when theme builder changes
-    this.customThemeForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      if (this.profileForm) this.profileForm.markAsDirty();
-    });
-  }
-
-  //#region helper function
-  // small helper for template: whether main form has detected changes
-  // isFormDirty(): boolean {
-  //   if (!this.profileForm) return false;
-
-  //   // Quick checks for top-level dirty flags (main form / popups)
-  //   if (this.profileForm.dirty) return true;
-  //   if (this.experienceDialogForm?.dirty) return true;
-  //   if (this.customThemeForm?.dirty) return true;
-
-  //   // Recursive check: any nested control touched/dirty => consider form changed.
-  //   const anyTouchedOrDirty = (ctrl: AbstractControl | null): boolean => {
-  //     if (!ctrl) return false;
-  //     if (ctrl.touched || ctrl.dirty) return true;
-  //     if (ctrl instanceof FormGroup) {
-  //       return Object.keys(ctrl.controls).some(k => anyTouchedOrDirty(ctrl.controls[k]));
-  //     }
-  //     if (ctrl instanceof FormArray) {
-  //       return ctrl.controls.some(c => anyTouchedOrDirty(c));
-  //     }
-  //     return false;
-  //   };
-
-  //   return anyTouchedOrDirty(this.profileForm);
-  // }
-  isFormChanged(): boolean {
-    return this.profileForm.dirty;
-  }
-  // small helper to produce simple error messages for template
-  getErrorText(fieldName: string, group: FormGroup = this.profileForm): string {
-    const field = group?.get(fieldName);
-    if (!field || !field.errors) return '';
-    if (field.errors['required']) return 'This field is required';
-    if (field.errors['maxlength']) return `Maximum length exceeded`;
-    if (field.errors['email']) return 'Invalid email address';
-    if (field.errors['pattern']) return 'Invalid format';
-    if (field.errors['fileType']) return 'Only PDF allowed';
-    return 'Invalid value';
-  }
-  //#endregion  
-
-  openThemeBuilder() {
-    this.initThemeForm();
+    this.isEditingTheme = false;
+    this.editingThemeId = null;
     this.showThemeBuilder = true;
   }
 
-  selectAndSaveTheme(theme: any) {
+  selectAndSaveTheme(theme: any): void {
     this.themeService.setTheme(theme.id);
     this.currentTheme = theme.name;
   }
 
-  saveThemePreference() {
-    this.loading.show('Saving theme preference...');
-    const profileData = this.buildFormData();
-    this.saveProfile(profileData);
+  saveThemePreference(): void {
+    this.loading.show('Applying theme...');
+    this.appService.updateProfile({ currenttheme: this.currentTheme, themes: this.themesList })
+      .pipe(take(1))
+      .subscribe({
+        next: () => { this.loading.hide(); this.alertService.showAlert('Theme preference saved!', 'success'); },
+        error: () => this.loading.hide()
+      });
   }
 
-  // Method to open the builder in Edit Mode
-  editTheme(theme: any) {
+  editTheme(theme: any): void {
     this.isEditingTheme = true;
     this.editingThemeId = theme.id;
     this.showThemeBuilder = true;
+    this.customThemeForm.patchValue({ theme_name: theme.name, tokens: theme.tokens, dark_tokens: theme.dark_tokens });
+  }
 
-    this.customThemeForm.patchValue({
-      theme_name: theme.name,
-      tokens: theme.tokens,
-      dark_tokens: theme.dark_tokens
+  deleteTheme(themeId: string, event: Event): void {
+    event.stopPropagation();
+    this.loading.show('Deleting theme...');
+    this.themesList = this.themesList.filter(t => t.id !== themeId);
+    this.appService.updateProfile({ themes: this.themesList }).pipe(take(1)).subscribe({
+      next: () => { this.loading.hide(); this.alertService.showAlert('Theme deleted.', 'info'); },
+      error: () => this.loading.hide()
     });
   }
 
-  deleteTheme(themeId: string, event: Event) {
-    this.loading.show('Deleting theme...');
-    event.stopPropagation(); // Don't select the theme while deleting
-
-    let themesList = this.normalizeThemesResponse(this.profileSignal()?.themes);
-    themesList = themesList.filter(t => t.id !== themeId);
-
-    const fd = this.buildFormData();
-    fd.set('themes', JSON.stringify(themesList));
-    this.saveProfile(fd);
-  }
-
-
-  saveCustomTheme() {
-    this.loading.show('Saving theme...');
+  saveCustomTheme(): void {
     if (this.customThemeForm.invalid) return;
+    this.loading.show('Saving theme...');
 
-    const formVal = this.customThemeForm.value;
-    let themesList = this.normalizeThemesResponse(this.profileSignal()?.themes);
-
+    const v = this.customThemeForm.value;
     const newTheme = {
-      id: this.isEditingTheme && this.editingThemeId
-        ? this.editingThemeId
-        : 'theme-' + Date.now(),
-      name: formVal.theme_name,
-      tokens: formVal.tokens,
-      dark_tokens: formVal.dark_tokens
+      id: this.isEditingTheme && this.editingThemeId ? this.editingThemeId : 'theme-' + Date.now(),
+      name: v.theme_name,
+      tokens: v.tokens,
+      dark_tokens: v.dark_tokens
     };
 
     if (this.isEditingTheme) {
-      const index = themesList.findIndex(t => t.id === this.editingThemeId);
-      if (index > -1) themesList[index] = newTheme;
+      const idx = this.themesList.findIndex(t => t.id === this.editingThemeId);
+      if (idx > -1) this.themesList[idx] = newTheme; else this.themesList.push(newTheme);
     } else {
-      themesList.push(newTheme);
+      this.themesList.push(newTheme);
     }
 
-    const fd = this.buildFormData();
-    fd.set('themes', JSON.stringify(themesList));
-
+    this.themeService.registerThemes([newTheme]);
     this.showThemeBuilder = false;
-    this.saveProfile(fd);
+
+    this.appService.updateProfile({ themes: this.themesList }).pipe(take(1)).subscribe({
+      next: () => {
+        this.loading.hide();
+        this.alertService.showAlert(this.isEditingTheme ? 'Theme updated!' : 'Theme created!', 'success');
+        this.isEditingTheme = false;
+        this.editingThemeId = null;
+      },
+      error: () => this.loading.hide()
+    });
   }
 
+  // ── Experience dialog ─────────────────────────────────────────
 
-  /**
-   * Main Method: Opens the dialog and populates data if editing
-   * @param exp The experience object (optional)
-   * @param index The index in the main array (optional)
-   */
-  openExperienceDialog(exp?: any, index: number | null = null) {
+  openExperienceDialog(exp?: any, index: number | null = null): void {
     this.selectedExperienceIndex = index;
-    this.initDialogForm(); // Reset form for fresh state
+    this.initDialogForm();
 
     if (exp) {
-      // 1. Patch basic fields
       this.experienceDialogForm.patchValue({
         role: exp.role,
         company: exp.company,
-        title: exp.title,
         description: exp.description,
         present: exp.present || false,
-        location: exp.location,
         startDate: exp.startDate ? new Date(exp.startDate) : null,
         endDate: exp.endDate ? new Date(exp.endDate) : null
       });
-
-      // 2. Clear and Rebuild Projects FormArray
-      const projectFormArray = this.experienceDialogForm.get('projects') as FormArray;
-      if (exp.projects && exp.projects.length > 0) {
-        exp.projects.forEach((proj: any) => {
-          projectFormArray.push(this.createProject(proj));
-        });
-      }
+      const projectsArray = this.experienceDialogForm.get('projects') as FormArray;
+      (exp.projects || []).forEach((proj: any) => projectsArray.push(this.createProject(proj)));
     }
 
     this.showExperienceDialog = true;
   }
 
-  // helpers to patch form from profile data
-  get skills(): FormArray {
-    return this.profileForm.get('skills') as FormArray;
-  }
-  get experiences(): FormArray {
-    return this.profileForm.get('experiences') as FormArray;
-  }
-  get experienceForms(): FormGroup[] {
-    return this.experiences.controls as FormGroup[];
-  }
-
-  get themes(): FormArray {
-    return this.profileForm.get('themes') as FormArray;
-  }
-
-  // Update your existing getter to return typed FormArray
-  get projectsArray(): FormArray<FormGroup> {
-    return this.experienceDialogForm.get('projects') as FormArray<FormGroup>;
-  }
-  // Add this method to get typed project form groups
-  get projectForms(): FormGroup[] {
-    return this.projectsArray.controls as FormGroup[];
-  }
-
-  addSkill(value = '') {
-    if (!value || !value.trim()) return;
-    this.skills.push(new FormControl(value.trim()));
-  }
-  removeSkill(i: number) {
-    this.skills.removeAt(i);
-  }
-
-  // Helper to get technologies array for a project
-  getTechnologiesArray(projectIndex: number): FormArray {
-    const project = this.projectForms[projectIndex];
-    return project.get('technologies') as FormArray;
-  }
-  // Helper to get technologies controls as FormControl[]
-  getTechnologyControls(projectIndex: number): FormControl[] {
-    return (this.getTechnologiesArray(projectIndex).controls as FormControl[]);
-  }
-
-  createExperience(data?: ExperienceDTO) {
-    return this.fb.group({
-      role: [data?.role || '', Validators.required],
-      company: [data?.company || '', Validators.required],
-      startDate: [data?.startDate || '', Validators.required],
-      endDate: [data?.endDate || ''],
-      present: [!!data?.present],
-      description: [data?.description || '', Validators.maxLength(1000)],
-      projects: this.fb.array((data?.projects || []).map((p: any) => this.createProject(p)))
-    });
-  }
-
-  // Create project form group
-  createProject(data?: any) {
-    return this.fb.group({
-      title: [data?.title || '', Validators.required],
-      description: [data?.description || ''],
-      projectProgress: [data?.projectProgress || ''],
-      url: [data?.url || ''],
-      technologies: this.fb.array(data?.technologies || [])
-    });
-  }
-
-  addExperience(data?: any) {
-    this.experiences.push(this.createExperience(data));
-  }
-  // Updated addExperience method to open dialog
-  addNewExperience() {
-    this.isAddingNewExperience = true;
-    this.selectedExperienceIndex = null;
-    this.initDialogForm();
-    this.experienceDialogVisible = true;
-  }
-
-  // View experience details
-  viewExperience(index: number) {
-    this.selectedExperienceIndex = index;
-    this.isAddingNewExperience = false;
-
-    // Load existing experience data into dialog form
-    const exp = this.experienceForms[index];
-    this.experienceDialogForm = this.fb.group({
-      role: [exp.get('role')?.value || '', Validators.required],
-      company: [exp.get('company')?.value || '', Validators.required],
-      startDate: [exp.get('startDate')?.value || '', Validators.required],
-      endDate: [exp.get('endDate')?.value || ''],
-      present: [exp.get('present')?.value || false],
-      description: [exp.get('description')?.value || '', Validators.maxLength(1000)],
-      projects: this.fb.array([])
-    });
-
-    // Copy projects
-    const projects = exp.get('projects')?.value || [];
-    projects.forEach((project: any) => {
-      this.projectsArray.push(this.createProject(project));
-    });
-
-    this.experienceDialogVisible = true;
-  }
-
-  // Edit experience
-  editExperience(index: number) {
-    this.selectedExperienceIndex = index;
-    this.isAddingNewExperience = false;
-    this.viewExperience(index); // Same as view but we'll handle save differently if needed
-  }
-
-  // Add project to dialog
-  addProject() {
-    this.projectsArray.insert(0, this.createProject());
-  }
-
-  // Remove project from dialog
-  removeProject(index: number) {
-    this.projectsArray.removeAt(index);
-  }
-
-  // Add technology to project
-  addTechnology(projectIndex: number, value: string) {
-    if (!value || !value.trim()) return;
-
-    const techArray = this.getTechnologiesArray(projectIndex);
-    if (!techArray) return;
-
-    techArray.push(new FormControl(value.trim()));
-  }
-  addTech(projectIndex: number, input: HTMLInputElement) {
-    const value = input.value.trim();
-    if (value) {
-      const project = this.projectsArray.at(projectIndex);
-      const techs = project.get('technologies')?.value || [];
-      project.get('technologies')?.setValue([...techs, value]);
-      input.value = '';
-    }
-  }
-
-  // Remove technology from project
-  removeTechnology(projectIndex: number, techIndex: number) {
-    const techArray = this.getTechnologiesArray(projectIndex);
-    if (techArray) {
-      techArray.removeAt(techIndex);
-    }
-  }
-  removeTech(projectIndex: number, techIndex: number) {
-    const project = this.projectsArray.at(projectIndex);
-    const techs = [...project.get('technologies')?.value];
-    techs.splice(techIndex, 1);
-    project.get('technologies')?.setValue(techs);
-  }
-
-  getTechs(index: number): string[] {
-    return this.projectsArray.at(index).get('technologies')?.value || [];
-  }
-
-  // Save experience from dialog
-  saveExperience() {
+  saveExperience(): void {
     if (this.experienceDialogForm.invalid) {
       this.experienceDialogForm.markAllAsTouched();
       return;
     }
-
-    const experienceData = this.experienceDialogForm.value;
-
-    // Format dates
-    experienceData.startDate = this.formatMonth(experienceData.startDate);
-    experienceData.endDate = experienceData.present ? null : this.formatMonth(experienceData.endDate);
+    const data = this.experienceDialogForm.value;
+    data.startDate = this.formatMonth(data.startDate);
+    data.endDate = data.present ? null : this.formatMonth(data.endDate);
 
     if (this.selectedExperienceIndex !== null) {
-      // Update existing experience
-      const expGroup = this.createExperience(experienceData);
-      this.experiences.setControl(this.selectedExperienceIndex, expGroup);
+      this.experiences.setControl(this.selectedExperienceIndex, this.createExperience(data));
     } else {
-      this.experiences.push(this.createExperience(experienceData));
+      this.experiences.push(this.createExperience(data));
     }
-    // ensure main form reflects the change
-    if (this.profileForm) this.profileForm.markAsDirty();
-
-    const profileData = this.buildFormData();
-    console.log('Built profile data with experiences:', profileData);
+    this.profileForm.markAsDirty();
     this.closeDialog();
   }
 
-  // Cancel editing
-  cancelExperienceEdit() {
-    this.closeDialog();
+  addNewExperience(): void {
+    this.isAddingNewExperience = true;
+    this.selectedExperienceIndex = null;
+    this.initDialogForm();
+    this.showExperienceDialog = true;
   }
 
-  // Close dialog
-  closeDialog() {
-    this.experienceDialogVisible = false;
+  cancelExperienceEdit(): void { this.closeDialog(); }
+  closeDialog(): void {
+    this.showExperienceDialog = false;
     this.selectedExperienceIndex = null;
     this.isAddingNewExperience = false;
-    this.showExperienceDialog = false;
+  }
+  onDialogHide(): void { this.closeDialog(); }
+
+  removeExperience(i: number): void { this.experiences.removeAt(i); }
+
+  addProject(): void { this.projectsArray.insert(0, this.createProject()); }
+  removeProject(index: number): void { this.projectsArray.removeAt(index); }
+
+  addTechnology(projectIndex: number, value: string): void {
+    if (!value?.trim()) return;
+    this.getTechnologiesArray(projectIndex).push(new FormControl(value.trim()));
+  }
+  addTech(projectIndex: number, input: HTMLInputElement): void {
+    const value = input.value.trim();
+    if (!value) return;
+    const proj = this.projectsArray.at(projectIndex);
+    proj.get('technologies')?.setValue([...(proj.get('technologies')?.value || []), value]);
+    input.value = '';
+  }
+  removeTechnology(projectIndex: number, techIndex: number): void {
+    this.getTechnologiesArray(projectIndex)?.removeAt(techIndex);
+  }
+  removeTech(projectIndex: number, techIndex: number): void {
+    const proj = this.projectsArray.at(projectIndex);
+    const techs = [...proj.get('technologies')?.value];
+    techs.splice(techIndex, 1);
+    proj.get('technologies')?.setValue(techs);
+  }
+  getTechs(index: number): string[] {
+    return this.projectsArray.at(index).get('technologies')?.value || [];
   }
 
-  // Dialog hide callback
-  onDialogHide() {
-    this.closeDialog();
+  // ── File uploads ──────────────────────────────────────────────
+
+  onAvatarChange(ev: Event): void {
+    const f = (ev.target as HTMLInputElement).files?.[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => { this.avatarDataUrl = reader.result as string; };
+    reader.readAsDataURL(f);
+    this.profileForm.markAsDirty();
   }
 
-  // Helper method to format date for display
+  removeAvatar(): void {
+    this.avatarDataUrl = null;
+    this.profileForm.patchValue({ avatar: null });
+  }
+
+  onResumeChange(ev: Event): void {
+    const f = (ev.target as HTMLInputElement).files?.[0];
+    if (f) this.applyResumeFile(f);
+  }
+  onResumeDragOver(ev: DragEvent): void { ev.preventDefault(); }
+  onResumeDragLeave(ev: DragEvent): void { ev.preventDefault(); }
+  onResumeDrop(ev: DragEvent): void {
+    ev.preventDefault();
+    const f = ev.dataTransfer?.files?.[0];
+    if (f) this.applyResumeFile(f);
+  }
+  viewResume(): void {
+    if (this.resumeUrl) window.open(this.resumeUrl, '_blank');
+  }
+  removeResume(): void {
+    this.resumeUrl = null;
+    this.resumeFileName = null;
+    this.profileForm.patchValue({ resume: null });
+    this.profileForm.get('resume')?.setErrors(null);
+  }
+
+  // ── Template helpers ──────────────────────────────────────────
+
+  isFormChanged(): boolean { return this.profileForm.dirty; }
+
+  isFieldInvalid(fieldName: string, group: FormGroup = this.profileForm): boolean {
+    const f = group.get(fieldName);
+    return !!(f && f.invalid && (f.dirty || f.touched));
+  }
+
+  getErrorText(fieldName: string, group: FormGroup = this.profileForm): string {
+    const f = group?.get(fieldName);
+    if (!f?.errors) return '';
+    if (f.errors['required']) return 'This field is required';
+    if (f.errors['maxlength']) return 'Maximum length exceeded';
+    if (f.errors['email']) return 'Invalid email address';
+    if (f.errors['pattern']) return 'Invalid format';
+    if (f.errors['fileType']) return 'Only PDF allowed';
+    return 'Invalid value';
+  }
+
   formatDisplayDate(date: any): string {
     if (!date) return 'Not specified';
-
     try {
       const d = typeof date === 'string' ? this.parseMonthString(date) : date;
-      if (!d) return 'Invalid date';
+      return d ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Invalid date';
+    } catch { return 'Invalid date'; }
+  }
 
-      return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-    } catch {
-      return 'Invalid date';
+  onDateSelect(date: Date, exp: FormGroup, controlName: 'startDate' | 'endDate'): void {
+    exp.get(controlName)?.setValue(date);
+  }
+
+  // ── FormArray getters ─────────────────────────────────────────
+
+  get skills(): FormArray    { return this.profileForm.get('skills') as FormArray; }
+  get experiences(): FormArray { return this.profileForm.get('experiences') as FormArray; }
+  get experienceForms(): FormGroup[] { return this.experiences.controls as FormGroup[]; }
+  get themes(): FormArray    { return this.profileForm.get('themes') as FormArray; }
+  get projectsArray(): FormArray<FormGroup> { return this.experienceDialogForm.get('projects') as FormArray<FormGroup>; }
+  get projectForms(): FormGroup[] { return this.projectsArray.controls as FormGroup[]; }
+
+  addSkill(value = ''): void { if (value?.trim()) this.skills.push(new FormControl(value.trim())); }
+  removeSkill(i: number): void { this.skills.removeAt(i); }
+
+  getTechnologiesArray(projectIndex: number): FormArray {
+    return this.projectForms[projectIndex].get('technologies') as FormArray;
+  }
+  getTechnologyControls(projectIndex: number): FormControl[] {
+    return this.getTechnologiesArray(projectIndex).controls as FormControl[];
+  }
+
+  // ── Lifecycle ─────────────────────────────────────────────────
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  // ── Private ───────────────────────────────────────────────────
+
+  private notifyUnread(): void {
+    const n = this.appService.notifications();
+    if (n && n.unreadCount > 0) {
+      this.alertService.showAlert(
+        `You have ${n.unreadCount} unread notification${n.unreadCount > 1 ? 's' : ''}`,
+        'info'
+      );
     }
   }
 
-  removeExperience(i: number) {
-    this.experiences.removeAt(i);
+  private buildForm(): void {
+    this.profileForm = this.fb.group({
+      name:           ['', [Validators.maxLength(80)]],
+      description:    ['', [Validators.maxLength(600)]],
+      email:          ['', [Validators.email]],
+      logo_initials:  ['', [Validators.maxLength(3)]],
+      primaryPhone:   ['', [Validators.pattern(/^\+?[0-9\s\-]{7,20}$/)]],
+      secondaryPhone: [''],
+      location:       ['', Validators.maxLength(120)],
+      website:        ['', Validators.pattern(/https?:\/\/.+/i)],
+      linkedin:       [''],
+      github:         [''],
+      openToWork:     [false],
+      skills:         this.fb.array([]),
+      resume:         [null],
+      avatar:         [null],
+      currentTheme:   ['', [Validators.maxLength(80)]],
+      experiences:    this.fb.array([]),
+      themes:         this.fb.array([])
+    });
+
+    this.passwordForm = this.fb.group({
+      email:           ['', [Validators.email]],
+      currentPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword:     ['', [Validators.required, Validators.minLength(6)]]
+    });
+
+    this.initDialogForm();
+
+    this.profileForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      if (this.profileForm && !this.profileForm.dirty) this.profileForm.markAsDirty();
+    });
   }
 
-  patchFromProfile(p: Profile | null) {
+  private initDialogForm(): void {
+    this.experienceDialogForm = this.fb.group({
+      role:        ['', Validators.required],
+      company:     ['', Validators.required],
+      startDate:   ['', Validators.required],
+      endDate:     [''],
+      present:     [false],
+      description: ['', Validators.maxLength(1000)],
+      projects:    this.fb.array([])
+    });
+    this.initThemeForm();
+
+    this.experienceDialogForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      if (this.profileForm) this.profileForm.markAsDirty();
+    });
+  }
+
+  private initThemeForm(): void {
+    const tokenGroup = () => this.fb.group({
+      primary:        ['', Validators.required],
+      accent:         ['', Validators.required],
+      primary_glow:   ['', Validators.required],
+      background:     ['', Validators.required],
+      surface:        ['', Validators.required],
+      surface_alt:    ['', Validators.required],
+      text_primary:   ['', Validators.required],
+      text_secondary: ['', Validators.required],
+      text_muted:     ['', Validators.required],
+      success:        ['', Validators.required],
+      warning:        ['', Validators.required],
+      error:          ['', Validators.required],
+      border:         ['', Validators.required]
+    });
+
+    this.customThemeForm = this.fb.group({
+      theme_name:  ['', Validators.required],
+      tokens:      tokenGroup(),
+      dark_tokens: tokenGroup()
+    });
+
+    this.customThemeForm.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      if (this.profileForm) this.profileForm.markAsDirty();
+    });
+  }
+
+  private patchFromProfile(p: Profile | null): void {
     if (!p) return;
-    // map server fields to form
+
     this.profileForm.patchValue({
-      name: p.full_name ?? '',
-      description: p.description ?? '',
-      email: p.email ?? '',
-      logo_initials: p.logo_initials ?? '',
-      primaryPhone: p.primary_phone ?? '',
+      name:           p.full_name ?? '',
+      description:    p.description ?? '',
+      email:          p.email ?? '',
+      logo_initials:  p.logo_initials ?? '',
+      primaryPhone:   p.primary_phone ?? '',
       secondaryPhone: p.secondary_phone ?? '',
-      location: p.location ?? '',
-      website: p.website ?? '',
-      linkedin: this.decodeHtml(p.linkedin ?? ''),
-      github: this.decodeHtml(p.github ?? ''),
-      openToWork: !!p.open_to_work
+      location:       p.location ?? '',
+      website:        p.website ?? '',
+      linkedin:       this.decodeHtml(p.linkedin ?? ''),
+      github:         this.decodeHtml(p.github ?? ''),
+      openToWork:     !!p.open_to_work
     });
-    this.passwordForm.patchValue({
-      email: p.email ?? ''
-    });
-    // skills
+    this.passwordForm.patchValue({ email: p.email ?? '' });
 
     while (this.skills.length) this.skills.removeAt(0);
     (p.skills || []).forEach(s => this.skills.push(new FormControl(s)));
 
     while (this.experiences.length) this.experiences.removeAt(0);
     (p.experiences || []).forEach(e => {
-      const expData = {
+      this.experiences.push(this.createExperience({
         ...e,
         startDate: e.startDate ? this.parseMonthString(e.startDate) : null,
-        endDate: e.endDate ? this.parseMonthString(e.endDate) : null,
-        projects: e.projects || [] // Add projects from server
-      };
-      this.addExperience(expData);
+        endDate:   e.endDate   ? this.parseMonthString(e.endDate)   : null,
+        projects:  e.projects  || []
+      }));
     });
 
-    this.applyThemeFromProfile(p);
     this.themesList = this.normalizeThemesResponse(p.themes || []);
-    // this.themeService.registerThemes(this.themesList);
+    this.applyThemeFromProfile(p);
 
-    const selectedTheme = this.themesList.find(t => t.name === p.currenttheme);
-    // 3. Apply current theme
-    if (p.currenttheme) {
-      this.currentTheme = p.currenttheme;
-      // this.themeService.setTheme(selectedTheme?.id);
-    }
+    if (p.currenttheme) this.currentTheme = p.currenttheme;
 
-    // avatar url (public)
     this.avatarDataUrl = p.avatar_url ?? null;
-    // resume file name: the server stores resume_url as path (e.g. resumes/<id>/uuid.pdf)
     if (p.resume_url) {
-      const parts = p.resume_url.split('/');
       this.resumeUrl = p.resume_url;
-      this.resumeFileName = 'Rohit_Resume.pdf';
-      this.profileForm.patchValue({
-        resume: p.resume_url
-      });
+      this.resumeFileName = 'Resume.pdf';
+      this.profileForm.patchValue({ resume: p.resume_url });
       this.profileForm.get('resume')?.setErrors(null);
     } else {
       this.resumeUrl = null;
-      this.resumeFileName = null;;
+      this.resumeFileName = null;
     }
 
     this.profileForm.markAsPristine();
     this.profileForm.markAsUntouched();
   }
 
-  onAvatarChange(ev: Event) {
-    const input = ev.target as HTMLInputElement;
-    const f = input.files?.[0];
-    if (!f) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.avatarDataUrl = reader.result as string;
-      this.profileForm.patchValue({ avatar: f });
+  private buildProfilePayload(): Partial<Profile> {
+    const v = this.profileForm.value;
+    return {
+      full_name:      v.name,
+      description:    v.description,
+      email:          v.email,
+      logo_initials:  v.logo_initials,
+      primary_phone:  v.primaryPhone,
+      secondary_phone: v.secondaryPhone,
+      location:       v.location,
+      website:        v.website,
+      linkedin:       v.linkedin,
+      github:         v.github,
+      open_to_work:   v.openToWork,
+      currenttheme:   this.currentTheme,
+      avatar_url:     this.avatarDataUrl ?? undefined,
+      resume_url:     this.resumeUrl ?? undefined,
+      skills:         this.skills.value,
+      themes:         this.themesList,
+      experiences:    this.experiences.value.map((exp: any) => ({
+        ...exp,
+        startDate: exp.startDate ? this.formatMonth(exp.startDate) : '',
+        endDate:   exp.endDate   ? this.formatMonth(exp.endDate)   : ''
+      }))
     };
-    reader.readAsDataURL(f);
-  }
-
-  onResumeChange(ev: Event) {
-    const input = ev.target as HTMLInputElement;
-    const f = input.files?.[0];
-    if (!f) return;
-    this.applyResumeFile(f);
-  }
-
-  onResumeDragOver(ev: DragEvent): void {
-    ev.preventDefault();
-  }
-
-  onResumeDragLeave(ev: DragEvent): void {
-    ev.preventDefault();
-  }
-
-  onResumeDrop(ev: DragEvent): void {
-    ev.preventDefault();
-    const file = ev.dataTransfer?.files?.[0];
-    if (!file) { return; }
-    this.applyResumeFile(file);
   }
 
   private applyResumeFile(file: File): void {
@@ -772,188 +600,53 @@ togglePasswordVisibility(field: 'current' | 'new'): void {
       return;
     }
     this.resumeFileName = file.name;
+    this.resumeUrl = URL.createObjectURL(file);
     this.profileForm.patchValue({ resume: file });
     this.profileForm.get('resume')?.setErrors(null);
+    this.profileForm.markAsDirty();
   }
 
-  viewResume() {
-    if (this.resumeUrl) {
-      window.open(this.resumeUrl, '_blank');
-    }
-  }
-
-  // Helper for Template Validation
-  isFieldInvalid(fieldName: string, group: FormGroup = this.profileForm): boolean {
-    const field = group.get(fieldName);
-    return !!(field && field.invalid && (field.dirty || field.touched));
-  }
-
-  // Build FormData: convert arrays to JSON strings because server expects JSON strings for some fields
-  private buildFormData(): FormData {
-    const fd = new FormData();
-    const v = this.profileForm.value;
-    fd.append('name', v.name || '');
-    fd.append('full_name', v.name || '');
-    fd.append('description', v.description || '');
-    fd.append('email', v.email || '');
-    fd.append('logo_initials', v.logo_initials || '');
-    fd.append('primaryPhone', v.primaryPhone || '');
-    fd.append('secondaryPhone', v.secondaryPhone || '');
-    fd.append('location', v.location || '');
-    fd.append('website', v.website || '');
-    fd.append('linkedin', v.linkedin || '');
-    fd.append('github', v.github || '');
-    fd.append('currenttheme', this.currentTheme || '');
-    fd.append('openToWork', String(!!v.openToWork));
-
-    // arrays → stringify
-    fd.append('skills', JSON.stringify(this.skills.value || []));
-    const experiences = this.experiences.value.map((exp: any) => ({
-      ...exp,
-      startDate: exp.startDate ? this.formatMonth(exp.startDate) : '',
-      endDate: exp.endDate ? this.formatMonth(exp.endDate) : '',
-      projects: exp.projects || [] // Include projects
-    }));
-    fd.append('experiences', JSON.stringify(experiences || []));
-
-    const avatarFile = this.profileForm.get('avatar')?.value as File | null;
-    if (avatarFile) fd.append('avatar', avatarFile, avatarFile.name);
-
-    const resumeValue = this.profileForm.get('resume')?.value;
-    if (resumeValue instanceof File) {
-      // Only append if it's a new binary file
-      fd.append('resume', resumeValue, resumeValue.name);
-    }
-
-    return fd;
-  }
-
-  saveSettings() {
-    if (this.profileForm.dirty) {
-      this.loading.show('Saving profile details...');
-      const profileData = this.buildFormData();
-      this.saveProfile(profileData);
-    }
-  }
-
-  saveProfile(profileData: FormData) {
-    this.appService.updateProfile(profileData).pipe(take(1)).subscribe({
-      next: (updatedProfile) => {
-        this.patchFromProfile(updatedProfile);
-        this.loading.hide();
-        this.alertService.showAlert('Settings updated successfully!', 'success');
-      },
-      error: (err) => {
-        this.loading.hide();
-        this.alertService.showAlert('Failed to update settings.', 'error');
-        console.error('Save error', err);
-      }
+  private createExperience(data?: any): FormGroup {
+    return this.fb.group({
+      role:        [data?.role || '', Validators.required],
+      company:     [data?.company || '', Validators.required],
+      startDate:   [data?.startDate || '', Validators.required],
+      endDate:     [data?.endDate || ''],
+      present:     [!!data?.present],
+      description: [data?.description || '', Validators.maxLength(1000)],
+      projects:    this.fb.array((data?.projects || []).map((p: any) => this.createProject(p)))
     });
   }
 
-  // Update password (your existing method - modify as needed)
-  updatePassword(): void {
-    if (this.passwordForm.invalid) {
-      this.passwordForm.markAllAsTouched();
-      return;
-    }
-
-    this.isChangingPassword = true;
-    const passwordData = this.passwordForm.getRawValue();
-
-    // Your API call here
-    this.authService.updatePassword(passwordData).pipe(takeUntil(this.destroy$)).subscribe({
-      next: (response) => {
-        this.isChangingPassword = false;
-        this.lastPasswordUpdate = new Date();
-
-        // Show success message
-        this.alertService.showAlert('Password updated successfully', 'success');
-
-        // Reset only password fields, keep email
-        this.passwordForm.patchValue({
-          currentPassword: '',
-          newPassword: ''
-        });
-        this.passwordForm.markAsPristine();
-        this.passwordForm.markAsUntouched();
-
-        // Reset visibility toggles
-        this.showCurrentPassword = false;
-        this.showNewPassword = false;
-      },
-      error: (error) => {
-        this.isChangingPassword = false;
-        this.alertService.showAlert('Failed to update the password.', 'error');
-      }
+  private createProject(data?: any): FormGroup {
+    return this.fb.group({
+      title:           [data?.title || '', Validators.required],
+      description:     [data?.description || ''],
+      projectProgress: [data?.projectProgress || ''],
+      url:             [data?.url || ''],
+      technologies:    this.fb.array(data?.technologies || [])
     });
   }
 
-  // Called when user selects a date in p-calendar
-  onDateSelect(date: Date, exp: FormGroup, controlName: 'startDate' | 'endDate') {
-    exp.get(controlName)?.setValue(date);
-  }
-
-  // Called when ngModel changes (for manual input)
-  onCalendarChange(date: Date, exp: FormGroup, controlName: 'startDate' | 'endDate') {
-    exp.get(controlName)?.setValue(this.formatMonth(date));
-  }
-
-  removeAvatar() {
-    this.avatarDataUrl = null;
-    this.profileForm.patchValue({ avatar: null });
-  }
-
-  removeResume() {
-    this.resumeUrl = null;
-    this.resumeFileName = null;
-    this.profileForm.patchValue({ resume: null });
-    // ensure no lingering resume errors block saving
-    this.profileForm.get('resume')?.setErrors(null);
-  }
-
-  resetDefaults() {
-    this.patchFromProfile(this.appService.profile());
-  }
-
-  // Helper: convert 'YYYY-MM' string to Date (first day of month)
-  private parseMonthString(monthStr: any | null): Date | null {
+  private parseMonthString(monthStr: any): Date | null {
     if (!monthStr) return null;
-
-    // If already a Date object
     if (monthStr instanceof Date) return monthStr;
-
-    // If it's a string in YYYY-MM format
     if (typeof monthStr === 'string' && /^\d{4}-\d{2}$/.test(monthStr)) {
       const [year, month] = monthStr.split('-').map(Number);
       if (!year || !month || month < 1 || month > 12) return null;
       return new Date(year, month - 1, 1);
     }
-
     return null;
   }
 
-  // Helper: convert Date to 'YYYY-MM'
   private formatMonth(date: Date | null): string | null {
     if (!date) return null;
-
-    // If it's already in YYYY-MM format (string from PrimeNG calendar)
-    if (typeof date === 'string' && /^\d{4}-\d{2}$/.test(date)) {
-      return date;
-    }
-
-    // If it's a Date object
+    if (typeof date === 'string' && /^\d{4}-\d{2}$/.test(date)) return date;
     if (date instanceof Date) {
       const y = date.getFullYear();
       const m = (date.getMonth() + 1).toString().padStart(2, '0');
       return `${y}-${m}`;
     }
-
     return null;
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 }

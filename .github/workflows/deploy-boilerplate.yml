@@ -1,0 +1,55 @@
+name: Deploy Angular Boilerplate to GitHub Pages
+
+# ── Configuration ─────────────────────────────────────────────────────────────
+# BASE_HREF must end with /
+# - User/org page  (username.github.io)         → /
+# - Project page   (username.github.io/repo/)   → /Rohit-Nair296/boilerplate/
+# With HashLocationStrategy, routing works from any base-href.
+env:
+  BASE_HREF: /Rohit-Nair296/boilerplate/
+
+# ── Triggers ──────────────────────────────────────────────────────────────────
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Frontend/**'           # only run when Frontend project files change
+  workflow_dispatch:            # allow manual run from GitHub Actions tab
+
+# ── Default working directory ──────────────────────────────────────────────────
+defaults:
+  run:
+    working-directory: Frontend
+
+# ── Job ───────────────────────────────────────────────────────────────────────
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: Frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (CSR, production)
+        run: npx ng build --configuration=production --base-href "${{ env.BASE_HREF }}"
+
+      - name: Deploy to GitHub Pages (boilerplate subfolder)
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          # Source: browser-only CSR output
+          folder: Frontend/dist/portfolio-site/browser
+          # Deploys into /boilerplate/ so it does not overwrite the portfolio at root
+          target-folder: boilerplate
+          # Do NOT wipe the rest of gh-pages (portfolio lives at root)
+          clean: false

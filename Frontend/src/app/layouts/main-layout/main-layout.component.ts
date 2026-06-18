@@ -9,7 +9,6 @@ import {
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { RadioButton } from 'primeng/radiobutton';
-import { THEME_NAME_MAP } from 'src/app/core/config/theme.config';
 import { CommonApp } from 'src/app/core/services/common';
 import { ChatBotComponent } from 'src/app/shared/components/chat-bot/chat-bot.component';
 import { FooterComponent } from 'src/app/shared/components/footer/footer.component';
@@ -64,9 +63,11 @@ export class MainLayoutComponent extends CommonApp implements OnInit, OnDestroy 
   // ── Lifecycle ────────────────────────────────────────────────
 
   ngOnInit(): void {
-    const resolvedId = THEME_NAME_MAP[this.appConfig.theme.name ?? 'theme-5'] ?? 'tron';
-    this.themeService.setTheme(resolvedId);
-    this.startSessionTimer();
+    // Restore session role on layout init (no HTTP, instant)
+    this.authService.initiateApp().subscribe(() => {
+      this.appConfig.appConfiguration.showUserProfileView = this.appService.role() === 'ADMIN';
+      this.appConfig.appConfiguration.showNotifications   = this.appService.role() === 'ADMIN';
+    });
   }
 
   ngOnDestroy(): void {
@@ -125,22 +126,4 @@ export class MainLayoutComponent extends CommonApp implements OnInit, OnDestroy 
     return typeof window !== 'undefined' && window.innerWidth <= MOBILE_BREAKPOINT;
   }
 
-  startSessionTimer() {
-    if (this.appService.role() !== 'ADMIN') {
-      setTimeout(() => {
-        this.confirmationService.confirm({
-          header: 'App session expiring',
-          message: 'Your session is about to expire. Do you want to refresh the session?',
-          acceptLabel: 'Ok',
-          acceptIcon: "none",
-          rejectVisible: false,
-          closeOnEscape: false,
-          closable: false,
-          accept: () => {
-            window.location.reload();
-          },
-        });
-      }, 10 * 60 * 1000);
-    }
-  }
 }

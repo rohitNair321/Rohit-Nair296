@@ -37,27 +37,9 @@ export class CommonApp {
     this.aiChatService = this.injector.get(ChatApiService);
 
     this.menuItems = [
-      new MenuItem({ label: 'Home', key: 'home', href: '#home', icon: 'home' }),
-      // new MenuItem({ label: 'About Me', key: 'aboutMe', href: '#about', icon: 'person' }),
-      // new MenuItem({ label: 'Projects', key: 'projects', href: '#projects', icon: 'work' }),
-      // new MenuItem({ label: 'Contact', key: 'contact', href: '#contact', icon: 'mail' }),
-      // new MenuItem({ label: 'Notifications', routerLink: 'notifications', icon: 'notifications', key: 'notifications', isHide: this.appConfig.appConfiguration.showNotifications,  role: 'admin' }),
-      // // new MenuItem({
-      // //   label: 'Resume', icon: 'download', action: true, key: 'resume', tooltip: 'Download Resume', actions: (event) => {
-      // //     this.downloadResume(event);
-      // //   }
-      // // }),
-
-      // new MenuItem({
-      //   label: 'Admin',
-      //   key: 'admin',
-      //   icon: 'dashboard_customize',
-      //   expanded: false,
-      //   subMenu: [
-      //     new MenuItem({ label: 'Dashboard', key: 'dashboard', routerLink: '/admin/dashboard', icon: 'dashboard' }),
-      //     new MenuItem({ label: 'Settings', key: 'settings', routerLink: '/admin/settings', icon: 'settings' })
-      //   ]
-      // }),
+      new MenuItem({ label: 'Home', key: 'home', routerLink: '/', icon: 'home' }),
+      new MenuItem({ label: 'Settings', key: 'settings', routerLink: '/admin/settings', icon: 'settings' }),
+      new MenuItem({ label: 'Notifications', key: 'notifications', routerLink: '/admin/notifications', icon: 'notifications' }),
     ];
   }
 

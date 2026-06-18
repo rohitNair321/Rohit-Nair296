@@ -8,7 +8,6 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from '@angular/cdk/dialog';
 import { authInterceptor } from './core/interceptors/app.interceptor';
-import { provideClientHydration } from '@angular/platform-browser';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 import { provideMarkdown } from 'ngx-markdown';
@@ -69,6 +68,6 @@ export const appConfig: ApplicationConfig = {
       DialogModule
     ),
     // APP_INITIALIZER: Restore user session before app loads
-    provideClientHydration(),
+    // provideClientHydration(),  ← re-add when SSR is re-enabled
   ],
 };

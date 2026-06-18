@@ -857,3 +857,218 @@ $max-w       : 1200px;
   .bp__feature-card { animation: none; opacity: 1; transform: none; }
   .bp__hero-blob    { filter: none; }
 }
+
+/* =============================================================
+   HERO HINT (demo credentials note)
+   ============================================================= */
+.bp__hero-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: -0.25rem;
+
+  .material-icons { font-size: 0.9rem; color: var(--accent); }
+
+  code {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: 'SF Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--primary);
+  }
+}
+
+/* =============================================================
+   FEATURE BADGE (Core / Admin / Performance labels)
+   ============================================================= */
+.bp__feature-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
+  color: var(--primary);
+  border: 1px solid color-mix(in oklab, var(--primary) 22%, transparent);
+  align-self: flex-start;
+}
+
+/* =============================================================
+   BUTTON — large size modifier
+   ============================================================= */
+.bp__btn--lg {
+  padding: 0.8rem 1.75rem;
+  font-size: 0.95rem;
+}
+
+/* =============================================================
+   DEMO PAGES GRID
+   ============================================================= */
+.bp__demo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.bp__demo-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: $radius-card;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow $transition, transform $transition, border-color $transition;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 8px 32px var(--primary-glow);
+    transform: translateY(-3px);
+    border-color: var(--primary);
+
+    .bp__demo-arrow { opacity: 1; transform: translateX(4px); }
+  }
+}
+
+.bp__demo-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.bp__demo-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
+  color: var(--primary);
+  flex-shrink: 0;
+
+  .material-icons { font-size: 1.4rem; }
+}
+
+.bp__demo-badge {
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  background: color-mix(in oklab, var(--primary) 10%, transparent);
+  color: var(--primary);
+  border: 1px solid color-mix(in oklab, var(--primary) 20%, transparent);
+
+  &--admin {
+    background: color-mix(in oklab, var(--accent) 10%, transparent);
+    color: var(--accent);
+    border-color: color-mix(in oklab, var(--accent) 20%, transparent);
+  }
+
+  &--auth {
+    background: color-mix(in oklab, var(--success) 10%, transparent);
+    color: var(--success);
+    border-color: color-mix(in oklab, var(--success) 20%, transparent);
+  }
+}
+
+.bp__demo-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.bp__demo-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+
+.bp__demo-auth-note {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: auto;
+
+  .material-icons { font-size: 0.85rem; }
+}
+
+.bp__demo-arrow {
+  position: absolute;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  color: var(--primary);
+  opacity: 0;
+  transition: opacity $transition, transform $transition;
+
+  .material-icons { font-size: 1.1rem; }
+}
+
+/* =============================================================
+   CTA BANNER
+   ============================================================= */
+.bp__cta {
+  background: linear-gradient(135deg,
+    color-mix(in oklab, var(--primary) 8%, var(--surface-alt)),
+    color-mix(in oklab, var(--accent) 6%, var(--surface-alt))
+  );
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2.5rem);
+  text-align: center;
+}
+
+.bp__cta-content {
+  max-width: $max-w;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.bp__cta-title {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 900;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.bp__cta-sub {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 480px;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.bp__cta-actions {
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 540px) {
+  .bp__cta-actions { flex-direction: column; width: 100%; }
+  .bp__btn--lg { width: 100%; justify-content: center; }
+  .bp__demo-grid { grid-template-columns: 1fr; }
+}

@@ -1,38 +1,34 @@
-// notification.component.ts
-import { Component, computed, inject, Injector, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, Injector, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
-import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { BadgeModule } from 'primeng/badge';
 import { TimeAgoPipe } from '../../shared/pipes/time.pipe';
 import { CommonApp } from 'src/app/core/services/common';
-import { Subject } from 'rxjs';
+import { Subject, take } from 'rxjs';
 
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [CommonModule,AccordionModule, ButtonModule, OverlayBadgeModule, BadgeModule, TimeAgoPipe],
+  imports: [CommonModule, AccordionModule, ButtonModule, BadgeModule, TimeAgoPipe],
   templateUrl: './notification.component.html',
-  styleUrls: ['./notification.component.scss']
+  styleUrls: ['./notification.component.scss'],
 })
 export class NotificationComponent extends CommonApp implements OnInit, OnDestroy {
 
-
   private destroy$ = new Subject<void>();
-  notifications = computed(() => {
-    return (
-      this.appService.notifications()
-    );
-  });
+
+  notifications = computed(() => this.appService.notifications());
   openId: string | null = null;
+
   constructor(public override injector: Injector) {
     super(injector);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    // Load notifications if not yet in the signal
     if (!this.notifications()) {
-      this.router.navigate(['/app/home']);
+      this.appService.getNotifications().pipe(take(1)).subscribe();
     }
   }
 
@@ -40,23 +36,18 @@ export class NotificationComponent extends CommonApp implements OnInit, OnDestro
     this.openId = this.openId === id ? null : id;
   }
 
-  markAsRead(id: string, event: Event) {
-    event.stopPropagation(); // Prevent accordion from toggling
-    this.appService.markMessageAsRead(id).subscribe(() => {
-
-    });
+  markAsRead(id: string, event: Event): void {
+    event.stopPropagation();
+    this.appService.markMessageAsRead(id).subscribe();
   }
 
-  deleteMessage(id: string, event: Event) {
-    event.stopPropagation(); // Prevent accordion from toggling
-    this.appService.deleteMessage(id).subscribe(() => {
-
-    });
+  deleteMessage(id: string, event: Event): void {
+    event.stopPropagation();
+    this.appService.deleteMessage(id).subscribe();
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
-
 }

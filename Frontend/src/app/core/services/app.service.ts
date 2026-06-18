@@ -1,239 +1,229 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { inject, Injectable, Signal, signal } from "@angular/core";
-import * as e from "cors";
-import { N } from "node_modules/@angular/cdk/number-property.d-CJVxXUcb";
-import { EMPTY, map, Observable, switchMap, tap, timer } from "rxjs";
+import { Injectable, Signal, signal } from "@angular/core";
+import { delay, map, Observable, of, tap } from "rxjs";
 import { LocalStorageService } from "src/app/shared/services/local-storage.service";
-import { environment } from "src/environments/environments";
+import { inject } from "@angular/core";
+import { MOCK_NOTIFICATIONS, MOCK_PROFILE, BOT_RESPONSES } from "../mock-data/mock-data";
 
 export type UserRole = 'ADMIN' | 'GUEST' | null;
+
 @Injectable({ providedIn: 'root' })
 export class AppService {
 
-    private readonly http = inject(HttpClient);
-    private localStorageService = inject(LocalStorageService);
+  private localStorageService = inject(LocalStorageService);
 
-    // Single source of truth
-    appState = signal<AppState>(initialState);
-    role = signal<UserRole>(null);
-    private readonly apiProfileUrl = '';
-    private readonly apiContactUrl = '';
-    private readonly apiAIChatUrl = '';
-    private httpOptions = {
-        withCredentials: true
+  role = signal<UserRole>(null);
+
+  _profile = signal<Profile | null>(null);
+  readonly profile: Signal<Profile | null> = this._profile;
+
+  _notifications = signal<Notification | null>(null);
+  readonly notifications: Signal<Notification | null> = this._notifications;
+
+  token = signal<string | null>(this.localStorageService.getItem('auth_token'));
+
+  constructor() {
+    const savedProfile = this.localStorageService.getItem('demo_profile');
+    this._profile.set(savedProfile ? { ...MOCK_PROFILE, ...JSON.parse(savedProfile) } : MOCK_PROFILE);
+
+    const savedNotifications = this.localStorageService.getItem('demo_notifications');
+    this._notifications.set(savedNotifications ? JSON.parse(savedNotifications) : MOCK_NOTIFICATIONS);
+  }
+
+  hasValidToken(): boolean {
+    return !!localStorage.getItem('auth_token');
+  }
+
+  getProfile(): Observable<Profile | null> {
+    return of(this._profile()).pipe(tap(p => this._profile.set(p!)));
+  }
+
+  updateProfile(data: Partial<Profile>): Observable<Profile> {
+    const current = this._profile() ?? MOCK_PROFILE;
+    const updated: Profile = { ...current, ...data, updated_at: new Date().toISOString() };
+    this.localStorageService.setItem('demo_profile', JSON.stringify(updated));
+    return of(updated).pipe(delay(300), tap(p => this._profile.set(p)));
+  }
+
+  getResumeSignedUrl(): Observable<{ url: string; expires_in: number }> {
+    return of({ url: 'assets/Rohit.Nair.pdf', expires_in: 3600 });
+  }
+
+  setLocalProfile(profile: Profile | null) {
+    this._profile.set(profile);
+  }
+
+  sendContactMessage(_formData: any): Observable<any> {
+    return of({ success: true, message: 'Message received! (demo mode)' }).pipe(delay(600));
+  }
+
+  // Loads mock notifications and sets the signal once
+  getNotifications(): Observable<Notification> {
+    const saved = this.localStorageService.getItem('demo_notifications');
+    const data: Notification = saved ? JSON.parse(saved) : MOCK_NOTIFICATIONS;
+    return of(data).pipe(
+      delay(400),
+      tap(n => this._notifications.set(n))
+    );
+  }
+
+  markMessageAsRead(id: string): Observable<Notification> {
+    const current = this._notifications();
+    if (!current) return of(MOCK_NOTIFICATIONS);
+
+    const updated: Notification = {
+      ...current,
+      notificationList: current.notificationList.map(n =>
+        n.id === id ? { ...n, is_read: true } : n
+      ),
+      unreadCount: Math.max(0, current.unreadCount - (current.notificationList.find(n => n.id === id)?.is_read ? 0 : 1)),
     };
+    this._notifications.set(updated);
+    this.localStorageService.setItem('demo_notifications', JSON.stringify(updated));
+    return of(updated);
+  }
 
-    _profile = signal<Profile | null>(null);
-    readonly profile: Signal<Profile | null> = this._profile;
+  deleteMessage(id: string): Observable<Notification> {
+    const current = this._notifications();
+    if (!current) return of(MOCK_NOTIFICATIONS);
 
-    _notifications = signal<Notification | null>(null);
-    readonly notifications: Signal<Notification | null> = this._notifications;
+    const removing = current.notificationList.find(n => n.id === id);
+    const updated: Notification = {
+      ...current,
+      notificationList: current.notificationList.filter(n => n.id !== id),
+      unreadCount: Math.max(0, current.unreadCount - (removing && !removing.is_read ? 1 : 0)),
+    };
+    this._notifications.set(updated);
+    this.localStorageService.setItem('demo_notifications', JSON.stringify(updated));
+    return of(updated);
+  }
 
-    token = signal<string | null>(this.localStorageService.getItem('auth_token'));
+  setRole(newRole: UserRole) {
+    this.role.set(newRole);
+  }
 
-    private authHeaders(): any {
-        // const token = this.token() || this.localStorageService.getItem('auth_token');
-        // return new HttpHeaders({ Authorization: token ? `Bearer ${token}` : '' });
-        return this.httpOptions;
-    }
+  isAuthorized(): boolean {
+    const hasToken = !!this.localStorageService.getItem('auth_token');
+    const isGuest = this.role() === 'GUEST';
+    return hasToken || isGuest;
+  }
 
-    hasValidToken(): boolean {
-        const token = localStorage.getItem('auth_token');
-        if (!token) return false;
-        return true;
-    }
+  intialAppState() {
+    this._profile.set(null);
+    this._notifications.set(null);
+    this.role.set(null);
+    this.localStorageService.clear();
+  }
 
-
-    // Fetch profile from server and update signal
-    getProfile(): Observable<Profile | null> {
-        return this.http.get<{ profile: Profile | null }>(`${this.apiProfileUrl}/getMyProfile`, {withCredentials: true})
-            .pipe(
-                map(r => r.profile || null),
-                tap(p => this._profile.set(p))
-            );
-    }
-
-    updateProfile(formData: FormData): Observable<Profile> {
-        return this.http.put<{ profile: Profile }>(`${this.apiProfileUrl}/saveUpdateMyProfile`, formData, {withCredentials: true}).pipe(
-            map(r => r.profile),
-            tap(updated => this._profile.set(updated))
-        );
-    }
-
-    getResumeSignedUrl(): Observable<{ url: string, expires_in: number }> {
-        return this.http.get<{ url: string, expires_in: number }>(`${this.apiProfileUrl}/me/resume`, {withCredentials: true});
-    }
-
-    setLocalProfile(profile: Profile | null) {
-        this._profile.set(profile);
-    }
-
-    sendContactMessage(formData: any): Observable<any> {
-        return this.http.post<any>(`${this.apiContactUrl}/send`, formData, {withCredentials: true}).pipe(
-            map((res) => {
-                return res;
-            })
-        );
-    }
-
-    getNotifications(): Observable<Notification> {
-        if (this.role() === 'ADMIN') {
-            return timer(0, 20 * 60 * 1000).pipe(
-                switchMap(() => this.http.get<Notification>(`${this.apiContactUrl}/notifications`, {withCredentials: true})),
-                map(notification => notification || null),
-                tap(notification => this._notifications.set(notification))
-            );
-        }
-        return EMPTY;
-    }
-
-    markMessageAsRead(id: string): Observable<Notification> {
-        return this.http.put<Notification>(`${this.apiContactUrl}/notifications/${id}/read`, {}, {withCredentials: true}).pipe(
-            map(notification => notification || null),
-            tap(notification => this._notifications.set(notification))
-        );
-    }
-
-    deleteMessage(id: string): Observable<Notification> {
-        return this.http.delete<Notification>(`${this.apiContactUrl}/delete/${id}`, {withCredentials: true}).pipe(
-            map(notification => notification || null),
-            tap(notification => this._notifications.set(notification))
-        );
-    }
-
-    setRole(newRole: UserRole) {
-        this.role.set(newRole);
-    }
-
-    // A simple check to see if we should allow entry to the app
-    isAuthorized(): boolean {
-        const hasToken = !!this.localStorageService.getItem('auth_token');
-        const isGuest = this.role() === 'GUEST';
-        return hasToken || isGuest;
-    }
-
-    intialAppState() {
-        this.appState.set(initialState);
-        this.localStorageService.clear();
-    }
-
-    aiChat(message: string, sessionId: string | null): Observable<AiChatResponse> {
-        return this.http.post<AiChatResponse>(this.apiAIChatUrl, { message, sessionId, userId: this.profile()?.id, role: this.role() });
-    }
-
+  aiChat(message: string, _sessionId: string | null): Observable<AiChatResponse> {
+    const reply = BOT_RESPONSES[Math.floor(Math.random() * BOT_RESPONSES.length)];
+    return of({ response: reply, sessionId: _sessionId ?? `session-${Date.now()}`, limitReached: false }).pipe(
+      delay(800 + Math.random() * 600)
+    );
+  }
 }
 
-interface AppState {
-    role: UserRole;
-    token: string | null;
-    _profile: Profile | null;
-    _notification: Notification | null;
-}
-
-const initialState: AppState = {
-    role: null,
-    token: null,
-    _profile: null,
-    _notification: null
-};
+// ── Interfaces ────────────────────────────────────────────────────────────────
 
 export interface Notification {
-    notificationList: NotificationDTO[];
-    success: string;
-    unreadCount: number;
+  notificationList: NotificationDTO[];
+  success: string;
+  unreadCount: number;
 }
 
 export interface NotificationDTO {
-    id: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    message: string;
-    is_read: boolean;
-    created_at: string;
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  message: string;
+  is_read: boolean;
+  created_at: string;
 }
+
 export interface ContactMessage {
-    id?: string;
-    first_name: string;
-    last_name: string;
-    email: string;
-    message: string;
+  id?: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  message: string;
 }
+
 export interface Experience {
-    role: string;
-    company: string;
-    startDate: string;
-    endDate?: string;
-    present?: boolean;
-    description?: string;
+  role: string;
+  company: string;
+  startDate: string;
+  endDate?: string;
+  present?: boolean;
+  description?: string;
 }
 
 export interface Profile {
-    id?: string;
-    full_name?: string;
-    description?: string;
-    email?: string;
-    primary_phone?: string;
-    logo_initials?: string;
-    secondary_phone?: string;
-    location?: string;
-    website?: string;
-    linkedin?: string;
-    github?: string;
-    open_to_work?: boolean;
-    skills?: string[];
-    experiences?: ExperienceDTO[];
-    currenttheme?: string;
-    themes?: ThemeDefinition[];
-    avatar_url?: string; // public url for avatar (if public)
-    resume_url?: string; // stored path on server (not public url)
-    created_at?: string;
-    updated_at?: string;
+  id?: string;
+  full_name?: string;
+  description?: string;
+  email?: string;
+  primary_phone?: string;
+  logo_initials?: string;
+  secondary_phone?: string;
+  location?: string;
+  website?: string;
+  linkedin?: string;
+  github?: string;
+  open_to_work?: boolean;
+  skills?: string[];
+  experiences?: ExperienceDTO[];
+  currenttheme?: string;
+  themes?: ThemeDefinition[];
+  avatar_url?: string;
+  resume_url?: string;
+  created_at?: string;
+  updated_at?: string;
 }
+
 export interface ProfileUpdateDTO {
-    full_name?: string;
-    description?: string;
-    email?: string;
-    primary_phone?: string;
-    secondary_phone?: string;
-    location?: string;
-    website?: string;
-    linkedin?: string;
-    github?: string;
-    open_to_work?: boolean;
-    skills?: string[];
-    experiences?: ExperienceDTO[];
-    avatar?: File;
-    resume?: File;
+  full_name?: string;
+  description?: string;
+  email?: string;
+  primary_phone?: string;
+  secondary_phone?: string;
+  location?: string;
+  website?: string;
+  linkedin?: string;
+  github?: string;
+  open_to_work?: boolean;
+  skills?: string[];
+  experiences?: ExperienceDTO[];
+  avatar?: File;
+  resume?: File;
 }
 
 export interface ExperienceDTO {
-    role: string;
-    company: string;
-    startDate: string;
-    endDate?: string;
-    present?: boolean;
-    description?: string;
-    projects?: ProjectDTO[];
+  role: string;
+  company: string;
+  startDate: string;
+  endDate?: string;
+  present?: boolean;
+  description?: string;
+  projects?: ProjectDTO[];
 }
 
 export interface ProjectDTO {
-    name: string;
-    description?: string;
-    techStack?: string[];
-    link?: string;
-    highlights?: string[];
+  name: string;
+  description?: string;
+  techStack?: string[];
+  link?: string;
+  highlights?: string[];
 }
 
 export interface ThemeDefinition {
-    id: string;
-    name: string;
-    tokens: Record<string, string>;
-    darkTokens?: Record<string, string>;
+  id: string;
+  name: string;
+  tokens: Record<string, string>;
+  darkTokens?: Record<string, string>;
 }
 
 interface AiChatResponse {
-    response: string;
-    sessionId: string;
-    limitReached?: boolean;
+  response: string;
+  sessionId: string;
+  limitReached?: boolean;
 }

@@ -6,7 +6,7 @@ import { PageNotFoundComponent } from './layouts/page-not-found/page-not-found.c
 import { canDeactivateGuard } from './core/app-gards/can-deactivate.guard';
 
 export const routes: Routes = [
-  // Main application routes - accessible to everyone (guest + admin)
+  // ── Public routes ──────────────────────────────────────────────────────────
   {
     path: '',
     component: MainLayoutComponent,
@@ -19,8 +19,8 @@ export const routes: Routes = [
       },
     ],
   },
-  
-  // Auth routes - for login/register (separate layout)
+
+  // ── Auth routes ────────────────────────────────────────────────────────────
   {
     path: 'auth',
     component: AuthLayoutComponent,
@@ -49,14 +49,33 @@ export const routes: Routes = [
       },
     ],
   },
-  
-  // Admin-only routes - require authentication
+
+  // ── Admin routes (require ADMIN role) ──────────────────────────────────────
   {
     path: 'admin',
     component: MainLayoutComponent,
     canActivate: [tokenGuard],
     children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'settings',
+      },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./features/settings/settings.component').then(m => m.SettingsComponent),
+        canDeactivate: [canDeactivateGuard],
+        data: { roles: ['ADMIN'] },
+      },
+      {
+        path: 'notifications',
+        loadComponent: () =>
+          import('./features/notification/notification.component').then(m => m.NotificationComponent),
+        data: { roles: ['ADMIN'] },
+      },
     ],
   },
+
   { path: '**', component: PageNotFoundComponent },
 ];
